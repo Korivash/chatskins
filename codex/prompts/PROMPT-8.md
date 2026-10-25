@@ -28,3 +28,10 @@ Keep everything that works now working:
 - a chat-text-never-HTML check for the banner
 
 Run each test file with node directly. Try git add + commit; if it's blocked, say so. Print a short summary.
+
+## ALSO (owner request): every overlay is TRANSPARENT by default
+- **The default:** the "Transparent background" setting (round 4) defaults to ON for every skin. Message/panel backgrounds are see-through, frames/borders stay, and the text gets the automatic readable outline/shadow when the skin has none.
+- **Applies everywhere:** skins.html "Use this skin" links, the editor's default and the home demo. The website previews show the transparent look over the stream backdrop (not a black box).
+- **Opt out:** the user can still turn the background back on in the editor (Background → Transparent off), and that choice is saved in their URL.
+- **Old URLs:** URLs that explicitly set transparent=false keep their background. Old URLs with no transparent key: decide sensibly and document it. Keep old links looking the same as before by treating "missing key" as the old default (off), and only set the new default ON for links created from now on.
+- **Test:** links created from every skin default to transparent; an explicit off is respected; old URLs decode unchanged.
