@@ -39,7 +39,9 @@ for(const file of walk(root).filter(file=>!file.includes(`${path.sep}tests${path
 const page=fs.readFileSync(path.join(root,'js/skins-page.js'),'utf8');
 assert.ok(page.includes("paintTag.textContent='Hand-painted'"));
 const templateCode=fs.readFileSync(path.join(root,'js/frame-templates.js'),'utf8');
-assert.match(templateCode,/const src=frameAssetUrl\(entry\.file\);if\(!src\)throw Error\('Frame image unavailable'\);const \{art,title\}=makeFrameNodes/);
+assert.match(templateCode,/chooseFrameEntry\(entries,id,\{shape:hintedShape,targetAspect:settings\.templateAspect\|\|hintAspect,kind\}\)/,'one entry is chosen from the requested frame aspect');
+assert.match(templateCode,/root\._frameEntry=entry;const exactAspect=entry\.w\/entry\.h/,'the selected entry controls panel aspect and frame metadata');
+assert.match(templateCode,/art\.style\.objectFit='fill'/,'art fills the panel after its aspect is matched');
 assert.match(templateCode,/--template-image-mask.*src/);
 const overlay=fs.readFileSync(path.join(root,'overlay.html'),'utf8');
 assert.match(overlay,/skin-render\.css/);

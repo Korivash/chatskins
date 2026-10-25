@@ -17,4 +17,14 @@ for(const entry of entries){
  assert.ok(Math.abs((box.y+box.h/2-targetY)*entry.h)<=toleranceY,`${entry.id}/${entry.shape} title is vertically centered in plaque`);
  if(entry.plaque.nudge){assert.ok(Math.abs(entry.plaque.nudge.x||0)<.02&&Math.abs(entry.plaque.nudge.y||0)<.02,`${entry.id}/${entry.shape} optical nudge stays subtle`)}
 }
+for(const id of ['bunny-princess','crowned-kittens','neon-hex']){
+ const entry=entries.find(item=>item.id===id&&item.shape==='tall')||entries.find(item=>item.id===id);
+ if(!entry)continue;
+ const panelHeight=720*.92,panelWidth=panelHeight*entry.w/entry.h,box=plaqueLayout(entry.plaque,entry.inner);
+ const plaqueCenter=(entry.plaque.x+entry.plaque.w/2)*panelWidth;
+ const titleCenter=(box.x+box.w/2)*panelWidth;
+ const delta=titleCenter-plaqueCenter;
+ assert.ok(Math.abs(delta)<=panelWidth*.02,`${id}: actual overlay title center within 2%`);
+ console.log(`${id}: plaque center ${plaqueCenter.toFixed(1)}px, title center ${titleCenter.toFixed(1)}px, offset ${delta.toFixed(1)}px at ${panelWidth.toFixed(1)}px panel width`);
+}
 console.log(`plaque title boxes centered for ${entries.length} frame shapes`);

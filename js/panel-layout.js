@@ -18,11 +18,19 @@ export function layoutPanel(host, panel, settings, viewportHeight = globalThis.i
     height = Math.min(height, width / aspect);
     panelLimit = height;
     panel.style.setProperty('--width', `${width}px`);
+    panel.style.width = `${width}px`;
     panel.style.height = `${height}px`;
     panel.style.maxHeight = `${height}px`;
     panel.style.setProperty('--panel-max-height', `${height}px`);
+    if(panel.classList?.contains('has-frame-template')){
+      panel.style.aspectRatio=String(aspect);
+      panel.style.maxWidth='none';
+    }
   } else {
     panel.style.setProperty('--width', `${settings.overlayWidth}px`);
+    panel.style.width='';
+    panel.style.aspectRatio='';
+    panel.style.maxWidth='';
     panel.style.setProperty('--panel-max-height', `${available}px`);
     panel.style.maxHeight = `${available}px`;
     panel.style.height = '';
