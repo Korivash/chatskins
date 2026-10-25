@@ -17,3 +17,5 @@ NEW TASK (round 21): **"Dream up a skin"**. Viewers describe a skin; the server 
 **Tests (mock OpenAI):** schema validation/clamping, limits, moderation on output, the submission file written outside the web root, the webhook payload has no IP, the review token is required for the private preview, approve-dream adds a valid skin, and the parts-only path works with images off.
 
 Run each test file with node directly. Try git add + commit; if it's blocked, say so. Report the files you created or changed.
+
+**IMPORTANT (owner): "the streamer gets it right away".** The dreamed skin is the streamer's to USE IMMEDIATELY: as soon as it's generated, "Get my OBS link" works with it (the design is encoded in their own link, like any Studio design) and it's saved to their "My skins". Approval ONLY controls whether it's added to the public gallery for everyone; it never blocks the streamer using it. Say this in the UI: "It's yours now. Submit it if you'd like everyone to be able to pick it."
