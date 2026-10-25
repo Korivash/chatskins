@@ -17,7 +17,7 @@ const samples=[
 ];
 
 test('every skin renders a readable separator between name formatting and message text',()=>{
- assert.equal(catalog.skins.length,52);for(const skin of catalog.skins)for(const message of samples){const {rule}=resolveChannelRules(message,{...skin.settings,channel:'streamer'});const line=rule?fillChannelTemplate(rule.format,message):`${message.username}: ${message.text}`;assert.ok(line.endsWith(message.text),`${skin.id} lost message text`);const prefix=line.slice(0,-message.text.length);assert.match(prefix,/[\s:.,!?;)>\]}\-]$/u,`${skin.id}: ${line}`)}
+ assert.ok(catalog.skins.length>=52);for(const skin of catalog.skins)for(const message of samples){const {rule}=resolveChannelRules(message,{...skin.settings,channel:'streamer'});const line=rule?fillChannelTemplate(rule.format,message):`${message.username}: ${message.text}`;assert.ok(line.endsWith(message.text),`${skin.id} lost message text`);const prefix=line.slice(0,-message.text.length);assert.match(prefix,/[\s:.,!?;)>\]}\-]$/u,`${skin.id}: ${line}`)}
 });
 
 test('skin page previews use the overlay message builder and retain a name/message separator',async()=>{

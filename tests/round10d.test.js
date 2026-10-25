@@ -11,7 +11,7 @@ class FakeNode{constructor(tag,text=''){this.tagName=tag;this.nodeType=tag==='#t
 function walk(node,fn){fn(node);for(const child of node.childNodes||[])walk(child,fn)}
 
 test('default transparent state keeps any skin card whose text misses 4.5:1 on the stream backdrop',()=>{
- assert.equal(data.skins.length,52);
+ assert.ok(data.skins.length>=52);
  for(const skin of data.skins){const low=colors(skin).filter(color=>contrastRatio(color,backdrop)<4.5),state=applySkinMetadata(normalizeSettings(skin.settings),skin),effective=effectiveSettings(state);if(low.length){assert.equal(skin.transparentDefault,false,`${skin.id} needs a retained card for ${low.join(', ')}`);assert.ok(skin.transparentDefaultReason?.trim(),`${skin.id} needs a reason`);assert.equal(effective.transparentBackground,false,skin.id);assert.ok(effective.backgrounds.message.opacity>0||effective.backgrounds.panel.opacity>0,`${skin.id} card background remains visible`)}else{assert.ok(colors(skin).every(color=>contrastRatio(color,backdrop)>=4.5),skin.id);assert.equal(effective.transparentBackground,true,skin.id)}}
 });
 

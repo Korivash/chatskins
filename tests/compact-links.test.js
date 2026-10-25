@@ -1,4 +1,4 @@
-﻿import test from 'node:test';
+import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {defaultChatPlay,buildChatPlayUrl,parseCompactPlayFragment,encodePlaySource,decodePlaySource} from '../js/chat-play.js';
@@ -14,8 +14,8 @@ const catalog=JSON.parse(await readFile(new URL('../design/skins.json',import.me
 const design=JSON.parse(await readFile(new URL('../design/skins.json',import.meta.url),'utf8')).alertDesign;
 const makePlay=(count)=>{const play=defaultChatPlay();play.enabled=true;play.points.enabled=true;play.allowedSkinIds=catalog.slice(0,count).map(s=>s.id);return play};
 
-test('compressed private play links stay under the hard limit for 1, 6 and all 52 skins',async()=>{
- for(const count of [1,6,52]){const url=await buildChatPlayUrl('https://getchatskins.com/editor.html',{token:'t'.repeat(120),chatSettings:{...catalog[0].settings,channel:'korivash'},chatPlay:makePlay(count),allowedSkins:catalog.slice(0,count),baseSkinId:catalog[0].id,baseSettings:catalog[0].settings});assert.ok(url.length<30000,`${count} skins produced ${url.length} chars`);const params=new URLSearchParams(new URL(url).hash.slice(1));assert.equal(params.get('v'),'2');const parsed=await parseCompactPlayFragment(new URL(url).hash,catalog);assert.equal(parsed.config.allowedSkins.length,count)}
+test('compressed private play links stay under the hard limit for 1, 6 and all catalog skins',async()=>{
+ for(const count of [1,6,catalog.length]){const url=await buildChatPlayUrl('https://getchatskins.com/editor.html',{token:'t'.repeat(120),chatSettings:{...catalog[0].settings,channel:'korivash'},chatPlay:makePlay(count),allowedSkins:catalog.slice(0,count),baseSkinId:catalog[0].id,baseSettings:catalog[0].settings});assert.ok(url.length<30000,`${count} skins produced ${url.length} chars`);const params=new URLSearchParams(new URL(url).hash.slice(1));assert.equal(params.get('v'),'2');const parsed=await parseCompactPlayFragment(new URL(url).hash,catalog);assert.equal(parsed.config.allowedSkins.length,count)}
 });
 
 test('typical combined link is compact and restores effective settings, play, alerts and token',async()=>{

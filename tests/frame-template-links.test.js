@@ -1,0 +1,15 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import {normalizeSettings} from '../js/settings.js';
+import {buildCompactSettingsUrl} from '../js/settings.js';
+import {decompressJson,applySettingsDiff} from '../js/compact-link.js';
+import {frameSettingsRoundTrip,buildWebcamFrameUrl} from '../js/frame-templates.js';
+const skin=JSON.parse(fs.readFileSync('design/skins.json','utf8')).skins.find(x=>x.category==='Frames');
+const base=normalizeSettings(skin.settings),settings=normalizeSettings({...base,channel:'korivash',templateTitle:'Moon chat',templateSubtitle:'LIVE NOW',frameColor:'#28A8D0',frameTint:67,frameSaturation:1.4,glowColor:'#EACBFF',glowStrength:.8,glowAnimation:'shimmer',middleBackground:'image',middleColor:'#223344',middleImage:'https://example.test/panel.webp',middleOpacity:.4,templateFont:'Bree Serif',templateTextColor:'#FDF1D3',templateNameMode:'twitch'});
+const url=await buildCompactSettingsUrl('https://getchatskins.com/editor.html',{settings,baseSkinId:skin.id,baseSettings:base}),parsed=new URL(url),payload=await decompressJson(new URLSearchParams(parsed.hash.slice(1)).get('data'));
+const round=normalizeSettings(applySettingsDiff(base,payload.c));
+assert.deepEqual(frameSettingsRoundTrip(round),frameSettingsRoundTrip(settings));
+const webcam=buildWebcamFrameUrl('https://getchatskins.com/skins.html',skin.frameTemplate,settings),webcamUrl=new URL(webcam);
+assert.equal(webcamUrl.searchParams.get('webcam'),skin.frameTemplate);assert.equal(webcamUrl.hash.includes('access_token'),false);
+assert.equal(webcamUrl.hash.includes('frameColor'),true);
+console.log('frame customizations round-trip through compact links and webcam URLs');

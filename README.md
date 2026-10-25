@@ -41,3 +41,8 @@ ChatSkins is a browser-based editor for Twitch chat overlays. It's built for the
 | Streamer favorites (12) | Bubble Lift, Glass Card, Name Tag, Comic Burst, Pastel Pop, Esports Slash, Quiet Line, Neon Edge, Sticker Stack, Initial Card, Signal Console, Announcer |
 | Animated (12) | Terminal, Vaporwave, Aurora, Glitter Bomb, Neon Pulse, Prism Shift, Holo Foil, Lava Lamp, Electric Storm, Starfall, Fire Frame, Ice Crystal |
 | Colorful (4) | Bubble Chat, Clean, Candy Pop, Rainbow Border |
+
+
+## Frame art
+
+Painted chat and matching webcam frames by Korivash and KittyVenom (made with ChatGPT image generation) and by OpenAI Codex image generation. All application code by Codex. Individual frame credits appear in the editor.
