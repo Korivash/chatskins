@@ -17,3 +17,13 @@ Keep all the test hooks and features working. Add tests:
 - tokens: every custom property used is defined
 
 Run each test file with node directly. Try git add + commit; if it's blocked, say so. Print a short summary.
+
+## ALSO FIX in this round (lead's Chromium check of the round 7 alerts UI and the previews)
+- **The editor's Alerts section looks broken:**
+  - giant native checkboxes (~48 px) centered on their own
+  - type labels pushed to the far right with a stray "+" / "–"
+  - the inputs stacked oddly
+
+  Restyle it with the new tokens: compact rows (a toggle + the type name on the left, an expand chevron on the right), the message template + duration inside the expanded row, and the "Send test alert" button per type.
+- **When you press "Send test alert"** while scrolled down in the controls, the preview stage is scrolled out of view, so you can't see the alert. Keep the preview sticky/visible (or scroll it into view) whenever a test alert or Test Chat burst fires.
+- **Missing space between name and message** in several skins ("OrbitWelcome, everyone!", "[Orbit]Welcome"), e.g. Cyber City, Space Command, Arcade Cabinet, Battle Royale, Dungeon Crawler, Hero Shooter. Every name format must end with a separator/space before the message (fix in skins.json formats or in the render join). Add a test that renders every skin and asserts that the name and the message text are separated by a space or punctuation.
