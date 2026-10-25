@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {panelMaxHeight} from '../js/fit.js';
 import {layoutPanel} from '../js/panel-layout.js';
-import {previewCanvasSize} from '../js/skin-preview.js';
+import {previewCanvasSize,marketingPreviewTransform} from '../js/skin-preview.js';
 import {frameContentRect,selectFrameEntry} from '../js/frame-templates.js';
 const skins=JSON.parse(fs.readFileSync('design/skins.json','utf8')).skins.filter(s=>s.frameTemplate);
 const entries=JSON.parse(fs.readFileSync('site-media/frames/frames.json','utf8')).filter(e=>e.kind==='chat');
@@ -28,9 +28,22 @@ for(const skin of skins){
  const{windowRect,rows}=previewPanel(skin,entry);
  for(const[rowIndex,row]of rows.entries())assert(row.left>=windowRect.left-1&&row.top>=windowRect.top-1&&row.right<=windowRect.right+1&&row.bottom<=windowRect.bottom+1,`${skin.name} sample message ${rowIndex+1} remains inside the preview frame window`);
 }
+const neon=entries.find(entry=>entry.id==='neon-kawaii-goth'&&entry.shape==='tall');
+assert.ok(neon.inner.x>=.275,'Neon Kawaii Goth tall window clears the hanging chain column');
+const neonSkin=skins.find(skin=>skin.frameTemplate==='neon-kawaii-goth');
+const neonGeometry=previewPanel(neonSkin,neon);
+assert.ok(neonGeometry.rows.every(row=>row.left>=neonGeometry.windowRect.left-1),'Neon Kawaii Goth message rows stay clear of the chain-side frame edge');
+for(const [width,height] of [[1440,900],[390,844]]){
+ const panel={left:400,top:60,width:480,height:660};
+ const fit=marketingPreviewTransform(width,height,1280,720,panel);
+ assert.ok(Math.abs((fit.left+(panel.left+panel.width/2)*fit.scale)-width/2)<.01,`README preview panel centered at ${width}px`);
+ assert.ok(Math.abs(fit.top+(panel.top+panel.height/2)*fit.scale-height/2)<.01,`README preview panel centered vertically at ${width}px`);
+ assert.ok(panel.height*fit.scale<=height*.8+.01,`README preview panel fits at ${width}px`);
+}
 assert.match(editor,/await Promise\.all\(\[frameReady,illustrationReady\]\)/,'editor waits for artwork before adding sample messages');
 assert.match(editor,/class="source"|\.source/,'editor preview uses the overlay source canvas');
 assert.match(skinsPage,/preview-virtual-stage/,'skins cards and monitor use the virtual canvas');
 assert.match(skinsPage,/layoutPanel\(canvas,chat,previewSettings,canvasSize\.height\)/,'skins preview panel uses the overlay layout');
 assert.match(readme,/preview-virtual-stage/,'readme previews use the virtual canvas');
 assert.match(readme,/layoutPanel\(canvas,chat,settings,canvasSize\.height\)/,'readme preview panel uses the overlay layout');
+assert.match(readme,/marketingPreviewTransform\(host\.clientWidth,host\.clientHeight/,'README preview scales and centers the panel rather than the whole canvas');

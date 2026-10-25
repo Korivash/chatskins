@@ -613,9 +613,9 @@
     "credit": "Korivash (ChatGPT)",
     "kind": "chat",
     "inner": {
-      "x": 0.225,
+      "x": 0.275,
       "y": 0.1975,
-      "w": 0.58375,
+      "w": 0.53375,
       "h": 0.60917
     },
     "plaque": {

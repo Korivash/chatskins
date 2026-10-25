@@ -50,6 +50,12 @@ export function previewCanvasSize(skin,width=1280,height=720){
  return{width:panelWidth/.92,height};
 }
 
+export function marketingPreviewTransform(hostWidth,hostHeight,canvasWidth,canvasHeight,panelRect){
+ const panelWidth=Math.max(1,Number(panelRect?.width)||1),panelHeight=Math.max(1,Number(panelRect?.height)||1);
+ const scale=Math.min(hostWidth*.92/panelWidth,hostHeight*.8/panelHeight,1.4);
+ return{scale,left:hostWidth/2-((Number(panelRect?.left)||0)+panelWidth/2)*scale,top:hostHeight/2-((Number(panelRect?.top)||0)+panelHeight/2)*scale,canvasWidth,canvasHeight};
+}
+
 export function fitSkinPreview(frame,wrapper){
  const fit=()=>{const box=frame.getBoundingClientRect();wrapper.style.transform='translate(-50%,-50%)';const w=wrapper.offsetWidth,h=wrapper.offsetHeight;if(!w||!h)return;const scale=Math.min(box.width*.88/w,box.height*.85/h,1.4);wrapper.style.transform=`translate(-50%,-50%) scale(${scale})`;wrapper.dataset.scale=String(scale)};
  fit();const observer=new ResizeObserver(fit);observer.observe(frame);document.fonts?.ready.then(fit);return fit;
