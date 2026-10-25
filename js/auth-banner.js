@@ -10,6 +10,8 @@ export function authBannerModel(result, kind = 'twitch') {
   return {status: 'success', message: `${points ? 'Channel points' : 'Alerts'} connected for ${login}.`, retry: false};
 }
 
+export function friendlyAuthError(value){return String(value||'Twitch could not connect. Please try again.').replace(/Permission for [^ ]+ was not granted\.[^]*$/,'Twitch did not grant all the access needed. Reconnect and try again.')}
+
 export function rewardSetupBannerModel(result) {
   if (!result?.ok) return {status: 'error', message: result?.error || 'Could not set up channel-point rewards.', retry: true};
   const created = result.created || [], reused = result.reused || [], disabled = result.disabledExisting || [];
@@ -34,7 +36,7 @@ export function showAuthBanner({document: doc = globalThis.document, result, kin
   toast.setAttribute('aria-live', 'polite');
   const message = doc.createElement('p');
   message.className = 'auth-toast-message';
-  message.textContent = model.message;
+  message.textContent = friendlyAuthError(model.message);
   const actions = doc.createElement('div');
   actions.className = 'auth-toast-actions';
   if (model.retry) {

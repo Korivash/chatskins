@@ -19,7 +19,7 @@ let alertToken='';
 if(hasPrivatePlay)history.replaceState(null,'',`${location.pathname}${location.search}`);
 if(alertLink){alertToken=alertLink.token;history.replaceState(null,'',`${location.pathname}${location.search}`);document.querySelector('#skin-render-css').disabled=false;const css=document.createElement('link');css.rel='stylesheet';css.href='css/alerts-render.css';document.head.append(css)}
 else document.querySelector('#skin-render-css').disabled=false;
-if(alertLink){const data=await(await fetch('./design/skins.json')).json();const host=document.querySelector('#overlay-root');await startAlertsOverlay({host,token:alertToken,config:alertLink.config,design:data.alertDesign});}
+if(alertLink&&!hasPrivatePlay){const data=await(await fetch('./design/skins.json')).json();const host=document.querySelector('#overlay-root');await startAlertsOverlay({host,token:alertToken,config:alertLink.config,design:data.alertDesign});}
 else{
  const query=new URLSearchParams(location.search),requestedSkin=query.get('skin'),testMode=query.get('test')==='1',host=document.querySelector('#overlay-root');host.dataset.overlayRoot='';let s=decodeSettings(hasPrivatePlay?urlHash:urlHash),payload=null,catalog=[],playSource=null;
  try{const encoded=hasPrivatePlay?playParams.get('play'):urlHash.slice(1),json=decodeURIComponent(escape(atob(encoded.replace(/-/g,'+').replace(/_/g,'/').padEnd(Math.ceil(encoded.length/4)*4,'='))));payload=JSON.parse(json)}catch{}
@@ -42,6 +42,7 @@ else{
   chatPlay?.registerMessage(message);const row=communityChat.add(root,message),record={message,row,expiryTimer:null};row.dataset.messageId=message.id||'';row.dataset.username=message.username||'';rows.push(record);queueFit();while(rows.length>s.maxMessages){const old=rows.shift();clearTimeout(old.expiryTimer);removeChatMessage(root,old.row);chatPlay?.removeMessage(old.message.id)}queueFit();if(s.messageLifetime>0)record.expiryTimer=setTimeout(()=>{record.row?.classList.add('expired');setTimeout(()=>{removeChatMessage(root,record.row);chatPlay?.removeMessage(message.id);rows=rows.filter(x=>x!==record);queueFit()},(s.reduceMotion||s.animationOut==='none')?0:s.animationOutDuration)},s.messageLifetime*1000)
  }
  if(testMode){for(const message of buildOverlayTestModel(s))add(message,false)}else if(s.channel)connectChat(s.channel,add,undefined,{onRoomState:room=>{communityChat.onRoomState(room);chatPlay?.setRoomId(room.roomId)}});
+ if(alertLink&&hasPrivatePlay){const data=await(await fetch('./design/skins.json')).json();await startAlertsOverlay({host,token:alertToken,config:alertLink.config,design:data.alertDesign});}
  if(testMode&&chatPlay){chatPlay.simulate('!skin guild','everyone','Moss');setTimeout(()=>{chatPlay.resume();chatPlay.testEffect('rain',{username:'Moss',text:'Kappa',emotes:{'25':[[0,4]]}})},700)}
  window.addEventListener('pagehide',()=>{communityChat.stop();chatPlay?.stop()});
 }

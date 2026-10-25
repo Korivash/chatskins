@@ -15,7 +15,7 @@ export function createRewardRequestBody(draft,{enabled=true}={}){
  return {title:String(draft.title||'').trim().slice(0,45),prompt:String(draft.prompt||'').slice(0,200),cost:Math.max(1,Math.min(1000000,Math.round(Number(draft.cost)||1))),is_enabled:!!enabled,is_user_input_required:!!draft.required,should_redemptions_skip_request_queue:false,global_cooldown_seconds:Math.max(60,Math.min(604800,Math.round(Number(draft.cooldown)||60)))};
 }
 
-export function isCreateRewardsReturn(auth){return !!auth?.handled&&!!auth?.token&&auth.action==='create-chat-play-rewards'}
+export function isCreateRewardsReturn(auth){return !!auth?.handled&&!!auth?.token&&(auth.action==='create-chat-play-rewards'||auth.action==='round11-setup'&&auth.createRewards===true)}
 export function runInitialRewardSetup(auth,createRewards){return isCreateRewardsReturn(auth)?Promise.resolve().then(createRewards):Promise.resolve(null)}
 
 function rewardUrl(broadcasterId,id=''){
@@ -34,7 +34,7 @@ export async function createChatPlayRewards({token,broadcasterId,rewards=CHAT_PL
  try{
   const existingResponse=await fetchImpl(url,{headers});
   if(existingResponse.status===401)return failure('Twitch access expired. Reconnect channel points.');
-  if(existingResponse.status===403)return failure('Twitch says channel-point rewards require an Affiliate or Partner channel and the channel:manage:redemptions permission.');
+  if(existingResponse.status===403)return failure('Channel-point rewards need an Affiliate or Partner channel. Chat commands and alerts are still ready.');
   if(!existingResponse.ok)return failure('Could not check existing channel-point rewards.');
   const existing=(await existingResponse.json()).data||[],created=[],reused=[],disabledExisting=[];
   const requestedTitles=[...new Set(rewards.map(reward=>reward.title))];
@@ -45,7 +45,7 @@ export async function createChatPlayRewards({token,broadcasterId,rewards=CHAT_PL
    if(match){const item={effect:reward.effect,id:match.id,title:match.title,isEnabled:match.is_enabled!==false};reused.push(item);if(!item.isEnabled)disabledExisting.push(item);continue}
    const response=await fetchImpl(url,{method:'POST',headers,body:JSON.stringify(createRewardRequestBody(reward,{enabled}))});
    if(response.status===401)return failure('Twitch access expired. Reconnect channel points.',{created,reused,disabledExisting});
-   if(response.status===403)return failure('Twitch says channel-point rewards require an Affiliate or Partner channel and the channel:manage:redemptions permission.',{created,reused,disabledExisting});
+   if(response.status===403)return failure('Channel-point rewards need an Affiliate or Partner channel. Chat commands and alerts are still ready.',{created,reused,disabledExisting});
    if(!response.ok)return failure(`Could not create ${reward.title}. ${created.length} rewards were created; retry to reuse those and create the rest.`,{created,reused,disabledExisting});
    const item=(await response.json()).data?.[0];
    if(item){created.push({id:item.id,title:item.title,isEnabled:item.is_enabled!==false});existing.push(item)}
