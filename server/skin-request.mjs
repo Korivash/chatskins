@@ -1,0 +1,35 @@
+import http from 'node:http';
+import {createHash} from 'node:crypto';
+import {resolve} from 'node:path';
+import {fileURLToPath} from 'node:url';
+
+const fields={name:60,inspired:80,colors:80,font:60,frame:120,description:800,channel:25,discord:40,website:200};
+const required=['name','inspired','colors','description'];
+const hour=60*60*1000,day=24*hour;
+const json=(status,body,headers={})=>({status,headers:{'content-type':'application/json; charset=utf-8','cache-control':'no-store',...headers},body});
+function sanitize(value){const urls=[];let text=value.replace(/https?:\/\/[^\s<>]+/gi,url=>{urls.push(url);return `URLTOKEN${urls.length-1}TOKEN`});text=text.replace(/@(?:everyone|here)\b/gi,'').replace(/<@[!&]?[^>]+>|<#\d+>/g,'').replace(/[\u0000-\u001f\u007f]/g,' ').replace(/([\\`*_{}\[\]()#+\-.!|>])/g,'\\$1');return text.replace(/URLTOKEN(\d+)TOKEN/g,(_,i)=>`<${urls[Number(i)]}>`).trim()}
+function retryAfter(list,now,windowMs,limit){if(!list.length)return Math.ceil(windowMs/1000);return Math.max(1,Math.ceil((list[0]+windowMs-now)/1000))}
+export function createSkinRequestHandler({fetchImpl=globalThis.fetch,webhookUrl=process.env.SKIN_REQUEST_WEBHOOK,now=Date.now,resolveIp=req=>{const trusted=process.env.SKIN_REQUEST_TRUSTED_PROXY||'127.0.0.1';if(req.remoteAddress!==trusted)return req.remoteAddress||'unknown';const forwarded=String(req.headers?.['x-forwarded-for']||'').split(',')[0].trim();return forwarded||req.remoteAddress||'unknown'},originHost=null}={}){
+ const acceptedByIp=new Map(),globalAccepted=[],reservedByIp=new Map();
+ return async function handleSkinRequest({method='POST',url='/api/skin-request',headers={},remoteAddress='unknown',body=''}={}){
+  if(method==='GET'&&url==='/api/health')return json(200,{ok:true});
+  if(method!=='POST'||url!=='/api/skin-request')return json(404,{ok:false,error:'not_found'});
+  const origin=headers.origin;if(origin){try{if(new URL(origin).host!==(originHost||headers.host))return json(403,{ok:false,error:'forbidden'})}catch{return json(403,{ok:false,error:'forbidden'})}}
+  if(Buffer.byteLength(body,'utf8')>8192)return json(400,{ok:false,errors:{form:'Request body must be 8 KiB or smaller.'}});
+  let data;try{data=JSON.parse(body)}catch{return json(400,{ok:false,errors:{form:'Enter a valid request.'}})}
+  if(!data||typeof data!=='object'||Array.isArray(data))return json(400,{ok:false,errors:{form:'Enter a valid request.'}});
+  const errors=Object.create(null);for(const key of Object.keys(data))if(!Object.hasOwn(fields,key))errors[key]='This field is not accepted.';
+  for(const [key,max] of Object.entries(fields)){if(!(key in data)){if(required.includes(key))errors[key]='This field is required.';continue}if(typeof data[key]!=='string'){errors[key]='Enter text for this field.';continue}if([...data[key]].length>max)errors[key]=`Use ${max} characters or fewer.`}
+  if(Object.keys(errors).length)return json(400,{ok:false,errors});
+  if(data.website.trim())return json(400,{ok:false,errors:{form:'Your request could not be accepted.'}});
+  if(data.channel&&!/^[A-Za-z0-9_]{1,25}$/.test(data.channel.trim()))return json(400,{ok:false,errors:{channel:'Use 1–25 letters, numbers or underscores.'}});
+  const clean={};for(const key of Object.keys(fields))clean[key]=sanitize(data[key]||'');for(const key of required)if(!clean[key])errors[key]='This field is required.';if(Object.keys(errors).length)return json(400,{ok:false,errors});
+  const time=now(),ip=resolveIp({remoteAddress,headers}),ipHash=createHash('sha256').update(String(ip)).digest('hex');for(const [key,times] of acceptedByIp){const fresh=times.filter(t=>time-t<hour);if(fresh.length)acceptedByIp.set(key,fresh);else acceptedByIp.delete(key)}
+  const ipAccepted=(acceptedByIp.get(ipHash)||[]).filter(t=>time-t<hour);acceptedByIp.set(ipHash,ipAccepted);const pending=reservedByIp.get(ipHash)||0;const ipRetry=ipAccepted.length+pending>=3?retryAfter(ipAccepted,time,hour,3):0;while(globalAccepted.length&&time-globalAccepted[0]>=day)globalAccepted.shift();const globalPending=reservedByIp.get('__global__')||0;const globalRetry=globalAccepted.length+globalPending>=50?retryAfter(globalAccepted,time,day,50):0;if(ipRetry||globalRetry)return json(429,{ok:false,error:'rate_limited',retryAfter:Math.max(ipRetry,globalRetry)},{'retry-after':String(Math.max(ipRetry,globalRetry))});
+  reservedByIp.set(ipHash,pending+1);reservedByIp.set('__global__',globalPending+1);let delivered=false;
+  try{if(!webhookUrl)throw Error('delivery unavailable');const embed={title:'New skin quest',description:clean.description,timestamp:new Date(time).toISOString(),fields:[['Skin name idea',clean.name],['Inspired by',clean.inspired],['Colors',clean.colors],['Font vibe',clean.font],['Frame idea',clean.frame],['Twitch channel',clean.channel],['Discord name',clean.discord]].filter(([,v])=>v).map(([name,value])=>({name,value:value.slice(0,1024),inline:false}))};const response=await fetchImpl(webhookUrl,{method:'POST',headers:{'content-type':'application/json'},signal:AbortSignal.timeout(5000),body:JSON.stringify({embeds:[embed],allowed_mentions:{parse:[],users:[],roles:[],replied_user:false}})});if(!response.ok)throw Error('delivery unavailable');delivered=true;acceptedByIp.set(ipHash,[...(acceptedByIp.get(ipHash)||[]).filter(t=>time-t<hour),time].sort((a,b)=>a-b));globalAccepted.push(time);globalAccepted.sort((a,b)=>a-b);return json(200,{ok:true})}catch{return json(503,{ok:false,error:'delivery_failed'})}finally{const left=(reservedByIp.get(ipHash)||1)-1;if(left>0)reservedByIp.set(ipHash,left);else reservedByIp.delete(ipHash);const gleft=(reservedByIp.get('__global__')||1)-1;if(gleft>0)reservedByIp.set('__global__',gleft);else reservedByIp.delete('__global__');if(!delivered){/* A failed delivery does not consume accepted quota. */}}
+ };
+}
+export const handleSkinRequest=createSkinRequestHandler();
+export function startServer({port=Number(process.env.PORT)||4417,host='127.0.0.1',handler=handleSkinRequest}={}){const server=http.createServer(async(req,res)=>{let body='';try{for await(const chunk of req){body+=chunk;if(Buffer.byteLength(body)>8192){res.writeHead(400,{'content-type':'application/json','cache-control':'no-store'});res.end(JSON.stringify({ok:false,errors:{form:'Request body must be 8 KiB or smaller.'}}));req.destroy();return}}const result=await handler({method:req.method,url:new URL(req.url,'http://localhost').pathname,headers:req.headers,remoteAddress:req.socket.remoteAddress,body});res.writeHead(result.status,result.headers);res.end(JSON.stringify(result.body))}catch{res.writeHead(400,{'content-type':'application/json','cache-control':'no-store'});res.end(JSON.stringify({ok:false,errors:{form:'Enter a valid request.'}}))}});server.listen(port,host);return server}
+if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url))startServer();
