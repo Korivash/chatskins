@@ -1,0 +1,13 @@
+[
+  {"metadata":{"message_type":"session_welcome"},"payload":{"session":{"id":"session-1","keepalive_timeout_seconds":10}}},
+  {"metadata":{"message_type":"session_keepalive"},"payload":{}},
+  {"metadata":{"message_type":"session_reconnect"},"payload":{"session":{"reconnect_url":"wss://eventsub.wss.twitch.tv/ws?session_id=next"}}},
+  {"metadata":{"message_type":"notification","message_id":"follow-1"},"payload":{"subscription":{"type":"channel.follow"},"event":{"broadcaster_user_id":"42","user_id":"77","user_name":"Moss"}}},
+  {"metadata":{"message_type":"notification","message_id":"sub-1"},"payload":{"subscription":{"type":"channel.subscribe"},"event":{"broadcaster_user_id":"42","user_id":"78","user_name":"Nova","tier":"1000","is_gift":false}}},
+  {"metadata":{"message_type":"notification","message_id":"resub-1"},"payload":{"subscription":{"type":"channel.subscription.message"},"event":{"broadcaster_user_id":"42","user_id":"77","user_name":"Moss","cumulative_months":12,"sub_tier":"1000","message":{"text":"A year here!"}}}},
+  {"metadata":{"message_type":"notification","message_id":"gift-1"},"payload":{"subscription":{"type":"channel.subscription.gift"},"event":{"broadcaster_user_id":"42","user_id":"79","user_name":"Juniper","total":5,"sub_tier":"1000"}}},
+  {"metadata":{"message_type":"notification","message_id":"raid-1"},"payload":{"subscription":{"type":"channel.raid"},"event":{"from_broadcaster_user_id":"80","from_broadcaster_user_name":"NightCrew","to_broadcaster_user_id":"42","viewers":128}}},
+  {"metadata":{"message_type":"notification","message_id":"cheer-1"},"payload":{"subscription":{"type":"channel.cheer"},"event":{"broadcaster_user_id":"42","user_id":"81","user_name":"PixelPilot","bits":1000,"is_anonymous":false}}},
+  {"metadata":{"message_type":"notification","message_id":"redeem-1"},"payload":{"subscription":{"type":"channel.channel_points_custom_reward_redemption.add"},"event":{"broadcaster_user_id":"42","user_id":"82","user_name":"Fern","reward":{"id":"r1","title":"Hydrate the party"}}}},
+  {"metadata":{"message_type":"revocation"},"payload":{"subscription":{"type":"channel.cheer","status":"authorization_revoked"}}}
+]
