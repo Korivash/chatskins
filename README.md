@@ -19,7 +19,7 @@ ChatSkins is a browser-based editor for Twitch chat overlays. It's built for the
 ### The editor
 ![ChatSkins editor: skin gallery and settings on the left, live preview on the right](docs/media/editor.png)
 
-### All 52 skins
+### Skin catalog
 ![All 52 ChatSkins skins, rendered by the real overlay](docs/media/skins.png)
 
 ---
