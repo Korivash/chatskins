@@ -35,6 +35,13 @@ export function buildSkinCardModel(skin){
  return {id:skin.id,name:skin.name,tagline:skin.tagline||'',featured:!!skin.featured,previewElement:{tag:'div',className:'portrait-preview',messages:buildSkinPreviewMessages(skin,2)}};
 }
 
+export function createSkinMonitorPreview(initialSkinId,render,{timers=globalThis,demoDuration=4500}={}){
+ let selectedId=initialSkinId,demoTimer=null;
+ const select=id=>{selectedId=id;timers.clearTimeout(demoTimer);demoTimer=null;render(selectedId);return selectedId};
+ const previewChatPlay=demoId=>{if(!demoId||demoId===selectedId)return false;timers.clearTimeout(demoTimer);render(demoId);demoTimer=timers.setTimeout(()=>{demoTimer=null;render(selectedId)},demoDuration);return true};
+ return{select,previewChatPlay,get selectedId(){return selectedId},stop(){timers.clearTimeout(demoTimer);demoTimer=null}};
+}
+
 export function fitSkinPreview(frame,wrapper){
  const fit=()=>{const box=frame.getBoundingClientRect();wrapper.style.transform='translate(-50%,-50%)';const w=wrapper.offsetWidth,h=wrapper.offsetHeight;if(!w||!h)return;const scale=Math.min(box.width*.88/w,box.height*.85/h,1.4);wrapper.style.transform=`translate(-50%,-50%) scale(${scale})`;wrapper.dataset.scale=String(scale)};
  fit();const observer=new ResizeObserver(fit);observer.observe(frame);document.fonts?.ready.then(fit);return fit;
