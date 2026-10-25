@@ -1,5 +1,5 @@
-import assert from 'node:assert/strict';
-import {defaultChatPlay,normalizeChatPlay,parseChatPlayCommand,resolveAllowedSkin,permissionAllows,createChatPlayCooldowns,tallyVotes,matchRewardTitle,isAllowedSkin,makePlayBanner,encodePlaySource,decodePlaySource,buildChatPlayUrl,parseChatPlayFragment,createChatPlayAdmission} from '../js/chat-play.js';
+﻿import assert from 'node:assert/strict';
+import {defaultChatPlay,normalizeChatPlay,parseChatPlayCommand,resolveAllowedSkin,permissionAllows,createChatPlayCooldowns,tallyVotes,matchRewardTitle,isAllowedSkin,makePlayBanner,encodePlaySource,decodePlaySource,buildChatPlayUrl,parseChatPlayFragment,parseCompactPlayFragment,createChatPlayAdmission} from '../js/chat-play.js';
 import {buildEventSubSubscriptions,parseEventSubMessage} from '../js/eventsub.js';
 import {createChatPlayRewards} from '../js/chat-play-points.js';
 
@@ -35,8 +35,8 @@ assert.equal(banner.textContent,'<img onerror=alert(1)>');assert.equal(banner.in
 const chatPlay={...config,points:{...config.points,enabled:true}};
 const encoded=encodePlaySource({chatSettings:{channel:'demo'},chatPlay,skins,baseSkinId:'guild-chat'}),decoded=decodePlaySource(encoded,skins);
 assert.equal(decoded.baseSkinId,'guild-chat');assert.deepEqual(decoded.allowedSkins.map(s=>s.id),skins.map(s=>s.id));
-const privateUrl=new URL(buildChatPlayUrl('https://example.test/editor.html',{token:'secret-token',chatSettings:{channel:'demo'},chatPlay,allowedSkins:skins,baseSkinId:'guild-chat'}));
-assert.equal(privateUrl.search,'');assert.ok(privateUrl.hash.includes('secret-token'));assert.equal(parseChatPlayFragment(privateUrl.hash,skins).token,'secret-token');
+const privateUrl=new URL(await buildChatPlayUrl('https://example.test/editor.html',{token:'secret-token',chatSettings:{channel:'demo'},chatPlay,allowedSkins:skins,baseSkinId:'guild-chat'}));
+assert.equal(privateUrl.search,'');assert.ok(privateUrl.hash.includes('secret-token'));assert.equal((await parseCompactPlayFragment(privateUrl.hash,skins)).token,'secret-token');
 const subs=buildEventSubSubscriptions({broadcasterId:'42',sessionId:'s',alerts:{types:{}},chatPlay});
 assert.equal(subs.some(s=>s.body.type==='channel.channel_points_custom_reward_redemption.add'),true);
 const event=parseEventSubMessage(JSON.stringify({metadata:{message_type:'notification'},payload:{subscription:{type:'channel.channel_points_custom_reward_redemption.add'},event:{id:'r',broadcaster_user_id:'42',user_name:'Moss',reward:{title:'Emote shower'},user_input:'Kappa',status:'unfulfilled'}}}),{broadcasterId:'42'});

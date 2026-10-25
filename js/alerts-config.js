@@ -1,4 +1,7 @@
 import {normalizeSettings} from './settings.js';
+import {CLEAN} from './settings.js';
+import {settingsDiff,applySettingsDiff,compactOverlayUrl} from './compact-link.js';
+import {decompressJson} from './compact-link.js';
 
 export const ALERT_TYPE_ORDER=['follow','sub','resub','giftSub','raid','cheer','redemption'];
 export const ALERT_SCOPES=Object.freeze({follow:'moderator:read:followers',sub:'channel:read:subscriptions',resub:'channel:read:subscriptions',giftSub:'channel:read:subscriptions',cheer:'bits:read',redemption:'channel:read:redemptions'});
@@ -33,7 +36,10 @@ const toBase64Url=text=>btoa(unescape(encodeURIComponent(text))).replace(/\+/g,'
 export function encodeAlertConfig(config,design){const normalized=normalizeAlertEnvelope(config,design);if(!normalized)throw new TypeError('Invalid alerts configuration');return toBase64Url(JSON.stringify(normalized))}
 export function decodeAlertConfig(encoded,design){try{const value=JSON.parse(decodeURIComponent(escape(atob(String(encoded).replace(/-/g,'+').replace(/_/g,'/').padEnd(Math.ceil(String(encoded).length/4)*4,'=')))));return normalizeAlertEnvelope(value,design)}catch{return null}}
 export function parseAlertsFragment(hash,design){const fragment=String(hash||'').replace(/^#/,'');if(!fragment.startsWith('v=1&'))return null;const params=new URLSearchParams(fragment);const token=params.get('access_token')||'',config=decodeAlertConfig(params.get('config'),design);return token&&config?{token,config}:null}
-export function buildAlertsUrl(baseUrl,{token,chatSettings,alerts,recipe},design){if(!token)throw new TypeError('A validated Twitch token is required');const url=new URL('overlay.html',baseUrl);url.search='';url.hash=`v=1&config=${encodeURIComponent(encodeAlertConfig({version:1,chatSettings,alerts,recipe},design))}&access_token=${encodeURIComponent(token)}`;return url.href}
+export function compactAlertData({chatSettings,alerts,recipe,baseSettings=CLEAN},design){return{c:settingsDiff(baseSettings,alertSafeChatSettings(chatSettings))||{},a:{alerts:normalizeAlerts(alerts,design),recipe:safeRecipe(recipe)}}}
+export function decodeCompactAlertData(payload,design,chatSettings){if(!payload?.a)return null;return normalizeAlertEnvelope({version:1,chatSettings:chatSettings||normalizeSettings(applySettingsDiff(CLEAN,payload.c||{})),alerts:payload.a.alerts,recipe:payload.a.recipe},design)}
+export async function buildAlertsUrl(baseUrl,{token,chatSettings,alerts,recipe,baseSkinId='',baseSettings=CLEAN},design){return compactOverlayUrl(baseUrl,{b:String(baseSkinId||''),...compactAlertData({chatSettings,alerts,recipe,baseSettings},design)},token)}
+export async function parseCompactAlertsFragment(hash,catalog=[],design){try{const params=new URLSearchParams(String(hash||'').replace(/^#/,''));if(params.get('v')!=='2'||!params.get('data')||!params.get('access_token'))return null;const payload=await decompressJson(params.get('data')),base=catalog.find(skin=>skin.id===payload.b)?.settings||CLEAN,chatSettings=applySettingsDiff(base,payload.c||{}),config=decodeCompactAlertData(payload,design,chatSettings);return config?{token:params.get('access_token'),config}:null}catch{return null}}
 
 export class AlertQueue{
  constructor({maxPending=20,maxAgeSeconds=120,followDedupeSeconds=30,now=Date.now}={}){this.maxPending=integer(maxPending,20,1,50);this.maxAgeMs=integer(maxAgeSeconds,120,15,300)*1000;this.followDedupeMs=integer(followDedupeSeconds,30,5,120)*1000;this.now=now;this.pending=[];this.seenIds=new Map();this.seenFollows=new Map();this.skipped=0}

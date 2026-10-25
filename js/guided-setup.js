@@ -1,24 +1,28 @@
-import {alertScopesFor,encodeAlertConfig,decodeAlertConfig} from './alerts-config.js';
+import {alertScopesFor,decodeAlertConfig,compactAlertData,decodeCompactAlertData} from './alerts-config.js';
 import {CHAT_PLAY_POINT_SCOPES} from './chat-play-points.js';
-import {encodePlaySource,decodePlaySource} from './chat-play.js';
+import {compactPlayData,decodeCompactPlayData,decodePlaySource} from './chat-play.js';
+import {CLEAN} from './settings.js';
+import {compactOverlayUrl,decompressJson} from './compact-link.js';
 
 export function combinedSetupScopes({pointsOn=true,alertsOn=true,alerts}={}){
  return [...new Set([...(pointsOn?CHAT_PLAY_POINT_SCOPES:[]),...(alertsOn?alertScopesFor(alerts):[])])];
 }
 
-export function buildUnifiedOverlayUrl(baseUrl,{token,chatSettings,chatPlay,allowedSkins,baseSkinId='',alerts,recipe,design}={}){
+export async function buildUnifiedOverlayUrl(baseUrl,{token,chatSettings,chatPlay,allowedSkins,baseSkinId='',baseSettings=CLEAN,alerts,recipe,design}={}){
  if(!token)throw new TypeError('A Twitch connection is required.');
- const url=new URL('overlay.html',baseUrl);url.search='';
- const params=new URLSearchParams();params.set('v','1');
- params.set('play',encodePlaySource({chatSettings,chatPlay,skins:allowedSkins,baseSkinId}));
- params.set('config',encodeAlertConfig({version:1,chatSettings,alerts,recipe},design));
- params.set('access_token',token);url.hash=params.toString();return url.href;
+ const play=compactPlayData({chatSettings,chatPlay,skins:allowedSkins,baseSkinId,baseSettings});
+ const alert=compactAlertData({chatSettings,alerts,recipe,baseSettings},design);
+ return compactOverlayUrl(baseUrl,{...play,a:alert.a},token);
 }
 
-export function decodeUnifiedOverlayFragment(hash,catalog=[],design){
+export async function decodeUnifiedOverlayFragment(hash,catalog=[],design){
  const params=new URLSearchParams(String(hash||'').replace(/^#/,''));
+ const token=params.get('access_token');
+ if(params.get('v')==='2'){
+  try{const payload=await decompressJson(params.get('data')),playConfig=decodeCompactPlayData(payload,catalog);if(!playConfig||!token)return null;const play={...playConfig,token},alertsConfig=decodeCompactAlertData({a:payload.a},design,playConfig.chatSettings);return alertsConfig?{play,alerts:alertsConfig,token}:null}catch{return null}
+ }
  if(params.get('v')!=='1')return null;
- const play=decodePlaySource(params.get('play'),catalog),alerts=decodeAlertConfig(params.get('config'),design),token=params.get('access_token');
+ const play=decodePlaySource(params.get('play'),catalog),alerts=decodeAlertConfig(params.get('config'),design);
  return play&&alerts&&token?{play,alerts,token}:null;
 }
 

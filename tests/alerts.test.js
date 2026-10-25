@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
-import {ALERT_TYPE_ORDER,ALERT_SCOPE_LIST,normalizeAlerts,alertScopesFor,fillAlertTemplate,validateAlertTemplate,AlertQueue,encodeAlertConfig,decodeAlertConfig,buildAlertsUrl,parseAlertsFragment} from '../js/alerts-config.js';
+import {ALERT_TYPE_ORDER,ALERT_SCOPE_LIST,normalizeAlerts,alertScopesFor,fillAlertTemplate,validateAlertTemplate,AlertQueue,encodeAlertConfig,decodeAlertConfig,buildAlertsUrl,parseAlertsFragment,parseCompactAlertsFragment} from '../js/alerts-config.js';
 import {buildAlertsAuthorizationUrl,validateAlertsToken,revokeAlertsToken} from '../js/alerts-auth.js';
 import {buildEventSubSubscriptions,parseEventSubMessage,createEventSubClient} from '../js/eventsub.js';
 import {createAlertCard} from '../js/alerts-render.js';
@@ -55,11 +55,11 @@ test('queue deduplicates EventSub ids and repeated broadcaster/follower pairs',(
  assert.equal(queue.length,2);assert.equal(queue.take().type,'follow');assert.equal(queue.enqueue({type:'sub',messageId:'m4'}).reason,'duplicate');now+=16000;assert.equal(queue.take(),null);
 });
 
-test('alerts link codec round-trips config and keeps the token out of query strings',()=>{
+test('alerts link codec round-trips config and keeps the token out of query strings',async()=>{
  const alerts=normalizeAlerts(null,design),chatSettings=normalizeSettings({channel:'streamer'}),config={version:1,chatSettings,alerts,recipe:{title:'A world update',motion:'pop',iconTreatment:'outline',soundWave:'triangle'}};
  const encoded=encodeAlertConfig(config,design);assert.deepEqual(decodeAlertConfig(encoded,design).alerts,alerts);
- const token='secret-access-token';const url=new URL(buildAlertsUrl('https://getchatskins.com/editor.html?old=1', {token,...config},design));assert.equal(url.search,'');assert.equal(url.hash.includes(encodeURIComponent(token)),true);assert.equal(url.search.includes(token),false);
- const parsed=parseAlertsFragment(url.hash,design);assert.equal(parsed.token,token);assert.equal(parsed.config.recipe.title,'A world update');
+ const token='secret-access-token';const url=new URL(await buildAlertsUrl('https://getchatskins.com/editor.html?old=1', {token,...config},design));assert.equal(url.search,'');assert.equal(url.hash.includes(encodeURIComponent(token)),true);assert.equal(url.search.includes(token),false);
+ const parsed=await parseCompactAlertsFragment(url.hash,[],design);assert.equal(parsed.token,token);assert.equal(parsed.config.recipe.title,'A world update');
  const oauth=new URL(buildAlertsAuthorizationUrl({state:'private-state',scopes:ALERT_SCOPE_LIST,location:{origin:'https://getchatskins.com'}}));assert.equal(oauth.origin,'https://id.twitch.tv');assert.equal(oauth.searchParams.get('redirect_uri'),'https://getchatskins.com/');assert.equal(oauth.searchParams.get('scope'),ALERT_SCOPE_LIST.join(' '));assert.equal(oauth.searchParams.has('access_token'),false);assert.equal(oauth.searchParams.has('token'),false);
  assert.equal(new URL(oauth.href).search.includes(token),false);
 });

@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#05070d">
+  <meta name="description" content="Your stream chat, skinned. Explore ChatSkins: game-inspired Twitch overlays, live chat play, and the OpenAI Codex story behind it all.">
+  <title>ChatSkins — Your stream chat, skinned.</title>
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/skin-render.css">
+  <link rel="stylesheet" href="css/readme.css">
+  <script type="module" src="js/readme.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="reading-progress" aria-hidden="true"></div>
+  <header class="site-header">
+    <a class="brand" href="/"><img src="design/chatskins-mark.svg" width="32" height="32" alt="">ChatSkins</a>
+    <nav aria-label="Main navigation"><a href="/">Home</a><a href="/skins.html">Skins</a><a href="/editor.html">Customize</a><a href="/docs/">Docs</a><a href="/readme.html" aria-current="page">README</a></nav>
+    <button class="motion-button" id="motion-toggle" type="button" aria-pressed="false">Pause motion</button>
+  </header>
+  <main id="main">
+    <section class="hero section motion-zone" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="event-label"><span class="live-dot"></span> Codex × TwitchCon 2026</p>
+        <h1 id="hero-title">Your stream<br>chat, skinned.</h1>
+        <p class="hero-intro">Your game has a world.<br>Now your chat belongs in it.</p>
+        <p class="muted hero-description">Game-inspired Twitch overlays. Every font, color and frame is yours. One link takes it live.</p>
+        <div class="actions"><a class="button primary" href="/editor.html">Try it free <span aria-hidden="true">↗</span></a><a class="button secondary" href="/skins.html">Browse skins</a></div>
+        <a class="text-link" href="https://github.com/Korivash/chatskins">Explore the project on GitHub <span aria-hidden="true">↗</span></a>
+      </div>
+      <div class="hero-stage">
+        <div class="orbit orbit-one" aria-hidden="true"></div><div class="orbit orbit-two" aria-hidden="true"></div>
+        <div class="stage-coordinate" aria-hidden="true">Your next chat unlocked</div>
+        <div class="stream-window">
+          <div class="window-bar"><span><i class="live-dot"></i> ChatSkins preview</span><span>Sample chat</span></div>
+          <div id="hero-preview" class="preview-host hero-preview" aria-label="Live sample skin preview"><p class="loading">Loading your next look…</p></div>
+          <div class="skin-selector"><div><small>Now equipped</small><strong id="hero-skin-name">ChatSkins Signature</strong></div><button id="next-skin" class="round-button" type="button" aria-label="Show next skin">↗</button></div>
+        </div>
+        <div class="stage-note"><span aria-hidden="true">✦</span> Same chat. A whole new world.</div>
+      </div>
+      <a class="scroll-cue" href="#numbers">Scroll to explore <span aria-hidden="true">↓</span></a>
+    </section>
+    <section id="numbers" class="numbers section" aria-label="ChatSkins in numbers">
+      <div><strong data-count="52" id="skin-count">52</strong><span>unique skins</span></div>
+      <div><strong data-count="12" id="animated-count">12</strong><span>animated looks</span></div>
+      <div><strong data-count="31" data-suffix="+">31+</strong><span>Codex sessions</span></div>
+      <div><strong data-count="120" data-suffix="+">120+</strong><span>commits</span></div>
+      <div><strong data-count="37" data-suffix="+">37+</strong><span>test files</span></div>
+      <div><strong data-count="1">1</strong><span>link to go live</span></div>
+    </section>
+    <section class="setup section motion-zone" aria-labelledby="setup-title">
+      <div class="section-heading"><h2 id="setup-title">Pick. Tweak. Paste.</h2><p>From “that’s my style” to live on stream.<br>No login. No install. No code.</p></div>
+      <div class="steps">
+        <a class="step" href="/skins.html"><span class="step-number">01</span><div class="step-art pick-art" aria-hidden="true"><i>Guild</i><i>Retro</i><i>Neon</i></div><h3>Pick your world.</h3><p>Guild halls, pixel adventures, electric skies. Start with a skin that feels like you.</p></a>
+        <a class="step" href="/editor.html"><span class="step-number">02</span><div class="step-art tweak-art" aria-hidden="true"><span><i></i></span><span><i></i></span><span><i></i></span></div><h3>Make it yours.</h3><p>Dial in fonts, colors, frames and motion. See every change in the live Test Chat.</p></a>
+        <a class="step" href="/docs/"><span class="step-number">03</span><div class="step-art paste-art" aria-hidden="true"><span>↗ Your overlay link</span><b>✓ Live in OBS</b></div><h3>Take it live.</h3><p>Paste one link into an OBS Browser Source. Your settings travel with the link.</p></a>
+      </div>
+    </section>
+    <section id="wardrobe" class="wardrobe motion-zone" aria-labelledby="wall-title">
+      <div class="section-heading section"><div><p class="section-kicker">An entire wardrobe for your chat</p><h2 id="wall-title">Find your main.</h2></div><p>Real skins. Really rendered.<br>Hover or focus to stop and explore.</p></div>
+      <div id="skin-wall"><p class="section muted">Loading the skin collection…</p></div>
+      <div class="section wall-foot"><span>Every look is a starting point. Every detail is editable.</span><a class="text-link" href="/skins.html">Meet the full collection ↗</a></div>
+    </section>
+    <section id="chat-play" class="chat-play section motion-zone" aria-labelledby="play-title">
+      <div class="play-copy"><p class="section-kicker">The audience gets the controls</p><h2 id="play-title">Don’t just read chat.<br>Play with it.</h2><p class="muted">Let viewers switch the skin, vote on the next look, or make it rain emotes. You choose the allowed skins, permissions and cooldowns.</p><div class="play-controls" role="group" aria-label="Try simulated chat commands"><button id="command-skin" class="command" type="button">!skin guild</button><button id="command-vote" class="command" type="button">!skinvote</button><button id="command-rain" class="command" type="button">Emote rain ✦</button></div><p class="fine-print">Interactive simulation · Nothing is sent to Twitch.</p><p id="play-status" role="status">Try a command. The preview is yours.</p></div>
+      <div class="play-console"><div class="window-bar"><span><i class="live-dot"></i> Chat play</span><span id="play-skin-name">ChatSkins Signature</span></div><div id="play-preview" class="preview-host" aria-label="Chat play sample"></div><div class="vote-panel"><div class="vote-heading"><strong>Chat chooses the next look</strong><span id="vote-status">Sample vote</span></div><div class="vote-row"><span>Guild</span><div><i id="vote-guild"></i></div><b id="votes-guild">58%</b></div><div class="vote-row"><span>Neon</span><div><i id="vote-neon"></i></div><b id="votes-neon">27%</b></div><div class="vote-row"><span>Retro</span><div><i id="vote-retro"></i></div><b id="votes-retro">15%</b></div></div><div id="emote-rain" aria-hidden="true"></div></div>
+    </section>
+    <section id="demo" class="demo section motion-zone" aria-labelledby="demo-title">
+      <div class="section-heading"><h2 id="demo-title">Works on real Twitch.</h2><p>Not just a pretty preview.<br>See the overlay on a real stream.</p></div>
+      <div class="demo-screen"><video id="demo-teaser" muted autoplay loop playsinline preload="metadata" poster="site-media/overlay-signature.jpg" aria-label="Muted excerpt of the ChatSkins demonstration"><source src="site-media/demo.mp4" type="video/mp4"></video><div class="demo-caption"><span><i class="live-dot"></i> The real thing</span><button id="watch-demo" class="button primary" type="button"><span aria-hidden="true">▶</span> Watch the full demo</button></div></div>
+      <p class="fine-print">Full demo: 2:52 · Narrated, with original music and a real Twitch chat test.</p>
+    </section>
+    <section id="codex" class="codex section motion-zone" aria-labelledby="codex-title">
+      <div class="section-heading"><div><p class="section-kicker">The team behind the pixels</p><h2 id="codex-title">Built with<br>OpenAI Codex.</h2></div><p>A designer. A builder. A relentless review loop.<br>Every round made the next one better.</p></div>
+      <div class="agent-team">
+        <article class="agent"><div class="agent-symbol" aria-hidden="true">✳</div><p>Design</p><h3>Astra</h3><span>gpt-6-astra</span><p>Turns the brief and research into layouts, skin recipes and visual mockups.</p></article>
+        <div class="packet-line" aria-hidden="true"><i></i><i></i><span>design → build</span></div>
+        <article class="agent"><div class="agent-symbol" aria-hidden="true">⌘</div><p>Build + test</p><h3>Luna</h3><span>gpt-6-luna</span><p>Builds the app, writes the tests and fixes the bugs found in each review.</p></article>
+        <div class="packet-line" aria-hidden="true"><i></i><i></i><span>build → review</span></div>
+        <article class="agent"><div class="agent-symbol" aria-hidden="true">◎</div><p>Review + ship</p><h3>Claude</h3><span>Lead</span><p>Writes prompts, reviews each build, tests in a browser, measures and deploys.</p></article>
+      </div>
+      <div class="build-loop" aria-label="Continuous cycle: design, build, test, measure, fix, then repeat"><span>Design</span><i aria-hidden="true">→</i><span>Build</span><i aria-hidden="true">→</i><span>Test</span><i aria-hidden="true">→</i><span>Measure</span><i aria-hidden="true">→</i><span>Fix</span><i aria-hidden="true">↻</i></div>
+      <div class="build-evidence"><div class="prompt-terminal"><div class="window-bar"><span>Real prompts. Real iterations.</span><span aria-hidden="true">● ● ●</span></div><div class="terminal-viewport"><div class="terminal-lines" id="prompt-lines"></div></div></div><article class="session-card"><span class="session-mark" aria-hidden="true">↳</span><p>Follow the build</p><h3>The first Luna build session.</h3><p>A real session from the project’s Codex log. The starting point for the build-and-test story.</p><code>01a171c3-2479-74f1-974d-5f7648ff9daf</code><a class="text-link" href="https://github.com/Korivash/chatskins/blob/main/docs/CODEX-SESSIONS.md">Read the session log ↗</a></article></div>
+    </section>
+    <section id="gallery" class="gallery section motion-zone" aria-labelledby="gallery-title"><div class="section-heading"><h2 id="gallery-title">See it in the wild.</h2><p>The editor, the effects, the whole collection.<br>Select an image for a closer look.</p></div><div id="gallery-grid" class="gallery-grid"></div></section>
+    <section class="closing section"><span class="closing-spark" aria-hidden="true">✦</span><h2>Your chat.<br>Your signature.</h2><a class="button primary" href="/editor.html">Find your look ↗</a><p>Free · No login · One link to go live.</p></section>
+  </main>
+  <footer class="section"><a class="brand" href="/"><img src="design/chatskins-mark.svg" width="28" height="28" alt="">ChatSkins</a><p>Free · No login · Built with OpenAI Codex for the Codex x TwitchCon Hackathon</p><nav aria-label="Footer navigation"><a href="https://getchatskins.com">Visit the site</a><a href="https://github.com/Korivash/chatskins">GitHub</a><a href="/docs/">Docs</a></nav><small>Made by Korivash</small></footer>
+  <dialog id="media-dialog" aria-labelledby="media-title"><div class="lightbox-header"><h2 id="media-title">ChatSkins gallery</h2><button id="close-media" class="button secondary" type="button">Close ✕</button></div><div id="media-content"></div><div class="lightbox-navigation"><button id="previous-media" class="button secondary" type="button">← Previous</button><span id="media-position"></span><button id="next-media" class="button secondary" type="button">Next →</button></div></dialog>
+  <noscript><p class="section">Enable JavaScript for live skin previews and the interactive gallery. <a href="/skins.html">Browse skins</a> or <a href="site-media/demo.mp4">watch the demo</a>.</p></noscript>
+</body>
+</html>
