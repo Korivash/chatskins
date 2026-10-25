@@ -44,6 +44,21 @@
 .chat-panel{isolation:isolate}.chat-panel>.chat-surface{z-index:0}.chat-panel::before,.chat-panel::after{z-index:1}.chat-panel>.chat-message{position:relative;z-index:2}
 .chat-message{isolation:isolate}.chat-message>.chat-surface{z-index:0}.chat-message::before,.chat-message::after{z-index:1}.chat-message>*:not(.chat-surface){position:relative;z-index:2}
 
+/* Frame rendering: ornaments use .chat-ornament children, leaving ::before for the border. */
+.chat-panel[data-target=panel]::before,.chat-message[data-frame]:not([data-frame=none])::before{content:""!important;position:absolute;inset:0;z-index:1;pointer-events:none;border:var(--frame-width,1px) solid var(--frame-color,transparent);border-radius:var(--radii,0);box-sizing:border-box}
+.chat-panel[data-frame=none][data-target=panel]::before,.chat-message[data-frame=none]::before{content:none!important}
+.chat-panel[data-frame=solid][data-target=panel]::before,.chat-message[data-frame=solid]::before{border-style:solid}
+.chat-panel[data-frame=double][data-target=panel]::before,.chat-message[data-frame=double]::before{border-style:double}
+.chat-panel[data-frame=dashed][data-target=panel]::before,.chat-message[data-frame=dashed]::before{border-style:dashed}
+.chat-panel[data-frame=dotted][data-target=panel]::before,.chat-message[data-frame=dotted]::before{border-style:dotted}
+.chat-panel[data-frame=groove][data-target=panel]::before,.chat-message[data-frame=groove]::before{border-style:groove}
+.chat-panel[data-frame=ridge][data-target=panel]::before,.chat-message[data-frame=ridge]::before{border-style:ridge}
+.chat-panel[data-frame=inset][data-target=panel]::before,.chat-message[data-frame=inset]::before{border-style:inset}
+.chat-panel[data-frame=outset][data-target=panel]::before,.chat-message[data-frame=outset]::before{border-style:outset}
+.chat-panel[data-frame=beveled][data-target=panel]::before,.chat-message[data-frame=beveled]::before{border-style:outset}
+.chat-panel[data-frame=pixel][data-target=panel]::before,.chat-message[data-frame=pixel]::before{border-style:solid;clip-path:polygon(var(--pixel-step) 0,calc(100% - var(--pixel-step)) 0,calc(100% - var(--pixel-step)) var(--pixel-step),100% var(--pixel-step),100% calc(100% - var(--pixel-step)),calc(100% - var(--pixel-step)) calc(100% - var(--pixel-step)),calc(100% - var(--pixel-step)) 100%,var(--pixel-step) 100%,var(--pixel-step) calc(100% - var(--pixel-step)),0 calc(100% - var(--pixel-step)),0 var(--pixel-step),var(--pixel-step) var(--pixel-step))}
+.chat-panel[data-hide-frames=true]::before,.chat-panel[data-hide-frames=true]::after,.chat-message[data-hide-frames=true]::before,.chat-message[data-hide-frames=true]::after{display:none!important}
+
 /* Shared bounded chat panel layout for OBS and the scaled editor source. */
 .overlay-root>.chat.chat-panel,.source .chat.chat-panel{position:absolute;height:auto;max-height:var(--panel-max-height,calc(100% - 40px));overflow:hidden;box-sizing:border-box;}
 .overlay-root>.chat.chat-panel,.source[data-direction=bottom] .chat.chat-panel{top:auto;bottom:var(--inset,20px)}
