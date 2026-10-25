@@ -9,4 +9,4 @@ function schedule(){if(closed||timer)return;const delay=Math.min(30000,1000*2**a
 connect();return{disconnect(){closed=true;if(timer)clearTimer(timer);timer=null;socket?.close();},get socket(){return socket;}};}
 function parseBadgeTag(raw=""){const out={};for(const item of raw.split(",")){const [name,version]=item.split("/");if(name)out[name]=version||true;}return out;}
 function parseEmoteTag(raw=""){const out={};for(const item of raw.split("/")){const [id,positions]=item.split(":");if(!id||!positions)continue;out[id]=positions.split(",").map(range=>range.split("-").map(Number));}return out;}
-export function connectChat(channel,onMessage,onState=()=>{},options={}){return createIRCClient(channel,{...options,onMessage,onState});}
+export function connectChat(channel,onMessage,onState=()=>{},options={}){const{onRoomState,...clientOptions}=options;return createIRCClient(channel,{...clientOptions,onMessage,onState,onRoomState});}
