@@ -2179,7 +2179,9 @@
         "geometryReference": "round10.css .skin-name-tag",
         "content": "Reserve ornaments outside content; wrap names and long words; no text clipping; preserve badges, emotes and moderation."
       },
-      "silhouette": "name-tag"
+      "silhouette": "name-tag",
+      "transparentDefault": false,
+      "transparentDefaultReason": "Keeps its light card behind dark text for contrast on dark streams."
     },
     {
       "id": "comic-burst",
@@ -2715,7 +2717,9 @@
         "geometryReference": "round10.css .skin-comic-burst",
         "content": "Reserve ornaments outside content; wrap names and long words; no text clipping; preserve badges, emotes and moderation."
       },
-      "silhouette": "comic-burst"
+      "silhouette": "comic-burst",
+      "transparentDefault": false,
+      "transparentDefaultReason": "Keeps its light card behind dark text for contrast on dark streams."
     },
     {
       "id": "pastel-pop",
@@ -3251,7 +3255,9 @@
         "geometryReference": "round10.css .skin-pastel-pop",
         "content": "Reserve ornaments outside content; wrap names and long words; no text clipping; preserve badges, emotes and moderation."
       },
-      "silhouette": "pastel-pop"
+      "silhouette": "pastel-pop",
+      "transparentDefault": false,
+      "transparentDefaultReason": "Keeps its light card behind dark text for contrast on dark streams."
     },
     {
       "id": "esports-slash",
@@ -3787,7 +3793,9 @@
         "geometryReference": "round10.css .skin-esports-slash",
         "content": "Reserve ornaments outside content; wrap names and long words; no text clipping; preserve badges, emotes and moderation."
       },
-      "silhouette": "esports-slash"
+      "silhouette": "esports-slash",
+      "transparentDefault": false,
+      "transparentDefaultReason": "Keeps its light card behind dark text for contrast on dark streams."
     },
     {
       "id": "quiet-line",
@@ -5395,7 +5403,9 @@
         "geometryReference": "round10.css .skin-sticker-stack",
         "content": "Reserve ornaments outside content; wrap names and long words; no text clipping; preserve badges, emotes and moderation."
       },
-      "silhouette": "sticker-stack"
+      "silhouette": "sticker-stack",
+      "transparentDefault": false,
+      "transparentDefaultReason": "Keeps its light card behind dark text for contrast on dark streams."
     },
     {
       "id": "initial-card",
@@ -6467,7 +6477,9 @@
         "geometryReference": "round10.css .skin-signal-console",
         "content": "Reserve ornaments outside content; wrap names and long words; no text clipping; preserve badges, emotes and moderation."
       },
-      "silhouette": "signal-console"
+      "silhouette": "signal-console",
+      "transparentDefault": false,
+      "transparentDefaultReason": "Keeps its light card behind dark text for contrast on dark streams."
     },
     {
       "id": "announcer",
@@ -12266,7 +12278,9 @@
         "columnGapPx": 16,
         "followMessage": "{name} joined the adventure!"
       },
-      "silhouette": "legacy-monster-trainer"
+      "silhouette": "legacy-monster-trainer",
+      "transparentDefault": false,
+      "transparentDefaultReason": "Keeps its light card behind dark text for contrast on dark streams."
     },
     {
       "id": "dungeon-crawler",
@@ -14796,7 +14810,9 @@
         "columnGapPx": 16,
         "followMessage": "{name} joined the adventure!"
       },
-      "silhouette": "legacy-kart-racer"
+      "silhouette": "legacy-kart-racer",
+      "transparentDefault": false,
+      "transparentDefaultReason": "Keeps its light card behind dark text for contrast on dark streams."
     },
     {
       "id": "bubble-chat",
@@ -15332,7 +15348,9 @@
         "geometryReference": "round10.css .skin-bubble-chat",
         "content": "Reserve ornaments outside content; wrap names and long words; no text clipping; preserve badges, emotes and moderation."
       },
-      "silhouette": "bubble-chat"
+      "silhouette": "bubble-chat",
+      "transparentDefault": false,
+      "transparentDefaultReason": "Keeps its light card behind dark text for contrast on dark streams."
     },
     {
       "id": "clean",
@@ -15868,7 +15886,9 @@
         "geometryReference": "round10.css .skin-clean",
         "content": "Reserve ornaments outside content; wrap names and long words; no text clipping; preserve badges, emotes and moderation."
       },
-      "silhouette": "clean"
+      "silhouette": "clean",
+      "transparentDefault": false,
+      "transparentDefaultReason": "Keeps its light card behind dark text for contrast on dark streams."
     },
     {
       "id": "candy-pop",
@@ -16404,7 +16424,9 @@
         "geometryReference": "round10.css .skin-candy-pop",
         "content": "Reserve ornaments outside content; wrap names and long words; no text clipping; preserve badges, emotes and moderation."
       },
-      "silhouette": "candy-pop"
+      "silhouette": "candy-pop",
+      "transparentDefault": false,
+      "transparentDefaultReason": "Keeps its light card behind dark text for contrast on dark streams."
     },
     {
       "id": "rainbow-border",
@@ -22384,7 +22406,9 @@
         "columnGapPx": 16,
         "followMessage": "{name} joined the adventure!"
       },
-      "silhouette": "legacy-space-station"
+      "silhouette": "legacy-space-station",
+      "transparentDefault": false,
+      "transparentDefaultReason": "Keeps its light card behind dark text for contrast on dark streams."
     },
     {
       "id": "aurora",
