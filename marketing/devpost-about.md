@@ -13,7 +13,7 @@ We also wanted it to be truly easy. A lot of streamers aren't technical. So the 
   - `!skin guild` swaps the skin, and `!skinvote` starts an on-screen vote.
   - Channel point rewards trigger effects like emote rain.
   - The streamer picks which skins are allowed, sets cooldowns and who can use it, and has a freeze button.
-- **Alerts** for subs, resubs, gift subs, cheers and raids, styled to match the skin, through Twitch EventSub.
+- **Alerts** for follows, subs, resubs, gift subs, cheers and raids, styled to match the skin, through Twitch EventSub.
 - **7TV, BTTV and FFZ emotes**, plus Twitch emotes.
 - **Transparent by default**, so it sits cleanly over gameplay. It works in OBS, Streamlabs, Twitch Studio and any app with a browser source.
 - **Docs** for every feature, and a **Request a skin** form that goes straight to our Discord.
