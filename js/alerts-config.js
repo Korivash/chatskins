@@ -1,6 +1,7 @@
 import {normalizeSettings} from './settings.js';
 import {CLEAN} from './settings.js';
 import {settingsDiff,applySettingsDiff,compactOverlayUrl} from './compact-link.js';
+import {encodeStudio} from './frame-studio.js';
 import {decompressJson} from './compact-link.js';
 
 export const ALERT_TYPE_ORDER=['follow','sub','resub','giftSub','raid','cheer','redemption'];
@@ -30,7 +31,7 @@ export function fillAlertTemplate(template,values={},type,design){const check=va
 export function alertScopesFor(alerts){const config=normalizeAlerts(alerts);return [...new Set(ALERT_TYPE_ORDER.filter(type=>config.types[type].enabled).map(type=>ALERT_SCOPES[type]).filter(Boolean))]}
 
 function safeRecipe(value){const r=value&&typeof value==='object'?value:{};const motions=['fade','slide','pop','step'],waves=['sine','triangle','square'],icons=['outline','pixel-grid'];return{version:1,title:cleanAlertText(r.title||'Community update',60),iconTreatment:icons.includes(r.iconTreatment)?r.iconTreatment:'outline',motion:motions.includes(r.motion)?r.motion:'fade',soundWave:waves.includes(r.soundWave)?r.soundWave:'sine',surfaceOpacityFloor:.94,titleSizePx:16,iconSizePx:36,paddingPx:20,columnGapPx:16,followMessage:typeof r.followMessage==='string'?r.followMessage:'{name} joined the adventure!'} }
-function alertSafeChatSettings(settings){const chat=normalizeSettings(settings);chat.customCSS={enabled:false,source:''};for(const bg of Object.values(chat.backgrounds||{}))if(bg?.mode==='image'){bg.mode='solid';bg.imageUrl='';bg.opacity=Math.max(bg.opacity||0,.94)}return chat}
+function alertSafeChatSettings(settings){const chat=normalizeSettings(settings);if(chat.studioDesign&&typeof chat.studioDesign==='object')chat.studioDesign=encodeStudio(chat.studioDesign);chat.customCSS={enabled:false,source:''};for(const bg of Object.values(chat.backgrounds||{}))if(bg?.mode==='image'){bg.mode='solid';bg.imageUrl='';bg.opacity=Math.max(bg.opacity||0,.94)}return chat}
 export function normalizeAlertEnvelope(value,design){if(!value||typeof value!=='object'||value.version!==1)return null;return{version:1,chatSettings:alertSafeChatSettings(value.chatSettings),alerts:normalizeAlerts(value.alerts,design),recipe:safeRecipe(value.recipe)}}
 const toBase64Url=text=>btoa(unescape(encodeURIComponent(text))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/g,'');
 export function encodeAlertConfig(config,design){const normalized=normalizeAlertEnvelope(config,design);if(!normalized)throw new TypeError('Invalid alerts configuration');return toBase64Url(JSON.stringify(normalized))}

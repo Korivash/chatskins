@@ -25,14 +25,14 @@ test('all legacy setting paths are rendered as editable controls in Style or Cha
   assert.match(html,/id="settings-chat"/);
 });
 
-test('six semantic tabs activate with arrows, Home and End',()=>{
-  assert.deepEqual(OPTION_TABS,['look','style','chat','viewers','alerts','link']);
+test('seven semantic tabs activate with arrows, Home and End',()=>{
+  assert.deepEqual(OPTION_TABS,['look','studio','style','chat','viewers','alerts','link']);
   assert.equal(nextOptionTab(0,'ArrowRight'),1);
   assert.equal(nextOptionTab(1,'ArrowRight'),2);
-  assert.equal(nextOptionTab(5,'ArrowRight'),0);
-  assert.equal(nextOptionTab(0,'ArrowLeft'),5);
-  assert.equal(nextOptionTab(4,'Home'),0);
-  assert.equal(nextOptionTab(0,'End'),5);
+  assert.equal(nextOptionTab(6,'ArrowRight'),0);
+  assert.equal(nextOptionTab(0,'ArrowLeft'),6);
+  assert.equal(nextOptionTab(5,'Home'),0);
+  assert.equal(nextOptionTab(0,'End'),6);
   assert.match(menu,/tab\.addEventListener\('keydown'/);
   assert.match(menu,/activate\(next,\{focusPanel:false,focusTab:true\}\)/);
   assert.match(html,/role="tablist"/);
@@ -76,7 +76,7 @@ test('the Frame card is conditional and brand matching writes frame settings',()
 });
 
 test('Get my OBS link opens the existing one-link copy flow without changing the builder',async()=>{
-  assert.match(editor,/optionsMenu\.activate\(5,\{focusPanel:true\}\)/);
+  assert.match(editor,/optionsMenu\.activate\(6,\{focusPanel:true\}\)/);
   assert.match(editor,/alertsController\.buildUnifiedLink\(play,allowed\)/);
   assert.match(editor,/buildCompactPlayUrl\(location\.href/);
   assert.match(editor,/buildCompactSettingsUrl\(location\.href/);

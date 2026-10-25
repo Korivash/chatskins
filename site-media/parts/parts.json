@@ -1,0 +1,905 @@
+{
+    "version":  1,
+    "parts":  [
+                  {
+                      "id":  0,
+                      "name":  "Carved wood",
+                      "category":  "borders",
+                      "tags":  [
+                                   "wood",
+                                   "cozy"
+                               ],
+                      "file":  "b-carved-wood.svg",
+                      "defaultSize":  {
+                                          "h":  28,
+                                          "w":  28
+                                      },
+                      "animated":  false
+                  },
+                  {
+                      "id":  1,
+                      "name":  "Chain",
+                      "category":  "borders",
+                      "tags":  [
+                                   "spooky",
+                                   "metal"
+                               ],
+                      "file":  "b-chain.svg",
+                      "defaultSize":  {
+                                          "h":  28,
+                                          "w":  28
+                                      },
+                      "animated":  false
+                  },
+                  {
+                      "id":  2,
+                      "name":  "Plain glow line",
+                      "category":  "borders",
+                      "tags":  [
+                                   "neon",
+                                   "simple"
+                               ],
+                      "file":  "b-glow-line.svg",
+                      "defaultSize":  {
+                                          "h":  28,
+                                          "w":  28
+                                      },
+                      "animated":  false
+                  },
+                  {
+                      "id":  3,
+                      "name":  "Double gold filigree",
+                      "category":  "borders",
+                      "tags":  [
+                                   "royal",
+                                   "gold"
+                               ],
+                      "file":  "b-gold-filigree.svg",
+                      "defaultSize":  {
+                                          "h":  28,
+                                          "w":  28
+                                      },
+                      "animated":  false
+                  },
+                  {
+                      "id":  4,
+                      "name":  "Ice",
+                      "category":  "borders",
+                      "tags":  [
+                                   "cool",
+                                   "crystal"
+                               ],
+                      "file":  "b-ice.svg",
+                      "defaultSize":  {
+                                          "h":  28,
+                                          "w":  28
+                                      },
+                      "animated":  false
+                  },
+                  {
+                      "id":  5,
+                      "name":  "Metal plate",
+                      "category":  "borders",
+                      "tags":  [
+                                   "tactical",
+                                   "metal"
+                               ],
+                      "file":  "b-metal-plate.svg",
+                      "defaultSize":  {
+                                          "h":  28,
+                                          "w":  28
+                                      },
+                      "animated":  false
+                  },
+                  {
+                      "id":  6,
+                      "name":  "Neon tube",
+                      "category":  "borders",
+                      "tags":  [
+                                   "neon",
+                                   "glow"
+                               ],
+                      "file":  "b-neon-tube.svg",
+                      "defaultSize":  {
+                                          "h":  28,
+                                          "w":  28
+                                      },
+                      "animated":  false
+                  },
+                  {
+                      "id":  7,
+                      "name":  "Pixel bricks",
+                      "category":  "borders",
+                      "tags":  [
+                                   "gamer",
+                                   "retro"
+                               ],
+                      "file":  "b-pixel-bricks.svg",
+                      "defaultSize":  {
+                                          "h":  28,
+                                          "w":  28
+                                      },
+                      "animated":  false
+                  },
+                  {
+                      "id":  8,
+                      "name":  "Ribbon / lace",
+                      "category":  "borders",
+                      "tags":  [
+                                   "cute",
+                                   "pink"
+                               ],
+                      "file":  "b-ribbon-lace.svg",
+                      "defaultSize":  {
+                                          "h":  28,
+                                          "w":  28
+                                      },
+                      "animated":  false
+                  },
+                  {
+                      "id":  9,
+                      "name":  "Sticker tape",
+                      "category":  "borders",
+                      "tags":  [
+                                   "casual",
+                                   "colorful"
+                               ],
+                      "file":  "b-sticker-tape.svg",
+                      "defaultSize":  {
+                                          "h":  28,
+                                          "w":  28
+                                      },
+                      "animated":  false
+                  },
+                  {
+                      "id":  10,
+                      "name":  "Vines",
+                      "category":  "borders",
+                      "tags":  [
+                                   "nature",
+                                   "cozy"
+                               ],
+                      "file":  "b-vines.svg",
+                      "defaultSize":  {
+                                          "h":  28,
+                                          "w":  28
+                                      },
+                      "animated":  false
+                  },
+                  {
+                      "id":  11,
+                      "name":  "Bolts corner",
+                      "category":  "corners",
+                      "tags":  [
+                                   "neon",
+                                   "gamer"
+                               ],
+                      "file":  "c-bolts.svg",
+                      "defaultSize":  {
+                                          "h":  14,
+                                          "w":  14
+                                      },
+                      "animated":  false
+                  },
+                  {
+                      "id":  12,
+                      "name":  "Bows corner",
+                      "category":  "corners",
+                      "tags":  [
+                                   "cute",
+                                   "ribbon"
+                               ],
+                      "file":  "c-bows.svg",
+                      "defaultSize":  {
+                                          "h":  14,
+                                          "w":  14
+                                      },
+                      "animated":  false
+                  },
+                  {
+                      "id":  13,
+                      "name":  "Filigree corner",
+                      "category":  "corners",
+                      "tags":  [
+                                   "royal",
+                                   "gold"
+                               ],
+                      "file":  "c-filigree.svg",
+                      "defaultSize":  {
+                                          "h":  14,
+                                          "w":  14
+                                      },
+                      "animated":  false
+                  },
+                  {
+                      "id":  14,
+                      "name":  "Gems corner",
+                      "category":  "corners",
+                      "tags":  [
+                                   "royal",
+                                   "crystal"
+                               ],
+                      "file":  "c-gems.svg",
+                      "defaultSize":  {
+                                          "h":  14,
+                                          "w":  14
+                                      },
+                      "animated":  false
+                  },
+                  {
+                      "id":  15,
+                      "name":  "Hearts corner",
+                      "category":  "corners",
+                      "tags":  [
+                                   "cute",
+                                   "pink"
+                               ],
+                      "file":  "c-hearts.svg",
+                      "defaultSize":  {
+                                          "h":  14,
+                                          "w":  14
+                                      },
+                      "animated":  false
+                  },
+                  {
+                      "id":  16,
+                      "name":  "Leaves corner",
+                      "category":  "corners",
+                      "tags":  [
+                                   "cozy",
+                                   "nature"
+                               ],
+                      "file":  "c-leaves.svg",
+                      "defaultSize":  {
+                                          "h":  14,
+                                          "w":  14
+                                      },
+                      "animated":  false
+                  },
+                  {
+                      "id":  17,
+                      "name":  "Skulls corner",
+                      "category":  "corners",
+                      "tags":  [
+                                   "spooky"
+                               ],
+                      "file":  "c-skulls.svg",
+                      "defaultSize":  {
+                                          "h":  14,
+                                          "w":  14
+                                      },
+                      "animated":  false
+                  },
+                  {
+                      "id":  18,
+                      "name":  "Stars corner",
+                      "category":  "corners",
+                      "tags":  [
+                                   "magic",
+                                   "space"
+                               ],
+                      "file":  "c-stars.svg",
+                      "defaultSize":  {
+                                          "h":  14,
+                                          "w":  14
+                                      },
+                      "animated":  false
+                  },
+                  {
+                      "id":  19,
+                      "name":  "Chat window",
+                      "category":  "structure",
+                      "tags":  [
+                                   "chat",
+                                   "messages"
+                               ],
+                      "file":  "chat-window.svg",
+                      "defaultSize":  {
+                                          "h":  76,
+                                          "w":  68
+                                      },
+                      "animated":  false
+                  },
+                  {
+                      "id":  20,
+                      "name":  "Embers",
+                      "category":  "effects",
+                      "tags":  [
+                                   "spooky",
+                                   "warm"
+                               ],
+                      "file":  "e-embers.svg",
+                      "defaultSize":  {
+                                          "h":  22,
+                                          "w":  38
+                                      },
+                      "animated":  true
+                  },
+                  {
+                      "id":  21,
+                      "name":  "Floating hearts",
+                      "category":  "effects",
+                      "tags":  [
+                                   "cute",
+                                   "animated"
+                               ],
+                      "file":  "e-floating-hearts.svg",
+                      "defaultSize":  {
+                                          "h":  22,
+                                          "w":  38
+                                      },
+                      "animated":  true
+                  },
+                  {
+                      "id":  22,
+                      "name":  "Glitch strips",
+                      "category":  "effects",
+                      "tags":  [
+                                   "neon",
+                                   "gamer"
+                               ],
+                      "file":  "e-glitch-strips.svg",
+                      "defaultSize":  {
+                                          "h":  22,
+                                          "w":  38
+                                      },
+                      "animated":  true
+                  },
+                  {
+                      "id":  23,
+                      "name":  "Glow pulse",
+                      "category":  "effects",
+                      "tags":  [
+                                   "neon",
+                                   "glow"
+                               ],
+                      "file":  "e-glow-pulse.svg",
+                      "defaultSize":  {
+                                          "h":  22,
+                                          "w":  38
+                                      },
+                      "animated":  true
+                  },
+                  {
+                      "id":  24,
+                      "name":  "Petals",
+                      "category":  "effects",
+                      "tags":  [
+                                   "cozy",
+                                   "animated"
+                               ],
+                      "file":  "e-petals.svg",
+                      "defaultSize":  {
+                                          "h":  22,
+                                          "w":  38
+                                      },
+                      "animated":  true
+                  },
+                  {
+                      "id":  25,
+                      "name":  "Scanlines",
+                      "category":  "effects",
+                      "tags":  [
+                                   "retro",
+                                   "gamer"
+                               ],
+                      "file":  "e-scanlines.svg",
+                      "defaultSize":  {
+                                          "h":  22,
+                                          "w":  38
+                                      },
+                      "animated":  true
+                  },
+                  {
+                      "id":  26,
+                      "name":  "Shimmer sweep",
+                      "category":  "effects",
+                      "tags":  [
+                                   "royal",
+                                   "animated"
+                               ],
+                      "file":  "e-shimmer-sweep.svg",
+                      "defaultSize":  {
+                                          "h":  22,
+                                          "w":  38
+                                      },
+                      "animated":  true
+                  },
+                  {
+                      "id":  27,
+                      "name":  "Snow",
+                      "category":  "effects",
+                      "tags":  [
+                                   "ice",
+                                   "animated"
+                               ],
+                      "file":  "e-snow.svg",
+                      "defaultSize":  {
+                                          "h":  22,
+                                          "w":  38
+                                      },
+                      "animated":  true
+                  },
+                  {
+                      "id":  28,
+                      "name":  "Sparkles",
+                      "category":  "effects",
+                      "tags":  [
+                                   "magic",
+                                   "animated"
+                               ],
+                      "file":  "e-sparkles.svg",
+                      "defaultSize":  {
+                                          "h":  22,
+                                          "w":  38
+                                      },
+                      "animated":  true
+                  },
+                  {
+                      "id":  29,
+                      "name":  "Banner",
+                      "category":  "plaques",
+                      "tags":  [
+                                   "royal",
+                                   "title"
+                               ],
+                      "file":  "p-banner.svg",
+                      "defaultSize":  {
+                                          "h":  12,
+                                          "w":  26
+                                      },
+                      "animated":  false
+                  },
+                  {
+                      "id":  30,
+                      "name":  "Chalkboard",
+                      "category":  "plaques",
+                      "tags":  [
+                                   "cozy",
+                                   "title"
+                               ],
+                      "file":  "p-chalkboard.svg",
+                      "defaultSize":  {
+                                          "h":  12,
+                                          "w":  26
+                                      },
+                      "animated":  false
+                  },
+                  {
+                      "id":  31,
+                      "name":  "Holo tag",
+                      "category":  "plaques",
+                      "tags":  [
+                                   "neon",
+                                   "title"
+                               ],
+                      "file":  "p-holo-tag.svg",
+                      "defaultSize":  {
+                                          "h":  12,
+                                          "w":  26
+                                      },
+                      "animated":  false
+                  },
+                  {
+                      "id":  32,
+                      "name":  "Nameplate",
+                      "category":  "plaques",
+                      "tags":  [
+                                   "simple",
+                                   "title"
+                               ],
+                      "file":  "p-nameplate.svg",
+                      "defaultSize":  {
+                                          "h":  12,
+                                          "w":  26
+                                      },
+                      "animated":  false
+                  },
+                  {
+                      "id":  33,
+                      "name":  "Neon box",
+                      "category":  "plaques",
+                      "tags":  [
+                                   "neon",
+                                   "title"
+                               ],
+                      "file":  "p-neon-box.svg",
+                      "defaultSize":  {
+                                          "h":  12,
+                                          "w":  26
+                                      },
+                      "animated":  false
+                  },
+                  {
+                      "id":  34,
+                      "name":  "Ribbon",
+                      "category":  "plaques",
+                      "tags":  [
+                                   "cute",
+                                   "title"
+                               ],
+                      "file":  "p-ribbon.svg",
+                      "defaultSize":  {
+                                          "h":  12,
+                                          "w":  26
+                                      },
+                      "animated":  false
+                  },
+                  {
+                      "id":  35,
+                      "name":  "Scroll",
+                      "category":  "plaques",
+                      "tags":  [
+                                   "spooky",
+                                   "royal",
+                                   "title"
+                               ],
+                      "file":  "p-scroll.svg",
+                      "defaultSize":  {
+                                          "h":  12,
+                                          "w":  26
+                                      },
+                      "animated":  false
+                  },
+                  {
+                      "id":  36,
+                      "name":  "Wooden sign",
+                      "category":  "plaques",
+                      "tags":  [
+                                   "cozy",
+                                   "title"
+                               ],
+                      "file":  "p-wooden-sign.svg",
+                      "defaultSize":  {
+                                          "h":  12,
+                                          "w":  26
+                                      },
+                      "animated":  false
+                  },
+                  {
+                      "id":  37,
+                      "name":  "Bat",
+                      "category":  "stickers",
+                      "tags":  [
+                                   "cute",
+                                   "decorative"
+                               ],
+                      "file":  "s-bat.svg",
+                      "defaultSize":  {
+                                          "h":  15,
+                                          "w":  15
+                                      },
+                      "animated":  false
+                  },
+                  {
+                      "id":  38,
+                      "name":  "Bunny",
+                      "category":  "stickers",
+                      "tags":  [
+                                   "cute",
+                                   "decorative"
+                               ],
+                      "file":  "s-bunny.svg",
+                      "defaultSize":  {
+                                          "h":  15,
+                                          "w":  15
+                                      },
+                      "animated":  false
+                  },
+                  {
+                      "id":  39,
+                      "name":  "Butterfly",
+                      "category":  "stickers",
+                      "tags":  [
+                                   "cute",
+                                   "decorative"
+                               ],
+                      "file":  "s-butterfly.svg",
+                      "defaultSize":  {
+                                          "h":  15,
+                                          "w":  15
+                                      },
+                      "animated":  false
+                  },
+                  {
+                      "id":  40,
+                      "name":  "Cat head",
+                      "category":  "stickers",
+                      "tags":  [
+                                   "cute",
+                                   "decorative"
+                               ],
+                      "file":  "s-cat.svg",
+                      "defaultSize":  {
+                                          "h":  15,
+                                          "w":  15
+                                      },
+                      "animated":  false
+                  },
+                  {
+                      "id":  41,
+                      "name":  "Cloud",
+                      "category":  "stickers",
+                      "tags":  [
+                                   "cute",
+                                   "decorative"
+                               ],
+                      "file":  "s-cloud.svg",
+                      "defaultSize":  {
+                                          "h":  15,
+                                          "w":  15
+                                      },
+                      "animated":  false
+                  },
+                  {
+                      "id":  42,
+                      "name":  "Coffee cup",
+                      "category":  "stickers",
+                      "tags":  [
+                                   "cute",
+                                   "decorative"
+                               ],
+                      "file":  "s-coffee.svg",
+                      "defaultSize":  {
+                                          "h":  15,
+                                          "w":  15
+                                      },
+                      "animated":  false
+                  },
+                  {
+                      "id":  43,
+                      "name":  "Comet",
+                      "category":  "stickers",
+                      "tags":  [
+                                   "cute",
+                                   "decorative"
+                               ],
+                      "file":  "s-comet.svg",
+                      "defaultSize":  {
+                                          "h":  15,
+                                          "w":  15
+                                      },
+                      "animated":  false
+                  },
+                  {
+                      "id":  44,
+                      "name":  "Controller",
+                      "category":  "stickers",
+                      "tags":  [
+                                   "cute",
+                                   "decorative"
+                               ],
+                      "file":  "s-controller.svg",
+                      "defaultSize":  {
+                                          "h":  15,
+                                          "w":  15
+                                      },
+                      "animated":  false
+                  },
+                  {
+                      "id":  45,
+                      "name":  "Crown",
+                      "category":  "stickers",
+                      "tags":  [
+                                   "cute",
+                                   "decorative"
+                               ],
+                      "file":  "s-crown.svg",
+                      "defaultSize":  {
+                                          "h":  15,
+                                          "w":  15
+                                      },
+                      "animated":  false
+                  },
+                  {
+                      "id":  46,
+                      "name":  "Crystal",
+                      "category":  "stickers",
+                      "tags":  [
+                                   "cute",
+                                   "decorative"
+                               ],
+                      "file":  "s-crystal.svg",
+                      "defaultSize":  {
+                                          "h":  15,
+                                          "w":  15
+                                      },
+                      "animated":  false
+                  },
+                  {
+                      "id":  47,
+                      "name":  "Cute skull",
+                      "category":  "stickers",
+                      "tags":  [
+                                   "cute",
+                                   "decorative"
+                               ],
+                      "file":  "s-cute-skull.svg",
+                      "defaultSize":  {
+                                          "h":  15,
+                                          "w":  15
+                                      },
+                      "animated":  false
+                  },
+                  {
+                      "id":  48,
+                      "name":  "Dragon wing",
+                      "category":  "stickers",
+                      "tags":  [
+                                   "cute",
+                                   "decorative"
+                               ],
+                      "file":  "s-dragon-wing.svg",
+                      "defaultSize":  {
+                                          "h":  15,
+                                          "w":  15
+                                      },
+                      "animated":  false
+                  },
+                  {
+                      "id":  49,
+                      "name":  "Love letter",
+                      "category":  "stickers",
+                      "tags":  [
+                                   "cute",
+                                   "decorative"
+                               ],
+                      "file":  "s-envelope.svg",
+                      "defaultSize":  {
+                                          "h":  15,
+                                          "w":  15
+                                      },
+                      "animated":  false
+                  },
+                  {
+                      "id":  50,
+                      "name":  "Flower",
+                      "category":  "stickers",
+                      "tags":  [
+                                   "cute",
+                                   "decorative"
+                               ],
+                      "file":  "s-flower.svg",
+                      "defaultSize":  {
+                                          "h":  15,
+                                          "w":  15
+                                      },
+                      "animated":  false
+                  },
+                  {
+                      "id":  51,
+                      "name":  "Ghost",
+                      "category":  "stickers",
+                      "tags":  [
+                                   "cute",
+                                   "decorative"
+                               ],
+                      "file":  "s-ghost.svg",
+                      "defaultSize":  {
+                                          "h":  15,
+                                          "w":  15
+                                      },
+                      "animated":  false
+                  },
+                  {
+                      "id":  52,
+                      "name":  "Heart charm",
+                      "category":  "stickers",
+                      "tags":  [
+                                   "cute",
+                                   "decorative"
+                               ],
+                      "file":  "s-heart-charm.svg",
+                      "defaultSize":  {
+                                          "h":  15,
+                                          "w":  15
+                                      },
+                      "animated":  false
+                  },
+                  {
+                      "id":  53,
+                      "name":  "Moon",
+                      "category":  "stickers",
+                      "tags":  [
+                                   "cute",
+                                   "decorative"
+                               ],
+                      "file":  "s-moon.svg",
+                      "defaultSize":  {
+                                          "h":  15,
+                                          "w":  15
+                                      },
+                      "animated":  false
+                  },
+                  {
+                      "id":  54,
+                      "name":  "Moth",
+                      "category":  "stickers",
+                      "tags":  [
+                                   "cute",
+                                   "decorative"
+                               ],
+                      "file":  "s-moth.svg",
+                      "defaultSize":  {
+                                          "h":  15,
+                                          "w":  15
+                                      },
+                      "animated":  false
+                  },
+                  {
+                      "id":  55,
+                      "name":  "Mushroom",
+                      "category":  "stickers",
+                      "tags":  [
+                                   "cute",
+                                   "decorative"
+                               ],
+                      "file":  "s-mushroom.svg",
+                      "defaultSize":  {
+                                          "h":  15,
+                                          "w":  15
+                                      },
+                      "animated":  false
+                  },
+                  {
+                      "id":  56,
+                      "name":  "Potion",
+                      "category":  "stickers",
+                      "tags":  [
+                                   "cute",
+                                   "decorative"
+                               ],
+                      "file":  "s-potion.svg",
+                      "defaultSize":  {
+                                          "h":  15,
+                                          "w":  15
+                                      },
+                      "animated":  false
+                  },
+                  {
+                      "id":  57,
+                      "name":  "Sprout",
+                      "category":  "stickers",
+                      "tags":  [
+                                   "cute",
+                                   "decorative"
+                               ],
+                      "file":  "s-sprout.svg",
+                      "defaultSize":  {
+                                          "h":  15,
+                                          "w":  15
+                                      },
+                      "animated":  false
+                  },
+                  {
+                      "id":  58,
+                      "name":  "Star",
+                      "category":  "stickers",
+                      "tags":  [
+                                   "cute",
+                                   "decorative"
+                               ],
+                      "file":  "s-star.svg",
+                      "defaultSize":  {
+                                          "h":  15,
+                                          "w":  15
+                                      },
+                      "animated":  false
+                  },
+                  {
+                      "id":  59,
+                      "name":  "Sword",
+                      "category":  "stickers",
+                      "tags":  [
+                                   "cute",
+                                   "decorative"
+                               ],
+                      "file":  "s-sword.svg",
+                      "defaultSize":  {
+                                          "h":  15,
+                                          "w":  15
+                                      },
+                      "animated":  false
+                  }
+              ]
+}

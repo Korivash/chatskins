@@ -1,4 +1,4 @@
-export const OPTION_TABS=Object.freeze(['look','style','chat','viewers','alerts','link']);
+export const OPTION_TABS=Object.freeze(['look','studio','style','chat','viewers','alerts','link']);
 
 export function nextOptionTab(current,key,length=OPTION_TABS.length){
   if(!length)return 0;
