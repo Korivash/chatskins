@@ -552,7 +552,25 @@
         "retro": 1
       },
       "galleryOrder": 0,
-      "tagline": "A luminous signature frame for every channel"
+      "tagline": "A luminous signature frame for every channel",
+      "alertRecipe": {
+        "version": 1,
+        "title": "Community achievement",
+        "frameNote": "Mint/violet ring, inset highlight and compact name chip",
+        "tokenBindings": "alertDesign.tokenBindings",
+        "iconSet": "alertDesign.icons",
+        "iconTreatment": "outline",
+        "motion": "pop",
+        "soundWave": "triangle",
+        "typeDefaults": "alertDesign.types",
+        "surfaceOpacityFloor": 0.94,
+        "titleSizePx": 16,
+        "bodySizePx": "clamp(20, resolved messageText fontSize, 32)",
+        "iconSizePx": 36,
+        "paddingPx": 20,
+        "columnGapPx": 16,
+        "followMessage": "{name} joined the adventure!"
+      }
     },
     {
       "id": "bubble-lift",
@@ -1039,7 +1057,25 @@
         "motion": 2,
         "retro": 1
       },
-      "tagline": "Soft teal bubbles with a playful chat tail"
+      "tagline": "Soft teal bubbles with a playful chat tail",
+      "alertRecipe": {
+        "version": 1,
+        "title": "A little celebration",
+        "frameNote": "Mint speech balloon with low left tail",
+        "tokenBindings": "alertDesign.tokenBindings",
+        "iconSet": "alertDesign.icons",
+        "iconTreatment": "outline",
+        "motion": "pop",
+        "soundWave": "sine",
+        "typeDefaults": "alertDesign.types",
+        "surfaceOpacityFloor": 0.94,
+        "titleSizePx": 16,
+        "bodySizePx": "clamp(20, resolved messageText fontSize, 32)",
+        "iconSizePx": 36,
+        "paddingPx": 20,
+        "columnGapPx": 16,
+        "followMessage": "{name} joined the adventure!"
+      }
     },
     {
       "id": "glass-card",
@@ -1526,7 +1562,25 @@
         "motion": 2,
         "retro": 1
       },
-      "tagline": "Cool translucent cards, crisp and calm"
+      "tagline": "Cool translucent cards, crisp and calm",
+      "alertRecipe": {
+        "version": 1,
+        "title": "Stream moment",
+        "frameNote": "Ice edge and translucent card; no dependence on backdrop blur",
+        "tokenBindings": "alertDesign.tokenBindings",
+        "iconSet": "alertDesign.icons",
+        "iconTreatment": "outline",
+        "motion": "fade",
+        "soundWave": "sine",
+        "typeDefaults": "alertDesign.types",
+        "surfaceOpacityFloor": 0.94,
+        "titleSizePx": 16,
+        "bodySizePx": "clamp(20, resolved messageText fontSize, 32)",
+        "iconSizePx": 36,
+        "paddingPx": 20,
+        "columnGapPx": 16,
+        "followMessage": "{name} joined the adventure!"
+      }
     },
     {
       "id": "name-tag",
@@ -2013,7 +2067,25 @@
         "motion": 2,
         "retro": 1
       },
-      "tagline": "A tidy name rail for quick reading"
+      "tagline": "A tidy name rail for quick reading",
+      "alertRecipe": {
+        "version": 1,
+        "title": "Community update",
+        "frameNote": "Blue tab above aligned body; icon occupies name rail",
+        "tokenBindings": "alertDesign.tokenBindings",
+        "iconSet": "alertDesign.icons",
+        "iconTreatment": "outline",
+        "motion": "slide",
+        "soundWave": "triangle",
+        "typeDefaults": "alertDesign.types",
+        "surfaceOpacityFloor": 0.94,
+        "titleSizePx": 16,
+        "bodySizePx": "clamp(20, resolved messageText fontSize, 32)",
+        "iconSizePx": 36,
+        "paddingPx": 20,
+        "columnGapPx": 16,
+        "followMessage": "{name} joined the adventure!"
+      }
     },
     {
       "id": "comic-burst",
@@ -2500,7 +2572,25 @@
         "motion": 3,
         "retro": 2
       },
-      "tagline": "Bold speech bubbles with comic-book punch"
+      "tagline": "Bold speech bubbles with comic-book punch",
+      "alertRecipe": {
+        "version": 1,
+        "title": "Big moment!",
+        "frameNote": "Butter balloon, heavy ink perimeter and hard offset shadow",
+        "tokenBindings": "alertDesign.tokenBindings",
+        "iconSet": "alertDesign.icons",
+        "iconTreatment": "outline",
+        "motion": "pop",
+        "soundWave": "square",
+        "typeDefaults": "alertDesign.types",
+        "surfaceOpacityFloor": 0.94,
+        "titleSizePx": 16,
+        "bodySizePx": "clamp(20, resolved messageText fontSize, 32)",
+        "iconSizePx": 36,
+        "paddingPx": 20,
+        "columnGapPx": 16,
+        "followMessage": "{name} joined the adventure!"
+      }
     },
     {
       "id": "pastel-pop",
@@ -2987,7 +3077,25 @@
         "motion": 3,
         "retro": 1
       },
-      "tagline": "Lavender cards with bright pastel energy"
+      "tagline": "Lavender cards with bright pastel energy",
+      "alertRecipe": {
+        "version": 1,
+        "title": "Something lovely",
+        "frameNote": "Lavender ticket corners with restrained lilac dots",
+        "tokenBindings": "alertDesign.tokenBindings",
+        "iconSet": "alertDesign.icons",
+        "iconTreatment": "outline",
+        "motion": "pop",
+        "soundWave": "sine",
+        "typeDefaults": "alertDesign.types",
+        "surfaceOpacityFloor": 0.94,
+        "titleSizePx": 16,
+        "bodySizePx": "clamp(20, resolved messageText fontSize, 32)",
+        "iconSizePx": 36,
+        "paddingPx": 20,
+        "columnGapPx": 16,
+        "followMessage": "{name} joined the adventure!"
+      }
     },
     {
       "id": "esports-slash",
@@ -3474,7 +3582,25 @@
         "motion": 3,
         "retro": 2
       },
-      "tagline": "Sharp lime accents for match-day chat"
+      "tagline": "Sharp lime accents for match-day chat",
+      "alertRecipe": {
+        "version": 1,
+        "title": "Squad milestone",
+        "frameNote": "Lime diagonal plate with upright lettering",
+        "tokenBindings": "alertDesign.tokenBindings",
+        "iconSet": "alertDesign.icons",
+        "iconTreatment": "outline",
+        "motion": "slide",
+        "soundWave": "triangle",
+        "typeDefaults": "alertDesign.types",
+        "surfaceOpacityFloor": 0.94,
+        "titleSizePx": 16,
+        "bodySizePx": "clamp(20, resolved messageText fontSize, 32)",
+        "iconSizePx": 36,
+        "paddingPx": 20,
+        "columnGapPx": 16,
+        "followMessage": "{name} joined the adventure!"
+      }
     },
     {
       "id": "quiet-line",
@@ -3961,7 +4087,25 @@
         "motion": 2,
         "retro": 1
       },
-      "tagline": "Warm accents for calm, readable chat"
+      "tagline": "Warm accents for calm, readable chat",
+      "alertRecipe": {
+        "version": 1,
+        "title": "Thank you",
+        "frameNote": "Warm name rule and quiet dark reading strip",
+        "tokenBindings": "alertDesign.tokenBindings",
+        "iconSet": "alertDesign.icons",
+        "iconTreatment": "outline",
+        "motion": "fade",
+        "soundWave": "sine",
+        "typeDefaults": "alertDesign.types",
+        "surfaceOpacityFloor": 0.94,
+        "titleSizePx": 16,
+        "bodySizePx": "clamp(20, resolved messageText fontSize, 32)",
+        "iconSizePx": 36,
+        "paddingPx": 20,
+        "columnGapPx": 16,
+        "followMessage": "{name} joined the adventure!"
+      }
     },
     {
       "id": "neon-edge",
@@ -4448,7 +4592,25 @@
         "motion": 2,
         "retro": 2
       },
-      "tagline": "A violet edge against midnight purple"
+      "tagline": "A violet edge against midnight purple",
+      "alertRecipe": {
+        "version": 1,
+        "title": "Signal received",
+        "frameNote": "Violet start rail with static edge glow; unglowed body",
+        "tokenBindings": "alertDesign.tokenBindings",
+        "iconSet": "alertDesign.icons",
+        "iconTreatment": "outline",
+        "motion": "fade",
+        "soundWave": "triangle",
+        "typeDefaults": "alertDesign.types",
+        "surfaceOpacityFloor": 0.94,
+        "titleSizePx": 16,
+        "bodySizePx": "clamp(20, resolved messageText fontSize, 32)",
+        "iconSizePx": 36,
+        "paddingPx": 20,
+        "columnGapPx": 16,
+        "followMessage": "{name} joined the adventure!"
+      }
     },
     {
       "id": "sticker-stack",
@@ -4935,7 +5097,25 @@
         "motion": 3,
         "retro": 1
       },
-      "tagline": "Apricot name stickers with a playful pop"
+      "tagline": "Apricot name stickers with a playful pop",
+      "alertRecipe": {
+        "version": 1,
+        "title": "New sticker moment",
+        "frameNote": "Apricot title sticker on a plum card",
+        "tokenBindings": "alertDesign.tokenBindings",
+        "iconSet": "alertDesign.icons",
+        "iconTreatment": "outline",
+        "motion": "pop",
+        "soundWave": "sine",
+        "typeDefaults": "alertDesign.types",
+        "surfaceOpacityFloor": 0.94,
+        "titleSizePx": 16,
+        "bodySizePx": "clamp(20, resolved messageText fontSize, 32)",
+        "iconSizePx": 36,
+        "paddingPx": 20,
+        "columnGapPx": 16,
+        "followMessage": "{name} joined the adventure!"
+      }
     },
     {
       "id": "initial-card",
@@ -5422,7 +5602,25 @@
         "motion": 2,
         "retro": 1
       },
-      "tagline": "A circular initial anchors each message"
+      "tagline": "A circular initial anchors each message",
+      "alertRecipe": {
+        "version": 1,
+        "title": "Community moment",
+        "frameNote": "Icon medallion spanning two text rows",
+        "tokenBindings": "alertDesign.tokenBindings",
+        "iconSet": "alertDesign.icons",
+        "iconTreatment": "outline",
+        "motion": "fade",
+        "soundWave": "sine",
+        "typeDefaults": "alertDesign.types",
+        "surfaceOpacityFloor": 0.94,
+        "titleSizePx": 16,
+        "bodySizePx": "clamp(20, resolved messageText fontSize, 32)",
+        "iconSizePx": 36,
+        "paddingPx": 20,
+        "columnGapPx": 16,
+        "followMessage": "{name} joined the adventure!"
+      }
     },
     {
       "id": "signal-console",
@@ -5909,7 +6107,25 @@
         "motion": 1,
         "retro": 4
       },
-      "tagline": "Mint console blocks with crisp amber prompts"
+      "tagline": "Mint console blocks with crisp amber prompts",
+      "alertRecipe": {
+        "version": 1,
+        "title": "Event received",
+        "frameNote": "Dashed mint receipt and amber prompt",
+        "tokenBindings": "alertDesign.tokenBindings",
+        "iconSet": "alertDesign.icons",
+        "iconTreatment": "outline",
+        "motion": "slide",
+        "soundWave": "triangle",
+        "typeDefaults": "alertDesign.types",
+        "surfaceOpacityFloor": 0.94,
+        "titleSizePx": 16,
+        "bodySizePx": "clamp(20, resolved messageText fontSize, 32)",
+        "iconSizePx": 36,
+        "paddingPx": 20,
+        "columnGapPx": 16,
+        "followMessage": "{name} joined the adventure!"
+      }
     },
     {
       "id": "announcer",
@@ -6396,7 +6612,25 @@
         "motion": 2,
         "retro": 2
       },
-      "tagline": "Big gold names for the latest updates"
+      "tagline": "Big gold names for the latest updates",
+      "alertRecipe": {
+        "version": 1,
+        "title": "In the spotlight",
+        "frameNote": "Gold headline above dark lower third",
+        "tokenBindings": "alertDesign.tokenBindings",
+        "iconSet": "alertDesign.icons",
+        "iconTreatment": "outline",
+        "motion": "slide",
+        "soundWave": "triangle",
+        "typeDefaults": "alertDesign.types",
+        "surfaceOpacityFloor": 0.94,
+        "titleSizePx": 16,
+        "bodySizePx": "clamp(20, resolved messageText fontSize, 32)",
+        "iconSizePx": 36,
+        "paddingPx": 20,
+        "columnGapPx": 16,
+        "followMessage": "{name} joined the adventure!"
+      }
     },
     {
       "id": "guild-chat",
@@ -6956,7 +7190,25 @@
         "motion": 2,
         "retro": 4
       },
-      "tagline": "MMO guild chat with officer and yell channels"
+      "tagline": "MMO guild chat with officer and yell channels",
+      "alertRecipe": {
+        "version": 1,
+        "title": "[Guild] Achievement",
+        "frameNote": "Two continuous 1px gold rings, 2px clear gap, forest backing",
+        "tokenBindings": "alertDesign.tokenBindings",
+        "iconSet": "alertDesign.icons",
+        "iconTreatment": "outline",
+        "motion": "fade",
+        "soundWave": "triangle",
+        "typeDefaults": "alertDesign.types",
+        "surfaceOpacityFloor": 0.94,
+        "titleSizePx": 16,
+        "bodySizePx": "clamp(20, resolved messageText fontSize, 32)",
+        "iconSizePx": 36,
+        "paddingPx": 20,
+        "columnGapPx": 16,
+        "followMessage": "{name} joined the adventure!"
+      }
     },
     {
       "id": "fantasy-mmo",
@@ -7500,7 +7752,25 @@
         "motion": 2,
         "retro": 4
       },
-      "tagline": "Party and guild channels in a fantasy window"
+      "tagline": "Party and guild channels in a fantasy window",
+      "alertRecipe": {
+        "version": 1,
+        "title": "[Party] Commendation",
+        "frameNote": "Lavender double window and inset diamond corners",
+        "tokenBindings": "alertDesign.tokenBindings",
+        "iconSet": "alertDesign.icons",
+        "iconTreatment": "outline",
+        "motion": "fade",
+        "soundWave": "sine",
+        "typeDefaults": "alertDesign.types",
+        "surfaceOpacityFloor": 0.94,
+        "titleSizePx": 16,
+        "bodySizePx": "clamp(20, resolved messageText fontSize, 32)",
+        "iconSizePx": 36,
+        "paddingPx": 20,
+        "columnGapPx": 16,
+        "followMessage": "{name} joined the adventure!"
+      }
     },
     {
       "id": "block-craft",
@@ -7987,7 +8257,25 @@
         "motion": 1,
         "retro": 5
       },
-      "tagline": "Square green blocks for friendly community chat"
+      "tagline": "Square green blocks for friendly community chat",
+      "alertRecipe": {
+        "version": 1,
+        "title": "Advancement unlocked",
+        "frameNote": "Moss-grey staircase frame with grass-green icon tile",
+        "tokenBindings": "alertDesign.tokenBindings",
+        "iconSet": "alertDesign.icons",
+        "iconTreatment": "pixel-grid",
+        "motion": "step",
+        "soundWave": "square",
+        "typeDefaults": "alertDesign.types",
+        "surfaceOpacityFloor": 0.94,
+        "titleSizePx": 16,
+        "bodySizePx": "clamp(20, resolved messageText fontSize, 32)",
+        "iconSizePx": 36,
+        "paddingPx": 20,
+        "columnGapPx": 16,
+        "followMessage": "{name} joined the adventure!"
+      }
     },
     {
       "id": "battle-arena",
@@ -8474,7 +8762,25 @@
         "motion": 3,
         "retro": 2
       },
-      "tagline": "A cool tactical panel for coordinated teams"
+      "tagline": "A cool tactical panel for coordinated teams",
+      "alertRecipe": {
+        "version": 1,
+        "title": "[Team] Milestone",
+        "frameNote": "Teal corner brackets and aligned tactical pane",
+        "tokenBindings": "alertDesign.tokenBindings",
+        "iconSet": "alertDesign.icons",
+        "iconTreatment": "outline",
+        "motion": "slide",
+        "soundWave": "triangle",
+        "typeDefaults": "alertDesign.types",
+        "surfaceOpacityFloor": 0.94,
+        "titleSizePx": 16,
+        "bodySizePx": "clamp(20, resolved messageText fontSize, 32)",
+        "iconSizePx": 36,
+        "paddingPx": 20,
+        "columnGapPx": 16,
+        "followMessage": "{name} joined the adventure!"
+      }
     },
     {
       "id": "battle-royale",
@@ -8961,7 +9267,25 @@
         "motion": 3,
         "retro": 2
       },
-      "tagline": "Notched sand-gold cards for squad callouts"
+      "tagline": "Notched sand-gold cards for squad callouts",
+      "alertRecipe": {
+        "version": 1,
+        "title": "Squad supply drop",
+        "frameNote": "Sand-yellow notched field card",
+        "tokenBindings": "alertDesign.tokenBindings",
+        "iconSet": "alertDesign.icons",
+        "iconTreatment": "outline",
+        "motion": "slide",
+        "soundWave": "triangle",
+        "typeDefaults": "alertDesign.types",
+        "surfaceOpacityFloor": 0.94,
+        "titleSizePx": 16,
+        "bodySizePx": "clamp(20, resolved messageText fontSize, 32)",
+        "iconSizePx": 36,
+        "paddingPx": 20,
+        "columnGapPx": 16,
+        "followMessage": "{name} joined the adventure!"
+      }
     },
     {
       "id": "retro-rpg",
@@ -9521,7 +9845,25 @@
         "motion": 1,
         "retro": 5
       },
-      "tagline": "Classic blue dialogue boxes with speaker cues"
+      "tagline": "Classic blue dialogue boxes with speaker cues",
+      "alertRecipe": {
+        "version": 1,
+        "title": "A new adventure!",
+        "frameNote": "Blue dialog window and full white double ring",
+        "tokenBindings": "alertDesign.tokenBindings",
+        "iconSet": "alertDesign.icons",
+        "iconTreatment": "pixel-grid",
+        "motion": "step",
+        "soundWave": "square",
+        "typeDefaults": "alertDesign.types",
+        "surfaceOpacityFloor": 0.94,
+        "titleSizePx": 16,
+        "bodySizePx": "clamp(20, resolved messageText fontSize, 32)",
+        "iconSizePx": 36,
+        "paddingPx": 20,
+        "columnGapPx": 16,
+        "followMessage": "A wild follower appears! {name} joined the party."
+      }
     },
     {
       "id": "cyber-city",
@@ -10008,7 +10350,25 @@
         "motion": 3,
         "retro": 3
       },
-      "tagline": "Bright cyan callsigns in a magenta city glow"
+      "tagline": "Bright cyan callsigns in a magenta city glow",
+      "alertRecipe": {
+        "version": 1,
+        "title": "City transmission",
+        "frameNote": "Magenta frame, cyan headline, deep plum backing",
+        "tokenBindings": "alertDesign.tokenBindings",
+        "iconSet": "alertDesign.icons",
+        "iconTreatment": "outline",
+        "motion": "slide",
+        "soundWave": "triangle",
+        "typeDefaults": "alertDesign.types",
+        "surfaceOpacityFloor": 0.94,
+        "titleSizePx": 16,
+        "bodySizePx": "clamp(20, resolved messageText fontSize, 32)",
+        "iconSizePx": 36,
+        "paddingPx": 20,
+        "columnGapPx": 16,
+        "followMessage": "{name} joined the adventure!"
+      }
     },
     {
       "id": "arcade-cabinet",
@@ -10495,7 +10855,25 @@
         "motion": 2,
         "retro": 5
       },
-      "tagline": "Arcade colors with a sturdy cabinet frame"
+      "tagline": "Arcade colors with a sturdy cabinet frame",
+      "alertRecipe": {
+        "version": 1,
+        "title": "New high moment",
+        "frameNote": "Purple pixel frame, amber text, static scanlines behind content",
+        "tokenBindings": "alertDesign.tokenBindings",
+        "iconSet": "alertDesign.icons",
+        "iconTreatment": "pixel-grid",
+        "motion": "step",
+        "soundWave": "square",
+        "typeDefaults": "alertDesign.types",
+        "surfaceOpacityFloor": 0.94,
+        "titleSizePx": 16,
+        "bodySizePx": "clamp(20, resolved messageText fontSize, 32)",
+        "iconSizePx": 36,
+        "paddingPx": 20,
+        "columnGapPx": 16,
+        "followMessage": "{name} joined the adventure!"
+      }
     },
     {
       "id": "space-command",
@@ -10982,7 +11360,25 @@
         "motion": 2,
         "retro": 3
       },
-      "tagline": "Cool steel panels for mission control chat"
+      "tagline": "Cool steel panels for mission control chat",
+      "alertRecipe": {
+        "version": 1,
+        "title": "Incoming transmission",
+        "frameNote": "Cyan HUD brackets on a navy instrument panel",
+        "tokenBindings": "alertDesign.tokenBindings",
+        "iconSet": "alertDesign.icons",
+        "iconTreatment": "outline",
+        "motion": "slide",
+        "soundWave": "triangle",
+        "typeDefaults": "alertDesign.types",
+        "surfaceOpacityFloor": 0.94,
+        "titleSizePx": 16,
+        "bodySizePx": "clamp(20, resolved messageText fontSize, 32)",
+        "iconSizePx": 36,
+        "paddingPx": 20,
+        "columnGapPx": 16,
+        "followMessage": "{name} joined the adventure!"
+      }
     },
     {
       "id": "monster-trainer",
@@ -11469,7 +11865,25 @@
         "motion": 3,
         "retro": 4
       },
-      "tagline": "Friendly ivory dialogue with bold blue edges"
+      "tagline": "Friendly ivory dialogue with bold blue edges",
+      "alertRecipe": {
+        "version": 1,
+        "title": "A new friend!",
+        "frameNote": "Ivory dialog box and thick charcoal perimeter",
+        "tokenBindings": "alertDesign.tokenBindings",
+        "iconSet": "alertDesign.icons",
+        "iconTreatment": "pixel-grid",
+        "motion": "step",
+        "soundWave": "square",
+        "typeDefaults": "alertDesign.types",
+        "surfaceOpacityFloor": 0.94,
+        "titleSizePx": 16,
+        "bodySizePx": "clamp(20, resolved messageText fontSize, 32)",
+        "iconSizePx": 36,
+        "paddingPx": 20,
+        "columnGapPx": 16,
+        "followMessage": "{name} joined the adventure!"
+      }
     },
     {
       "id": "dungeon-crawler",
@@ -11956,7 +12370,25 @@
         "motion": 2,
         "retro": 4
       },
-      "tagline": "Stone frames and warm, firelit lettering"
+      "tagline": "Stone frames and warm, firelit lettering",
+      "alertRecipe": {
+        "version": 1,
+        "title": "Treasure discovered",
+        "frameNote": "Stone-colored bevel with warm amber icon",
+        "tokenBindings": "alertDesign.tokenBindings",
+        "iconSet": "alertDesign.icons",
+        "iconTreatment": "outline",
+        "motion": "fade",
+        "soundWave": "triangle",
+        "typeDefaults": "alertDesign.types",
+        "surfaceOpacityFloor": 0.94,
+        "titleSizePx": 16,
+        "bodySizePx": "clamp(20, resolved messageText fontSize, 32)",
+        "iconSizePx": 36,
+        "paddingPx": 20,
+        "columnGapPx": 16,
+        "followMessage": "{name} joined the adventure!"
+      }
     },
     {
       "id": "cozy-farm",
@@ -12443,7 +12875,25 @@
         "motion": 2,
         "retro": 3
       },
-      "tagline": "Warm wooden plaques for a cozy community"
+      "tagline": "Warm wooden plaques for a cozy community",
+      "alertRecipe": {
+        "version": 1,
+        "title": "A gift at the gate",
+        "frameNote": "Brown board seams and cream lettering",
+        "tokenBindings": "alertDesign.tokenBindings",
+        "iconSet": "alertDesign.icons",
+        "iconTreatment": "outline",
+        "motion": "pop",
+        "soundWave": "sine",
+        "typeDefaults": "alertDesign.types",
+        "surfaceOpacityFloor": 0.94,
+        "titleSizePx": 16,
+        "bodySizePx": "clamp(20, resolved messageText fontSize, 32)",
+        "iconSizePx": 36,
+        "paddingPx": 20,
+        "columnGapPx": 16,
+        "followMessage": "{name} joined the adventure!"
+      }
     },
     {
       "id": "horror-survival",
@@ -12930,7 +13380,25 @@
         "motion": 2,
         "retro": 3
       },
-      "tagline": "Emergency red slips with clear readable text"
+      "tagline": "Emergency red slips with clear readable text",
+      "alertRecipe": {
+        "version": 1,
+        "title": "Contact confirmed",
+        "frameNote": "Dim red frame, clear warm text; no flicker or scare sound",
+        "tokenBindings": "alertDesign.tokenBindings",
+        "iconSet": "alertDesign.icons",
+        "iconTreatment": "outline",
+        "motion": "fade",
+        "soundWave": "sine",
+        "typeDefaults": "alertDesign.types",
+        "surfaceOpacityFloor": 0.94,
+        "titleSizePx": 16,
+        "bodySizePx": "clamp(20, resolved messageText fontSize, 32)",
+        "iconSizePx": 36,
+        "paddingPx": 20,
+        "columnGapPx": 16,
+        "followMessage": "{name} joined the adventure!"
+      }
     },
     {
       "id": "hero-shooter",
@@ -13417,7 +13885,25 @@
         "motion": 3,
         "retro": 2
       },
-      "tagline": "Fast orange accents for team callouts"
+      "tagline": "Fast orange accents for team callouts",
+      "alertRecipe": {
+        "version": 1,
+        "title": "Team recognition",
+        "frameNote": "Orange stripe with white corner wedges",
+        "tokenBindings": "alertDesign.tokenBindings",
+        "iconSet": "alertDesign.icons",
+        "iconTreatment": "outline",
+        "motion": "slide",
+        "soundWave": "triangle",
+        "typeDefaults": "alertDesign.types",
+        "surfaceOpacityFloor": 0.94,
+        "titleSizePx": 16,
+        "bodySizePx": "clamp(20, resolved messageText fontSize, 32)",
+        "iconSizePx": 36,
+        "paddingPx": 20,
+        "columnGapPx": 16,
+        "followMessage": "{name} joined the adventure!"
+      }
     },
     {
       "id": "kart-racer",
@@ -13904,7 +14390,25 @@
         "motion": 3,
         "retro": 2
       },
-      "tagline": "Sunny racing colors with playful spacing"
+      "tagline": "Sunny racing colors with playful spacing",
+      "alertRecipe": {
+        "version": 1,
+        "title": "Victory lap",
+        "frameNote": "Yellow/mint pill with dark ink",
+        "tokenBindings": "alertDesign.tokenBindings",
+        "iconSet": "alertDesign.icons",
+        "iconTreatment": "outline",
+        "motion": "pop",
+        "soundWave": "square",
+        "typeDefaults": "alertDesign.types",
+        "surfaceOpacityFloor": 0.94,
+        "titleSizePx": 16,
+        "bodySizePx": "clamp(20, resolved messageText fontSize, 32)",
+        "iconSizePx": 36,
+        "paddingPx": 20,
+        "columnGapPx": 16,
+        "followMessage": "{name} joined the adventure!"
+      }
     },
     {
       "id": "bubble-chat",
@@ -14391,7 +14895,25 @@
         "motion": 3,
         "retro": 1
       },
-      "tagline": "Lilac inline bubbles for lighter conversations"
+      "tagline": "Lilac inline bubbles for lighter conversations",
+      "alertRecipe": {
+        "version": 1,
+        "title": "A happy update",
+        "frameNote": "Pale rounded capsule with plum text",
+        "tokenBindings": "alertDesign.tokenBindings",
+        "iconSet": "alertDesign.icons",
+        "iconTreatment": "outline",
+        "motion": "pop",
+        "soundWave": "sine",
+        "typeDefaults": "alertDesign.types",
+        "surfaceOpacityFloor": 0.94,
+        "titleSizePx": 16,
+        "bodySizePx": "clamp(20, resolved messageText fontSize, 32)",
+        "iconSizePx": 36,
+        "paddingPx": 20,
+        "columnGapPx": 16,
+        "followMessage": "{name} joined the adventure!"
+      }
     },
     {
       "id": "clean",
@@ -14878,7 +15400,25 @@
         "motion": 2,
         "retro": 1
       },
-      "tagline": "Simple, readable chat with a calm dark backing"
+      "tagline": "Simple, readable chat with a calm dark backing",
+      "alertRecipe": {
+        "version": 1,
+        "title": "Community update",
+        "frameNote": "Minimal dark card with no added ornamental frame",
+        "tokenBindings": "alertDesign.tokenBindings",
+        "iconSet": "alertDesign.icons",
+        "iconTreatment": "outline",
+        "motion": "fade",
+        "soundWave": "sine",
+        "typeDefaults": "alertDesign.types",
+        "surfaceOpacityFloor": 0.94,
+        "titleSizePx": 16,
+        "bodySizePx": "clamp(20, resolved messageText fontSize, 32)",
+        "iconSizePx": 36,
+        "paddingPx": 20,
+        "columnGapPx": 16,
+        "followMessage": "{name} joined the adventure!"
+      }
     },
     {
       "id": "candy-pop",
@@ -15365,7 +15905,25 @@
         "motion": 3,
         "retro": 1
       },
-      "tagline": "Sweet pink tiles with soft pastel colors"
+      "tagline": "Sweet pink tiles with soft pastel colors",
+      "alertRecipe": {
+        "version": 1,
+        "title": "Sweet moment",
+        "frameNote": "Warm pastel tile with dark plum lettering",
+        "tokenBindings": "alertDesign.tokenBindings",
+        "iconSet": "alertDesign.icons",
+        "iconTreatment": "outline",
+        "motion": "pop",
+        "soundWave": "sine",
+        "typeDefaults": "alertDesign.types",
+        "surfaceOpacityFloor": 0.94,
+        "titleSizePx": 16,
+        "bodySizePx": "clamp(20, resolved messageText fontSize, 32)",
+        "iconSizePx": 36,
+        "paddingPx": 20,
+        "columnGapPx": 16,
+        "followMessage": "{name} joined the adventure!"
+      }
     },
     {
       "id": "rainbow-border",
@@ -15856,7 +16414,25 @@
         "motion": 2,
         "retro": 2
       },
-      "tagline": "A colorful frame around clear midnight chat"
+      "tagline": "A colorful frame around clear midnight chat",
+      "alertRecipe": {
+        "version": 1,
+        "title": "A colorful milestone",
+        "frameNote": "Static multicolor perimeter on navy",
+        "tokenBindings": "alertDesign.tokenBindings",
+        "iconSet": "alertDesign.icons",
+        "iconTreatment": "outline",
+        "motion": "fade",
+        "soundWave": "triangle",
+        "typeDefaults": "alertDesign.types",
+        "surfaceOpacityFloor": 0.94,
+        "titleSizePx": 16,
+        "bodySizePx": "clamp(20, resolved messageText fontSize, 32)",
+        "iconSizePx": 36,
+        "paddingPx": 20,
+        "columnGapPx": 16,
+        "followMessage": "{name} joined the adventure!"
+      }
     },
     {
       "id": "terminal",
@@ -16343,7 +16919,25 @@
         "motion": 1,
         "retro": 5
       },
-      "tagline": "A quiet green console with crisp prompts"
+      "tagline": "A quiet green console with crisp prompts",
+      "alertRecipe": {
+        "version": 1,
+        "title": "event > received",
+        "frameNote": "One green console pane; complete text, no typing delay",
+        "tokenBindings": "alertDesign.tokenBindings",
+        "iconSet": "alertDesign.icons",
+        "iconTreatment": "outline",
+        "motion": "fade",
+        "soundWave": "square",
+        "typeDefaults": "alertDesign.types",
+        "surfaceOpacityFloor": 0.94,
+        "titleSizePx": 16,
+        "bodySizePx": "clamp(20, resolved messageText fontSize, 32)",
+        "iconSizePx": 36,
+        "paddingPx": 20,
+        "columnGapPx": 16,
+        "followMessage": "{name} joined the adventure!"
+      }
     },
     {
       "id": "vaporwave",
@@ -16830,7 +17424,25 @@
         "motion": 3,
         "retro": 4
       },
-      "tagline": "Slow neon gradients with a cool retro feel"
+      "tagline": "Slow neon gradients with a cool retro feel",
+      "alertRecipe": {
+        "version": 1,
+        "title": "New frequency",
+        "frameNote": "Pink/teal fill with pale mint lettering",
+        "tokenBindings": "alertDesign.tokenBindings",
+        "iconSet": "alertDesign.icons",
+        "iconTreatment": "outline",
+        "motion": "fade",
+        "soundWave": "sine",
+        "typeDefaults": "alertDesign.types",
+        "surfaceOpacityFloor": 0.94,
+        "titleSizePx": 16,
+        "bodySizePx": "clamp(20, resolved messageText fontSize, 32)",
+        "iconSizePx": 36,
+        "paddingPx": 20,
+        "columnGapPx": 16,
+        "followMessage": "{name} joined the adventure!"
+      }
     },
     {
       "id": "crystal-realm",
@@ -17382,7 +17994,25 @@
         "retro": 2
       },
       "galleryOrder": 34,
-      "tagline": "Silver chat windows with bright crystal accents"
+      "tagline": "Silver chat windows with bright crystal accents",
+      "alertRecipe": {
+        "version": 1,
+        "title": "[Party] Honor earned",
+        "frameNote": "Silver inset window and cool diamond seal",
+        "tokenBindings": "alertDesign.tokenBindings",
+        "iconSet": "alertDesign.icons",
+        "iconTreatment": "outline",
+        "motion": "fade",
+        "soundWave": "sine",
+        "typeDefaults": "alertDesign.types",
+        "surfaceOpacityFloor": 0.94,
+        "titleSizePx": 16,
+        "bodySizePx": "clamp(20, resolved messageText fontSize, 32)",
+        "iconSizePx": 36,
+        "paddingPx": 20,
+        "columnGapPx": 16,
+        "followMessage": "{name} joined the adventure!"
+      }
     },
     {
       "id": "old-school-mmo",
@@ -17902,7 +18532,25 @@
         "retro": 5
       },
       "galleryOrder": 35,
-      "tagline": "Retro guild chat with golden yells and waves"
+      "tagline": "Retro guild chat with golden yells and waves",
+      "alertRecipe": {
+        "version": 1,
+        "title": "Realm achievement",
+        "frameNote": "Brass bevel, brown stone ledger and yellow serif text",
+        "tokenBindings": "alertDesign.tokenBindings",
+        "iconSet": "alertDesign.icons",
+        "iconTreatment": "pixel-grid",
+        "motion": "step",
+        "soundWave": "square",
+        "typeDefaults": "alertDesign.types",
+        "surfaceOpacityFloor": 0.94,
+        "titleSizePx": 16,
+        "bodySizePx": "clamp(20, resolved messageText fontSize, 32)",
+        "iconSizePx": 36,
+        "paddingPx": 20,
+        "columnGapPx": 16,
+        "followMessage": "{name} joined the adventure!"
+      }
     },
     {
       "id": "frontier-mmo",
@@ -18438,7 +19086,25 @@
         "retro": 3
       },
       "galleryOrder": 36,
-      "tagline": "Guild, party and whisper channels in parchment"
+      "tagline": "Guild, party and whisper channels in parchment",
+      "alertRecipe": {
+        "version": 1,
+        "title": "[Map] New discovery",
+        "frameNote": "Parchment-colored margin on an olive pane",
+        "tokenBindings": "alertDesign.tokenBindings",
+        "iconSet": "alertDesign.icons",
+        "iconTreatment": "outline",
+        "motion": "slide",
+        "soundWave": "triangle",
+        "typeDefaults": "alertDesign.types",
+        "surfaceOpacityFloor": 0.94,
+        "titleSizePx": 16,
+        "bodySizePx": "clamp(20, resolved messageText fontSize, 32)",
+        "iconSizePx": 36,
+        "paddingPx": 20,
+        "columnGapPx": 16,
+        "followMessage": "{name} joined the adventure!"
+      }
     },
     {
       "id": "arena-league",
@@ -18966,7 +19632,25 @@
         "retro": 2
       },
       "galleryOrder": 37,
-      "tagline": "Team channels in a sharp gold-cut frame"
+      "tagline": "Team channels in a sharp gold-cut frame",
+      "alertRecipe": {
+        "version": 1,
+        "title": "[Team] Honor",
+        "frameNote": "Slanted gold plate; orange body remains upright",
+        "tokenBindings": "alertDesign.tokenBindings",
+        "iconSet": "alertDesign.icons",
+        "iconTreatment": "outline",
+        "motion": "slide",
+        "soundWave": "triangle",
+        "typeDefaults": "alertDesign.types",
+        "surfaceOpacityFloor": 0.94,
+        "titleSizePx": 16,
+        "bodySizePx": "clamp(20, resolved messageText fontSize, 32)",
+        "iconSizePx": 36,
+        "paddingPx": 20,
+        "columnGapPx": 16,
+        "followMessage": "{name} joined the adventure!"
+      }
     },
     {
       "id": "tactical-ops",
@@ -19486,7 +20170,25 @@
         "retro": 2
       },
       "galleryOrder": 38,
-      "tagline": "Clear team comms in a minimal ops console"
+      "tagline": "Clear team comms in a minimal ops console",
+      "alertRecipe": {
+        "version": 1,
+        "title": "[Comms] Event confirmed",
+        "frameNote": "Minimal blue-grey comms strip with orange monospace text",
+        "tokenBindings": "alertDesign.tokenBindings",
+        "iconSet": "alertDesign.icons",
+        "iconTreatment": "outline",
+        "motion": "slide",
+        "soundWave": "triangle",
+        "typeDefaults": "alertDesign.types",
+        "surfaceOpacityFloor": 0.94,
+        "titleSizePx": 16,
+        "bodySizePx": "clamp(20, resolved messageText fontSize, 32)",
+        "iconSizePx": 36,
+        "paddingPx": 20,
+        "columnGapPx": 16,
+        "followMessage": "{name} joined the adventure!"
+      }
     },
     {
       "id": "block-server",
@@ -20014,7 +20716,25 @@
         "retro": 5
       },
       "galleryOrder": 39,
-      "tagline": "Square server chat with owner and mod roles"
+      "tagline": "Square server chat with owner and mod roles",
+      "alertRecipe": {
+        "version": 1,
+        "title": "Server milestone",
+        "frameNote": "Square grey server notice with pixel icon",
+        "tokenBindings": "alertDesign.tokenBindings",
+        "iconSet": "alertDesign.icons",
+        "iconTreatment": "pixel-grid",
+        "motion": "step",
+        "soundWave": "square",
+        "typeDefaults": "alertDesign.types",
+        "surfaceOpacityFloor": 0.94,
+        "titleSizePx": 16,
+        "bodySizePx": "clamp(20, resolved messageText fontSize, 32)",
+        "iconSizePx": 36,
+        "paddingPx": 20,
+        "columnGapPx": 16,
+        "followMessage": "{name} joined the adventure!"
+      }
     },
     {
       "id": "hero-quest",
@@ -20542,7 +21262,25 @@
         "retro": 3
       },
       "galleryOrder": 40,
-      "tagline": "Party roles with original fantasy-style icons"
+      "tagline": "Party roles with original fantasy-style icons",
+      "alertRecipe": {
+        "version": 1,
+        "title": "[Party] Quest complete",
+        "frameNote": "Bronze role-icon rail on a purple story pane",
+        "tokenBindings": "alertDesign.tokenBindings",
+        "iconSet": "alertDesign.icons",
+        "iconTreatment": "outline",
+        "motion": "fade",
+        "soundWave": "triangle",
+        "typeDefaults": "alertDesign.types",
+        "surfaceOpacityFloor": 0.94,
+        "titleSizePx": 16,
+        "bodySizePx": "clamp(20, resolved messageText fontSize, 32)",
+        "iconSizePx": 36,
+        "paddingPx": 20,
+        "columnGapPx": 16,
+        "followMessage": "{name} joined the adventure!"
+      }
     },
     {
       "id": "space-station",
@@ -21046,7 +21784,25 @@
         "retro": 1
       },
       "galleryOrder": 41,
-      "tagline": "Soft crew bubbles with stable color markers"
+      "tagline": "Soft crew bubbles with stable color markers",
+      "alertRecipe": {
+        "version": 1,
+        "title": "Crew announcement",
+        "frameNote": "White meeting bubble, navy ink and small crew dot",
+        "tokenBindings": "alertDesign.tokenBindings",
+        "iconSet": "alertDesign.icons",
+        "iconTreatment": "outline",
+        "motion": "pop",
+        "soundWave": "sine",
+        "typeDefaults": "alertDesign.types",
+        "surfaceOpacityFloor": 0.94,
+        "titleSizePx": 16,
+        "bodySizePx": "clamp(20, resolved messageText fontSize, 32)",
+        "iconSizePx": 36,
+        "paddingPx": 20,
+        "columnGapPx": 16,
+        "followMessage": "{name} joined the adventure!"
+      }
     }
   ],
   "settingsSchema": {
@@ -27005,5 +27761,586 @@
     "presentation.cutSize": "Corner cut size",
     "transparentBackground": "Transparent background",
     "hideFrames": "Hide frames"
+  },
+  "alertDesign": {
+    "version": 1,
+    "status": "design-only; requires a new alerts renderer and codec",
+    "settingsSchema": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "const": 1
+        },
+        "enabled": {
+          "type": "boolean",
+          "default": false
+        },
+        "position": {
+          "type": "string",
+          "enum": [
+            "top-left",
+            "top-center",
+            "top-right",
+            "center",
+            "bottom-left",
+            "bottom-right"
+          ],
+          "default": "top-center"
+        },
+        "widthPx": {
+          "type": "integer",
+          "default": 480,
+          "minimum": 280,
+          "maximum": 800
+        },
+        "insetPx": {
+          "type": "integer",
+          "default": 36,
+          "minimum": 0,
+          "maximum": 120
+        },
+        "queue": {
+          "type": "object",
+          "properties": {
+            "maxPending": {
+              "type": "integer",
+              "default": 20,
+              "minimum": 1,
+              "maximum": 50
+            },
+            "maxAgeSeconds": {
+              "type": "integer",
+              "default": 120,
+              "minimum": 15,
+              "maximum": 300
+            },
+            "followDedupeSeconds": {
+              "type": "integer",
+              "default": 30,
+              "minimum": 5,
+              "maximum": 120
+            },
+            "gapMs": {
+              "type": "integer",
+              "default": 500,
+              "minimum": 0,
+              "maximum": 2000
+            }
+          },
+          "required": [
+            "maxPending",
+            "maxAgeSeconds",
+            "followDedupeSeconds",
+            "gapMs"
+          ],
+          "additionalProperties": false
+        },
+        "sound": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": false
+            },
+            "volume": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "default": 0.2
+            }
+          },
+          "required": [
+            "enabled",
+            "volume"
+          ],
+          "additionalProperties": false
+        },
+        "showViewerMessage": {
+          "type": "boolean",
+          "default": true
+        },
+        "showRewardTitle": {
+          "type": "boolean",
+          "default": true
+        },
+        "types": {
+          "type": "object",
+          "properties": {
+            "follow": {
+              "type": "object",
+              "properties": {
+                "enabled": {
+                  "type": "boolean",
+                  "default": true
+                },
+                "message": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 160,
+                  "default": "{name} joined the adventure!"
+                },
+                "holdSeconds": {
+                  "type": "integer",
+                  "default": 5,
+                  "minimum": 3,
+                  "maximum": 20
+                }
+              },
+              "required": [
+                "enabled",
+                "message",
+                "holdSeconds"
+              ],
+              "additionalProperties": false
+            },
+            "sub": {
+              "type": "object",
+              "properties": {
+                "enabled": {
+                  "type": "boolean",
+                  "default": true
+                },
+                "message": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 160,
+                  "default": "{name} subscribed!"
+                },
+                "holdSeconds": {
+                  "type": "integer",
+                  "default": 7,
+                  "minimum": 3,
+                  "maximum": 20
+                }
+              },
+              "required": [
+                "enabled",
+                "message",
+                "holdSeconds"
+              ],
+              "additionalProperties": false
+            },
+            "resub": {
+              "type": "object",
+              "properties": {
+                "enabled": {
+                  "type": "boolean",
+                  "default": true
+                },
+                "message": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 160,
+                  "default": "{name} is back for {months} months!"
+                },
+                "holdSeconds": {
+                  "type": "integer",
+                  "default": 9,
+                  "minimum": 3,
+                  "maximum": 20
+                }
+              },
+              "required": [
+                "enabled",
+                "message",
+                "holdSeconds"
+              ],
+              "additionalProperties": false
+            },
+            "giftSub": {
+              "type": "object",
+              "properties": {
+                "enabled": {
+                  "type": "boolean",
+                  "default": true
+                },
+                "message": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 160,
+                  "default": "{name} gifted {count} subscriptions!"
+                },
+                "holdSeconds": {
+                  "type": "integer",
+                  "default": 8,
+                  "minimum": 3,
+                  "maximum": 20
+                }
+              },
+              "required": [
+                "enabled",
+                "message",
+                "holdSeconds"
+              ],
+              "additionalProperties": false
+            },
+            "raid": {
+              "type": "object",
+              "properties": {
+                "enabled": {
+                  "type": "boolean",
+                  "default": true
+                },
+                "message": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 160,
+                  "default": "{name} arrived with {viewers} viewers!"
+                },
+                "holdSeconds": {
+                  "type": "integer",
+                  "default": 9,
+                  "minimum": 3,
+                  "maximum": 20
+                }
+              },
+              "required": [
+                "enabled",
+                "message",
+                "holdSeconds"
+              ],
+              "additionalProperties": false
+            },
+            "cheer": {
+              "type": "object",
+              "properties": {
+                "enabled": {
+                  "type": "boolean",
+                  "default": true
+                },
+                "message": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 160,
+                  "default": "{name} cheered {bits} bits!"
+                },
+                "holdSeconds": {
+                  "type": "integer",
+                  "default": 6,
+                  "minimum": 3,
+                  "maximum": 20
+                }
+              },
+              "required": [
+                "enabled",
+                "message",
+                "holdSeconds"
+              ],
+              "additionalProperties": false
+            },
+            "redemption": {
+              "type": "object",
+              "properties": {
+                "enabled": {
+                  "type": "boolean",
+                  "default": false
+                },
+                "message": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 160,
+                  "default": "{name} redeemed a channel reward!"
+                },
+                "holdSeconds": {
+                  "type": "integer",
+                  "default": 7,
+                  "minimum": 3,
+                  "maximum": 20
+                }
+              },
+              "required": [
+                "enabled",
+                "message",
+                "holdSeconds"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "follow",
+            "sub",
+            "resub",
+            "giftSub",
+            "raid",
+            "cheer",
+            "redemption"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "version",
+        "enabled",
+        "position",
+        "widthPx",
+        "insetPx",
+        "queue",
+        "sound",
+        "showViewerMessage",
+        "showRewardTitle",
+        "types"
+      ],
+      "additionalProperties": false
+    },
+    "defaults": {
+      "version": 1,
+      "enabled": false,
+      "position": "top-center",
+      "widthPx": 480,
+      "insetPx": 36,
+      "queue": {
+        "maxPending": 20,
+        "maxAgeSeconds": 120,
+        "followDedupeSeconds": 30,
+        "gapMs": 500
+      },
+      "sound": {
+        "enabled": false,
+        "volume": 0.2
+      },
+      "showViewerMessage": true,
+      "showRewardTitle": true,
+      "types": {
+        "follow": {
+          "enabled": true,
+          "message": "{name} joined the adventure!",
+          "holdSeconds": 5
+        },
+        "sub": {
+          "enabled": true,
+          "message": "{name} subscribed!",
+          "holdSeconds": 7
+        },
+        "resub": {
+          "enabled": true,
+          "message": "{name} is back for {months} months!",
+          "holdSeconds": 9
+        },
+        "giftSub": {
+          "enabled": true,
+          "message": "{name} gifted {count} subscriptions!",
+          "holdSeconds": 8
+        },
+        "raid": {
+          "enabled": true,
+          "message": "{name} arrived with {viewers} viewers!",
+          "holdSeconds": 9
+        },
+        "cheer": {
+          "enabled": true,
+          "message": "{name} cheered {bits} bits!",
+          "holdSeconds": 6
+        },
+        "redemption": {
+          "enabled": false,
+          "message": "{name} redeemed a channel reward!",
+          "holdSeconds": 7
+        }
+      }
+    },
+    "tokenBindings": {
+      "frame": "frame",
+      "shape": "presentation",
+      "bodyTypography": "resolved parts.messageText",
+      "titleTypography": "resolved parts.name",
+      "bodyPaint": "parts.messageText.paint",
+      "namePaint": "parts.name.paint",
+      "surface": "backgrounds[frame.target]",
+      "accent": "frame.paint",
+      "reduceMotion": "reduceMotion OR system preference"
+    },
+    "icons": {
+      "spark": {
+        "viewBox": "0 0 24 24",
+        "path": "M12 2 L15 9 L22 12 L15 15 L12 22 L9 15 L2 12 L9 9 Z",
+        "fill": "none",
+        "stroke": "currentColor",
+        "strokeWidth": 1.75
+      },
+      "star": {
+        "viewBox": "0 0 24 24",
+        "path": "M12 2 L15 8 L22 9 L17 14 L18 21 L12 18 L6 21 L7 14 L2 9 L9 8 Z",
+        "fill": "none",
+        "stroke": "currentColor",
+        "strokeWidth": 1.75
+      },
+      "cycle": {
+        "viewBox": "0 0 24 24",
+        "path": "M19 8 A8 8 0 1 0 20 15 M19 3 L19 8 L14 8",
+        "fill": "none",
+        "stroke": "currentColor",
+        "strokeWidth": 1.75
+      },
+      "gift": {
+        "viewBox": "0 0 24 24",
+        "path": "M3 9 H21 V14 H3 Z M5 14 V22 H19 V14 M12 9 V22 M12 9 C2 9 4 0 8 3 Z M12 9 C22 9 20 0 16 3 Z",
+        "fill": "none",
+        "stroke": "currentColor",
+        "strokeWidth": 1.75
+      },
+      "banner": {
+        "viewBox": "0 0 24 24",
+        "path": "M5 22 V3 H20 L17 8 L20 13 H5 M9 6 H14 M9 10 H13",
+        "fill": "none",
+        "stroke": "currentColor",
+        "strokeWidth": 1.75
+      },
+      "gem": {
+        "viewBox": "0 0 24 24",
+        "path": "M12 2 L21 10 L12 22 L3 10 Z M3 10 H21 M12 2 L8 10 L12 22 L16 10 Z",
+        "fill": "none",
+        "stroke": "currentColor",
+        "strokeWidth": 1.75
+      },
+      "ticket": {
+        "viewBox": "0 0 24 24",
+        "path": "M3 5 H21 V9 Q17 12 21 15 V19 H3 V15 Q7 12 3 9 Z M12 8 V16",
+        "fill": "none",
+        "stroke": "currentColor",
+        "strokeWidth": 1.75
+      }
+    },
+    "types": {
+      "follow": {
+        "label": "Follow",
+        "defaultMessage": "{name} joined the adventure!",
+        "holdSeconds": 5,
+        "icon": "spark",
+        "notesHz": [
+          523.25,
+          659.25
+        ]
+      },
+      "sub": {
+        "label": "Subscription",
+        "defaultMessage": "{name} subscribed!",
+        "holdSeconds": 7,
+        "icon": "star",
+        "notesHz": [
+          523.25,
+          659.25,
+          783.99
+        ]
+      },
+      "resub": {
+        "label": "Resubscription",
+        "defaultMessage": "{name} is back for {months} months!",
+        "holdSeconds": 9,
+        "icon": "cycle",
+        "notesHz": [
+          659.25,
+          783.99,
+          1046.5
+        ]
+      },
+      "giftSub": {
+        "label": "Gift subscriptions",
+        "defaultMessage": "{name} gifted {count} subscriptions!",
+        "holdSeconds": 8,
+        "icon": "gift",
+        "notesHz": [
+          523.25,
+          783.99,
+          1046.5
+        ]
+      },
+      "raid": {
+        "label": "Raid",
+        "defaultMessage": "{name} arrived with {viewers} viewers!",
+        "holdSeconds": 9,
+        "icon": "banner",
+        "notesHz": [
+          392,
+          523.25,
+          783.99
+        ]
+      },
+      "cheer": {
+        "label": "Cheer",
+        "defaultMessage": "{name} cheered {bits} bits!",
+        "holdSeconds": 6,
+        "icon": "gem",
+        "notesHz": [
+          783.99,
+          1046.5
+        ]
+      },
+      "redemption": {
+        "label": "Channel points",
+        "defaultMessage": "{name} redeemed a channel reward!",
+        "holdSeconds": 7,
+        "icon": "ticket",
+        "notesHz": [
+          659.25,
+          523.25
+        ]
+      }
+    },
+    "soundEnvelope": {
+      "noteMs": 110,
+      "gapMs": 35,
+      "attackMs": 8,
+      "releaseMs": 75,
+      "peakGain": 0.08,
+      "maxVoices": 1
+    },
+    "motion": {
+      "fade": {
+        "enterMs": 220,
+        "exitMs": 180,
+        "from": "opacity(0)"
+      },
+      "slide": {
+        "enterMs": 220,
+        "exitMs": 180,
+        "from": "translateY(-12px) opacity(0); bottom anchors use +12px"
+      },
+      "pop": {
+        "enterMs": 240,
+        "exitMs": 180,
+        "from": "scale(.96) opacity(0)"
+      },
+      "step": {
+        "enterMs": 160,
+        "exitMs": 160,
+        "from": "translateY(-8px) opacity(0); steps(2,end)"
+      },
+      "exit": "opacity only; step uses steps(2,end); no reverse travel",
+      "reduced": "immediate enter/exit; preserve hold"
+    },
+    "templateTokens": {
+      "follow": [
+        "name"
+      ],
+      "sub": [
+        "name"
+      ],
+      "resub": [
+        "name",
+        "months"
+      ],
+      "giftSub": [
+        "name",
+        "count"
+      ],
+      "raid": [
+        "name",
+        "viewers"
+      ],
+      "cheer": [
+        "name",
+        "bits"
+      ],
+      "redemption": [
+        "name"
+      ]
+    },
+    "subscriptionVariants": [
+      "tier1",
+      "tier2",
+      "tier3",
+      "prime"
+    ],
+    "primeNotice": "Preview-only Prime variant: EventSub cannot distinguish Prime from Tier 1. Live 1000 badge: Tier 1 / Prime."
   }
 }
