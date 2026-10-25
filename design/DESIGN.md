@@ -1,3 +1,216 @@
+# Round 3 — full editor handoff
+
+This section is authoritative over all earlier rounds below, including the old exclusions of custom CSS and saved skins. Design files only; application implementation belongs to the builder. `skins.json` now has schemaVersion 3, all 22 complete presets, an embedded draft-2020-12 `settingsSchema`, `editorStateSchema`, `savedSkinSchema`, and storage limits. Old flat keys remain as compatibility projections. The existing v2 app must be upgraded before it can consume v3; its current normalizer rejects version 3. Do not deploy this data alone.
+
+## Composition and interaction
+
+Keep the slate palette and DM Sans editor typography from round 1. The chat itself remains the visual focus. Use a 440 px left rail, 64 px header, 96 px preview toolbar and flexible right stage. At 1280 × 720 the stage fits a 1280 × 720 source into the available 792 × 460 area without cropping (792 × 445.5); at 1920 × 1080 it fits 1432 × 805.5. All overlay dimensions are source pixels. Rail scrolls independently; its search and bottom actions remain visible. Below 900 px preview moves above settings; document scroll and sticky actions replace the desktop scroll regions. Controls never shrink below 40 px high; single-column fields at 360 px. Use 16 px rail padding, 12 px field gaps, 8 px swatch gaps. Focus remains a visible gold outline.
+
+```
+Chat studio       Guild Chat · Modified          Undo  Redo
+Find a setting                 Fake / Live · channel · status
+Skins / My skins               Dark / Light / Checker · Burst 10
+Message box                    ┌──────────────────────────┐
+Name / Message text            │ transparent source stage │
+Badges / System / Panel        │                          │
+Frame / Background             │ [Guild] [Moss]: hello    │
+Name format / Layout           └──────────────────────────┘
+Motion / Filters / Advanced    1280 × 720 · Fit · source px
+Save skin · Copy overlay URL
+```
+
+Each of the six styling parts is a disclosure with identical controls, followed by Frame, Background, Name format, Layout, Motion & effects, Filters and Advanced. Runtime starts Skins and Name open; the review mockup deliberately opens EVERY section and nested group. Skins are starting points, never locks. “Start from scratch” loads Clean, clears frame/backgrounds/effects and custom CSS, keeps readable default text, and becomes an unsaved baseline. Preserve channel, filters and reduceMotion on skin selection/reset. Preserve nothing else. Built-in presets cannot be overwritten. Show the current skin name and “Modified” in the header, independently of library selection.
+
+Search placeholder: “Find a setting”. Match labels, part names and synonyms (bubble/message box, border/frame, spacing/gap). Expand matching sections, show matching fields plus their contextual dependencies and result count. No results: “No settings match. Try font, frame or lifetime.” Clearing search restores previous disclosure state. Every control has a visible value, units where applicable, and a proper label; sliders pair with editable numeric fields. Color controls show #RRGGBBAA, swatch and alpha slider 0–100%; presets retain six-digit flat compatibility colors. Gradients show two mandatory stop rows and an optional third, each with color/alpha and position %. Sorted positions, 0–100%, duplicates allowed for hard edges. Preserve hidden values on mode changes. Invalid inputs keep last valid preview with inline guidance; clamp finite committed numbers. No motion or font-fetching on every keystroke; commit font names on Enter/blur.
+
+Preview has explicit Fake chat / Live channel choices; typing a channel never switches mode implicitly. Live mode reports Connecting, Live (including empty chat), or Connection failed with “Use fake chat” action. Never silently relabel fake content as live. Background is Dark #101722, Light #F2F5FA or Checker; never serialized to overlay. Burst inserts exactly 10 marked sample rows through the same queue/lifetime/overflow logic; in Live mode label “Live + test messages” until these rows leave. Burst is preview-only. Render moderation, subscriber badges, long wrapping names, emoji, an emote and a system line in sample data. Every UI control is keyboard operable; announce connection/copy/save status, not incoming sample chat. Respect system OR user reduced motion.
+
+## V3 settings and defaults
+
+All nested objects are fully materialized in every skin. JSON schema defaults are Clean defaults. Six `parts` keys: `panel`, `messageBox`, `name`, `messageText`, `badges`, `system`. The shared table below applies to EACH. Exceptions: name solid color #A9CAFFFF; system #AEBBD0FF; badges #D4DCE8FF and size 14.3; panel/messageBox/badges shadows off. All other shared defaults below apply. Lengths px, angles degrees, stop positions %, alpha 0–1, time explicitly seconds or ms. Numeric fields accept decimals unless integer; sliders step .1 px, .01 alpha, 1 degree, 1 ms/second, weight 1.
+
+Typography is independently editable. `inheritTypography=false` makes a part use its own family, size, weight, italic, spacing, uppercase and lineHeight. Optional “Use parent typography” sets it true and disables those controls without erasing them: messageBox inherits panel, name/messageText/badges inherit messageBox, system inherits panel. Panel cannot inherit (normalize its flag false). Panel and box typography establish text defaults; explicit child overrides win, avoiding accidental changes to a carefully styled name. Paint/effects never inherit. Container paint colors only direct container text; backgrounds are separate surface controls. Container outline/shadow/glow render once around its box; text parts use glyph strokes/shadows. Badge styles affect its label/chip, never recolor Twitch badge image pixels; outline/shadow/glow decorate its wrapper. Emotes retain original pixels and sizing, unaffected by text paint.
+
+Any Google Font family can be typed (1–80 Unicode characters, no CSS syntax); use an encoded family query on the fixed Google Fonts endpoint, not a supplied stylesheet URL. Retain the curated list: DM Sans, Lato, Noto Sans, Pixelify Sans, Roboto Slab, Barlow, Barlow Condensed, VT323, IBM Plex Mono, Nunito Sans; plus system-ui, serif, sans-serif, monospace. Request selected families/weights only, with fallback while loading and an editor-only failure notice. Weight accepts 100–900; if unsupported, browser nearest available weight, displayed as a notice without rewriting the requested value.
+
+| Key | Type | Default | Range / choices |
+| --- | --- | --- | --- |
+| `parts.{part}.fontFamily` | string | `"DM Sans"` | max 80 characters |
+| `parts.{part}.fontSize` | number | `22` | 8–96 |
+| `parts.{part}.fontWeight` | integer | `500` | 100–900 |
+| `parts.{part}.italic` | boolean | `false` | true / false |
+| `parts.{part}.letterSpacing` | number | `0` | -3–20 |
+| `parts.{part}.uppercase` | boolean | `false` | true / false |
+| `parts.{part}.lineHeight` | number | `1.45` | 1–3 |
+| `parts.{part}.inheritTypography` | boolean | `false` | true / false |
+| `parts.{part}.paint.mode` | string | `"solid"` | solid / linear / radial |
+| `parts.{part}.paint.color` | string | `"#F2F5FAFF"` | ^#[0-9A-Fa-f]{8}$ |
+| `parts.{part}.paint.angle` | number | `135` | 0–360 |
+| `parts.{part}.paint.stops` | array | `[{"color": "#A9CAFFFF", "position": 0}, {"color": "#E5A9FFFF", "position": 100}]` | 2–3 entries; see item contract |
+| `parts.{part}.outline.width` | number | `0` | 0–8 |
+| `parts.{part}.outline.color` | string | `"#000000FF"` | ^#[0-9A-Fa-f]{8}$ |
+| `parts.{part}.shadow.enabled` | boolean | `true` | true / false |
+| `parts.{part}.shadow.color` | string | `"#000000A6"` | ^#[0-9A-Fa-f]{8}$ |
+| `parts.{part}.shadow.x` | number | `0` | -64–64 |
+| `parts.{part}.shadow.y` | number | `1` | -64–64 |
+| `parts.{part}.shadow.blur` | number | `3` | 0–64 |
+| `parts.{part}.glow.enabled` | boolean | `false` | true / false |
+| `parts.{part}.glow.color` | string | `"#A9CAFF80"` | ^#[0-9A-Fa-f]{8}$ |
+| `parts.{part}.glow.blur` | number | `4` | 0–48 |
+| `parts.{part}.glow.spread` | number | `0` | 0–16 |
+| `frame.target` | string | `"message"` | message / panel |
+| `frame.style` | string | `"none"` | none / solid / double / dashed / dotted / groove / ridge / inset / outset / pixel / beveled |
+| `frame.width` | number | `0` | 0–16 |
+| `frame.paint.mode` | string | `"solid"` | solid / linear / radial |
+| `frame.paint.color` | string | `"#7487A1FF"` | ^#[0-9A-Fa-f]{8}$ |
+| `frame.paint.angle` | number | `135` | 0–360 |
+| `frame.paint.stops` | array | `[{"color": "#A9CAFFFF", "position": 0}, {"color": "#E5A9FFFF", "position": 100}]` | 2–3 entries; see item contract |
+| `frame.radius.topLeft` | number | `6` | 0–120 |
+| `frame.radius.topRight` | number | `6` | 0–120 |
+| `frame.radius.bottomRight` | number | `6` | 0–120 |
+| `frame.radius.bottomLeft` | number | `6` | 0–120 |
+| `frame.padding.top` | number | `8` | 0–120 |
+| `frame.padding.right` | number | `12` | 0–120 |
+| `frame.padding.bottom` | number | `8` | 0–120 |
+| `frame.padding.left` | number | `12` | 0–120 |
+| `frame.doubleGap` | number | `2` | 0–24 |
+| `frame.pixelStep` | number | `4` | 1–24 |
+| `frame.outer.enabled` | boolean | `false` | true / false |
+| `frame.outer.width` | number | `1` | 0–16 |
+| `frame.outer.color` | string | `"#7487A1FF"` | ^#[0-9A-Fa-f]{8}$ |
+| `frame.outer.offset` | number | `2` | 0–32 |
+| `frame.ornament.style` | string | `"none"` | none / brackets / dots / diamonds / notches |
+| `frame.ornament.color` | string | `"#7487A1FF"` | ^#[0-9A-Fa-f]{8}$ |
+| `frame.ornament.size` | number | `12` | 2–48 |
+| `frame.ornament.width` | number | `1` | 0.5–8 |
+| `frame.ornament.inset` | number | `2` | 0–32 |
+| `frame.legacyDetail` | string | `"none"` | none / hud / slab |
+| `backgrounds.message.mode` | string | `"solid"` | solid / linear / radial / image |
+| `backgrounds.message.color` | string | `"#111C2EFF"` | ^#[0-9A-Fa-f]{8}$ |
+| `backgrounds.message.stops` | array | `[{"color": "#111C2EFF", "position": 0}, {"color": "#273B59FF", "position": 100}]` | 2–3 entries; see item contract |
+| `backgrounds.message.angle` | number | `135` | 0–360 |
+| `backgrounds.message.radialCenterX` | number | `50` | 0–100 |
+| `backgrounds.message.radialCenterY` | number | `50` | 0–100 |
+| `backgrounds.message.imageUrl` | string | `""` | max 2048 characters |
+| `backgrounds.message.imageFit` | string | `"cover"` | cover / contain / fill / tile |
+| `backgrounds.message.imageOpacity` | number | `1` | 0–1 |
+| `backgrounds.message.opacity` | number | `0.55` | 0–1 |
+| `backgrounds.message.backdropBlur` | number | `0` | 0–40 |
+| `backgrounds.message.recipe` | string | `"none"` | none / rainbow / boards / confetti |
+| `backgrounds.panel.mode` | string | `"solid"` | solid / linear / radial / image |
+| `backgrounds.panel.color` | string | `"#111C2EFF"` | ^#[0-9A-Fa-f]{8}$ |
+| `backgrounds.panel.stops` | array | `[{"color": "#111C2EFF", "position": 0}, {"color": "#273B59FF", "position": 100}]` | 2–3 entries; see item contract |
+| `backgrounds.panel.angle` | number | `135` | 0–360 |
+| `backgrounds.panel.radialCenterX` | number | `50` | 0–100 |
+| `backgrounds.panel.radialCenterY` | number | `50` | 0–100 |
+| `backgrounds.panel.imageUrl` | string | `""` | max 2048 characters |
+| `backgrounds.panel.imageFit` | string | `"cover"` | cover / contain / fill / tile |
+| `backgrounds.panel.imageOpacity` | number | `1` | 0–1 |
+| `backgrounds.panel.opacity` | number | `0` | 0–1 |
+| `backgrounds.panel.backdropBlur` | number | `0` | 0–40 |
+| `backgrounds.panel.recipe` | string | `"none"` | none / rainbow / boards / confetti |
+| `nameTemplate` | string | `"{badges} {name}: "` | max 160 characters |
+| `animationOut` | string | `"fade"` | none / fade / shrink / slide |
+| `animationOutDuration` | integer | `160` | 0–1500 |
+| `customCSS.enabled` | boolean | `false` | true / false |
+| `customCSS.source` | string | `""` | max 20000 characters |
+
+`paint.stops` and background stops are arrays of 2–3 `{color:#RRGGBBAA, position:number 0–100}` objects. Part paint stop defaults are [{color:#A9CAFFFF,position:0},{color:#E5A9FFFF,position:100}]; background defaults are [{color:#111C2EFF,position:0},{color:#273B59FF,position:100}]. A part's radial paint is centered at 50%/50%; its angle is retained but ignored. Solid fallback always uses paint.color. Glow spread on glyphs means repeated stroke-like text shadows (bounded at 16 px); box glow uses box-shadow spread. Shadow/glow must not overwrite each other or frame pseudo-elements.
+
+## Frame geometry and Guild Chat regression
+
+Frame target selects one panel or every message. Frame scope is independent from the two background surfaces. Padding applies only to the framed target, even with style none. Radius applies to that target and its background. Off-target backgrounds default to square corners; explicit surface custom CSS may change that. Width 0 or none hides primary frame and its border effects, but independently enabled outer frame and corner ornaments remain visible. Borders/ornaments sit above backgrounds and behind text, pointer-events none. Reserve outer outset in layout and overflow calculations, including the source edge; never clip it with the panel's content overflow. Clip image/background layers individually, not the decorated wrapper.
+
+Solid/dashed/dotted/groove/ridge/inset/outset follow CSS border geometry. Beveled uses top/left paint mixed with 28% white and bottom/right with 40% black. Gradient border uses a masked ring, not a filled rectangle; groove/ridge/inset/outset/beveled shade that ring in the same directions. Double is two full rings, each `width`, separated by `doubleGap`, total occupied thickness `2*width+doubleGap`, independent of CSS's minimum double-border width. Pixel uses square staircase corners: step size pixelStep with two right-angle steps at every corner, no diagonal antialiasing or rounded corners; saved radii are retained but ignored. Reserve 2*pixelStep at each corner and inset text beyond it. Ornaments: brackets = two perpendicular size-length lines; dots = filled size-diameter circles; diamonds = size-square rotated 45°; notches = inward V marks with depth size/2. Each repeats at four corners, inset from primary border's inner edge; width applies to strokes, ignored by filled dots/diamonds. Reserve ornament bounds in effective padding. No skin-ID rendering branches.
+
+Second outer frame is a solid ring of outer.width, separated from the primary frame's OUTSIDE edge by outer.offset. Outer corner radii = corresponding primary radius + offset + outer.width. Content box + primary border is the layout box; painted outset = offset + outer.width, reserved outside it. Both rings use border-box geometry. Do not use one box-shadow slot shared with glow/ambient effects.
+
+**Guild Chat exact correction:** frame.target panel; style solid; width 1; paint solid #BDA363FF; radius TL/TR/BR/BL = 2 px; padding T/R/B/L = 14/16/14/16 px. outer.enabled true, width 1, color #BDA363FF, offset 2 px. Thus two continuous gold 1 px rings with a 2 px clear gap, outer radius 5 px and total outset 3 px. Ornament none; legacyDetail none; borderEffect none. Background panel solid #0C1915FF at .80 opacity; message background opacity 0. Panel width 480 px excludes the extra 3 px painted outset on each side. Gold stays opaque when the background changes opacity. Preserve Lato 22/400, green text #72EC99, names #A1FFB7, system #E3C885, gap 7, and nameTemplate `{badges} [Guild] [{name}]: `. The previous prose called this corners, which permitted incomplete corner-only rendering; this spec explicitly replaces that recipe with two full rings. At source scale inspect all four sides, empty panel, five rows, overflow and exit, in both renderer contexts. At preview downscaling subpixel antialiasing is expected; judge the 1 px lines also at 100%.
+
+Legacy hud/slab decorations remain selectable as “Legacy detail” so all 22 skins retain their character. `frame.legacyDetail` uses the round 2 geometry, independent of primary style and ornaments. All other designs use none. Clearing it produces the ordinary frame builder result.
+
+## Background and name template
+
+Both `backgrounds.message` and `backgrounds.panel` expose the full background object above; the UI selects a surface without moving values between them. Solid, linear, radial and image modes are independent of frame target. ImageUrl allows empty or absolute HTTPS URL only, maximum 2048 characters, no credentials/data/javascript/file URLs. The user supplies their own image; the UI states that viewers/OBS will fetch it. Image has centered cover/contain/fill/tile fitting, imageOpacity multiplies opacity and pixel alpha; solid color is a fallback beneath it. For all modes, opacity multiplies only the background layer's alpha, never text/frame opacity. Backdrop blur applies behind the surface, without blurring its text; OBS cannot blur unrelated underlying OBS sources, only content inside the browser page. With unavailable image or backdrop support use the fallback solid. Gradient position order is stable; radial is an ellipse centered at radialCenterX/Y. `recipe` preserves round 2 rainbow/boards/confetti as an optional decorative layer; controls can switch it to none. Effects run on their old backgroundScope target, not on both surfaces.
+
+Template is literal text with exactly one `{name}`, zero/one `{channel}`, zero/one `{badges}`. Unknown brace tokens, missing/repeated name or >160 characters are invalid; keep last valid example and explain. `{badges}` is a placement marker for the existing trusted badge component, never HTML from the token text; zero badges contributes no text. `showBadges=false` suppresses that component regardless of template. Do not additionally prepend badges. Collapse only the one adjacent space owned by an empty badge token; otherwise preserve all user punctuation/spacing, including trailing spaces. No automatic extra separator in v3. Name/channel/literals use text nodes, never innerHTML; even `<{name}> ` displays angle brackets. Prefix punctuation follows name styling; badge styling remains independent. System lines bypass the template. Always show an example using Moss, channel cozy_channel and a moderator badge below the field. Offer text-only examples `[Guild] [{name}]: `, `<{name}> `, `{name} » `, `{badges} {name}: `.
+
+## Layout, removal and retained settings
+
+These are still top-level keys; authoritative changes from earlier ranges:
+
+| Key | Type | Default | Range |
+| --- | --- | --- | --- |
+| overlayWidth | integer | 480 | 120–3840 px, constrained to available source width |
+| maxMessages | integer | 8 | 1–30 |
+| messageSpacing | number | 8 | 0–120 px |
+| alignment | enum | left | left / center / right, stack and text |
+| direction | enum | bottom | bottom / top, newest edge |
+| messageLifetime | integer | 30 | 0 never; 1–3600 seconds |
+| edgeInset | integer | 20 | 0–64 px |
+| animationOut | enum | fade | none / fade / shrink / slide |
+| animationOutDuration | integer | 160 | 0–1500 ms |
+
+Timer starts on arrival. Fade opacity 1→0; shrink scale 1→.85 and opacity 1→0 around alignment anchor; slide translates 16 px toward oldest edge and fades. Exit reserves original row height until removal, then compacts once; never animate layout. A row exits once and is excluded from active capacity; total mounted rows still ≤30 (evict oldest immediately if required). Capacity/height overflow always evicts immediately to avoid clipping; user removal and expiry use the chosen exit. Panel frame stays fixed while rows enter/exit. Reduced motion makes exits immediate. All old entrance, text/ambient effects, role colors, mentions, channel and filter keys keep round 2 defaults/ranges as encoded in settingsSchema. Do not reset unrelated parts when changing a font or effect.
+
+## My skins, reset, history and sharing
+
+Browser library key `chat-studio.my-skins.v3` stores `{schemaVersion:3, skins:[savedSkinSchema...]}` (max 100 records). Each record: id string `user-` + UUID (1–64 suffix chars); name string trimmed 1–60 characters, default “Untitled skin”; createdAt/updatedAt ISO UTC timestamps set on save; settings a complete normalized v3 object. Save prompts inline for name and creates a new record; “Update saved skin” explicitly overwrites the selected local record. Duplicate copies its values into a new record named “Name copy” (trim to fit), new UUID/timestamps. Rename preserves ID; duplicate names allowed and distinguished by modified date. Delete removes only the local record; show Undo action, keep current appearance as an unsaved baseline. Never modify built-ins. On quota/privacy failure keep edits in memory and report “Could not save in this browser. Export a JSON backup.” No false saved status. Saving a skin normalizes channel to empty and filters/reduceMotion to Clean; applying it preserves the user's current channel/filters/reduceMotion.
+
+Export selected skin or all My skins as UTF-8 JSON envelope above, filename chat-skins.json. Import accepts v1/v2/v3 envelope, 1–100 records, ≤1 MiB, and only validated plain data; migrate, sanitize CSS, preview a list of names and warnings before Import. Never overwrite an existing ID: assign a new local UUID, preserve name; built-in imported IDs also become user IDs. Reject future versions, malformed JSON, invalid record types or too many records without modifying library. For otherwise valid records normalize invalid settings per key with visible change summary; user may cancel. Unknown keys are dropped; no prototype merges. Library schema uses full settings, not references to built-in IDs, so export works independently of preset updates.
+
+History is session-only, up to 100 transactions of settings, selected baseline and local library mutations. Group one drag or text-edit focus session as one transaction; skin application, reset, import, save/rename/delete each one transaction. Redo clears on a new edit. Ctrl+Z/Ctrl+Y (Cmd+Z/Cmd+Shift+Z on macOS); text inputs/textareas keep native text undo while focused, then commit one editor transaction on blur. Disabled history buttons state why. Channel, connection, preview switches, search and disclosure state are outside history. Undoing library changes persists the restored library; on storage failure report it explicitly. “Reset to skin” restores the snapshot captured at last apply/save, including custom CSS, preserving channel/filters/reduceMotion, and is itself undoable. Never silently reset to Clean. URL loads are an “Imported look” baseline; they need no local skin ID. A deleted baseline remains available in session. Start-from-scratch is also undoable.
+
+Share is “Copy overlay URL” plus “Copy share link” using the SAME overlay URL containing all canonical normalized settings as base64url UTF-8 JSON; omit editor/library/history state. No local skin ID dependency or external shortener. URL decoder resolves fields, sanitizes CSS and validates again in overlay, not only editor. If URL exceeds 16,000 characters show a length notice and offer JSON export; copy remains available (do not imply all browsers/OBS accept unlimited URLs). Clipboard failure reveals a selectable URL. Require a valid channel for a live overlay link; saved JSON works without one.
+
+Editor-only schema: searchQuery string default empty/max120; previewMode fake|live default fake; previewBackground dark|light|checker default checker; burstCount constant10; activeSkinId string default clean/max80; baseline null until load then a full settings snapshot; openSections string[] default [skins,name], subset of section IDs, unique; undoLimit constant100. History arrays start empty and hold ≤100 transactions each. No editor-only values enter an overlay URL.
+
+## Advanced CSS contract
+
+Opt-in `customCSS.enabled=false`, `source=""`, max20,000 characters. Plain textarea with Apply button (one undo transaction), character count, validation status and Reset CSS action. Display: “CSS applies only inside your overlay. Imports, external file URLs and expressions are removed from shared styles. Use Background → Image for your own image URL.” Show count and reasons for removed rules/declarations; preview the sanitized text on Apply. Store/export/share only sanitized source. The same sanitization must run on JSON import and URL decode, even when disabled.
+
+Use a CSS parser, not regex substitution: decode CSS escapes and comments before examining tokens. Remove all @import rules, expression() declarations (case/escape insensitive), and all external URL-bearing declarations, including http(s) url(), protocol-relative URLs, image-set string URLs and escaped equivalents. This design deliberately permits only local `url(#fragment)` references; strip other url() resources as well. Reject @font-face and unknown at-rules. Permit scoped qualified rules and nested @media/@supports only; disallow custom @keyframes in v3. Expand nesting before selector validation. Prefix every selector branch with the unique `[data-overlay-root]` scope; `:root` and root `&` map to it. Reject selectors escaping it (html/body, external ancestors, :has outside scope), @scope and malformed selectors. Contain layout/paint/style on the root, isolate its stacking context, and clip custom overflow at root; CSS cannot style the editor or other overlays. Provide documented hooks `.chat-panel`, `.chat-message`, `.chat-name`, `.chat-text`, `.chat-badges`, `.chat-system`. Custom CSS is last in cascade inside the root, can override builder styles, and gets a persistent “Custom CSS active” indicator; disabling it shows the builder result. It never becomes executable HTML/JS. Sanitizer acceptance examples: `@import "https://x"`, escaped `u\72l(https://x)`, mixed-case `EXPRESSION(...)`, `image-set("https://x" 1x)` removed; `.chat-name { letter-spacing:1px }` retained and scoped. Never claim a shared link is safe based only on stripping three strings.
+
+### Alpha for retained effect colors
+
+`effectColors` supplies canonical #RRGGBBAA colors (string, exactly eight hex digits) for the existing role/mention/border effects. Defaults: broadcaster #FFB7A5FF, moderator #97E8B2FF, vip #E6B0FFFF, subscriber #FFE095FF, mention #F4D38DFF, borderSecondary #E5A9FFFF. Each is a swatch + alpha slider; legacy broadcasterNameColor/modNameColor/vipNameColor/subNameColor/mentionHighlightColor/borderEffectColor map respectively to these fields with FF alpha. Export old aliases by dropping alpha, never overwrite the canonical alpha. Name gradient swatches are the canonical name.paint stops.
+
+## Migration and precedence
+
+Missing version = 1. Normalize legacy v1/v2 keys against their old ranges before mapping; map to v3, then allow v3 ranges. V3 canonical fields win over aliases PER LEAF. Missing canonical leaves use a valid corresponding old value, then Clean default. Invalid provided canonical leaves use Clean with notice (not a stale alias). Unsupported future versions show a notice and Clean. Deep-copy plain recognized fields; discard unknowns. JSON schema is the complete persisted shape, not a requirement that incoming partial URLs already be complete.
+
+| Legacy keys | V3 destination / mapping |
+| --- | --- |
+| fontFamily/fontSize/fontWeight/lineHeight | all six parts; badges size = fontSize × .65 |
+| textColor/nameColor/systemColor | messageText/name/system paint.color (+FF); container textColor; badges neutral |
+| outlineWidth/outlineColor | name/messageText/system outline |
+| shadowEnabled/Color/Opacity/Blur | name/messageText/system shadow; x0,y1, alpha merged into color |
+| nameEffect gradient + nameGradientColor1/2 | name paint linear at 90°, two stops; gradient flag is alias, not a second renderer |
+| nameEffect glow | name.glow enabled, color resolved name color, blur4; rainbow remains timed effect |
+| borderStyle | line→solid, bevel→beveled, corners→solid + brackets, hud/slab→solid + legacyDetail; others same |
+| borderWidth/Color/cornerRadius | frame.width/paint.color/all four radii |
+| paddingX/paddingY | frame.padding left+right/top+bottom |
+| backgroundScope | frame.target and old-effect target |
+| backgroundColor/Opacity/SecondaryColor/Treatment | active backgrounds[target]; other surface opacity0; gradient→linear 135°, rainbow/boards/confetti→recipe |
+| nameFormat | nameTemplate = optional `{badges} ` + old format + one trailing space |
+| showBadges, channel, filters, layout, animation and remaining round 2 effects | same top-level keys |
+
+The 22 records retain ALL old flat keys and also all canonical objects. Guild's old borderStyle projection is corrected to double. Emit aliases from canonical state when writing skins.json or compatibility exports: typography from messageText, name/system colors from respective solid fallbacks, shadow/outline from messageText, radius from TL, padding from left/top, frame scope from target, background fields from that target, template removes badge marker and one trailing separator. Map solid→line, beveled→bevel; unsupported legacy styles→line; outer enabled→double. Name paint linear/radial projects to gradient, glow to glow; otherwise retain rainbow or none. Background radial→gradient, image→solid fallback. Projection is lossy for v2; never use aliases to render v3 or overwrite canonical fields. Plain modern overlay URLs may omit aliases to shorten links; decoder fills them after canonical resolution. Round 2 role priority still overrides name paint, then Twitch mode uses its resolved solid color; chosen gradient takes precedence over ordinary fixed color. Existing border effects and background effects decorate canonical geometry and never replace its base layers.
+
+## Builder acceptance
+
+- Every part can independently change font, size, weight, italic, spacing, uppercase, paint, outline, shadow and glow; no sibling changes unless typography inheritance is enabled.
+- All 22 v3 records validate and retain their old keys; v1/v2 URLs migrate; v3 canonical data survives URL and JSON round-trips, including alpha and custom CSS.
+- Guild frame has two continuous gold lines in editor and OBS at 100%, with no clipping on overflow or expiry. Double, outer frame, glow and ornaments coexist without pseudo-element collisions.
+- Templates render angle brackets and malicious-looking input literally; badges occur once. Invalid tokens cannot become markup.
+- Save/reload, rename, duplicate, delete/undo, import conflicts, storage failure, reset-to-baseline and native text undo behave as specified.
+- Verify blank live channel, empty connected chat, failed connection, burst10, transparent backgrounds and actual OBS image/blur limitations.
+- Validate parser-based CSS sanitation with escape/comment/url/selector bypass cases before enabling shared CSS. All controls and search work with keyboard at 320/1280/1920 widths.
+
+---
+
+# Earlier design rounds (historical reference; Round 3 above wins)
+
 # Chat overlay design handoff
 
 This is a design package, not the application. `mockup.html` is a static review sheet with an editor composition and 22 five-message specimens. It has no chat connection, URL logic or functioning settings. `skins.json` is the complete preset data; no preset relies on hidden defaults. BRIEF.md is the product source. The requested gallery-first grouping supersedes the older group order in PROMPT.md.
