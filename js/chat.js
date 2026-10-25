@@ -1,3 +1,1 @@
-export function connectChat(channel,onMessage,onState=()=>{}){if(!window.tmi||!channel){onState('error');return{disconnect(){}};}const client=new window.tmi.Client({options:{skipUpdatingEmotes:true},connection:{reconnect:true,secure:true},channels:[channel]});
-client.on('connected',()=>onState('live'));client.on('disconnected',()=>onState('error'));client.on('message',(target,tags,message,self)=>{if(!self)onMessage({username:tags['display-name']||tags.username,text:message,color:tags.color,badges:tags.badges||{},emotes:tags.emotes||{}});});client.connect().catch(()=>onState('error'));return{disconnect:()=>client.disconnect()};}
-
+export {connectChat,createIRCClient,parseIRC,parseTags,unescapeTag} from './irc.js';
