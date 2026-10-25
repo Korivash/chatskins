@@ -7,6 +7,7 @@
  function syncPause(){document.body.classList.toggle('paused',paused||reduced.matches);$('#pause').textContent=reduced.matches?'Motion off (device)':paused?'Resume motion':'Pause motion';$('#pause').disabled=reduced.matches;$('#pause').setAttribute('aria-pressed',String(paused));}
  $('#pause').onclick=()=>{paused=!paused;syncPause();};reduced.addEventListener('change',syncPause);syncPause();
  function chat(el,skin,mini=false){if(!el)return;el.className='chat-sample '+skin.id;el.style.cssText=`--skin-bg:${skin.bg};--skin-border:${skin.border};--skin-text:${skin.text};--skin-name:${skin.nameColor};--skin-radius:${Math.min(skin.radius,24)}px`;
+ if(skin.sampleHtml){el.className='chat-sample';el.innerHTML=skin.sampleHtml;return;}
  const rows=mini?[['moss','one more run?'],['luna','we’re so back ✦']]:[['orbit','chat, we made it'],['moss','okay this looks SO good'],['luna','one more run? ✦ ✦ ✦']];
  el.innerHTML=rows.map(([n,t])=>`<div class="msg"><b>${n}</b><span>${t}</span></div>`).join('');}
  let lastOpener;
