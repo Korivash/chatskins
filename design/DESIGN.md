@@ -1,3 +1,139 @@
+# Round 5 — Streamer favorites and a finished editor
+
+This round is authoritative where it conflicts with earlier rounds. This is a **design handoff**, not an application change. Read `research/TOP-CHAT-UIS.md` first: its popularity claims are qualitative observations, not a measured ranking. We translate its bubble, vertical-tag, minimal-glass, neon, emote-forward and editorial directions into original shapes and palettes. No external theme CSS, art, logos or proprietary fonts are used. Frames are CSS/SVG geometry; all preset fonts are Google Fonts.
+
+## Visual direction and gallery
+
+Keep the editor quiet: canvas #101722, rail #182230, controls #222F40, dividers #34465E, text #F2F5FA, muted text #AFBDD0, focus #F4D38D. DM Sans handles editor text; individual skins own their display typography. Use left-aligned labels, generous preview space and actual chat specimens as gallery thumbnails. Color belongs in the chat, not in competing editor decoration.
+
+`skins.json` contains **34 complete settings objects: 12 new + 22 polished**. Existing IDs and the default `clean` stay stable. All 12 new styles belong to the first group, **Streamer favorites**. Within that group, the six Featured records lead in this exact demo order: **Bubble Lift, Glass Card, Name Tag, Comic Burst, Pastel Pop, Esports Slash**. Then Quiet Line, Neon Edge, Sticker Stack, Initial Card, Signal Console, Announcer. Follow with Game styles, Colorful, Animated. Historical category labels remain browsing metadata; Animated does not require always-running animation. Featured is a textual badge, not color alone. Do not duplicate Featured cards in another group. Catalog metadata `featured`, `galleryOrder`, `galleryGroups`, `featuredSkinIds`, `description` and `designRevision` never enters an overlay URL.
+
+The original Guild Chat is our calibration point: preserve its two continuous 1 px gold rings, 2 px clear gap, green text, Lato metrics and panel background. Every other original skin now has an intentional name format and frame/color combination (see the per-skin table below). Similar pairs are explicitly separated: Bubble Chat remains an inline pale capsule versus Bubble Lift's dark teal stacked speech balloon; Terminal is one green pane versus Signal Console's individual dashed mint command slips; Hero Shooter uses orange rectangular stripe cards versus Esports Slash's lime diagonal plates; Candy Pop uses warm multicolor tiles versus Pastel Pop's lavender cut-corner tickets. Readable names are bold, bodies stay calm, and all presets start with static decorative effects. Neon Edge has static edge glow. Entrances remain short, and system/user reduced motion always wins.
+
+At 480 source pixels, typical body text is 22 px with line-height 1.4; Retro RPG uses 28 px VT323. Never scale text to make an overly long username fit. Wrap it, keeping the message column intact. Most new dark backgrounds use .96 opacity; Glass Card uses .86 with 12 px backdrop blur. This backing is essential: **OBS cannot blur a separate gameplay source behind the browser source**. Blur is an optional in-page enhancement; disabling it must leave Glass Card readable. Light pastel styles use deep ink with near-opaque backing. Design acceptance target is 4.5:1 body/name contrast against the composited surface on black and white backgrounds, with an automatic name contrast correction described below. Custom transparency can lower contrast; show an inline editor hint when it does.
+
+## Additive settings contract
+
+Retain `schemaVersion:3`; add catalog `designRevision:5`. This is an additive design extension, not a claim that an older v3 renderer understands the new primitives. The builder must extend its normalizer, schema, URL codec and renderer together. Older v3 inputs fill missing new leaves with the defaults below; existing canonical v3 leaves retain their values. Earlier round migration rules still apply. All newly proposed objects are materialized in every preset and included in `settingsSchema` and the embedded saved-skin schema. Unknown fields are still dropped. URLs contain the full normalized settings rather than a preset-ID lookup. A pre-Round-5 renderer may drop these fields: do not promise fidelity in an old build.
+
+Every skin remains fully editable; **no skin-ID rendering branches**. `presentation` adds reusable layout and frame primitives:
+
+| Key | Default | Range / behavior |
+| --- | --- | --- |
+| `presentation.layout` | `inline` | inline / stacked / columns / initials / announcer |
+| `presentation.shape` | `rect` | rect / speech / slash / ticket |
+| `presentation.nameTreatment` | `plain` | plain / pill / tab |
+| `presentation.accent` | `none` | none / rail / underline / topbar |
+| `presentation.chipColor` | `#A9CAFFFF` | RGBA name-chip/initial-medallion fill |
+| `presentation.columnWidth` | `120` | 64–180 px, capped at 35% of available row width |
+| `presentation.initialSize` | `40` | 24–64 px |
+| `presentation.tailSize` | `10` | 0–20 px, zero removes tail |
+| `presentation.cutSize` | `12` | 0–24 px |
+
+Inline flows name and body together. Stacked gives the name its own row with 4 px separation. Columns gives names a fixed start column and messages the flexible remaining width with 12 px gap; use 8 px gap below 360 source pixels. Initials uses an initial circle spanning name/body rows with a 12 px column gap; derive one uppercase grapheme from display name, fallback `?`, mark decorative to assistive technology. This is not an avatar API lookup. Announcer stacks the name above the body; its 32 px size is in `parts.name`, never a hidden style override. For column widths below 240 source pixels, fall back to stacked to preserve readable text. Use min-width:0 and overflow-wrap:anywhere throughout.
+
+Pill names have chipColor fill, 1 px white at 67% border, 20 px radius, 4/9 px padding and a 2 px hard black shadow at 44%; reserve 8 px below. Tab names use the same padding, 2 px radius, no shadow. Plain has no fill. Name text always uses its resolved name paint; automatic contrast checks against the chip when present. Medallion letters use contrast-safe dark or light ink. No badge duplication: `{badges}` remains a single template marker, with badges before name text inside its wrapper. Name templates retain exact punctuation in JSON; escaping and allowed tokens remain Round 3 rules.
+
+Rect uses the existing frame/radii. Speech uses it plus a triangular 10 px tail at inline-start 24 px, pointing down and filled from the frame color; reserve tailSize below so it never hits the next row. Slash uses points `(cut,0), (100%,0), (100%-cut,100%), (0,100%)`; ticket cuts all four corners at cutSize. Render the silhouette as a background/frame layer, using an inset inner polygon to preserve border width; do not clip the text or its shadow. Add cutSize to horizontal padding for slash/ticket. At extreme radii/cuts, clamp to half the available frame dimension. Rect-only radii stay stored but are ignored by polygon shapes. A shape follows `frame.target`: once for panel, once per message otherwise. Pixel staircase geometry takes precedence over shape/radius; retain their values for switching back.
+
+Rail is a 5 px start border on each row; topbar is a 5 px top edge on the framed target; underline is a 2 px name rule. Accent color is frame.paint.color. Reserve these in layout instead of painting across text. Frame width zero hides the primary perimeter, but an independently selected accent remains visible; hideFrames hides both. Ornaments retain the four-corner geometry from Round 3. Effects, outer rings, shadow and ornaments each own separate layers. All primitive controls appear under Name layout or Frame, never as undocumented CSS. Mockup CSS is an illustrative static rendering, not the production renderer: the builder must implement the exact multi-ring, four-corner and polygon inset contracts above.
+
+New numeric keys accept finite decimals unless noted; maxLines is committed as an integer. Colors use #RRGGBBAA. New settings defaults are as below. Skin application/reset preserves channel, filters, reduceMotion, provider toggles, nameStyle, grouping, messageLimits, lifecycle and emphasis preferences; applying a skin replaces emote size and presentation. Loading a URL uses its explicit values. This supersedes Round 3's narrower preservation rule. The inherited `transparentBackground=false` and `hideFrames=false` switches are now explicitly declared in the schema: the former suppresses both background surfaces without changing stored colors; the latter suppresses frames, accents, ornaments and frame effects. Neither hides text. The outer OBS page remains transparent regardless. Canonical corner radii retain the full range; the legacy radius alias clamps to its old 24 px maximum.
+
+## Five login-free feature additions
+
+These prioritize the survey's readable lifecycle, filters/emphasis and fast customization gaps. They require no profile lookup, pronoun service, OAuth or EventSub. The mandatory community-emote work is specified separately below.
+
+| Feature | Settings / default | Editor UI and precise behavior |
+| --- | --- | --- |
+| Readable, pronoun-free names | `nameStyle.readableColors=true`, `nameStyle.minContrast=4.5` (3–7) | Name → Color: “Keep names readable” toggle; advanced “Minimum name contrast” ratio input. Retain Twitch/fixed/role name choices. Resolve ordinary priority first, then adjust luminance until the requested contrast is met against the local backing/chip. If impossible with a translucent surface, add an opaque contrasting local name backing. For gradients, check every stop. Never infer gender, pronouns or identity; no external profile request. |
+| Consecutive-user grouping | `grouping.enabled=false`, `grouping.windowSeconds=20` (1–120 s) | Layout → “Group consecutive messages” toggle and “Group within” slider. Group only immediately adjacent, eligible messages from the same IRC user-id (fallback lowercase login) within the window; no intervening user/system row. Suppress repeated name, badge and initial on later rows; align continuation bodies with the first body. A role/name change or first-message highlight breaks the group. Each message keeps its own lifecycle/moderation ID; when its header is removed, promote the next row's name. Never concatenate stored message text. |
+| Line length and truncation | `messageLimits.maxLineCh=38` (16–80 ch), `messageLimits.maxLines=0` (integer 0–12; 0 = unlimited) | Layout → “Maximum line length” slider showing `38 ch`, “Maximum message lines” with “Unlimited” at 0. Constrain body width, not overall panel width; wrap unbroken text. Truncate only at a grapheme/emote boundary after measuring loaded fonts, adding an ellipsis on the last visible line. Preserve full message as accessible text; no interactive “read more” button on the stream. Never crop an emote in half. |
+| Readable message lifecycle | existing `messageLifetime=30` s (0 = never), `animationOut=fade`, `animationOutDuration=160` ms; new `lifecycle.fadeMaskPx=0` (0–64 px) | Motion → “Keep messages forever” toggle plus “Message lifetime”; disabled duration retains previous nonzero choice in editor state. Layout advanced → “Overflow fade depth”. Fade mask affects the oldest edge only, inside the content area, never frame/text of the newest row. Complete-row eviction remains authoritative; no partial clipped row. Reduced motion makes entrance/exit immediate. Timer and capacity rules stay Round 3. |
+| Tagged first-message emphasis | `emphasis.firstMessage=false`, `emphasis.color=#FFE095FF` | Filters & emphasis → “Highlight tagged first messages” toggle and alpha swatch. Only IRC `first-msg=1` qualifies: add a 3 px start marker and small “First message” label, keeping text colors stable. Reserve label space when present. Missing/unsupported tags produce ordinary chat. “First seen this session” is NOT a substitute; anonymous IRC may not supply this metadata. UI helper: “Only shown when Twitch supplies the first-message tag.” No follow/sub alerts or API inference. |
+
+## Mandatory public community emotes
+
+Emotes → three independent styled toggles: **7TV emotes**, **BTTV emotes**, **FFZ emotes**. Keys `emotes.sevenTV`, `emotes.bttv`, `emotes.ffz`, all **true**. No login, secret, token or proxy credential. Request IRC tags capability. Resolve the channel's numeric ID from the joined channel's **ROOMSTATE `room-id` tag**; do not guess it from display name or use an authenticated user lookup. Globals may load before ROOMSTATE. If the tag never arrives, global support still works and channel sets wait; editor status says “Waiting for channel ID”.
+
+Fetch the public global and channel sets for each enabled provider:
+
+| Provider | Channel endpoint | Global endpoint |
+| --- | --- | --- |
+| 7TV | `https://7tv.io/v3/users/twitch/{id}` | `https://7tv.io/v3/emote-sets/global` |
+| BTTV | `https://api.betterttv.net/3/cached/users/twitch/{id}` | `https://api.betterttv.net/3/cached/emotes/global` |
+| FFZ | `https://api.frankerfacez.com/v1/room/id/{id}` | `https://api.frankerfacez.com/v1/set/global` |
+
+Normalize each provider into code → `{provider,id,url,width,height}`. 7TV channel `emote_set.emotes` and global `emotes` supply names and host/files; use returned host/files (prefer suitable WebP/AVIF with PNG fallback). BTTV combines `channelEmotes` and `sharedEmotes`; globals are an array; use provider CDN `https://cdn.betterttv.net/emote/{id}/2x` (higher resolution when required). FFZ follows room set IDs and global `default_sets` through `sets`, then each set's `emoticons`; use returned resolution URLs. Normalize protocol-relative image hosts to HTTPS. Validate response shapes and URLs, reject non-HTTPS images, never insert provider text as HTML. If upstream response shape changes, disable that response gracefully and retain text. No assumption that undocumented fields will always exist; builder verifies live responses during implementation.
+
+Cache **in memory**, keyed by provider + global/channel ID. Refresh every **10 minutes** from last attempt while active; deduplicate in-flight requests. Switching channel discards the active channel map immediately and applies only responses matching the new ID/generation. Keep globals reusable. Provider off means stop its refresh/request use and render new tokens as text; re-enabling can reuse a still-fresh cache. Use an 8-second timeout; network/CORS/429/5xx/invalid JSON failures leave the last good set for the current session, with next retry on the normal 10-minute interval (honor longer Retry-After). A channel 404 is an empty channel set, not a connection error. Cap cached channel sets to the current channel to avoid an unbounded session cache. Abort on teardown; no retry storm or per-message fetch.
+
+Parse native Twitch emote ranges first using IRC positions. In the remaining text spans match **case-sensitive, exact whole tokens separated by whitespace or message boundaries**; punctuation stays part of the token (`Kappa,` is not `Kappa`). Never substring-match inside usernames, URLs or longer words. This is the unambiguous whole-word rule for codes containing punctuation. Collision precedence: native Twitch range > any channel-set exact code > any global-set exact code; within the same scope, **7TV > BTTV > FFZ**. Build one resolved map at refresh, never search every provider on each message. Treat emote URLs as images, with code as alt text; failed image load replaces it with the original text token and spacing. A disabled/unavailable provider leaves readable text with no blank boxes. Native emoji remain text/emoji and do not need an emote API.
+
+`emotes.inlineSize=28` px (16–64) defines inline height; preserve image aspect ratio and cap extreme widths to available body width. `emotes.emoteOnlyScale=2` (1–3) gives **56 px** default emote-only height. After resolution, a message is emote-only iff it contains one or more native/third-party emotes and otherwise only whitespace; textual emoji alone do not qualify. Wrap bursts naturally within the body, never add an enormous unbounded canvas. If an unresolved/failed token remains, use ordinary inline sizing. Emote pixels never inherit text outlines or gradients. Animated provider images honor reduced motion via a static file where available, otherwise a static placeholder with code; never promise reduced motion while continuing GIF/WebP animation. Provider status is editor-only: Loading / Ready / Unavailable, with successful load time; failures must not interrupt IRC or display error banners in the stream.
+
+## Editor polish contract
+
+Keep Round 3's 440 px desktop rail, fit-to-source preview and 40 px minimum controls. The mockup's compact review rail demonstrates the same spacing and treatment; runtime dimensions remain 440 px. Use 16 px section padding, 12 px field gaps, 8 px between swatches, 24 px between major areas. At <900 px, preview comes first and controls stack. At 320 px use single-column labels/inputs when needed, without horizontal page scrolling.
+
+Each of Message box / Name / Message text / Badges / System / Panel has **Font / Color / Effects** groups. Font shows family, size, weight, line height. Color shows paint and alpha; Effects shows outline, shadow, glow. Advanced typography (italic, uppercase, letter spacing, inheritance), gradient stops and effect offsets start collapsed. Only relevant fields expand with their parent mode. Advanced rows preserve values when hidden. Every top-level section, including Skins, Frame, Background, Name format, Layout, Motion, Filters, Emotes and Advanced, has exactly one **Reset section** link. Nested Font/Color/Effects groups do not get duplicate reset links. Reset restores that section's last applied/saved baseline snapshot, is one undo transaction, and updates the preview. Skins reset only clears gallery filters/selection to current baseline; it does not delete My skins. Show a status announcement; never open a confirmation modal for these reversible changes.
+
+`editorLabels` in skins.json explicitly maps **every settings-schema leaf path** (array entries use `*`) to a human control label. It is design metadata, not a URL field. Compatibility aliases are not separately rendered controls. Contextual section headings supply the part/surface; do not show `parts.name.shadow.y`, `enabled`, `blur` or an auto-generated raw key. Required examples: **Shadow offset Y**, **Shadow on**, **Glow on**, **Glow blur**, **Frame width**, **Name column width**, **7TV emotes**. Units supplement labels: px, ms, s, ch, %, °, × or contrast ratio, as appropriate. “Line height” is a multiplier, not px. Disabled controls retain visible labels and a short explanation. Every input has an actual associated label, not placeholder-only copy.
+
+Boolean controls are 42×24 px styled switches with a 40 px hit area, using native checkbox semantics or role=switch with checked state and keyboard Space. Checked position and text communicate state without color alone. Do not expose bare browser checkboxes. Color controls show an alpha-checker swatch, editable **#RRGGBBAA**, and an **Opacity** slider/readout; both update the same canonical value. Sliders have a live value and unit plus editable number field, not an unlabeled thumb. Drag previews immediately and commits one undo item. Native color-picker RGB changes preserve alpha. Keep text contrast and focus rings visible on all control backgrounds.
+
+Search occupies its own opaque **non-overlapping rail row** above the independently scrolling settings: rail grid rows `auto minmax(0,1fr) auto`. It may be position:sticky top:0 within that header region; never absolute-position it over controls. On narrow layouts it remains in normal flow when sticky space would exceed 25% of the viewport height. Match human labels, section names and synonyms; open matched advanced rows and include dependencies. Scroll matched fields into the content viewport with scroll-margin, never behind search/actions. Clearing search restores previous disclosures. Empty state: “No settings match. Try font, glow or lifetime.” Keep Copy overlay URL in the reserved bottom action row. Search/filter state remains editor-only.
+
+## Acceptance and scope of the mockup
+
+`mockup.html` is a self-contained static review sheet with **all 34 specimens, six Featured first**, followed by the polished editor study. It intentionally has no IRC, URL generation or functioning settings binding. Native disclosures/toggles can be inspected; sample content never claims to be live. Four chat rows per skin include a moderator badge, a long name, a wrapping sentence and three original star emote placeholders. No third-party artwork is embedded. Backdrops are abstract busy CSS shapes, not actual gameplay captures. Samples show final static motion states. `round5.py` regenerates the catalog/mockup within design/ only.
+
+Builder acceptance: validate all 34 settings objects; round-trip every new leaf and six Featured metadata entries; preserve Guild geometry; test anonymous ROOMSTATE, missing first-msg, provider disabled/404/CORS/image failure, code collisions, channel switches and 10-minute refresh; exercise grouped-header eviction and emote-only sizing. Visually review 320/1280/1920 px layouts, long names and actual busy OBS gameplay at 100% source scale; check black/white contrast and blur-disabled behavior. Check all controls via keyboard, search overlap, per-section reset/undo and reduced motion. The static design artifact is not proof of runtime performance, provider uptime or OBS compatibility.
+
+
+## Complete Round 5 visual roster
+
+| Skin | Frame and color story | Name format |
+| --- | --- | --- |
+| Bubble Lift | Deep teal bubbles with a low left tail and a mint name above the message. | {name} |
+| Glass Card | Ice-blue translucent cards, a bright upper edge and soft depth. | {name} |
+| Name Tag | Blue name tabs form a vertical reading rail; bodies align in a second column. | {name} |
+| Comic Burst | Buttery speech balloons, thick ink outlines and offset ink shadows. | {name}! |
+| Pastel Pop | Lavender ticket bubbles with lilac corner dots and deep plum text. | {name} ♡ |
+| Esports Slash | Lime name plates and opposing diagonal ends; only the frame is slanted. | {name} // |
+| Quiet Line | Warm editorial names, a short amber rule and a quiet dark reading strip. | {name} · |
+| Neon Edge | One violet neon rail on an ink-purple card; white body text stays unglowed. | {name} / |
+| Sticker Stack | Apricot name stickers with a small hard shadow on plum message cards. | {name} |
+| Initial Card | A circular initial medallion anchors a compact two-row social card. | {name} |
+| Signal Console | Mint receipt-like command blocks with amber prompts; no typing delay. | @{name} $ |
+| Announcer | Oversized gold names headline compact dark lower thirds. | {name} |
+| Guild Chat | Reference preserved: two continuous gold rings, green guild dialogue and a deep forest pane. | [Guild] [{name}]: |
+| Fantasy MMO | Lavender double window with inset diamond corners; softer and cooler than Guild. | [Party] {name} › |
+| Block Craft | Moss-grey stepped blocks and bright grass names; compact square rows. | <{name}> |
+| Old-School MMO | Ochre ledger in a brass bevel; a sober single pane with yellow dialogue. | {name}: |
+| Battle Arena | Teal tactical pane with squared corner brackets and an aligned squad column. | [Team] {name} › |
+| Battle Royale | Sand-yellow notched field cards; condensed names and individual charcoal plates. | [Squad] {name} |
+| Retro RPG Dialog Box | Cobalt dialogue window with a bright twin rim and triangular speaker prompt. | ▸ {name} |
+| Cyber City | Magenta cut-corner panels and cyan callsigns; a hard-edged city HUD. | // {name} |
+| Arcade Cabinet | Purple cabinet bezel, butter-yellow score names and static scanlines. | P1 · {name} |
+| Space Command | Steel-blue communications panel with long technical corner brackets. | COMMS / {name} |
+| Monster Trainer | Ivory dialogue cards with a heavy blue-ink rim and friendly tall lettering. | {name} says: |
+| Dungeon Crawler | Stone-grey bevel, small brass corner diamonds and firelit serif names. | [{name}] |
+| Cozy Farm | Warm wood plaques, cream lettering and small peg dots at the corners. | {name} · |
+| Horror Survival | Dusty red emergency slips; light body text instead of low-contrast blood red. | [{name}] transmission: |
+| Hero Shooter | Orange start stripe with small white corner wedges and compact team calls. | {name} / |
+| Kart Racer | Sun-yellow racing capsules with a mint lane stripe; wide, playful spacing. | {name} » |
+| Bubble Chat | Classic pale lavender inline capsules; deliberately compact beside Bubble Lift. | {name}: |
+| Clean | Neutral navy reading strips with stronger backing and clear bold names. | {name}: |
+| Candy Pop | Pink candy tiles with cream-to-mint pastel fill and small diamond corners. | {name} ✦ |
+| Rainbow Border | Prismatic static perimeter around a sober midnight card; white names stay still. | {name} + |
+| Terminal | A single forest-green console pane; plain prompts and no animated typing. | {name} > |
+| Vaporwave | Plum-to-ocean gradient ribbons with fine lilac twin lines and mint names. | {name} ~ |
+
+---
+
+# Prior rounds (historical; Round 5 above wins)
+
 # Round 3 — full editor handoff
 
 This section is authoritative over all earlier rounds below, including the old exclusions of custom CSS and saved skins. Design files only; application implementation belongs to the builder. `skins.json` now has schemaVersion 3, all 22 complete presets, an embedded draft-2020-12 `settingsSchema`, `editorStateSchema`, `savedSkinSchema`, and storage limits. Old flat keys remain as compatibility projections. The existing v2 app must be upgraded before it can consume v3; its current normalizer rejects version 3. Do not deploy this data alone.
