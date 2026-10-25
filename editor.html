@@ -15,6 +15,7 @@
   <link rel="stylesheet" href="css/editor-simple.css">
   <link rel="stylesheet" href="css/editor-options.css">
   <link rel="stylesheet" href="css/place-mode.css">
+  <link rel="stylesheet" href="css/describe-helper.css">
   <script type="module" src="js/editor.js"></script>
 </head>
 <body class="game editor options-editor">
@@ -39,6 +40,15 @@
       <div class="options-settings">
         <section id="options-panel-look" class="options-panel" role="tabpanel" aria-labelledby="options-tab-look" tabindex="-1">
           <header class="panel-heading"><div><h2 id="look-heading" tabindex="-1">Look</h2><p>Choose the chat your viewers will see.</p></div></header>
+          <section id="describe-card" class="describe-card" aria-labelledby="describe-heading">
+            <div><p class="options-kicker">A style helper</p><h3 id="describe-heading">Describe your chat</h3><p>Tell us the look you want. We’ll set up a matching skin.</p></div>
+            <label class="describe-label" for="describe-text">Your style idea</label>
+            <textarea id="describe-text" maxlength="300" rows="2" placeholder="spooky purple, big text, cute ghost vibe" aria-describedby="describe-note describe-status"></textarea>
+            <div class="describe-examples" role="group" aria-label="Style examples"><button type="button" data-describe-example="spooky purple, big text, cute ghost vibe">Spooky ghost</button><button type="button" data-describe-example="warm cafe, soft cream colors, friendly rounded text">Cozy cafe</button><button type="button" data-describe-example="neon blue esports, bold names, sharp edges">Neon esports</button><button type="button" data-describe-example="space station, calm green glow, compact chat">Space station</button></div>
+            <div class="describe-actions"><button id="describe-submit" class="primary" type="button">Make it</button><button id="describe-guide" type="button">Open Make it mine</button></div>
+            <p id="describe-note" class="describe-note">Uses OpenAI. Don’t include personal info.</p>
+            <p id="describe-status" class="describe-status" role="status" aria-live="polite"></p>
+          </section>
           <section id="make-it-mine" class="make-it-mine" hidden aria-labelledby="make-it-mine-heading">
             <div><p class="options-kicker">A quick start</p><h3 id="make-it-mine-heading">Make it mine</h3><p>Three small choices. Each one updates your preview.</p></div>
             <fieldset><legend>1. What's your vibe?</legend><div class="option-tile-grid vibe-tiles">
