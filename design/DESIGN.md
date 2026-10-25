@@ -1216,3 +1216,129 @@ Exact colors, metrics, effect selections and durations are authoritative in skin
 ### Round 2 acceptance
 
 Review all 22 cards and 22 five-row specimens, including multi-line bodies and emote placeholders. The extra effect strip demonstrates wave, moderator shake, glow and animated gradient even though they are not defaulted together in a skin. Verify both reduced-motion sources reveal complete text and freeze every decorative layer. Inspect at 320, 1280 and 1920 px widths. Builder checks: URL v1 migration, v2 round-trip of every key, role priority with multiple badges, mention boundaries and empty channel, overriding every effect on every frame, max-capacity eviction and no font/layout shifts during typewriter. Profile an hour-long OBS session separately: this design sheet is not proof of runtime CPU performance.
+
+## Round 9: Premium site + Docs
+
+### Direction and reference study
+
+The Miko references earn their premium feel through clear material hierarchy: a thin announcement band, an expansive glass-like hero, a luminous product focal point, controlled accent colors, and generous negative space. Rounded surfaces use fine upper highlights and deep shadows instead of heavy outlines. Large, tightly set type carries the message; restrained supporting text leaves room for product art. Stats and gradient icon tiles make the lower page feel like the same product.
+
+ChatSkins adopts that quality with its own composition: a centered headline above a wide stream monitor, with four real chat treatments orbiting it. This is a stage for the conversation. It does not reproduce Miko's left-copy/right-illustration split or its pink palette. The grid floor appears only beneath the hero art. PRESS START appears once, as an invitation, rather than turning every section into a game menu. Website surfaces stay black and blue; skin specimens retain their authentic palettes.
+
+Initial plan review: an evenly divided split hero would echo Miko too closely and reduce chat to a small illustration. The selected stacked composition gives the monitor enough width for readable messages. Feature tiles remain compact and quiet so the hero is the memorable moment. No fictional community-count or endorsement badge is used.
+
+### Tokens
+
+| Token | Value | Role |
+| --- | --- | --- |
+| Canvas | `#05070D` | Whole-site background |
+| Surface | `#0B1425` | Cards, docs sidebar, editor panels |
+| Raised | `#101E34` | Inspectors and layered surfaces |
+| Edge | `#23344D` | Quiet 1px border; hover `#3C87E9` |
+| Primary | `#2F7BFF` | Selection and gradient start |
+| Cyan | `#38BDF8` | Gradient end, focus, sparse highlights |
+| Mint | `#82E8CB` | Live dot and Tip callouts only |
+| Text | `#F3F7FF` | Headings and primary text |
+| Muted | `#A6B6CD` | Body, labels, helpers |
+| Action ink | `#031020` | Dark text on blue/cyan primary buttons |
+| Warning | `#F2BD73` on `#241C10` | Docs warning only |
+
+Primary gradient: 115deg from blue to cyan. Headline gradient uses lighter `#74A6FF` to cyan for contrast. Glass uses a translucent navy fill with a static radial blue glow behind it, 1px edge and subtle inset upper highlight. No bright glow behind body copy. Hero shadow: `0 0 100px #1361D51C`; raised product shadow: `0 40px 85px #0009`. No full-page animated glow.
+
+Type: Google Fonts **Familjen Grotesk** 400–700 for headlines, logo text and large numbers; **Manrope** 400–800 for body, controls, navigation and documentation. Fallbacks are system sans-serif; code uses Consolas/monospace. Headline desktop 88/95px, mobile 49/53px; page heading 64/69px; section heading 48/52px, mobile 30/34px; card heading 21/25px; body 15/25.5px; docs body 15/28.5px; control 13–15px; helper 12/18px. Headline tracking −.035em. Body lines stay under 65–75 characters. Uppercase is limited to hero eyebrow, stat captions, and monitor metadata.
+
+Spacing scale: 4, 8, 12, 16, 24, 32, 48, 64, 96px. Maximum marketing width 1240px, desktop outer gutters 32px, mobile 16px. Section gaps 96px desktop / 64px mobile. Radii: 6px small controls, 10px buttons, 16–18px cards, 32px hero (22px mobile). Do not apply one radius to every component.
+
+### Components and states
+
+- Announcement: 36–40px band, centered link, subtle navy gradient. Exact text: “New: chat-powered skins: let your viewers change your chat”. It links to the relevant docs page. A release gate applies below.
+- Navigation: brand, Skins / Customize / Docs / Request, primary Make my overlay. Desktop 88px high. Mobile wraps into brand/action and a full-width link row; no inaccessible hover-only menu.
+- Primary action: blue/cyan fill, dark bold text, 10px corners, modest blue shadow. Secondary action: navy surface and 1px edge. Hover strengthens edge, focus uses a 2px cyan outline with offset. Disabled actions retain readable text and expose a reason.
+- Eyebrow: 10px bold, pill border, generous letter spacing. Claims must be factual. Use PRESS START on Home and contextual labels elsewhere, not fabricated user numbers.
+- Surface: fine blue-grey border, deep shadow, restrained upper highlight. Skin art may contain its own frame colors; website tokens do not override the renderer's palette.
+- Stat tile: large Familjen number and small caps caption. Exact claims: 42 skins / 0 logins needed / 1 link for OBS / 100% free.
+- Feature tile: 43px gradient icon tile, short heading, two or three lines of explanatory copy. Symbols in specimens are placeholders for original simple line icons; use no third-party logos. Eight tiles, four columns desktop, two mobile.
+- Status: mint dot plus text; never color alone. Gallery scores show numeric values as well as labels. Loading gets status text, errors get a useful retry instruction, empty search provides suggested terms.
+- Live preview: actual `applyChatStyle` / `createMessage` renderer with `buildSkinPreviewMessages`, never a fabricated chat screenshot. Every preview has a labelled container. Avoid live-region announcements on every sample message.
+- Motion: sample refresh/Featured switch every five seconds, bounded node replacement, no animation of card positions. Pause previews is explicit. System reduced motion freezes cycling and renderer effects. Hidden documents and offscreen samples do not update. Floating cards are tilted statically, not continuously bobbing.
+- Focus and mobile: keyboard-visible focus, labelled controls, skip link, no text-only hover disclosure. No content hidden behind a fixed CTA. Reflow at 760px; right docs TOC disappears at 1100px. Verify at 360, 390, 768, 1440 and 1920px before implementation signoff.
+
+### Home specification
+
+Order: announcement → navigation → luminous hero → stat tiles → feature grid → Works with strip → setup → FAQ → footer.
+
+Hero headline: “Your stream chat, skinned.” Highlight skinned in the accessible blue/cyan gradient. Pitch: “Turn the conversation into part of your world. 42 expressive skins. Every detail yours. One link to go live.” Actions: Make my overlay / Browse 42 skins / Read the docs. Trust line: “Free · No login · One link · Works in OBS, Streamlabs, Twitch Studio, XSplit, Meld, vMix”. Keep it close to the actions and readable, not in a separate badge farm.
+
+Hero art: central 16:9-ish stream-monitor specimen, original abstract landscape made with CSS, rendered chat over the landscape, live-preview status and selected Featured skin name. Cycle through all catalog entries marked Featured. Four floating mini specimens: Guild Chat, Signature, Retro RPG, Bubble Lift. Keep rotations under 8 degrees. At narrow widths the monitor uses 92% of the hero width and two floating specimens become a row beneath it; the other two are decorative and may disappear. Real skin content is not recolored to fit the website.
+
+Features and copy are in `home9-mockup.html`: Game-style skins, A full editor, MMO chat channels, Your favorite emotes (Twitch + 7TV/BTTV/FFZ), Alerts that belong, Chat-powered skins, Made for gameplay (transparent), Safe, read-only chat. Alerts and audience control copy is a proposed release state, not evidence of implementation.
+
+Works with: text badges only for OBS Studio, Streamlabs Desktop, Twitch Studio, XSplit, Meld Studio, vMix and Lightstream. Lead: “Works with anything with a Browser Source.” Do not imply sponsorship or add third-party logos.
+
+Setup headline and copy: “Meet your new Browser Source. No plugins to install. Works in OBS Studio, Streamlabs, Twitch Studio, XSplit, Meld and any app with a browser/web source.” Ordered steps: Add a Browser Source → Paste your overlay URL → Set 1920×1080 (or 1280×720 for a 720p canvas) → Place ChatSkins above your game capture. Link to the setup guide. FAQ uses native details/summary; footer includes Privacy & safety, Changelog and Request a skin.
+
+### Skins specification
+
+Keep every catalog entry and all existing filters: Featured, Streamer favorites, Game styles, Animated, Colorful. Featured overlaps the category groups and does not increase the total beyond 42. Show current group count and total. Header: “Find your chat energy.” Subhead: “42 original looks. Live previews. Every one is yours to customize.”
+
+Desktop: three-column gallery beside a 310px sticky inspector; at medium width use two gallery columns. At mobile move the inspector below the two-column grid, avoiding tiny four-column cards. Selected cards have a blue edge and `aria-pressed`; all cards remain keyboard reachable. Inspector contains name, catalog tagline, larger rendered sample, Readability / Flair / Motion / Retro scores, Make my overlay and Customize this skin. Selected skin ID is carried to the editor specimen. Pause/resume affects the samples, not the saved skin settings. No paid locks, rarity badges or invented popularity scores.
+
+Production retains the existing use-skin dialog: enter channel or optional Connect with Twitch → complete overlay URL → copy feedback. The specimen's actions lead to the design editor and do not generate production URLs. Keep live previews using the same render functions as the overlay.
+
+### Editor specification
+
+Restyle without reorganizing the existing editing workflow. Preserve the control pane, persistent live preview, Simple/Advanced switch, source-pixel numeric controls, setup progress, copy-link step, reset and saved skins. Use blue active indicators, normal sentence-case labels, navy form surfaces, readable helper text and quiet accordion separators. Remove game-menu corners and heavy decorative rules from the surrounding UI, not from chosen skins.
+
+Keep all sections: Simple mode, part styling, frames, backgrounds, name format, layout, animation/effects, roles/colors, filters, My skins, custom CSS, channels and emotes. Keep preview tests and transparency backdrops. Preserve native select/range/number ergonomics and the current paired sliders/numeric inputs. No 88px marketing headline in the workspace; use a 32–40px functional page title. Put contextual docs links beside section headings, opening the matching docs page without discarding edits.
+
+At desktop preserve the existing pane widths and preview ratio. On mobile stack preview and controls with a compact sticky preview toggle; the copy action must not cover inputs or error messages. Save/Copy labels must make clear whether they save locally or copy a source URL. Fields retain edits after errors. Modified state is visible. Destructive reset stays a deliberate separate action.
+
+`editor9-mockup.html` is a restyled copy of the existing design specimen; its JavaScript stays design-only. Use it to review materials and spacing, not as proof of new controls or URL serialization.
+
+### Request specification
+
+Keep the existing fields, required-state rules, reference input, submission action and success/error flow. Frame the page around a useful idea, not a quest or bounty. Heading: “What should chat look like next?” Support copy: “Tell us the look your community is missing.” Use a readable single-column form, with a quiet adjacent guidance panel on desktop. Explain what a useful reference contains and ask users not to paste private alert links. Keep references as links, not unreviewed remote embeds.
+
+Primary action is Send request; disabled/pending state is Sending…; success says the idea was received, not scheduled. On error retain every field and place the reason beside the submit area. Do not introduce authentication or payments. `request9-mockup.html` preserves the existing design specimen's interactions and adds the shared shell; it does not contact the submission service.
+
+### Docs information architecture and routes
+
+Production entry is `/docs/` (Getting started). Each other Markdown basename maps to `/docs/<basename>/`. The design-only viewer uses `docs-mockup.html#<basename>` and `#<basename>/<heading>` so reviewers can explore every page without building a router. Clean production paths require the builder's routing work; none is added here.
+
+| Group | Pages in reading order |
+| --- | --- |
+| Start here | Getting started; Add to your streaming app; Choosing a skin |
+| Customize | The editor; Simple mode; Part styling; Frames; Backgrounds; Name format; Layout; Animation & effects; Roles & colors; Filters; My skins; Custom CSS |
+| Connect & play | MMO chat channels; Emotes; Connect with Twitch; Alerts; Chat-powered skins |
+| Guides | Transparent background & gameplay; Troubleshooting |
+| Reference | Privacy & safety; Request a skin; FAQ; Changelog |
+
+The streaming-app guide has independently linked headings for OBS Studio, Streamlabs Desktop, Twitch Studio, XSplit, Meld Studio and vMix / others. It includes all requested Browser Source settings and qualifies options that other apps do not expose. Avoid prescribing OBS-specific option labels as universal controls. Twitch Studio copy is conditional on an installed version that supports web layers, not a recommendation to acquire it.
+
+### Docs shell and interactions
+
+Desktop three-column reading layout: 240px left nav, up to 720px article, 180px right TOC, 48px gutters, max 1380px. Sticky 76px top bar contains brand, client-side search, and Make my overlay. Left navigation independently scrolls; active page has blue tint and edge, not color alone. Page order drives both sidebar and previous/next cards. Right TOC lists H2 headings and links to stable anchors with sticky-header offset. Include breadcrumb/group context, one H1, and sensible H2/H3 structure.
+
+Search indexes every page title and H2 heading, case-insensitively. Result shows matching title/heading plus group and page context. Enter opens the first match; arrow keys move through visible results; Escape dismisses. Empty query hides the panel. No-result copy: “No matches. Try ‘emotes’, ‘size’, or ‘frames’.” A query never contacts a server. Search text is escaped before rendering. Production may add H3 indexing and ranking, but must retain title/heading coverage.
+
+Every code or URL block gets Copy. Success changes the label to Copied briefly. If clipboard access fails, select the text and say “Selected — copy manually”. No private real alert URL appears in the specimen. Code blocks scroll internally and do not stretch the document width.
+
+Callouts: Tip is mint/navy; Note is blue/navy; Warning is amber/ink. Each includes its label so color is not the only signal. Keep actionable explanations short and leave full instructions in the surrounding article.
+
+Mobile: replace sidebar with a labelled drawer trigger; expose `aria-expanded` and `aria-controls`. Drawer fits at most 90vw, scrolls independently, closes on navigation, outside click or Escape, and Escape returns focus to the trigger. The specimen uses a nonmodal drawer; a production modal version must make background content inert and trap focus. Hide the secondary TOC before squeezing the article. Search remains at the top. Article padding is 22px. Previous/next cards stack. Direct heading links must retain the selected page.
+
+### Full documentation copy and editorial contracts
+
+All full copy is in **26 Markdown files in `design/docs-content/`**, one per page. Each starts with an outline comment and then the complete article. The viewer embeds the same content via `docs-content-index.js`. `round9-content.py` regenerates the files and index. This is documentation design, not a request to create external documents or production routes.
+
+The MMO guide derives each enabled per-skin channel template directly from `design/skins.json`; it does not invent labels. The explanation matches the current first-matching-rule resolver, separate first-time notice and uppercase threshold. OAuth copy matches `js/twitch-auth.js`: no extra scopes, token used in memory for login lookup, removed from the callback URL, not persisted, revocation attempted. Do not extend “never stored” to future alert/channel-point credentials without verifying their architecture.
+
+Alerts and chat-powered skins contain explicit proposed-experience notes. Proposed audience contract: approved IDs only; separate change/vote permissions; one active choice per eligible voter; ties preserve the current skin; global and per-viewer cooldowns; no queued flood; visible stop control cancels voting, rejects future input and restores a selected safe skin until explicitly resumed. These are design decisions for implementation, not claims about current runtime. Channel-point authorization is separate from the channel-name shortcut. Private alert links need revocation/replacement before this copy can ship.
+
+Changelog is labelled design preview and has no invented shipped date. Remove proposed labels only after behavior has been verified. The requested announcement bar is also release-gated on audience controls shipping. Browser-source settings are a practical baseline; compatibility requires a web-source-capable installed version.
+
+### Deliverables and verification boundary
+
+Required: `home9-mockup.html`, `docs-mockup.html`, `skins9-mockup.html`, this section, and `docs-content/*.md`. Additional review specimens: `editor9-mockup.html`, `request9-mockup.html`. Shared assets: `round9.css`, `round9-workspace.css`, `round9-previews.js`, `round9-docs.js`, `docs-content-index.js`; generation scripts and `ROUND9-HANDOFF.md` document reproducibility.
+
+Review over HTTP from the repository root so preview modules can read the existing renderer. No application files or production routes are changed by this design round. Existing unrelated working-tree edits are out of scope. Syntax and static asset/link checks are performed; headless Chrome could not start because the environment denied Chromium IPC/crash-handler access, so no successful visual screenshot review is claimed. Before build signoff, inspect desktop/mobile screenshots, all 42 live samples, long docs pages, keyboard navigation, reduced motion, clipboard fallback and overflow at narrow widths.
