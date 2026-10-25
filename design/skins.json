@@ -1969,7 +1969,7 @@
           "nameTreatment": "tab",
           "accent": "rail",
           "chipColor": "#8FC8FFFF",
-          "columnWidth": 120,
+          "columnWidth": 168,
           "initialSize": 40,
           "tailSize": 10,
           "cutSize": 12

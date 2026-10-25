@@ -215,3 +215,40 @@ body.overlay{margin:0;min-height:100vh;background:transparent;overflow:hidden}
 /* Keep the animated Signature ring above its panel surface and message rows. */
 .chat.chat-panel[data-border-effect=animatedGradient]::after{content:"";position:absolute;inset:-2px;z-index:4;padding:2px;border:0;border-radius:inherit;pointer-events:none;background:linear-gradient(120deg,#7EEAD6,#B7AAFF,#7EEAD6) 0 0/220% 100%;-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:signature-flow var(--border-effect-speed,12s) linear infinite}
 @media(prefers-reduced-motion:reduce){.chat.chat-panel[data-border-effect=animatedGradient]::after{animation:none!important}}.chat[data-reduce-motion=true].chat-panel[data-border-effect=animatedGradient]::after{animation:none!important}
+/* Round 7d overlay rendering corrections. */
+.role-icon{width:1em;height:1em;min-width:1em;min-height:1em;display:inline-block;vertical-align:-.14em;flex:none}
+.badge{display:inline-flex;align-items:center;justify-content:center;width:.85em;height:.85em;min-width:.85em;min-height:.85em;margin-inline-end:.16em;border:0;clip-path:none;font-size:.85em;line-height:1;vertical-align:middle;color:inherit}
+.chat-message .chat-badges{font-size:1em}
+.chat-message .badge{font-size:1em}
+.chat-message .badge .role-icon{width:1em;height:1em;min-width:1em;min-height:1em;vertical-align:middle}
+.chat[data-signature-skin=true]>.chat-surface{background-color:rgba(16,21,40,.94)!important;opacity:1!important;backdrop-filter:blur(8px)}
+.chat[data-signature-skin=true] .signature-name-chip{display:inline-block;padding:0 .34em;border-radius:4px;box-shadow:0 0 4px currentColor;text-shadow:none;-webkit-text-stroke:0;white-space:nowrap}
+.signature-role-tag{display:inline-block;padding:0 .35em;margin-inline:.08em;border-radius:3px;font:600 .74em/1.35 "Chakra Petch",sans-serif;letter-spacing:.04em;vertical-align:.08em;text-shadow:none;-webkit-text-stroke:0}
+.signature-role-tag.host{color:#342508;background:#FFDA8A;box-shadow:0 0 7px #FFDA8A88}
+.signature-role-tag.mod{color:#101528;background:#7EEAD6;box-shadow:0 0 5px #7EEAD688}
+.chat[data-signature-skin=true] .signature-host-flash{animation:signature-host-flash 600ms ease-out 1}
+@keyframes signature-host-flash{0%{box-shadow:inset 0 0 0 2px #FFDA8A,0 0 12px #FFDA8A}100%{box-shadow:inset 0 0 0 0 transparent,0 0 0 transparent}}
+.chat[data-signature-skin=true] .signature-mention{border-left:3px solid #B7AAFF;padding-left:8px}
+.chat[data-signature-skin=true] .channel-first-time{color:#7EEAD6;background:linear-gradient(90deg,#7EEAD622,transparent 72%);padding:1px 5px;border-left:2px solid #7EEAD6;border-radius:2px;font-family:"Chakra Petch",sans-serif;font-weight:600;letter-spacing:.04em}
+.chat[data-signature-skin=true] .channel-first-time::before{content:"✦ ";color:#FFDA8A}
+.chat[data-signature-skin=true] .channel-name{font-family:"Chakra Petch",sans-serif;font-weight:600}
+.chat[data-shape=slash][data-treatment=tab][data-layout=columns] .chat-message,.chat[data-accent=rail][data-treatment=plain][data-layout=columns] .chat-message{display:flex;align-items:center;gap:10px}
+.chat[data-shape=slash][data-treatment=tab][data-layout=columns] .chat-name,.chat[data-accent=rail][data-treatment=plain][data-layout=columns] .chat-name{flex:0 1 auto;max-width:48%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;word-break:normal;overflow-wrap:normal}
+.chat[data-shape=slash][data-treatment=tab][data-layout=columns] .message-body,.chat[data-accent=rail][data-treatment=plain][data-layout=columns] .message-body{flex:1 1 0;min-width:0}
+.chat[data-treatment=tab][data-layout=columns] .chat-message{grid-template-columns:minmax(120px,min(var(--column-width,168px),50%)) minmax(0,1fr)}
+.chat[data-treatment=tab][data-layout=columns] .chat-name{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;word-break:normal;overflow-wrap:normal}
+.chat.chat-panel[data-target=panel]::before{border-color:var(--frame-color)!important}
+.chat.chat-panel[data-border-effect=animatedGradient]::before{border-color:transparent!important}
+.overlay-root>.chat.chat-panel,.source .chat.chat-panel{overflow:visible}
+.chat.chat-panel[data-target=panel]{overflow:visible}
+.chat.chat-panel[data-frame=beveled][data-target=panel]::before{border-style:outset}
+@media(prefers-reduced-motion:reduce){.chat[data-signature-skin=true] .signature-host-flash{animation:none!important}}
+
+/* Signature treatment follows the production recipe: static texture, live role accents. */
+.chat[data-signature-skin=true]{border-radius:12px;background:transparent!important}
+.chat[data-signature-skin=true]>.chat-surface{background-color:rgba(16,21,40,.94)!important;opacity:1!important;backdrop-filter:blur(8px);box-shadow:inset 0 1px 0 #ffffff22,inset 0 0 24px #7eead60a}
+.chat[data-signature-skin=true]>.chat-surface::after{background:repeating-linear-gradient(0deg,transparent 0 3px,#00000008 3px 4px);opacity:1}
+.chat[data-signature-skin=true] .channel-first-time{animation:signature-new-shimmer 800ms ease-out 1}
+@keyframes signature-new-shimmer{from{background-position:-110% 0}to{background-position:110% 0}}
+
+@media(prefers-reduced-motion:reduce){.chat[data-signature-skin=true] .channel-first-time{animation:none!important}}
