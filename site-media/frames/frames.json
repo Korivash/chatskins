@@ -14,14 +14,17 @@
       "h": 0.52833
     },
     "plaque": {
-      "x": 0.21,
-      "y": 0.045,
-      "w": 0.58,
-      "h": 0.075,
-      "font": "Bree Serif",
+      "x": 0.375,
+      "y": 0.028333,
+      "w": 0.2375,
+      "h": 0.065833,
+      "painted": false,
       "coverPainted": false,
-      "luminance": 0.113,
-      "ink": "#F7F5FF"
+      "tone": "dark",
+      "none": false,
+      "luminance": 0.028776,
+      "ink": "#F7F5FF",
+      "fill": "#2A2A29"
     }
   },
   {
@@ -39,14 +42,17 @@
       "h": 0.52167
     },
     "plaque": {
-      "x": 0.21,
-      "y": 0.045,
-      "w": 0.58,
-      "h": 0.075,
-      "font": "DM Sans",
+      "x": 0.32875,
+      "y": 0.138333,
+      "w": 0.14,
+      "h": 0.03,
+      "painted": false,
       "coverPainted": false,
-      "luminance": 0.087,
-      "ink": "#F7F5FF"
+      "tone": "dark",
+      "none": false,
+      "luminance": 0.018246,
+      "ink": "#F7F5FF",
+      "fill": "#1A1616"
     }
   },
   {
@@ -64,14 +70,17 @@
       "h": 0.47375
     },
     "plaque": {
-      "x": 0.21,
-      "y": 0.045,
-      "w": 0.58,
-      "h": 0.075,
-      "font": "DM Sans",
+      "x": 0.3875,
+      "y": 0.16,
+      "w": 0.091667,
+      "h": 0.04,
+      "painted": false,
       "coverPainted": false,
-      "luminance": 0.127,
-      "ink": "#F7F5FF"
+      "tone": "dark",
+      "none": false,
+      "luminance": 0.014038,
+      "ink": "#F7F5FF",
+      "fill": "#181818"
     }
   },
   {
@@ -89,14 +98,17 @@
       "h": 0.60583
     },
     "plaque": {
-      "x": 0.21,
-      "y": 0.045,
-      "w": 0.58,
-      "h": 0.075,
-      "font": "Bree Serif",
+      "x": 0.41875,
+      "y": 0.040833,
+      "w": 0.1625,
+      "h": 0.059167,
+      "painted": false,
       "coverPainted": false,
-      "luminance": 0.071,
-      "ink": "#F7F5FF"
+      "tone": "dark",
+      "none": false,
+      "luminance": 0.05387,
+      "ink": "#F7F5FF",
+      "fill": "#483947"
     }
   },
   {
@@ -114,14 +126,17 @@
       "h": 0.55375
     },
     "plaque": {
-      "x": 0.21,
-      "y": 0.045,
-      "w": 0.58,
-      "h": 0.075,
-      "font": "Bree Serif",
+      "x": 0.45,
+      "y": 0.0575,
+      "w": 0.095833,
+      "h": 0.095,
+      "painted": false,
       "coverPainted": false,
-      "luminance": 0.071,
-      "ink": "#F7F5FF"
+      "tone": "dark",
+      "none": false,
+      "luminance": 0.095468,
+      "ink": "#F7F5FF",
+      "fill": "#634D68"
     }
   },
   {
@@ -139,14 +154,17 @@
       "h": 0.62833
     },
     "plaque": {
-      "x": 0.21,
+      "x": 0.41,
       "y": 0.045,
-      "w": 0.58,
-      "h": 0.075,
-      "font": "DM Sans",
+      "w": 0.18125,
+      "h": 0.048333,
+      "painted": false,
       "coverPainted": false,
-      "luminance": 0.092,
-      "ink": "#F7F5FF"
+      "tone": "dark",
+      "none": false,
+      "luminance": 0.058022,
+      "ink": "#F7F5FF",
+      "fill": "#362B27"
     }
   },
   {
@@ -164,14 +182,17 @@
       "h": 0.60625
     },
     "plaque": {
-      "x": 0.21,
-      "y": 0.045,
-      "w": 0.58,
-      "h": 0.075,
-      "font": "DM Sans",
+      "x": 0.35,
+      "y": 0.07125,
+      "w": 0.3,
+      "h": 0.05375,
+      "painted": false,
       "coverPainted": false,
-      "luminance": 0.077,
-      "ink": "#F7F5FF"
+      "tone": "dark",
+      "none": false,
+      "luminance": 0.041057,
+      "ink": "#F7F5FF",
+      "fill": "#37251B"
     }
   },
   {
@@ -189,14 +210,17 @@
       "h": 0.53083
     },
     "plaque": {
-      "x": 0.21,
-      "y": 0.045,
-      "w": 0.58,
-      "h": 0.075,
-      "font": "Bree Serif",
+      "x": 0.33,
+      "y": 0.138333,
+      "w": 0.09,
+      "h": 0.031667,
+      "painted": false,
       "coverPainted": false,
-      "luminance": 0.25,
-      "ink": "#100905"
+      "tone": "light",
+      "none": false,
+      "luminance": 0.703919,
+      "ink": "#2B1D12",
+      "fill": "#ECD8B4"
     }
   },
   {
@@ -214,14 +238,17 @@
       "h": 0.5025
     },
     "plaque": {
-      "x": 0.21,
-      "y": 0.045,
-      "w": 0.58,
-      "h": 0.075,
-      "font": "Bree Serif",
+      "x": 0.386667,
+      "y": 0.20375,
+      "w": 0.086667,
+      "h": 0.03125,
+      "painted": false,
       "coverPainted": false,
-      "luminance": 0.294,
-      "ink": "#100905"
+      "tone": "light",
+      "none": false,
+      "luminance": 0.648538,
+      "ink": "#2B1D12",
+      "fill": "#E9D5A9"
     }
   },
   {
@@ -239,14 +266,17 @@
       "h": 0.64083
     },
     "plaque": {
-      "x": 0.21,
-      "y": 0.045,
-      "w": 0.58,
-      "h": 0.075,
-      "font": "Bree Serif",
+      "x": 0.32875,
+      "y": 0.116667,
+      "w": 0.3425,
+      "h": 0.03,
+      "painted": false,
       "coverPainted": false,
-      "luminance": 0.357,
-      "ink": "#100905"
+      "tone": "light",
+      "none": false,
+      "luminance": 0.761065,
+      "ink": "#2B1D12",
+      "fill": "#E9E4DB"
     }
   },
   {
@@ -264,14 +294,17 @@
       "h": 0.59
     },
     "plaque": {
-      "x": 0.21,
-      "y": 0.045,
-      "w": 0.58,
-      "h": 0.075,
-      "font": "Bree Serif",
+      "x": 0.381667,
+      "y": 0.15125,
+      "w": 0.233333,
+      "h": 0.035,
+      "painted": false,
       "coverPainted": false,
-      "luminance": 0.292,
-      "ink": "#100905"
+      "tone": "light",
+      "none": false,
+      "luminance": 0.736483,
+      "ink": "#2B1D12",
+      "fill": "#EBE4D9"
     }
   },
   {
@@ -289,14 +322,17 @@
       "h": 0.48167
     },
     "plaque": {
-      "x": 0.21,
-      "y": 0.045,
-      "w": 0.58,
-      "h": 0.075,
-      "font": "DM Sans",
+      "x": 0.24375,
+      "y": 0.158333,
+      "w": 0.145,
+      "h": 0.023333,
+      "painted": false,
       "coverPainted": false,
-      "luminance": 0.537,
-      "ink": "#100905"
+      "tone": "light",
+      "none": false,
+      "luminance": 0.798374,
+      "ink": "#2B1D12",
+      "fill": "#F3E8D9"
     }
   },
   {
@@ -314,14 +350,17 @@
       "h": 0.4775
     },
     "plaque": {
-      "x": 0.21,
-      "y": 0.045,
-      "w": 0.58,
-      "h": 0.075,
-      "font": "DM Sans",
+      "x": 0.336667,
+      "y": 0.15,
+      "w": 0.100833,
+      "h": 0.02625,
+      "painted": false,
       "coverPainted": false,
-      "luminance": 0.579,
-      "ink": "#100905"
+      "tone": "light",
+      "none": false,
+      "luminance": 0.892516,
+      "ink": "#2B1D12",
+      "fill": "#FAF2E5"
     }
   },
   {
@@ -339,14 +378,17 @@
       "h": 0.54083
     },
     "plaque": {
-      "x": 0.21,
-      "y": 0.045,
-      "w": 0.58,
-      "h": 0.075,
-      "font": "DM Sans",
+      "x": 0.33625,
+      "y": 0.140833,
+      "w": 0.3275,
+      "h": 0.016667,
+      "painted": false,
       "coverPainted": false,
-      "luminance": 0.164,
-      "ink": "#F7F5FF"
+      "tone": "light",
+      "none": false,
+      "luminance": 0.659789,
+      "ink": "#2B1D12",
+      "fill": "#EAD5AA"
     }
   },
   {
@@ -364,14 +406,17 @@
       "h": 0.375
     },
     "plaque": {
-      "x": 0.21,
-      "y": 0.045,
-      "w": 0.58,
-      "h": 0.075,
-      "font": "DM Sans",
+      "x": 0.385833,
+      "y": 0.1575,
+      "w": 0.226667,
+      "h": 0.03125,
+      "painted": false,
       "coverPainted": false,
-      "luminance": 0.154,
-      "ink": "#F7F5FF"
+      "tone": "light",
+      "none": false,
+      "luminance": 0.694619,
+      "ink": "#2B1D12",
+      "fill": "#EDD7B6"
     }
   },
   {
@@ -389,14 +434,17 @@
       "h": 0.64917
     },
     "plaque": {
-      "x": 0.21,
-      "y": 0.045,
-      "w": 0.58,
-      "h": 0.075,
-      "font": "DM Sans",
+      "x": 0.2275,
+      "y": 0.056667,
+      "w": 0.48375,
+      "h": 0.039167,
+      "painted": false,
       "coverPainted": false,
-      "luminance": 0.285,
-      "ink": "#100905"
+      "tone": "light",
+      "none": false,
+      "luminance": 0.268001,
+      "ink": "#2B1D12",
+      "fill": "#878786"
     }
   },
   {
@@ -414,14 +462,17 @@
       "h": 0.59375
     },
     "plaque": {
-      "x": 0.21,
-      "y": 0.045,
-      "w": 0.58,
-      "h": 0.075,
-      "font": "DM Sans",
+      "x": 0.280833,
+      "y": 0.06875,
+      "w": 0.27,
+      "h": 0.0875,
+      "painted": false,
       "coverPainted": false,
-      "luminance": 0.306,
-      "ink": "#100905"
+      "tone": "light",
+      "none": false,
+      "luminance": 0.317768,
+      "ink": "#2B1D12",
+      "fill": "#979797"
     }
   },
   {
@@ -439,14 +490,17 @@
       "h": 0.6225
     },
     "plaque": {
-      "x": 0.21,
-      "y": 0.045,
-      "w": 0.58,
-      "h": 0.075,
-      "font": "DM Sans",
+      "x": 0.345,
+      "y": 0.153333,
+      "w": 0.315,
+      "h": 0.024167,
+      "painted": false,
       "coverPainted": false,
-      "luminance": 0.263,
-      "ink": "#100905"
+      "tone": "light",
+      "none": false,
+      "luminance": 0.805759,
+      "ink": "#2B1D12",
+      "fill": "#E9E5FB"
     }
   },
   {
@@ -464,14 +518,17 @@
       "h": 0.48
     },
     "plaque": {
-      "x": 0.21,
-      "y": 0.045,
-      "w": 0.58,
-      "h": 0.075,
-      "font": "DM Sans",
+      "x": 0.375833,
+      "y": 0.12,
+      "w": 0.236667,
+      "h": 0.06375,
+      "painted": false,
       "coverPainted": false,
-      "luminance": 0.372,
-      "ink": "#100905"
+      "tone": "light",
+      "none": false,
+      "luminance": 0.47664,
+      "ink": "#2B1D12",
+      "fill": "#FC96DA"
     }
   },
   {
@@ -489,15 +546,16 @@
       "h": 0.53167
     },
     "plaque": {
-      "x": 0.13,
-      "y": 0.065,
-      "w": 0.4,
-      "h": 0.095,
-      "font": "Bungee",
-      "coverPainted": true,
-      "color": "#100B20",
-      "ink": "#100905",
-      "luminance": 0.188
+      "x": 0.21,
+      "y": 0.27,
+      "w": 0.6,
+      "h": 0.04,
+      "painted": false,
+      "coverPainted": false,
+      "tone": "dark",
+      "none": true,
+      "luminance": 0.05,
+      "ink": "#f9e9ff"
     }
   },
   {
@@ -515,15 +573,16 @@
       "h": 0.62185
     },
     "plaque": {
-      "x": 0.13,
-      "y": 0.065,
-      "w": 0.4,
-      "h": 0.095,
-      "font": "Bungee",
-      "coverPainted": true,
-      "color": "#100B20",
-      "ink": "#100905",
-      "luminance": 0.275
+      "x": 0.18,
+      "y": 0.245926,
+      "w": 0.6,
+      "h": 0.059259,
+      "painted": false,
+      "coverPainted": false,
+      "tone": "dark",
+      "none": true,
+      "luminance": 0.05,
+      "ink": "#f9e9ff"
     }
   },
   {
@@ -541,15 +600,17 @@
       "h": 0.60917
     },
     "plaque": {
-      "x": 0.13,
-      "y": 0.065,
-      "w": 0.4,
-      "h": 0.095,
-      "font": "Bungee",
+      "x": 0.21375,
+      "y": 0.07,
+      "w": 0.32875,
+      "h": 0.065833,
+      "painted": true,
       "coverPainted": true,
-      "color": "#100B20",
+      "tone": "dark",
+      "none": false,
+      "luminance": 0.154984,
       "ink": "#F7F5FF",
-      "luminance": 0.147
+      "fill": "#10091D"
     }
   },
   {
@@ -567,15 +628,17 @@
       "h": 0.6575
     },
     "plaque": {
-      "x": 0.13,
-      "y": 0.065,
-      "w": 0.35,
-      "h": 0.095,
-      "font": "Bungee",
+      "x": 0.18125,
+      "y": 0.079167,
+      "w": 0.21375,
+      "h": 0.055,
+      "painted": true,
       "coverPainted": true,
-      "color": "#100B20",
+      "tone": "dark",
+      "none": false,
+      "luminance": 0.155851,
       "ink": "#F7F5FF",
-      "luminance": 0.159
+      "fill": "#10091D"
     }
   },
   {
@@ -593,15 +656,17 @@
       "h": 0.54167
     },
     "plaque": {
-      "x": 0.085,
-      "y": 0.045,
-      "w": 0.38,
-      "h": 0.13,
-      "font": "DM Sans",
+      "x": 0.15625,
+      "y": 0.075833,
+      "w": 0.25625,
+      "h": 0.064167,
+      "painted": true,
       "coverPainted": true,
-      "color": "#FFE6F0",
-      "ink": "#100905",
-      "luminance": 0.499
+      "tone": "light",
+      "none": false,
+      "luminance": 0.53677,
+      "ink": "#2B1D12",
+      "fill": "#FDF4F5"
     }
   },
   {
@@ -619,15 +684,17 @@
       "h": 0.605
     },
     "plaque": {
-      "x": 0.085,
-      "y": 0.045,
-      "w": 0.38,
-      "h": 0.13,
-      "font": "DM Sans",
+      "x": 0.15625,
+      "y": 0.075833,
+      "w": 0.25625,
+      "h": 0.064167,
+      "painted": true,
       "coverPainted": true,
-      "color": "#FFE6F0",
-      "ink": "#100905",
-      "luminance": 0.5
+      "tone": "light",
+      "none": false,
+      "luminance": 0.509959,
+      "ink": "#2B1D12",
+      "fill": "#FDF5F5"
     }
   },
   {
@@ -645,15 +712,17 @@
       "h": 0.4675
     },
     "plaque": {
-      "x": 0.075,
-      "y": 0.035,
-      "w": 0.42,
-      "h": 0.13,
-      "font": "Bree Serif",
+      "x": 0.13875,
+      "y": 0.073333,
+      "w": 0.30625,
+      "h": 0.068333,
+      "painted": true,
       "coverPainted": true,
-      "color": "#14284A",
-      "ink": "#100905",
-      "luminance": 0.186
+      "tone": "dark",
+      "none": false,
+      "luminance": 0.243733,
+      "ink": "#F7F5FF",
+      "fill": "#090403"
     }
   },
   {
@@ -671,15 +740,17 @@
       "h": 0.5425
     },
     "plaque": {
-      "x": 0.08,
-      "y": 0.045,
-      "w": 0.39,
-      "h": 0.12,
-      "font": "Chakra Petch",
+      "x": 0.15375,
+      "y": 0.073333,
+      "w": 0.27125,
+      "h": 0.059167,
+      "painted": true,
       "coverPainted": true,
-      "color": "#252A2D",
-      "ink": "#100905",
-      "luminance": 0.183
+      "tone": "dark",
+      "none": false,
+      "luminance": 0.348174,
+      "ink": "#F7F5FF",
+      "fill": "#1A1815"
     }
   },
   {
@@ -697,14 +768,16 @@
       "h": 0.78583
     },
     "plaque": {
-      "x": 0.21,
-      "y": 0.045,
-      "w": 0.58,
-      "h": 0.075,
-      "font": "DM Sans",
+      "x": 0.11,
+      "y": 0.14,
+      "w": 0.78,
+      "h": 0.035,
+      "painted": false,
       "coverPainted": false,
-      "luminance": 0.943,
-      "ink": "#100905"
+      "tone": "dark",
+      "none": true,
+      "luminance": 0.05,
+      "ink": "#F7F5FF"
     }
   },
   {
@@ -752,14 +825,17 @@
       "h": 0.6325
     },
     "plaque": {
-      "x": 0.21,
-      "y": 0.045,
-      "w": 0.58,
-      "h": 0.075,
-      "font": "DM Sans",
+      "x": 0.1575,
+      "y": 0.1025,
+      "w": 0.26375,
+      "h": 0.043333,
+      "painted": false,
       "coverPainted": false,
-      "luminance": 0.11,
-      "ink": "#F7F5FF"
+      "tone": "dark",
+      "none": false,
+      "luminance": 0.114268,
+      "ink": "#F7F5FF",
+      "fill": "#370627"
     }
   },
   {
@@ -777,14 +853,17 @@
       "h": 0.5925
     },
     "plaque": {
-      "x": 0.21,
-      "y": 0.045,
-      "w": 0.58,
-      "h": 0.075,
-      "font": "DM Sans",
+      "x": 0.0925,
+      "y": 0.09125,
+      "w": 0.181667,
+      "h": 0.03875,
+      "painted": false,
       "coverPainted": false,
-      "luminance": 0.127,
-      "ink": "#F7F5FF"
+      "tone": "dark",
+      "none": false,
+      "luminance": 0.018834,
+      "ink": "#F7F5FF",
+      "fill": "#271725"
     }
   }
 ]

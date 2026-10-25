@@ -30443,14 +30443,6 @@
       "galleryOrder": 1052,
       "frameTemplate": "cozy-cafe",
       "frameShape": "tall",
-      "plaque": {
-        "x": 0.21,
-        "y": 0.045,
-        "w": 0.58,
-        "h": 0.075,
-        "font": "Bree Serif",
-        "coverPainted": false
-      },
       "messageStyle": "honeybyte-cafe",
       "animated": false,
       "templateFont": "Lato",
@@ -31014,14 +31006,6 @@
       "galleryOrder": 1053,
       "frameTemplate": "demon-throne",
       "frameShape": "tall",
-      "plaque": {
-        "x": 0.21,
-        "y": 0.045,
-        "w": 0.58,
-        "h": 0.075,
-        "font": "DM Sans",
-        "coverPainted": false
-      },
       "messageStyle": "velvet-seance",
       "animated": true,
       "templateFont": "DM Sans",
@@ -31585,14 +31569,6 @@
       "galleryOrder": 1054,
       "frameTemplate": "haunted-manor",
       "frameShape": "tall",
-      "plaque": {
-        "x": 0.21,
-        "y": 0.045,
-        "w": 0.58,
-        "h": 0.075,
-        "font": "Bree Serif",
-        "coverPainted": false
-      },
       "messageStyle": "spirit-post",
       "animated": true,
       "templateFont": "Bree Serif",
@@ -32156,14 +32132,6 @@
       "galleryOrder": 1055,
       "frameTemplate": "lava-forge",
       "frameShape": "tall",
-      "plaque": {
-        "x": 0.21,
-        "y": 0.045,
-        "w": 0.58,
-        "h": 0.075,
-        "font": "DM Sans",
-        "coverPainted": false
-      },
       "messageStyle": "abyssal-relay",
       "animated": true,
       "templateFont": "DM Sans",
@@ -32727,14 +32695,6 @@
       "galleryOrder": 1056,
       "frameTemplate": "mothlight",
       "frameShape": "tall",
-      "plaque": {
-        "x": 0.21,
-        "y": 0.045,
-        "w": 0.58,
-        "h": 0.075,
-        "font": "Bree Serif",
-        "coverPainted": false
-      },
       "messageStyle": "mothlight",
       "animated": true,
       "templateFont": "Bree Serif",
@@ -33298,14 +33258,6 @@
       "galleryOrder": 1057,
       "frameTemplate": "royal-court",
       "frameShape": "tall",
-      "plaque": {
-        "x": 0.21,
-        "y": 0.045,
-        "w": 0.58,
-        "h": 0.075,
-        "font": "Bree Serif",
-        "coverPainted": false
-      },
       "messageStyle": "clean",
       "animated": false,
       "templateFont": "Bree Serif",
@@ -33869,14 +33821,6 @@
       "galleryOrder": 1058,
       "frameTemplate": "solar-oracle",
       "frameShape": "tall",
-      "plaque": {
-        "x": 0.21,
-        "y": 0.045,
-        "w": 0.58,
-        "h": 0.075,
-        "font": "DM Sans",
-        "coverPainted": false
-      },
       "messageStyle": "solar-oracle",
       "animated": true,
       "templateFont": "DM Sans",
@@ -34440,14 +34384,6 @@
       "galleryOrder": 1059,
       "frameTemplate": "star-oracle",
       "frameShape": "tall",
-      "plaque": {
-        "x": 0.21,
-        "y": 0.045,
-        "w": 0.58,
-        "h": 0.075,
-        "font": "DM Sans",
-        "coverPainted": false
-      },
       "messageStyle": "frostbound",
       "animated": true,
       "templateFont": "DM Sans",
@@ -34985,8 +34921,8 @@
       "silhouette": "frame-star-oracle",
       "titleStyle": {
         "fontFamily": "Cinzel",
-        "color": "#fffef8",
-        "gradient": "linear-gradient(90deg,#fffef8,#fff8dc)",
+        "color": "#2B1D12",
+        "gradient": "linear-gradient(90deg,#2B1D12,#40301C)",
         "effect": "glow",
         "subtitleFontFamily": "Cinzel",
         "subtitleColor": "#f7e6a1",
@@ -35011,14 +34947,6 @@
       "galleryOrder": 1060,
       "frameTemplate": "sticker-bomb",
       "frameShape": "tall",
-      "plaque": {
-        "x": 0.21,
-        "y": 0.045,
-        "w": 0.58,
-        "h": 0.075,
-        "font": "DM Sans",
-        "coverPainted": false
-      },
       "messageStyle": "clean",
       "animated": true,
       "templateFont": "DM Sans",
@@ -35582,14 +35510,6 @@
       "galleryOrder": 1061,
       "frameTemplate": "sugar-static",
       "frameShape": "tall",
-      "plaque": {
-        "x": 0.21,
-        "y": 0.045,
-        "w": 0.58,
-        "h": 0.075,
-        "font": "DM Sans",
-        "coverPainted": false
-      },
       "messageStyle": "sugar-static",
       "animated": true,
       "templateFont": "DM Sans",
@@ -36153,16 +36073,6 @@
       "galleryOrder": 1062,
       "frameTemplate": "neon-kawaii-goth",
       "frameShape": "square",
-      "plaque": {
-        "x": 0.13,
-        "y": 0.065,
-        "w": 0.4,
-        "h": 0.095,
-        "font": "Bungee",
-        "coverPainted": true,
-        "color": "#100B20",
-        "ink": "#FF80E7"
-      },
       "messageStyle": "sugar-static",
       "animated": true,
       "templateFont": "DM Sans",
@@ -36726,16 +36636,6 @@
       "galleryOrder": 1063,
       "frameTemplate": "neon-kawaii-goth-minimal",
       "frameShape": "tall",
-      "plaque": {
-        "x": 0.13,
-        "y": 0.065,
-        "w": 0.35,
-        "h": 0.095,
-        "font": "Bungee",
-        "coverPainted": true,
-        "color": "#100B20",
-        "ink": "#FF80E7"
-      },
       "messageStyle": "sugar-static",
       "animated": false,
       "templateFont": "DM Sans",
@@ -37299,16 +37199,6 @@
       "galleryOrder": 1064,
       "frameTemplate": "bunny-princess",
       "frameShape": "tall",
-      "plaque": {
-        "x": 0.085,
-        "y": 0.045,
-        "w": 0.38,
-        "h": 0.13,
-        "font": "DM Sans",
-        "coverPainted": true,
-        "color": "#FFE6F0",
-        "ink": "#6F2347"
-      },
       "messageStyle": "sugar-static",
       "animated": false,
       "templateFont": "DM Sans",
@@ -37872,16 +37762,6 @@
       "galleryOrder": 1065,
       "frameTemplate": "crowned-kittens",
       "frameShape": "tall",
-      "plaque": {
-        "x": 0.085,
-        "y": 0.045,
-        "w": 0.38,
-        "h": 0.13,
-        "font": "DM Sans",
-        "coverPainted": true,
-        "color": "#FFE6F0",
-        "ink": "#6F2347"
-      },
       "messageStyle": "sugar-static",
       "animated": false,
       "templateFont": "DM Sans",
@@ -38445,16 +38325,6 @@
       "galleryOrder": 1066,
       "frameTemplate": "sword-and-shield",
       "frameShape": "tall",
-      "plaque": {
-        "x": 0.075,
-        "y": 0.035,
-        "w": 0.42,
-        "h": 0.13,
-        "font": "Bree Serif",
-        "coverPainted": true,
-        "color": "#14284A",
-        "ink": "#F2D17F"
-      },
       "messageStyle": "frostbound",
       "animated": false,
       "templateFont": "DM Sans",
@@ -39018,16 +38888,6 @@
       "galleryOrder": 1067,
       "frameTemplate": "tactical-gunmetal",
       "frameShape": "tall",
-      "plaque": {
-        "x": 0.08,
-        "y": 0.045,
-        "w": 0.39,
-        "h": 0.12,
-        "font": "Chakra Petch",
-        "coverPainted": true,
-        "color": "#252A2D",
-        "ink": "#F4F1E8"
-      },
       "messageStyle": "phantom-signal",
       "animated": false,
       "templateFont": "IBM Plex Mono",
@@ -39591,14 +39451,6 @@
       "galleryOrder": 1068,
       "frameTemplate": "crescent-moon",
       "frameShape": "tall",
-      "plaque": {
-        "x": 0.21,
-        "y": 0.045,
-        "w": 0.58,
-        "h": 0.075,
-        "font": "DM Sans",
-        "coverPainted": false
-      },
       "messageStyle": "clean",
       "animated": true,
       "templateFont": "DM Sans",
@@ -40136,15 +39988,15 @@
       "silhouette": "frame-crescent-moon",
       "titleStyle": {
         "fontFamily": "Cormorant Garamond",
-        "color": "#100905",
-        "gradient": "none",
+        "color": "#F7F5FF",
+        "gradient": "linear-gradient(90deg,#F7F5FF,#E7E2FF)",
         "effect": "glow",
         "subtitleFontFamily": "Cormorant Garamond",
         "subtitleColor": "#100905",
         "shadow": "0 0 7px #ffd77a",
         "stroke": "1px #100905",
         "tilt": 0,
-        "followFrameColor": true
+        "followFrameColor": false
       }
     },
     {
@@ -40163,14 +40015,6 @@
       "galleryOrder": 1069,
       "frameTemplate": "neon-hex",
       "frameShape": "tall",
-      "plaque": {
-        "x": 0.21,
-        "y": 0.045,
-        "w": 0.58,
-        "h": 0.075,
-        "font": "DM Sans",
-        "coverPainted": false
-      },
       "messageStyle": "neon-hex",
       "animated": false,
       "templateFont": "DM Sans",

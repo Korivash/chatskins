@@ -18,8 +18,8 @@ for(const entry of manifest){
     assert.ok(entry.inner.w*entry.inner.h>=.2,`chat window is too small: ${entry.id}/${entry.shape}`);
     const skin=skins.find(item=>item.frameTemplate===entry.id);
     assert.ok(skin,`no skin maps to ${entry.id}`);
-    assert.ok(skin.plaque,`missing title plaque rect for ${entry.id}`);
-    const {x,y,w,h}=skin.plaque;
+    assert.ok(entry.plaque,`missing measured title plaque metadata for ${entry.id}`);
+    const {x,y,w,h}=entry.plaque;
     assert.ok(x>=0&&y>=0&&w>0&&h>0&&x+w<=1&&y+h<=1,`invalid plaque rect for ${entry.id}`);
   }
 }

@@ -438,3 +438,8 @@ body.overlay{margin:0;min-height:100vh;background:transparent;overflow:hidden}
 @media(prefers-reduced-motion:reduce){.chat.has-frame-template .template-plaque-title,.chat.has-frame-template .template-plaque-subtitle{animation:none!important;transition:none!important}}
 
 .chat.has-frame-template:not([data-template-message-borders="true"]) .message{border:0!important;outline:0!important;box-shadow:none!important}
+
+.chat.has-frame-template .template-plaque.narrow-plaque{background:var(--plaque-cover,#241b2b);border-radius:999px;padding:2px 7px;overflow:visible}
+.chat.has-frame-template .template-plaque.no-plaque{background:color-mix(in srgb,var(--template-middle-color,#111827) 88%,transparent);border-radius:999px;padding:2px 8px;overflow:visible}
+.chat.has-frame-template .template-plaque[data-plaque-tone=light]{color:#2b1d12}
+.chat.has-frame-template .template-plaque[data-plaque-tone=dark]{color:#f7f5ff}

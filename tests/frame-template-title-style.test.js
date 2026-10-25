@@ -18,7 +18,7 @@ for(const skin of skins){
   const titleColors=style.gradient&&style.gradient!=='none'?[...(style.gradient.match(/#[\da-f]{6}/ig)||[])]:[style.color];
   for(const entry of entries){
     const plaque={...entry.plaque,...(skin.plaque||{})};
-    const surface=plaque.coverPainted?luminance(plaque.color):entry.plaque.luminance;
+    const surface=plaque.none?luminance(skin.settings?.middleColor||'#17172a'):plaque.painted?luminance(plaque.fill):plaque.luminance;
     for(const color of titleColors)assert.ok(contrast(luminance(color),surface)>=4.5,`${skin.name}/${entry.shape}: ${color} contrast against plaque`);
   }
 }
@@ -29,3 +29,11 @@ assert.match(renderer,/display=swap/);
 assert.match(css,/data-title-gradient=true/);
 assert.match(css,/data-title-effect=emboss/);
 assert.match(css,/data-title-effect=ghost/);
+
+for(const entry of frames){
+  const plaque=entry.plaque;
+  assert.ok(plaque&&(plaque.none||Number.isFinite(plaque.x)&&Number.isFinite(plaque.y)&&Number.isFinite(plaque.w)&&Number.isFinite(plaque.h)),`${entry.id}/${entry.shape}: plaque or none required`);
+  if(plaque.none)continue;
+  assert.ok(plaque.x>=0&&plaque.y>=0&&plaque.x+plaque.w<=1&&plaque.y+plaque.h<=1,`${entry.id}/${entry.shape}: plaque rect inside image`);
+  if(plaque.painted)assert.match(plaque.fill,/^#[\da-f]{6}$/i,`${entry.id}/${entry.shape}: painted plaque needs sampled fill`);
+}
