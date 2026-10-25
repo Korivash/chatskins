@@ -50,7 +50,7 @@ body.overlay{margin:0;min-height:100vh;background:transparent;overflow:hidden}
 .chat[data-treatment=confetti] .message:nth-child(3n){background:linear-gradient(135deg,var(--bg),var(--bg2))}
 .chat[data-background=scanlines]::before,.chat[data-background=scanlines] .message::before{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,#0000 0 3px,#0002 3px 4px)}
 .chat[data-background=gradientDrift] .message{background:linear-gradient(135deg,var(--bg),var(--bg2));background-size:200% 200%;animation:gradientDrift 16s ease-in-out infinite alternate}
-.chat[data-background=sparkles] .message::after{content:"?  ·  ?";position:absolute;right:8px;top:2px;color:#fff9;font-size:.65em;pointer-events:none;animation:sparkle 600ms ease-out both}
+.chat[data-background=sparkles] .message::after{content:"* *";position:absolute;right:8px;top:2px;color:#fff9;font-size:.65em;pointer-events:none;animation:sparkle 600ms ease-out both}
 .chat[data-ambient=torch]{box-shadow:inset 0 0 8px #d88d4240;animation:torch 3.8s ease-in-out infinite}
 .chat[data-ambient=flicker]{box-shadow:inset 0 0 4px #a33b3b77;animation:flicker 5s ease-in-out infinite}
 .chat[data-ambient=scan]::after{content:"";position:absolute;left:0;top:2px;width:100%;height:1px;background:#69e7ff88;animation:scan 6s linear infinite;pointer-events:none}
@@ -230,7 +230,7 @@ body.overlay{margin:0;min-height:100vh;background:transparent;overflow:hidden}
 @keyframes signature-host-flash{0%{box-shadow:inset 0 0 0 2px #FFDA8A,0 0 12px #FFDA8A}100%{box-shadow:inset 0 0 0 0 transparent,0 0 0 transparent}}
 .chat[data-signature-skin=true] .signature-mention{border-left:3px solid #B7AAFF;padding-left:8px}
 .chat[data-signature-skin=true] .channel-first-time{color:#7EEAD6;background:linear-gradient(90deg,#7EEAD622,transparent 72%);padding:1px 5px;border-left:2px solid #7EEAD6;border-radius:2px;font-family:"Chakra Petch",sans-serif;font-weight:600;letter-spacing:.04em}
-.chat[data-signature-skin=true] .channel-first-time::before{content:"✦ ";color:#FFDA8A}
+.chat[data-signature-skin=true] .channel-first-time::before{content:"* ";color:#FFDA8A}
 .chat[data-signature-skin=true] .channel-name{font-family:"Chakra Petch",sans-serif;font-weight:600}
 .chat[data-shape=slash][data-treatment=tab][data-layout=columns] .chat-message,.chat[data-accent=rail][data-treatment=plain][data-layout=columns] .chat-message{display:flex;align-items:center;gap:10px}
 .chat[data-shape=slash][data-treatment=tab][data-layout=columns] .chat-name,.chat[data-accent=rail][data-treatment=plain][data-layout=columns] .chat-name{flex:0 1 auto;max-width:48%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;word-break:normal;overflow-wrap:normal}
@@ -252,3 +252,12 @@ body.overlay{margin:0;min-height:100vh;background:transparent;overflow:hidden}
 @keyframes signature-new-shimmer{from{background-position:-110% 0}to{background-position:110% 0}}
 
 @media(prefers-reduced-motion:reduce){.chat[data-signature-skin=true] .channel-first-time{animation:none!important}}
+/* Round 7e preview and shared message flow fixes. */
+.chat-identity{display:inline-flex;align-items:baseline;gap:.18em;min-width:0;max-width:100%;vertical-align:baseline}
+.chat-identity .chat-badges{display:inline-flex;align-items:center;flex:none;white-space:nowrap}
+.chat-identity .chat-name{display:inline-block;min-width:0;max-width:14ch;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;word-break:normal;overflow-wrap:normal;vertical-align:baseline}
+.chat-message{min-width:0;max-width:100%;overflow-wrap:anywhere;word-break:normal;box-sizing:border-box}
+.chat-message .message-body{min-width:0;max-width:100%;overflow-wrap:anywhere;white-space:normal}
+.chat[data-layout=columns] .chat-message{grid-template-columns:minmax(0,auto) minmax(0,1fr);column-gap:4px;align-items:baseline}
+.chat[data-layout=columns] .chat-identity{grid-column:1;white-space:nowrap}
+.chat[data-layout=columns] .chat-message>.message-body{grid-column:2;min-width:0}

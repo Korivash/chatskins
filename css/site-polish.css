@@ -9,3 +9,13 @@
 /* Round 7b: legible, complete character previews */
 .game .roster.portraits .skin-card{min-height:250px}.game .portrait-preview{height:100px;flex:none}.game .skin-live-preview{flex:none;min-height:0!important;max-height:none!important;padding:5px!important}.game .skin-live-preview .message{white-space:normal!important;overflow:visible!important;line-height:1.2!important;font-size:12px!important}.game .skin-live-preview .message-body{max-width:100%!important;white-space:normal!important;overflow-wrap:anywhere}.game .skin-live-preview .chat-message{flex:none;min-height:0;padding:2px 4px!important}.game .monitor-preview{height:216px}.game #skin-preview{min-height:226px}.game .selection-panel .screen{min-height:310px}
 .game .skin-live-preview .message-body,.game .skin-live-preview .chat-name,.game .skin-live-preview .channel-name{font-size:12px!important}
+/* Round 7e card preview sizing, wrapping, and balanced card height. */
+.game .skin-live-preview{position:absolute!important;left:50%;top:50%;bottom:auto!important;transform:translate(-50%,-50%);transform-origin:center center;width:85%;max-width:none!important;padding:4px!important;overflow:visible;gap:3px}
+.game .skin-live-preview .chat-message{display:block!important;width:100%;max-width:100%;min-width:0;white-space:normal!important;overflow:hidden!important;overflow-wrap:anywhere;word-break:normal;line-height:1.2!important;font-size:12px!important;padding:3px 5px!important}
+.game .skin-live-preview .chat-identity,.game .skin-live-preview .chat-name,.game .skin-live-preview .chat-badges,.game .skin-live-preview .message-body,.game .skin-live-preview .channel-name{max-width:100%;font-size:12px!important;line-height:1.2!important;white-space:normal!important;vertical-align:baseline}
+.game .skin-live-preview .chat-identity{display:inline-flex!important;align-items:baseline;max-width:100%}
+.game .skin-live-preview .chat-name{max-width:14ch!important;display:inline-block!important;white-space:nowrap!important;overflow:hidden;text-overflow:ellipsis}
+.game .skin-live-preview .chat-badges{display:inline-flex!important;align-items:center;white-space:nowrap!important}
+.game .skin-live-preview .message-body{display:inline!important;overflow-wrap:anywhere!important;word-break:normal}
+.game .roster.portraits .skin-card{height:188px;min-height:188px;max-height:188px;flex:none}
+.game .roster.portraits .portrait-preview{height:100px;flex:0 0 100px}
