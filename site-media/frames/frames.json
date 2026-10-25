@@ -19,7 +19,9 @@
       "w": 0.58,
       "h": 0.075,
       "font": "Bree Serif",
-      "coverPainted": false
+      "coverPainted": false,
+      "luminance": 0.113,
+      "ink": "#F7F5FF"
     }
   },
   {
@@ -42,7 +44,9 @@
       "w": 0.58,
       "h": 0.075,
       "font": "DM Sans",
-      "coverPainted": false
+      "coverPainted": false,
+      "luminance": 0.087,
+      "ink": "#F7F5FF"
     }
   },
   {
@@ -65,7 +69,9 @@
       "w": 0.58,
       "h": 0.075,
       "font": "DM Sans",
-      "coverPainted": false
+      "coverPainted": false,
+      "luminance": 0.127,
+      "ink": "#F7F5FF"
     }
   },
   {
@@ -88,7 +94,9 @@
       "w": 0.58,
       "h": 0.075,
       "font": "Bree Serif",
-      "coverPainted": false
+      "coverPainted": false,
+      "luminance": 0.071,
+      "ink": "#F7F5FF"
     }
   },
   {
@@ -111,7 +119,9 @@
       "w": 0.58,
       "h": 0.075,
       "font": "Bree Serif",
-      "coverPainted": false
+      "coverPainted": false,
+      "luminance": 0.071,
+      "ink": "#F7F5FF"
     }
   },
   {
@@ -134,7 +144,9 @@
       "w": 0.58,
       "h": 0.075,
       "font": "DM Sans",
-      "coverPainted": false
+      "coverPainted": false,
+      "luminance": 0.092,
+      "ink": "#F7F5FF"
     }
   },
   {
@@ -157,7 +169,9 @@
       "w": 0.58,
       "h": 0.075,
       "font": "DM Sans",
-      "coverPainted": false
+      "coverPainted": false,
+      "luminance": 0.077,
+      "ink": "#F7F5FF"
     }
   },
   {
@@ -180,7 +194,9 @@
       "w": 0.58,
       "h": 0.075,
       "font": "Bree Serif",
-      "coverPainted": false
+      "coverPainted": false,
+      "luminance": 0.25,
+      "ink": "#100905"
     }
   },
   {
@@ -203,7 +219,9 @@
       "w": 0.58,
       "h": 0.075,
       "font": "Bree Serif",
-      "coverPainted": false
+      "coverPainted": false,
+      "luminance": 0.294,
+      "ink": "#100905"
     }
   },
   {
@@ -226,7 +244,9 @@
       "w": 0.58,
       "h": 0.075,
       "font": "Bree Serif",
-      "coverPainted": false
+      "coverPainted": false,
+      "luminance": 0.357,
+      "ink": "#100905"
     }
   },
   {
@@ -249,7 +269,9 @@
       "w": 0.58,
       "h": 0.075,
       "font": "Bree Serif",
-      "coverPainted": false
+      "coverPainted": false,
+      "luminance": 0.292,
+      "ink": "#100905"
     }
   },
   {
@@ -272,7 +294,9 @@
       "w": 0.58,
       "h": 0.075,
       "font": "DM Sans",
-      "coverPainted": false
+      "coverPainted": false,
+      "luminance": 0.537,
+      "ink": "#100905"
     }
   },
   {
@@ -295,7 +319,9 @@
       "w": 0.58,
       "h": 0.075,
       "font": "DM Sans",
-      "coverPainted": false
+      "coverPainted": false,
+      "luminance": 0.579,
+      "ink": "#100905"
     }
   },
   {
@@ -318,7 +344,9 @@
       "w": 0.58,
       "h": 0.075,
       "font": "DM Sans",
-      "coverPainted": false
+      "coverPainted": false,
+      "luminance": 0.164,
+      "ink": "#F7F5FF"
     }
   },
   {
@@ -341,7 +369,9 @@
       "w": 0.58,
       "h": 0.075,
       "font": "DM Sans",
-      "coverPainted": false
+      "coverPainted": false,
+      "luminance": 0.154,
+      "ink": "#F7F5FF"
     }
   },
   {
@@ -364,7 +394,9 @@
       "w": 0.58,
       "h": 0.075,
       "font": "DM Sans",
-      "coverPainted": false
+      "coverPainted": false,
+      "luminance": 0.285,
+      "ink": "#100905"
     }
   },
   {
@@ -387,7 +419,9 @@
       "w": 0.58,
       "h": 0.075,
       "font": "DM Sans",
-      "coverPainted": false
+      "coverPainted": false,
+      "luminance": 0.306,
+      "ink": "#100905"
     }
   },
   {
@@ -410,7 +444,9 @@
       "w": 0.58,
       "h": 0.075,
       "font": "DM Sans",
-      "coverPainted": false
+      "coverPainted": false,
+      "luminance": 0.263,
+      "ink": "#100905"
     }
   },
   {
@@ -433,7 +469,9 @@
       "w": 0.58,
       "h": 0.075,
       "font": "DM Sans",
-      "coverPainted": false
+      "coverPainted": false,
+      "luminance": 0.372,
+      "ink": "#100905"
     }
   },
   {
@@ -458,7 +496,8 @@
       "font": "Bungee",
       "coverPainted": true,
       "color": "#100B20",
-      "ink": "#FF80E7"
+      "ink": "#100905",
+      "luminance": 0.188
     }
   },
   {
@@ -483,7 +522,8 @@
       "font": "Bungee",
       "coverPainted": true,
       "color": "#100B20",
-      "ink": "#FF80E7"
+      "ink": "#100905",
+      "luminance": 0.275
     }
   },
   {
@@ -508,7 +548,8 @@
       "font": "Bungee",
       "coverPainted": true,
       "color": "#100B20",
-      "ink": "#FF80E7"
+      "ink": "#F7F5FF",
+      "luminance": 0.147
     }
   },
   {
@@ -533,7 +574,8 @@
       "font": "Bungee",
       "coverPainted": true,
       "color": "#100B20",
-      "ink": "#FF80E7"
+      "ink": "#F7F5FF",
+      "luminance": 0.159
     }
   },
   {
@@ -558,7 +600,8 @@
       "font": "DM Sans",
       "coverPainted": true,
       "color": "#FFE6F0",
-      "ink": "#6F2347"
+      "ink": "#100905",
+      "luminance": 0.499
     }
   },
   {
@@ -583,7 +626,8 @@
       "font": "DM Sans",
       "coverPainted": true,
       "color": "#FFE6F0",
-      "ink": "#6F2347"
+      "ink": "#100905",
+      "luminance": 0.5
     }
   },
   {
@@ -608,7 +652,8 @@
       "font": "Bree Serif",
       "coverPainted": true,
       "color": "#14284A",
-      "ink": "#F2D17F"
+      "ink": "#100905",
+      "luminance": 0.186
     }
   },
   {
@@ -633,7 +678,8 @@
       "font": "Chakra Petch",
       "coverPainted": true,
       "color": "#252A2D",
-      "ink": "#F4F1E8"
+      "ink": "#100905",
+      "luminance": 0.183
     }
   },
   {
@@ -656,7 +702,9 @@
       "w": 0.58,
       "h": 0.075,
       "font": "DM Sans",
-      "coverPainted": false
+      "coverPainted": false,
+      "luminance": 0.943,
+      "ink": "#100905"
     }
   },
   {
@@ -709,7 +757,9 @@
       "w": 0.58,
       "h": 0.075,
       "font": "DM Sans",
-      "coverPainted": false
+      "coverPainted": false,
+      "luminance": 0.11,
+      "ink": "#F7F5FF"
     }
   },
   {
@@ -732,7 +782,9 @@
       "w": 0.58,
       "h": 0.075,
       "font": "DM Sans",
-      "coverPainted": false
+      "coverPainted": false,
+      "luminance": 0.127,
+      "ink": "#F7F5FF"
     }
   }
 ]
