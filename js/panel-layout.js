@@ -9,8 +9,23 @@ export function layoutPanel(host, panel, settings, viewportHeight = globalThis.i
   host.dataset.direction = settings.direction;
   host.dataset.alignment = settings.alignment;
   panel.style.setProperty('--inset', `${settings.edgeInset}px`);
-  panel.style.setProperty('--width', `${settings.overlayWidth}px`);
-  panel.style.setProperty('--panel-max-height', `${available}px`);
-  panel.style.maxHeight = `${available}px`;
-  return available;
+  const aspect = panel.classList?.contains('has-frame-template') ? Number(panel.dataset.frameAspect) : 0;
+  let panelLimit = available;
+  if (Number.isFinite(aspect) && aspect > 0) {
+    const hostWidth = Number(host.clientWidth) || globalThis.innerWidth || 1280;
+    let height = Math.min(measuredHeight * .92, available);
+    let width = Math.min(height * aspect, hostWidth * .92);
+    height = Math.min(height, width / aspect);
+    panelLimit = height;
+    panel.style.setProperty('--width', `${width}px`);
+    panel.style.height = `${height}px`;
+    panel.style.maxHeight = `${height}px`;
+    panel.style.setProperty('--panel-max-height', `${height}px`);
+  } else {
+    panel.style.setProperty('--width', `${settings.overlayWidth}px`);
+    panel.style.setProperty('--panel-max-height', `${available}px`);
+    panel.style.maxHeight = `${available}px`;
+    panel.style.height = '';
+  }
+  return panelLimit;
 }
