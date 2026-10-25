@@ -1,6 +1,19 @@
 # Codex sessions
 
-Every OpenAI Codex session used to build ChatSkins, oldest first. They are generated from the local Codex session logs by `log-sessions.mjs`, so no row is typed by hand.
+ChatSkins was built entirely with **OpenAI Codex**. Instead of one giant thread, we ran a small **multi-agent workflow**: each Codex agent has one job, and every round is its own short, focused session.
+
+| Agent | Codex model | Job |
+|---|---|---|
+| **Astra**: designer | `gpt-6-astra` | Reads the brief, the research and the bug reports, then writes the design: layout, skin recipes, settings schema, mockups (`design/`). |
+| **Luna**: builder | `gpt-6-luna` | Builds the app from Astra's design, writes the unit tests, and fixes the bugs found in testing. |
+| **Luna**: researcher | `gpt-6-luna` + web search | Surveyed the top Twitch chat overlays (`research/TOP-CHAT-UIS.md`). |
+
+**Why many sessions instead of one thread**
+- **Token efficiency:** a fresh session per round keeps each context small. The agent reads only the brief, the design and the code it needs, instead of dragging hours of history. Design runs on Astra, and the bulk of the coding runs on Luna, the lighter model.
+- **Task management:** one round = one task = one session. Every task is written down as a prompt file in this repo (`DESIGN-PROMPT*.md` for Astra, `PROMPT*.md` for Luna), so you can match each session below with its exact prompt and its commit.
+- **Quality loop:** after every build we test in a real browser (and on live Twitch chat), measure what's wrong, and write those measurements into the next session's prompt.
+
+The list below is generated from the local Codex session logs by `log-sessions.mjs`, so no row is typed by hand.
 
 Total: **19** sessions.
 
@@ -20,8 +33,8 @@ Total: **19** sessions.
 | 12 | 2026-10-25 07:37:51 | `01a171fe-90ac-7952-978f-6dc5616a1cf4` | gpt-6-luna | build (Luna) | app | Round 4e: the frames are still not drawn. One bug, measured exactly. Work only inside this folder. ## Measured |
 | 13 | 2026-10-25 07:39:36 | `01a17200-2c33-75d2-b52c-ec39b23f2820` | gpt-6-luna | build (Luna) | app | Round 4f: one crash from 4e. Work only inside this folder. Chromium page error on load of index.html (and so t |
 | 14 | 2026-10-25 07:40:56 | `01a17201-6425-7252-a116-636ed1b90791` | gpt-6-luna | build (Luna) | app | Round 4g: the editor sections are empty. The owner found it on the live site, and the lead confirmed it in Chr |
-| 15 | 2026-10-25 07:42:00 | `01a17202-60bd-7e41-909f-5357d84cd5c8` | gpt-6-luna | build (Luna) | research | Research task (no coding). Write the result to TOP-CHAT-UIS.md in this folder. We build ChatSkins, a free brow |
+| 15 | 2026-10-25 07:42:00 | `01a17202-60bd-7e41-909f-5357d84cd5c8` | gpt-6-luna | research (Luna) | research | Research task (no coding). Write the result to TOP-CHAT-UIS.md in this folder. We build ChatSkins, a free brow |
 | 16 | 2026-10-25 07:43:53 | `01a17204-1922-7781-81cd-53d75bcf0e4f` | gpt-6-astra | design (Astra) | app | Round 5 design. You are the designer. First read research/TOP-CHAT-UIS.md (a fresh web survey of the most popu |
-| 17 | 2026-10-25 07:49:34 | `01a17209-4c53-76d2-868f-646acd4abaa7` | gpt-6-luna | build (Luna) | trailer art |  |
+| 17 | 2026-10-25 07:49:34 | `01a17209-4c53-76d2-868f-646acd4abaa7` | gpt-6-luna | trailer art (Luna) | trailer art |  |
 | 18 | 2026-10-25 07:55:19 | `01a1720e-8ef6-7b72-bdd6-008cece473d5` | gpt-6-luna | build (Luna) | app | Round 5 build. Read design/DESIGN.md (the "Round 5" section), design/skins.json and design/mockup.html, then t |
 | 19 | 2026-10-25 08:02:31 | `01a17215-2627-7ca3-97a4-9a358899cd50` | gpt-6-astra | design (Astra) | app | Round 6 design: the WHOLE WEBSITE, judge-ready. You are the designer. Read BRIEF.md, research/TOP-CHAT-UIS.md, |

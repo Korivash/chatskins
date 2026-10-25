@@ -18,8 +18,26 @@ for (const f of files) {
 }
 rows.sort((a, b) => String(a.ts).localeCompare(String(b.ts)));
 const role = m => m.includes('astra') ? 'design (Astra)' : 'build (Luna)';
-let md = '# Codex sessions\n\nEvery OpenAI Codex session used to build ChatSkins, oldest first. They are generated from the local Codex session logs by `log-sessions.mjs`, so no row is typed by hand.\n\n';
+const role2 = r => r.where === 'research' ? 'research (Luna)' : r.where === 'trailer art' ? 'trailer art (Luna)' : role(r.model);
+let md = `# Codex sessions
+
+ChatSkins was built entirely with **OpenAI Codex**. Instead of one giant thread, we ran a small **multi-agent workflow**: each Codex agent has one job, and every round is its own short, focused session.
+
+| Agent | Codex model | Job |
+|---|---|---|
+| **Astra**: designer | \`gpt-6-astra\` | Reads the brief, the research and the bug reports, then writes the design: layout, skin recipes, settings schema, mockups (\`design/\`). |
+| **Luna**: builder | \`gpt-6-luna\` | Builds the app from Astra's design, writes the unit tests, and fixes the bugs found in testing. |
+| **Luna**: researcher | \`gpt-6-luna\` + web search | Surveyed the top Twitch chat overlays (\`research/TOP-CHAT-UIS.md\`). |
+
+**Why many sessions instead of one thread**
+- **Token efficiency:** a fresh session per round keeps each context small. The agent reads only the brief, the design and the code it needs, instead of dragging hours of history. Design runs on Astra, and the bulk of the coding runs on Luna, the lighter model.
+- **Task management:** one round = one task = one session. Every task is written down as a prompt file in this repo (\`DESIGN-PROMPT*.md\` for Astra, \`PROMPT*.md\` for Luna), so you can match each session below with its exact prompt and its commit.
+- **Quality loop:** after every build we test in a real browser (and on live Twitch chat), measure what's wrong, and write those measurements into the next session's prompt.
+
+The list below is generated from the local Codex session logs by \`log-sessions.mjs\`, so no row is typed by hand.
+
+`;
 md += `Total: **${rows.length}** sessions.\n\n| # | Started (UTC) | Session ID | Model | Role | Area | Task (first line of the prompt) |\n|---|---|---|---|---|---|---|\n`;
-rows.forEach((r, i) => { md += `| ${i + 1} | ${String(r.ts).replace('T', ' ').slice(0, 19)} | \`${r.id}\` | ${r.model} | ${role(r.model)} | ${r.where} | ${r.task} |\n`; });
+rows.forEach((r, i) => { md += `| ${i + 1} | ${String(r.ts).replace('T', ' ').slice(0, 19)} | \`${r.id}\` | ${r.model} | ${role2(r)} | ${r.where} | ${r.task} |\n`; });
 fs.mkdirSync(path.join(REPO, 'docs'), { recursive: true }); fs.writeFileSync(path.join(REPO, 'docs/CODEX-SESSIONS.md'), md);
 console.log(rows.length, 'sessions');
