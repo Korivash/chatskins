@@ -15,7 +15,7 @@ ChatSkins was built entirely with **OpenAI Codex**. Instead of one giant thread,
 
 The list below is generated from the local Codex session logs by `log-sessions.mjs`, so no row is typed by hand.
 
-Total: **30** sessions.
+Total: **31** sessions.
 
 | # | Started (UTC) | Session ID | Model | Role | Area | Task (first line of the prompt) |
 |---|---|---|---|---|---|---|
@@ -49,3 +49,4 @@ Total: **30** sessions.
 | 28 | 2026-10-25 11:18:18 | `01a172c8-6608-7a22-87f5-61ab8f09e584` | gpt-6-luna | build (Luna) | app | Round 6f: a live bug in server/skin-request.mjs (the request form fails for every real visitor). Change only t |
 | 29 | 2026-10-25 11:26:06 | `01a172cf-8904-7ce2-8d39-d96851056728` | gpt-6-astra | design (Astra) | app | Round 8 design: CHAT-POWERED SKINS. Viewers play with the overlay. You are the designer. Read DESIGN.md (all r |
 | 30 | 2026-10-25 11:29:35 | `01a172d2-b8fa-7793-9ad4-91c3e53619fa` | gpt-6-luna | build (Luna) | app | Round 9c: the previews don't run a test chat (owner: "the previews are not working, it should be doing a fake  |
+| 31 | 2026-10-25 12:10:05 | `01a172f7-cff6-7af3-9e4a-688e53b8037f` | gpt-6-astra | design (Astra) | app | Round 10 design: SKINS THAT STAND OUT. You are the designer. Read DESIGN.md (all rounds), design/skins.json, t |
