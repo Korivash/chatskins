@@ -12,9 +12,16 @@ ChatSkins is a browser-based editor for Twitch chat overlays. It's built for the
 
 ![Animated skins and a ChatSkins overlay over a stream](docs/media/demo.gif)
 
-**Full tour** (2:34, narrated, original music): [docs/media/demo.mp4](docs/media/demo.mp4). It shows the skins, the animated skins, Use this skin, the OBS overlay, the editor, Guild Chat channels, chat play, alerts and the docs, all recorded on the live site.
+**Full demo** (2:46, narrated, original music): [docs/media/demo.mp4](docs/media/demo.mp4). It shows every feature on the live site, then how the Codex agent team built it.
 
 **How we built it** (2:36, narrated, original music): [docs/media/making-of.mp4](docs/media/making-of.mp4). It covers the idea, the agent team (Astra designs, Luna builds, Claude tests and ships), a real prompt, Astra's mockups, a live Luna build log, testing all 52 skins through the real overlay, and the 31-session / 120-commit loop.
+
+### Gallery
+| | |
+|---|---|
+| ![Signature skin over a stream](docs/media/gallery/overlay-signature.jpg) | ![Guild Chat with Guild, Party and Officer channels](docs/media/gallery/overlay-guild-chat.jpg) |
+| ![Animated Electric Storm skin](docs/media/gallery/overlay-animated.jpg) | ![Chat play: an on-screen !skinvote](docs/media/gallery/chat-play-vote.jpg) |
+| ![Alerts in the editor](docs/media/gallery/alerts.jpg) | ![The Codex agent team](docs/media/gallery/how-we-built-it.jpg) |
 
 ### The editor
 ![ChatSkins editor: skin gallery and settings on the left, live preview on the right](docs/media/editor.png)
