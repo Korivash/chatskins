@@ -1,290 +1,738 @@
 [
- {
-  "id": "cozy-cafe",
-  "shape": "tall",
-  "file": "site-media/frames/cozy-cafe-tall.webp",
-  "w": 800,
-  "h": 1200,
-  "credit": "Codex",
-  "kind": "chat"
- },
- {
-  "id": "demon-throne",
-  "shape": "tall",
-  "file": "site-media/frames/demon-throne-tall.webp",
-  "w": 800,
-  "h": 1200,
-  "credit": "Codex",
-  "kind": "chat"
- },
- {
-  "id": "demon-throne",
-  "shape": "wide",
-  "file": "site-media/frames/demon-throne-wide.webp",
-  "w": 1200,
-  "h": 800,
-  "credit": "Codex",
-  "kind": "chat"
- },
- {
-  "id": "haunted-manor",
-  "shape": "tall",
-  "file": "site-media/frames/haunted-manor-tall.webp",
-  "w": 800,
-  "h": 1200,
-  "credit": "Codex",
-  "kind": "chat"
- },
- {
-  "id": "haunted-manor",
-  "shape": "wide",
-  "file": "site-media/frames/haunted-manor-wide.webp",
-  "w": 1200,
-  "h": 800,
-  "credit": "Codex",
-  "kind": "chat"
- },
- {
-  "id": "lava-forge",
-  "shape": "tall",
-  "file": "site-media/frames/lava-forge-tall.webp",
-  "w": 800,
-  "h": 1200,
-  "credit": "Codex",
-  "kind": "chat"
- },
- {
-  "id": "lava-forge",
-  "shape": "wide",
-  "file": "site-media/frames/lava-forge-wide.webp",
-  "w": 1200,
-  "h": 800,
-  "credit": "Codex",
-  "kind": "chat"
- },
- {
-  "id": "mothlight",
-  "shape": "tall",
-  "file": "site-media/frames/mothlight-tall.webp",
-  "w": 800,
-  "h": 1200,
-  "credit": "Codex",
-  "kind": "chat"
- },
- {
-  "id": "mothlight",
-  "shape": "wide",
-  "file": "site-media/frames/mothlight-wide.webp",
-  "w": 1200,
-  "h": 800,
-  "credit": "Codex",
-  "kind": "chat"
- },
- {
-  "id": "royal-court",
-  "shape": "tall",
-  "file": "site-media/frames/royal-court-tall.webp",
-  "w": 800,
-  "h": 1200,
-  "credit": "Codex",
-  "kind": "chat"
- },
- {
-  "id": "royal-court",
-  "shape": "wide",
-  "file": "site-media/frames/royal-court-wide.webp",
-  "w": 1200,
-  "h": 800,
-  "credit": "Codex",
-  "kind": "chat"
- },
- {
-  "id": "solar-oracle",
-  "shape": "tall",
-  "file": "site-media/frames/solar-oracle-tall.webp",
-  "w": 800,
-  "h": 1200,
-  "credit": "Codex",
-  "kind": "chat"
- },
- {
-  "id": "solar-oracle",
-  "shape": "wide",
-  "file": "site-media/frames/solar-oracle-wide.webp",
-  "w": 1200,
-  "h": 800,
-  "credit": "Codex",
-  "kind": "chat"
- },
- {
-  "id": "star-oracle",
-  "shape": "tall",
-  "file": "site-media/frames/star-oracle-tall.webp",
-  "w": 800,
-  "h": 1200,
-  "credit": "Codex",
-  "kind": "chat"
- },
- {
-  "id": "star-oracle",
-  "shape": "wide",
-  "file": "site-media/frames/star-oracle-wide.webp",
-  "w": 1200,
-  "h": 800,
-  "credit": "Codex",
-  "kind": "chat"
- },
- {
-  "id": "sticker-bomb",
-  "shape": "tall",
-  "file": "site-media/frames/sticker-bomb-tall.webp",
-  "w": 800,
-  "h": 1200,
-  "credit": "Codex",
-  "kind": "chat"
- },
- {
-  "id": "sticker-bomb",
-  "shape": "wide",
-  "file": "site-media/frames/sticker-bomb-wide.webp",
-  "w": 1200,
-  "h": 800,
-  "credit": "Codex",
-  "kind": "chat"
- },
- {
-  "id": "sugar-static",
-  "shape": "tall",
-  "file": "site-media/frames/sugar-static-tall.webp",
-  "w": 800,
-  "h": 1200,
-  "credit": "Codex",
-  "kind": "chat"
- },
- {
-  "id": "sugar-static",
-  "shape": "wide",
-  "file": "site-media/frames/sugar-static-wide.webp",
-  "w": 1200,
-  "h": 800,
-  "credit": "Codex",
-  "kind": "chat"
- },
- {
-  "id": "neon-kawaii-goth",
-  "shape": "square",
-  "file": "site-media/frames/neon-kawaii-goth-square.webp",
-  "w": 1200,
-  "h": 1200,
-  "credit": "Korivash (ChatGPT)",
-  "kind": "chat"
- },
- {
-  "id": "neon-kawaii-goth",
-  "shape": "wide",
-  "file": "site-media/frames/neon-kawaii-goth-wide.webp",
-  "w": 1200,
-  "h": 675,
-  "credit": "Korivash (ChatGPT)",
-  "kind": "chat"
- },
- {
-  "id": "neon-kawaii-goth",
-  "shape": "tall",
-  "file": "site-media/frames/neon-kawaii-goth-tall.webp",
-  "w": 800,
-  "h": 1200,
-  "credit": "Korivash (ChatGPT)",
-  "kind": "chat"
- },
- {
-  "id": "neon-kawaii-goth-minimal",
-  "shape": "tall",
-  "file": "site-media/frames/neon-kawaii-goth-minimal-tall.webp",
-  "w": 800,
-  "h": 1200,
-  "credit": "Korivash (ChatGPT)",
-  "kind": "chat"
- },
- {
-  "id": "bunny-princess",
-  "shape": "tall",
-  "file": "site-media/frames/bunny-princess-tall.webp",
-  "w": 800,
-  "h": 1200,
-  "credit": "KittyVenom (ChatGPT)",
-  "kind": "chat"
- },
- {
-  "id": "crowned-kittens",
-  "shape": "tall",
-  "file": "site-media/frames/crowned-kittens-tall.webp",
-  "w": 800,
-  "h": 1200,
-  "credit": "KittyVenom (ChatGPT)",
-  "kind": "chat"
- },
- {
-  "id": "sword-and-shield",
-  "shape": "tall",
-  "file": "site-media/frames/sword-and-shield-tall.webp",
-  "w": 800,
-  "h": 1200,
-  "credit": "KittyVenom (ChatGPT)",
-  "kind": "chat"
- },
- {
-  "id": "tactical-gunmetal",
-  "shape": "tall",
-  "file": "site-media/frames/tactical-gunmetal-tall.webp",
-  "w": 800,
-  "h": 1200,
-  "credit": "KittyVenom (ChatGPT)",
-  "kind": "chat"
- },
- {
-  "id": "crescent-moon",
-  "shape": "tall",
-  "file": "site-media/frames/crescent-moon-tall.webp",
-  "w": 800,
-  "h": 1200,
-  "credit": "KittyVenom (ChatGPT)",
-  "kind": "chat"
- },
- {
-  "id": "neon-kawaii-goth",
-  "shape": "webcam",
-  "file": "site-media/frames/neon-kawaii-goth-webcam.webp",
-  "w": 1200,
-  "h": 675,
-  "credit": "KittyVenom (ChatGPT)",
-  "kind": "webcam"
- },
- {
-  "id": "bunny-princess",
-  "shape": "webcam",
-  "file": "site-media/frames/bunny-princess-webcam.webp",
-  "w": 1200,
-  "h": 675,
-  "credit": "KittyVenom (ChatGPT)",
-  "kind": "webcam"
- },
- {
-  "id": "neon-hex",
-  "shape": "tall",
-  "file": "site-media/frames/neon-hex-tall.webp",
-  "w": 800,
-  "h": 1200,
-  "credit": "Codex",
-  "kind": "chat"
- },
- {
-  "id": "neon-hex",
-  "shape": "wide",
-  "file": "site-media/frames/neon-hex-wide.webp",
-  "w": 1200,
-  "h": 800,
-  "credit": "Codex",
-  "kind": "chat"
- }
+  {
+    "id": "cozy-cafe",
+    "shape": "tall",
+    "file": "site-media/frames/cozy-cafe-tall.webp",
+    "w": 800,
+    "h": 1200,
+    "credit": "Codex",
+    "kind": "chat",
+    "inner": {
+      "x": 0.12,
+      "y": 0.12,
+      "w": 0.76,
+      "h": 0.76
+    },
+    "plaque": {
+      "x": 0.21,
+      "y": 0.045,
+      "w": 0.58,
+      "h": 0.075,
+      "font": "Bree Serif",
+      "coverPainted": false
+    }
+  },
+  {
+    "id": "demon-throne",
+    "shape": "tall",
+    "file": "site-media/frames/demon-throne-tall.webp",
+    "w": 800,
+    "h": 1200,
+    "credit": "Codex",
+    "kind": "chat",
+    "inner": {
+      "x": 0.17188,
+      "y": 0.22375,
+      "w": 0.65625,
+      "h": 0.5525
+    },
+    "plaque": {
+      "x": 0.21,
+      "y": 0.045,
+      "w": 0.58,
+      "h": 0.075,
+      "font": "DM Sans",
+      "coverPainted": false
+    }
+  },
+  {
+    "id": "demon-throne",
+    "shape": "wide",
+    "file": "site-media/frames/demon-throne-wide.webp",
+    "w": 1200,
+    "h": 800,
+    "credit": "Codex",
+    "kind": "chat",
+    "inner": {
+      "x": 0.21958,
+      "y": 0.23125,
+      "w": 0.56083,
+      "h": 0.5375
+    },
+    "plaque": {
+      "x": 0.21,
+      "y": 0.045,
+      "w": 0.58,
+      "h": 0.075,
+      "font": "DM Sans",
+      "coverPainted": false
+    }
+  },
+  {
+    "id": "haunted-manor",
+    "shape": "tall",
+    "file": "site-media/frames/haunted-manor-tall.webp",
+    "w": 800,
+    "h": 1200,
+    "credit": "Codex",
+    "kind": "chat",
+    "inner": {
+      "x": 0.21,
+      "y": 0.18167,
+      "w": 0.58,
+      "h": 0.63667
+    },
+    "plaque": {
+      "x": 0.21,
+      "y": 0.045,
+      "w": 0.58,
+      "h": 0.075,
+      "font": "Bree Serif",
+      "coverPainted": false
+    }
+  },
+  {
+    "id": "haunted-manor",
+    "shape": "wide",
+    "file": "site-media/frames/haunted-manor-wide.webp",
+    "w": 1200,
+    "h": 800,
+    "credit": "Codex",
+    "kind": "chat",
+    "inner": {
+      "x": 0.18583,
+      "y": 0.20563,
+      "w": 0.62833,
+      "h": 0.58875
+    },
+    "plaque": {
+      "x": 0.21,
+      "y": 0.045,
+      "w": 0.58,
+      "h": 0.075,
+      "font": "Bree Serif",
+      "coverPainted": false
+    }
+  },
+  {
+    "id": "lava-forge",
+    "shape": "tall",
+    "file": "site-media/frames/lava-forge-tall.webp",
+    "w": 800,
+    "h": 1200,
+    "credit": "Codex",
+    "kind": "chat",
+    "inner": {
+      "x": 0.1525,
+      "y": 0.17042,
+      "w": 0.695,
+      "h": 0.65917
+    },
+    "plaque": {
+      "x": 0.21,
+      "y": 0.045,
+      "w": 0.58,
+      "h": 0.075,
+      "font": "DM Sans",
+      "coverPainted": false
+    }
+  },
+  {
+    "id": "lava-forge",
+    "shape": "wide",
+    "file": "site-media/frames/lava-forge-wide.webp",
+    "w": 1200,
+    "h": 800,
+    "credit": "Codex",
+    "kind": "chat",
+    "inner": {
+      "x": 0.10875,
+      "y": 0.18125,
+      "w": 0.7825,
+      "h": 0.6375
+    },
+    "plaque": {
+      "x": 0.21,
+      "y": 0.045,
+      "w": 0.58,
+      "h": 0.075,
+      "font": "DM Sans",
+      "coverPainted": false
+    }
+  },
+  {
+    "id": "mothlight",
+    "shape": "tall",
+    "file": "site-media/frames/mothlight-tall.webp",
+    "w": 800,
+    "h": 1200,
+    "credit": "Codex",
+    "kind": "chat",
+    "inner": {
+      "x": 0.12,
+      "y": 0.1,
+      "w": 0.76,
+      "h": 0.8
+    },
+    "plaque": {
+      "x": 0.21,
+      "y": 0.045,
+      "w": 0.58,
+      "h": 0.075,
+      "font": "Bree Serif",
+      "coverPainted": false
+    }
+  },
+  {
+    "id": "mothlight",
+    "shape": "wide",
+    "file": "site-media/frames/mothlight-wide.webp",
+    "w": 1200,
+    "h": 800,
+    "credit": "Codex",
+    "kind": "chat",
+    "inner": {
+      "x": 0.25083,
+      "y": 0.23313,
+      "w": 0.49833,
+      "h": 0.53375
+    },
+    "plaque": {
+      "x": 0.21,
+      "y": 0.045,
+      "w": 0.58,
+      "h": 0.075,
+      "font": "Bree Serif",
+      "coverPainted": false
+    }
+  },
+  {
+    "id": "royal-court",
+    "shape": "tall",
+    "file": "site-media/frames/royal-court-tall.webp",
+    "w": 800,
+    "h": 1200,
+    "credit": "Codex",
+    "kind": "chat",
+    "inner": {
+      "x": 0.20687,
+      "y": 0.16417,
+      "w": 0.58625,
+      "h": 0.67167
+    },
+    "plaque": {
+      "x": 0.21,
+      "y": 0.045,
+      "w": 0.58,
+      "h": 0.075,
+      "font": "Bree Serif",
+      "coverPainted": false
+    }
+  },
+  {
+    "id": "royal-court",
+    "shape": "wide",
+    "file": "site-media/frames/royal-court-wide.webp",
+    "w": 1200,
+    "h": 800,
+    "credit": "Codex",
+    "kind": "chat",
+    "inner": {
+      "x": 0.19583,
+      "y": 0.19062,
+      "w": 0.60833,
+      "h": 0.61875
+    },
+    "plaque": {
+      "x": 0.21,
+      "y": 0.045,
+      "w": 0.58,
+      "h": 0.075,
+      "font": "Bree Serif",
+      "coverPainted": false
+    }
+  },
+  {
+    "id": "solar-oracle",
+    "shape": "tall",
+    "file": "site-media/frames/solar-oracle-tall.webp",
+    "w": 800,
+    "h": 1200,
+    "credit": "Codex",
+    "kind": "chat",
+    "inner": {
+      "x": 0.18688,
+      "y": 0.24375,
+      "w": 0.62625,
+      "h": 0.5125
+    },
+    "plaque": {
+      "x": 0.21,
+      "y": 0.045,
+      "w": 0.58,
+      "h": 0.075,
+      "font": "DM Sans",
+      "coverPainted": false
+    }
+  },
+  {
+    "id": "solar-oracle",
+    "shape": "wide",
+    "file": "site-media/frames/solar-oracle-wide.webp",
+    "w": 1200,
+    "h": 800,
+    "credit": "Codex",
+    "kind": "chat",
+    "inner": {
+      "x": 0.12458,
+      "y": 0.24625,
+      "w": 0.75083,
+      "h": 0.5075
+    },
+    "plaque": {
+      "x": 0.21,
+      "y": 0.045,
+      "w": 0.58,
+      "h": 0.075,
+      "font": "DM Sans",
+      "coverPainted": false
+    }
+  },
+  {
+    "id": "star-oracle",
+    "shape": "tall",
+    "file": "site-media/frames/star-oracle-tall.webp",
+    "w": 800,
+    "h": 1200,
+    "credit": "Codex",
+    "kind": "chat",
+    "inner": {
+      "x": 0.17812,
+      "y": 0.21417,
+      "w": 0.64375,
+      "h": 0.57167
+    },
+    "plaque": {
+      "x": 0.21,
+      "y": 0.045,
+      "w": 0.58,
+      "h": 0.075,
+      "font": "DM Sans",
+      "coverPainted": false
+    }
+  },
+  {
+    "id": "star-oracle",
+    "shape": "wide",
+    "file": "site-media/frames/star-oracle-wide.webp",
+    "w": 1200,
+    "h": 800,
+    "credit": "Codex",
+    "kind": "chat",
+    "inner": {
+      "x": 0.13958,
+      "y": 0.29625,
+      "w": 0.72083,
+      "h": 0.4075
+    },
+    "plaque": {
+      "x": 0.21,
+      "y": 0.045,
+      "w": 0.58,
+      "h": 0.075,
+      "font": "DM Sans",
+      "coverPainted": false
+    }
+  },
+  {
+    "id": "sticker-bomb",
+    "shape": "tall",
+    "file": "site-media/frames/sticker-bomb-tall.webp",
+    "w": 800,
+    "h": 1200,
+    "credit": "Codex",
+    "kind": "chat",
+    "inner": {
+      "x": 0.21437,
+      "y": 0.16042,
+      "w": 0.57125,
+      "h": 0.67917
+    },
+    "plaque": {
+      "x": 0.21,
+      "y": 0.045,
+      "w": 0.58,
+      "h": 0.075,
+      "font": "DM Sans",
+      "coverPainted": false
+    }
+  },
+  {
+    "id": "sticker-bomb",
+    "shape": "wide",
+    "file": "site-media/frames/sticker-bomb-wide.webp",
+    "w": 1200,
+    "h": 800,
+    "credit": "Codex",
+    "kind": "chat",
+    "inner": {
+      "x": 0.17125,
+      "y": 0.18812,
+      "w": 0.6575,
+      "h": 0.62375
+    },
+    "plaque": {
+      "x": 0.21,
+      "y": 0.045,
+      "w": 0.58,
+      "h": 0.075,
+      "font": "DM Sans",
+      "coverPainted": false
+    }
+  },
+  {
+    "id": "sugar-static",
+    "shape": "tall",
+    "file": "site-media/frames/sugar-static-tall.webp",
+    "w": 800,
+    "h": 1200,
+    "credit": "Codex",
+    "kind": "chat",
+    "inner": {
+      "x": 0.17125,
+      "y": 0.19625,
+      "w": 0.6575,
+      "h": 0.6075
+    },
+    "plaque": {
+      "x": 0.21,
+      "y": 0.045,
+      "w": 0.58,
+      "h": 0.075,
+      "font": "DM Sans",
+      "coverPainted": false
+    }
+  },
+  {
+    "id": "sugar-static",
+    "shape": "wide",
+    "file": "site-media/frames/sugar-static-wide.webp",
+    "w": 1200,
+    "h": 800,
+    "credit": "Codex",
+    "kind": "chat",
+    "inner": {
+      "x": 0.11125,
+      "y": 0.245,
+      "w": 0.7775,
+      "h": 0.51
+    },
+    "plaque": {
+      "x": 0.21,
+      "y": 0.045,
+      "w": 0.58,
+      "h": 0.075,
+      "font": "DM Sans",
+      "coverPainted": false
+    }
+  },
+  {
+    "id": "neon-kawaii-goth",
+    "shape": "square",
+    "file": "site-media/frames/neon-kawaii-goth-square.webp",
+    "w": 1200,
+    "h": 1200,
+    "credit": "Korivash (ChatGPT)",
+    "kind": "chat",
+    "inner": {
+      "x": 0.16625,
+      "y": 0.22,
+      "w": 0.6675,
+      "h": 0.56
+    },
+    "plaque": {
+      "x": 0.13,
+      "y": 0.065,
+      "w": 0.4,
+      "h": 0.095,
+      "font": "Bungee",
+      "coverPainted": true,
+      "color": "#100B20",
+      "ink": "#FF80E7"
+    }
+  },
+  {
+    "id": "neon-kawaii-goth",
+    "shape": "wide",
+    "file": "site-media/frames/neon-kawaii-goth-wide.webp",
+    "w": 1200,
+    "h": 675,
+    "credit": "Korivash (ChatGPT)",
+    "kind": "chat",
+    "inner": {
+      "x": 0.16875,
+      "y": 0.17481,
+      "w": 0.6625,
+      "h": 0.64889
+    },
+    "plaque": {
+      "x": 0.13,
+      "y": 0.065,
+      "w": 0.4,
+      "h": 0.095,
+      "font": "Bungee",
+      "coverPainted": true,
+      "color": "#100B20",
+      "ink": "#FF80E7"
+    }
+  },
+  {
+    "id": "neon-kawaii-goth",
+    "shape": "tall",
+    "file": "site-media/frames/neon-kawaii-goth-tall.webp",
+    "w": 800,
+    "h": 1200,
+    "credit": "Korivash (ChatGPT)",
+    "kind": "chat",
+    "inner": {
+      "x": 0.19375,
+      "y": 0.18167,
+      "w": 0.6125,
+      "h": 0.63667
+    },
+    "plaque": {
+      "x": 0.13,
+      "y": 0.065,
+      "w": 0.4,
+      "h": 0.095,
+      "font": "Bungee",
+      "coverPainted": true,
+      "color": "#100B20",
+      "ink": "#FF80E7"
+    }
+  },
+  {
+    "id": "neon-kawaii-goth-minimal",
+    "shape": "tall",
+    "file": "site-media/frames/neon-kawaii-goth-minimal-tall.webp",
+    "w": 800,
+    "h": 1200,
+    "credit": "Korivash (ChatGPT)",
+    "kind": "chat",
+    "inner": {
+      "x": 0.15125,
+      "y": 0.15625,
+      "w": 0.6975,
+      "h": 0.6875
+    },
+    "plaque": {
+      "x": 0.13,
+      "y": 0.065,
+      "w": 0.35,
+      "h": 0.095,
+      "font": "Bungee",
+      "coverPainted": true,
+      "color": "#100B20",
+      "ink": "#FF80E7"
+    }
+  },
+  {
+    "id": "bunny-princess",
+    "shape": "tall",
+    "file": "site-media/frames/bunny-princess-tall.webp",
+    "w": 800,
+    "h": 1200,
+    "credit": "KittyVenom (ChatGPT)",
+    "kind": "chat",
+    "inner": {
+      "x": 0.17562,
+      "y": 0.21542,
+      "w": 0.64875,
+      "h": 0.56917
+    },
+    "plaque": {
+      "x": 0.085,
+      "y": 0.045,
+      "w": 0.38,
+      "h": 0.13,
+      "font": "DM Sans",
+      "coverPainted": true,
+      "color": "#FFE6F0",
+      "ink": "#6F2347"
+    }
+  },
+  {
+    "id": "crowned-kittens",
+    "shape": "tall",
+    "file": "site-media/frames/crowned-kittens-tall.webp",
+    "w": 800,
+    "h": 1200,
+    "credit": "KittyVenom (ChatGPT)",
+    "kind": "chat",
+    "inner": {
+      "x": 0.17625,
+      "y": 0.21625,
+      "w": 0.6475,
+      "h": 0.5675
+    },
+    "plaque": {
+      "x": 0.085,
+      "y": 0.045,
+      "w": 0.38,
+      "h": 0.13,
+      "font": "DM Sans",
+      "coverPainted": true,
+      "color": "#FFE6F0",
+      "ink": "#6F2347"
+    }
+  },
+  {
+    "id": "sword-and-shield",
+    "shape": "tall",
+    "file": "site-media/frames/sword-and-shield-tall.webp",
+    "w": 800,
+    "h": 1200,
+    "credit": "KittyVenom (ChatGPT)",
+    "kind": "chat",
+    "inner": {
+      "x": 0.1825,
+      "y": 0.25125,
+      "w": 0.635,
+      "h": 0.4975
+    },
+    "plaque": {
+      "x": 0.075,
+      "y": 0.035,
+      "w": 0.42,
+      "h": 0.13,
+      "font": "Bree Serif",
+      "coverPainted": true,
+      "color": "#14284A",
+      "ink": "#F2D17F"
+    }
+  },
+  {
+    "id": "tactical-gunmetal",
+    "shape": "tall",
+    "file": "site-media/frames/tactical-gunmetal-tall.webp",
+    "w": 800,
+    "h": 1200,
+    "credit": "KittyVenom (ChatGPT)",
+    "kind": "chat",
+    "inner": {
+      "x": 0.195,
+      "y": 0.21375,
+      "w": 0.61,
+      "h": 0.5725
+    },
+    "plaque": {
+      "x": 0.08,
+      "y": 0.045,
+      "w": 0.39,
+      "h": 0.12,
+      "font": "Chakra Petch",
+      "coverPainted": true,
+      "color": "#252A2D",
+      "ink": "#F4F1E8"
+    }
+  },
+  {
+    "id": "crescent-moon",
+    "shape": "tall",
+    "file": "site-media/frames/crescent-moon-tall.webp",
+    "w": 800,
+    "h": 1200,
+    "credit": "KittyVenom (ChatGPT)",
+    "kind": "chat",
+    "inner": {
+      "x": 0.075,
+      "y": 0.09125,
+      "w": 0.85,
+      "h": 0.8175
+    },
+    "plaque": {
+      "x": 0.21,
+      "y": 0.045,
+      "w": 0.58,
+      "h": 0.075,
+      "font": "DM Sans",
+      "coverPainted": false
+    }
+  },
+  {
+    "id": "neon-kawaii-goth",
+    "shape": "webcam",
+    "file": "site-media/frames/neon-kawaii-goth-webcam.webp",
+    "w": 1200,
+    "h": 675,
+    "credit": "KittyVenom (ChatGPT)",
+    "kind": "webcam",
+    "inner": {
+      "x": 0.16875,
+      "y": 0.17481,
+      "w": 0.6625,
+      "h": 0.64889
+    }
+  },
+  {
+    "id": "bunny-princess",
+    "shape": "webcam",
+    "file": "site-media/frames/bunny-princess-webcam.webp",
+    "w": 1200,
+    "h": 675,
+    "credit": "KittyVenom (ChatGPT)",
+    "kind": "webcam",
+    "inner": {
+      "x": 0.18375,
+      "y": 0.21556,
+      "w": 0.6325,
+      "h": 0.56741
+    }
+  },
+  {
+    "id": "neon-hex",
+    "shape": "tall",
+    "file": "site-media/frames/neon-hex-tall.webp",
+    "w": 800,
+    "h": 1200,
+    "credit": "Codex",
+    "kind": "chat",
+    "inner": {
+      "x": 0.18438,
+      "y": 0.16792,
+      "w": 0.63125,
+      "h": 0.66417
+    },
+    "plaque": {
+      "x": 0.21,
+      "y": 0.045,
+      "w": 0.58,
+      "h": 0.075,
+      "font": "DM Sans",
+      "coverPainted": false
+    }
+  },
+  {
+    "id": "neon-hex",
+    "shape": "wide",
+    "file": "site-media/frames/neon-hex-wide.webp",
+    "w": 1200,
+    "h": 800,
+    "credit": "Codex",
+    "kind": "chat",
+    "inner": {
+      "x": 0.17417,
+      "y": 0.1875,
+      "w": 0.65167,
+      "h": 0.625
+    },
+    "plaque": {
+      "x": 0.21,
+      "y": 0.045,
+      "w": 0.58,
+      "h": 0.075,
+      "font": "DM Sans",
+      "coverPainted": false
+    }
+  }
 ]

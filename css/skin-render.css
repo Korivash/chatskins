@@ -419,3 +419,5 @@ body.overlay{margin:0;min-height:100vh;background:transparent;overflow:hidden}
 .chat.has-frame-template .chat-name,.chat.has-frame-template .message-body,.chat.has-frame-template .channel-name{font-family:var(--template-font,"DM Sans"),sans-serif}.chat.has-frame-template[data-template-glow=pulse] .template-frame-art{animation:template-glow-pulse 3.8s ease-in-out infinite alternate}.chat.has-frame-template[data-template-glow=shimmer] .template-frame-art{animation:template-frame-shimmer 7s ease-in-out infinite alternate}
 
 .chat.has-frame-template .message{font-family:var(--template-font,'DM Sans'),sans-serif;font-size:16px!important;line-height:1.2!important;margin-block:2px!important}.chat.has-frame-template .chat-message{padding:2px 5px!important;min-height:0!important}.chat.has-frame-template .chat-name,.chat.has-frame-template .message-body{line-height:1.2!important}.template-plaque-subtitle[hidden]{display:none!important}
+
+.chat.has-frame-template{justify-content:flex-end}
