@@ -1,14 +1,11 @@
 {
   "schemaVersion": 3,
-  "defaultSkinId": "clean",
+  "defaultSkinId": "chatskins-signature",
   "skins": [
     {
       "id": "chatskins-signature",
       "name": "ChatSkins Signature",
       "category": "Game styles",
-      "description": "A folded mint-to-violet perimeter frames Twitch-color name chips; quiet navy backing keeps the conversation central.",
-      "designNotes": "A folded mint-to-violet perimeter frames Twitch-color name chips; quiet navy backing keeps the conversation central.",
-      "frameRecipe": "2 px gradient ring, 12 px corners, 1 px inset highlight; static 4 px scanline pitch at 3% opacity behind text. No blur dependency.",
       "settings": {
         "schemaVersion": 3,
         "channel": "",
@@ -444,7 +441,7 @@
           "layout": "inline",
           "shape": "rect",
           "nameTreatment": "pill",
-          "accent": "none",
+          "accent": "roleIcons",
           "chipColor": "#101528FF",
           "columnWidth": 120,
           "initialSize": 40,
@@ -554,25 +551,13 @@
         "motion": 4,
         "retro": 1
       },
-      "channelPresentation": {
-        "nameChip": "Twitch color fill + same-color 4px static soft glow. Choose #101528 or #FFFFFF text by greater WCAG contrast; if neither reaches 4.5 adjust chip luminance minimally. Missing color #7EEAD6. Retain 1px contrasting chip edge.",
-        "badges": "Original SVG crown / sword / gem / star for broadcaster / mod / VIP / sub. Highest role wins; text label accompanies icon.",
-        "broadcaster": "Gold HOST tag; 600ms gold border-opacity pulse once (never text blink).",
-        "firstTime": "Supplemental ✦ NEW tag on existing message, one 800ms shimmer, no duplicate body.",
-        "mentionsChannel": "Violet 3px leading highlight bar independent of winning role.",
-        "action": "Italic violet body independent of role; retain role tag.",
-        "emoteOnly": "2× inline size, max 56px; preserve alt text and layout bounds.",
-        "entrance": "260ms translateY(10px) scale(.96) opacity(0) → identity opacity(1); 320ms fade exit, reserve row height.",
-        "ambient": "12s mint→violet ring: translate gradient layer inside border mask, static scanlines behind text; no animated blur/filter, no per-frame JS.",
-        "readability": "94% navy backing, white body with 1px navy outline; backing stays without blur. Contrast guarantee applies to default preset, not user transparency overrides."
-      },
-      "galleryOrder": 0
+      "galleryOrder": 0,
+      "tagline": "A luminous signature frame for every channel"
     },
     {
       "id": "bubble-lift",
       "name": "Bubble Lift",
       "category": "Streamer favorites",
-      "description": "Deep teal bubbles with a low left tail and a mint name above the message.",
       "settings": {
         "schemaVersion": 3,
         "channel": "",
@@ -1053,13 +1038,13 @@
         "flair": 3,
         "motion": 2,
         "retro": 1
-      }
+      },
+      "tagline": "Soft teal bubbles with a playful chat tail"
     },
     {
       "id": "glass-card",
       "name": "Glass Card",
       "category": "Streamer favorites",
-      "description": "Ice-blue translucent cards, a bright upper edge and soft depth.",
       "settings": {
         "schemaVersion": 3,
         "channel": "",
@@ -1540,13 +1525,13 @@
         "flair": 3,
         "motion": 2,
         "retro": 1
-      }
+      },
+      "tagline": "Cool translucent cards, crisp and calm"
     },
     {
       "id": "name-tag",
       "name": "Name Tag",
       "category": "Streamer favorites",
-      "description": "Blue name tabs form a vertical reading rail; bodies align in a second column.",
       "settings": {
         "schemaVersion": 3,
         "channel": "",
@@ -2027,13 +2012,13 @@
         "flair": 3,
         "motion": 2,
         "retro": 1
-      }
+      },
+      "tagline": "A tidy name rail for quick reading"
     },
     {
       "id": "comic-burst",
       "name": "Comic Burst",
       "category": "Streamer favorites",
-      "description": "Buttery speech balloons, thick ink outlines and offset ink shadows.",
       "settings": {
         "schemaVersion": 3,
         "channel": "",
@@ -2514,13 +2499,13 @@
         "flair": 5,
         "motion": 3,
         "retro": 2
-      }
+      },
+      "tagline": "Bold speech bubbles with comic-book punch"
     },
     {
       "id": "pastel-pop",
       "name": "Pastel Pop",
       "category": "Streamer favorites",
-      "description": "Lavender ticket bubbles with lilac corner dots and deep plum text.",
       "settings": {
         "schemaVersion": 3,
         "channel": "",
@@ -3001,13 +2986,13 @@
         "flair": 4,
         "motion": 3,
         "retro": 1
-      }
+      },
+      "tagline": "Lavender cards with bright pastel energy"
     },
     {
       "id": "esports-slash",
       "name": "Esports Slash",
       "category": "Streamer favorites",
-      "description": "Lime name plates and opposing diagonal ends; only the frame is slanted.",
       "settings": {
         "schemaVersion": 3,
         "channel": "",
@@ -3488,13 +3473,13 @@
         "flair": 5,
         "motion": 3,
         "retro": 2
-      }
+      },
+      "tagline": "Sharp lime accents for match-day chat"
     },
     {
       "id": "quiet-line",
       "name": "Quiet Line",
       "category": "Streamer favorites",
-      "description": "Warm editorial names, a short amber rule and a quiet dark reading strip.",
       "settings": {
         "schemaVersion": 3,
         "channel": "",
@@ -3975,13 +3960,13 @@
         "flair": 1,
         "motion": 2,
         "retro": 1
-      }
+      },
+      "tagline": "Warm accents for calm, readable chat"
     },
     {
       "id": "neon-edge",
       "name": "Neon Edge",
       "category": "Streamer favorites",
-      "description": "One violet neon rail on an ink-purple card; white body text stays unglowed.",
       "settings": {
         "schemaVersion": 3,
         "channel": "",
@@ -4462,13 +4447,13 @@
         "flair": 4,
         "motion": 2,
         "retro": 2
-      }
+      },
+      "tagline": "A violet edge against midnight purple"
     },
     {
       "id": "sticker-stack",
       "name": "Sticker Stack",
       "category": "Streamer favorites",
-      "description": "Apricot name stickers with a small hard shadow on plum message cards.",
       "settings": {
         "schemaVersion": 3,
         "channel": "",
@@ -4949,13 +4934,13 @@
         "flair": 4,
         "motion": 3,
         "retro": 1
-      }
+      },
+      "tagline": "Apricot name stickers with a playful pop"
     },
     {
       "id": "initial-card",
       "name": "Initial Card",
       "category": "Streamer favorites",
-      "description": "A circular initial medallion anchors a compact two-row social card.",
       "settings": {
         "schemaVersion": 3,
         "channel": "",
@@ -5436,13 +5421,13 @@
         "flair": 3,
         "motion": 2,
         "retro": 1
-      }
+      },
+      "tagline": "A circular initial anchors each message"
     },
     {
       "id": "signal-console",
       "name": "Signal Console",
       "category": "Streamer favorites",
-      "description": "Mint receipt-like command blocks with amber prompts; no typing delay.",
       "settings": {
         "schemaVersion": 3,
         "channel": "",
@@ -5923,13 +5908,13 @@
         "flair": 3,
         "motion": 1,
         "retro": 4
-      }
+      },
+      "tagline": "Mint console blocks with crisp amber prompts"
     },
     {
       "id": "announcer",
       "name": "Announcer",
       "category": "Streamer favorites",
-      "description": "Oversized gold names headline compact dark lower thirds.",
       "settings": {
         "schemaVersion": 3,
         "channel": "",
@@ -6410,7 +6395,8 @@
         "flair": 4,
         "motion": 2,
         "retro": 2
-      }
+      },
+      "tagline": "Big gold names for the latest updates"
     },
     {
       "id": "guild-chat",
@@ -6962,7 +6948,6 @@
         }
       },
       "category": "Game styles",
-      "description": "Reference preserved: two continuous gold rings, green guild dialogue and a deep forest pane.",
       "featured": false,
       "galleryOrder": 13,
       "stats": {
@@ -6970,7 +6955,8 @@
         "flair": 4,
         "motion": 2,
         "retro": 4
-      }
+      },
+      "tagline": "MMO guild chat with officer and yell channels"
     },
     {
       "id": "fantasy-mmo",
@@ -7506,7 +7492,6 @@
         }
       },
       "category": "Game styles",
-      "description": "Lavender double window with inset diamond corners; softer and cooler than Guild.",
       "featured": false,
       "galleryOrder": 14,
       "stats": {
@@ -7514,7 +7499,8 @@
         "flair": 4,
         "motion": 2,
         "retro": 4
-      }
+      },
+      "tagline": "Party and guild channels in a fantasy window"
     },
     {
       "id": "block-craft",
@@ -7993,7 +7979,6 @@
         }
       },
       "category": "Game styles",
-      "description": "Moss-grey stepped blocks and bright grass names; compact square rows.",
       "featured": false,
       "galleryOrder": 15,
       "stats": {
@@ -8001,7 +7986,8 @@
         "flair": 4,
         "motion": 1,
         "retro": 5
-      }
+      },
+      "tagline": "Square green blocks for friendly community chat"
     },
     {
       "id": "battle-arena",
@@ -8480,7 +8466,6 @@
         }
       },
       "category": "Game styles",
-      "description": "Teal tactical pane with squared corner brackets and an aligned squad column.",
       "featured": false,
       "galleryOrder": 16,
       "stats": {
@@ -8488,7 +8473,8 @@
         "flair": 3,
         "motion": 3,
         "retro": 2
-      }
+      },
+      "tagline": "A cool tactical panel for coordinated teams"
     },
     {
       "id": "battle-royale",
@@ -8967,7 +8953,6 @@
         }
       },
       "category": "Game styles",
-      "description": "Sand-yellow notched field cards; condensed names and individual charcoal plates.",
       "featured": false,
       "galleryOrder": 17,
       "stats": {
@@ -8975,7 +8960,8 @@
         "flair": 4,
         "motion": 3,
         "retro": 2
-      }
+      },
+      "tagline": "Notched sand-gold cards for squad callouts"
     },
     {
       "id": "retro-rpg",
@@ -9527,7 +9513,6 @@
         }
       },
       "category": "Game styles",
-      "description": "Cobalt dialogue window with a bright twin rim and triangular speaker prompt.",
       "featured": false,
       "galleryOrder": 18,
       "stats": {
@@ -9535,7 +9520,8 @@
         "flair": 5,
         "motion": 1,
         "retro": 5
-      }
+      },
+      "tagline": "Classic blue dialogue boxes with speaker cues"
     },
     {
       "id": "cyber-city",
@@ -10014,7 +10000,6 @@
           "rules": []
         }
       },
-      "description": "Magenta cut-corner panels and cyan callsigns; a hard-edged city HUD.",
       "featured": false,
       "galleryOrder": 19,
       "stats": {
@@ -10022,7 +10007,8 @@
         "flair": 5,
         "motion": 3,
         "retro": 3
-      }
+      },
+      "tagline": "Bright cyan callsigns in a magenta city glow"
     },
     {
       "id": "arcade-cabinet",
@@ -10501,7 +10487,6 @@
           "rules": []
         }
       },
-      "description": "Purple cabinet bezel, butter-yellow score names and static scanlines.",
       "featured": false,
       "galleryOrder": 20,
       "stats": {
@@ -10509,7 +10494,8 @@
         "flair": 5,
         "motion": 2,
         "retro": 5
-      }
+      },
+      "tagline": "Arcade colors with a sturdy cabinet frame"
     },
     {
       "id": "space-command",
@@ -10988,7 +10974,6 @@
           "rules": []
         }
       },
-      "description": "Steel-blue communications panel with long technical corner brackets.",
       "featured": false,
       "galleryOrder": 21,
       "stats": {
@@ -10996,7 +10981,8 @@
         "flair": 3,
         "motion": 2,
         "retro": 3
-      }
+      },
+      "tagline": "Cool steel panels for mission control chat"
     },
     {
       "id": "monster-trainer",
@@ -11475,7 +11461,6 @@
           "rules": []
         }
       },
-      "description": "Ivory dialogue cards with a heavy blue-ink rim and friendly tall lettering.",
       "featured": false,
       "galleryOrder": 22,
       "stats": {
@@ -11483,7 +11468,8 @@
         "flair": 4,
         "motion": 3,
         "retro": 4
-      }
+      },
+      "tagline": "Friendly ivory dialogue with bold blue edges"
     },
     {
       "id": "dungeon-crawler",
@@ -11962,7 +11948,6 @@
           "rules": []
         }
       },
-      "description": "Stone-grey bevel, small brass corner diamonds and firelit serif names.",
       "featured": false,
       "galleryOrder": 23,
       "stats": {
@@ -11970,7 +11955,8 @@
         "flair": 4,
         "motion": 2,
         "retro": 4
-      }
+      },
+      "tagline": "Stone frames and warm, firelit lettering"
     },
     {
       "id": "cozy-farm",
@@ -12449,7 +12435,6 @@
           "rules": []
         }
       },
-      "description": "Warm wood plaques, cream lettering and small peg dots at the corners.",
       "featured": false,
       "galleryOrder": 24,
       "stats": {
@@ -12457,7 +12442,8 @@
         "flair": 4,
         "motion": 2,
         "retro": 3
-      }
+      },
+      "tagline": "Warm wooden plaques for a cozy community"
     },
     {
       "id": "horror-survival",
@@ -12936,7 +12922,6 @@
           "rules": []
         }
       },
-      "description": "Dusty red emergency slips; light body text instead of low-contrast blood red.",
       "featured": false,
       "galleryOrder": 25,
       "stats": {
@@ -12944,7 +12929,8 @@
         "flair": 3,
         "motion": 2,
         "retro": 3
-      }
+      },
+      "tagline": "Emergency red slips with clear readable text"
     },
     {
       "id": "hero-shooter",
@@ -13423,7 +13409,6 @@
           "rules": []
         }
       },
-      "description": "Orange start stripe with small white corner wedges and compact team calls.",
       "featured": false,
       "galleryOrder": 26,
       "stats": {
@@ -13431,7 +13416,8 @@
         "flair": 4,
         "motion": 3,
         "retro": 2
-      }
+      },
+      "tagline": "Fast orange accents for team callouts"
     },
     {
       "id": "kart-racer",
@@ -13910,7 +13896,6 @@
           "rules": []
         }
       },
-      "description": "Sun-yellow racing capsules with a mint lane stripe; wide, playful spacing.",
       "featured": false,
       "galleryOrder": 27,
       "stats": {
@@ -13918,7 +13903,8 @@
         "flair": 5,
         "motion": 3,
         "retro": 2
-      }
+      },
+      "tagline": "Sunny racing colors with playful spacing"
     },
     {
       "id": "bubble-chat",
@@ -14397,7 +14383,6 @@
         }
       },
       "category": "Colorful",
-      "description": "Classic pale lavender inline capsules; deliberately compact beside Bubble Lift.",
       "featured": false,
       "galleryOrder": 28,
       "stats": {
@@ -14405,7 +14390,8 @@
         "flair": 3,
         "motion": 3,
         "retro": 1
-      }
+      },
+      "tagline": "Lilac inline bubbles for lighter conversations"
     },
     {
       "id": "clean",
@@ -14884,7 +14870,6 @@
         }
       },
       "category": "Colorful",
-      "description": "Neutral navy reading strips with stronger backing and clear bold names.",
       "featured": false,
       "galleryOrder": 29,
       "stats": {
@@ -14892,7 +14877,8 @@
         "flair": 1,
         "motion": 2,
         "retro": 1
-      }
+      },
+      "tagline": "Simple, readable chat with a calm dark backing"
     },
     {
       "id": "candy-pop",
@@ -15371,7 +15357,6 @@
           "rules": []
         }
       },
-      "description": "Pink candy tiles with cream-to-mint pastel fill and small diamond corners.",
       "featured": false,
       "galleryOrder": 30,
       "stats": {
@@ -15379,7 +15364,8 @@
         "flair": 5,
         "motion": 3,
         "retro": 1
-      }
+      },
+      "tagline": "Sweet pink tiles with soft pastel colors"
     },
     {
       "id": "rainbow-border",
@@ -15862,7 +15848,6 @@
           "rules": []
         }
       },
-      "description": "Prismatic static perimeter around a sober midnight card; white names stay still.",
       "featured": false,
       "galleryOrder": 31,
       "stats": {
@@ -15870,7 +15855,8 @@
         "flair": 5,
         "motion": 2,
         "retro": 2
-      }
+      },
+      "tagline": "A colorful frame around clear midnight chat"
     },
     {
       "id": "terminal",
@@ -16349,7 +16335,6 @@
         }
       },
       "category": "Animated",
-      "description": "A single forest-green console pane; plain prompts and no animated typing.",
       "featured": false,
       "galleryOrder": 32,
       "stats": {
@@ -16357,7 +16342,8 @@
         "flair": 2,
         "motion": 1,
         "retro": 5
-      }
+      },
+      "tagline": "A quiet green console with crisp prompts"
     },
     {
       "id": "vaporwave",
@@ -16836,7 +16822,6 @@
           "rules": []
         }
       },
-      "description": "Plum-to-ocean gradient ribbons with fine lilac twin lines and mint names.",
       "featured": false,
       "galleryOrder": 33,
       "stats": {
@@ -16844,15 +16829,13 @@
         "flair": 5,
         "motion": 3,
         "retro": 4
-      }
+      },
+      "tagline": "Slow neon gradients with a cool retro feel"
     },
     {
       "id": "crystal-realm",
       "name": "Crystal Realm",
       "category": "Game styles",
-      "description": "Cool silver lozenges and literary letterforms make a restrained, luminous social window.",
-      "designNotes": "Cool silver lozenges and literary letterforms make a restrained, luminous social window.",
-      "frameRecipe": "1 px silver-blue outer line plus inset 1 px blue line at 4 px; four original open diamond corner ornaments, 10 px.",
       "settings": {
         "schemaVersion": 3,
         "channel": "",
@@ -17398,16 +17381,13 @@
         "motion": 2,
         "retro": 2
       },
-      "channelPresentation": {},
-      "galleryOrder": 34
+      "galleryOrder": 34,
+      "tagline": "Silver chat windows with bright crystal accents"
     },
     {
       "id": "old-school-mmo",
       "name": "Old-School Realm",
       "category": "Game styles",
-      "description": "Blunt slab serifs sit in a chunky stone ledger; yellow speech carries the nostalgic read.",
-      "designNotes": "Blunt slab serifs sit in a chunky stone ledger; yellow speech carries the nostalgic read.",
-      "frameRecipe": "3 px dark-brown stone bevel, square corners, inset ochre seam; CSS repeating-gradient stone seams only, no bitmap.",
       "settings": {
         "schemaVersion": 3,
         "channel": "",
@@ -17455,10 +17435,10 @@
         "borderEffect": "none",
         "borderEffectSpeed": 6,
         "borderEffectColor": "#E5A9FF",
-        "nameEffect": "none",
+        "nameEffect": "flash",
         "nameGradientColor1": "#A9CAFF",
         "nameGradientColor2": "#E5A9FF",
-        "textEffect": "none",
+        "textEffect": "wave",
         "typewriterDuration": 700,
         "backgroundEffect": "none",
         "backgroundSecondaryColor": "#273B59",
@@ -17921,19 +17901,13 @@
         "motion": 3,
         "retro": 5
       },
-      "channelPresentation": {
-        "allCaps": "flash: text hue cycles yellow → pale coral → lavender over 2.4s, once, no opacity flash; then yellow.",
-        "action": "wave: translate whole message body Y 0 → -2px → 0 over 1.2s once; no character splitting."
-      },
-      "galleryOrder": 35
+      "galleryOrder": 35,
+      "tagline": "Retro guild chat with golden yells and waves"
     },
     {
       "id": "frontier-mmo",
       "name": "Frontier MMO",
       "category": "Game styles",
-      "description": "Uneven parchment margins surround a clear charcoal field, like a traveling party log.",
-      "designNotes": "Uneven parchment margins surround a clear charcoal field, like a traveling party log.",
-      "frameRecipe": "2 px warm parchment rim; irregular 6 px SVG paper teeth at left/right, outside a rectangular unclipped reading surface.",
       "settings": {
         "schemaVersion": 3,
         "channel": "",
@@ -18463,16 +18437,13 @@
         "motion": 2,
         "retro": 3
       },
-      "channelPresentation": {},
-      "galleryOrder": 36
+      "galleryOrder": 36,
+      "tagline": "Guild, party and whisper channels in parchment"
     },
     {
       "id": "arena-league",
       "name": "Arena League",
       "category": "Game styles",
-      "description": "Two offset gold cuts give the panel momentum while names and messages stay upright.",
-      "designNotes": "Two offset gold cuts give the panel momentum while names and messages stay upright.",
-      "frameRecipe": "12 px slanted ends on the frame layer only, 1 px gold trim and 3 px short leading rail; reserve cut width in padding.",
       "settings": {
         "schemaVersion": 3,
         "channel": "",
@@ -18994,16 +18965,13 @@
         "motion": 2,
         "retro": 2
       },
-      "channelPresentation": {},
-      "galleryOrder": 37
+      "galleryOrder": 37,
+      "tagline": "Team channels in a sharp gold-cut frame"
     },
     {
       "id": "tactical-ops",
       "name": "Tactical Ops",
       "category": "Game styles",
-      "description": "A narrow timestamp-like gutter and two team hues do the work of a spare comms terminal.",
-      "designNotes": "A narrow timestamp-like gutter and two team hues do the work of a spare comms terminal.",
-      "frameRecipe": "1 px slate top/bottom rules, 2 px radius, 90% charcoal backing; no decorative glow or texture.",
       "settings": {
         "schemaVersion": 3,
         "channel": "",
@@ -19517,18 +19485,13 @@
         "motion": 2,
         "retro": 2
       },
-      "channelPresentation": {
-        "firstTime": "Prefix *NEW* to the normal role line once; preserve admin/team color and show original message once."
-      },
-      "galleryOrder": 38
+      "galleryOrder": 38,
+      "tagline": "Clear team comms in a minimal ops console"
     },
     {
       "id": "block-server",
       "name": "Block Server",
       "category": "Game styles",
-      "description": "Flat grey strips and stepped lettering evoke a friendly community server without borrowed textures.",
-      "designNotes": "Flat grey strips and stepped lettering evoke a friendly community server without borrowed textures.",
-      "frameRecipe": "Square 1 px grey edge, 88% grey backing, 2 px stepped corner inset; no bevel or game artwork.",
       "settings": {
         "schemaVersion": 3,
         "channel": "",
@@ -20050,18 +20013,13 @@
         "motion": 1,
         "retro": 5
       },
-      "channelPresentation": {
-        "firstTime": "One supplemental arrival line before the normal role-formatted first message; never hide the original message."
-      },
-      "galleryOrder": 39
+      "galleryOrder": 39,
+      "tagline": "Square server chat with owner and mod roles"
     },
     {
       "id": "hero-quest",
       "name": "Hero Quest",
       "category": "Game styles",
-      "description": "An inset party rail pairs handmade role silhouettes with warm dialogue and generous leading.",
-      "designNotes": "An inset party rail pairs handmade role silhouettes with warm dialogue and generous leading.",
-      "frameRecipe": "2 px bronze party-frame rim, 6 px corners, 24 px icon gutter; shield for mod, sword for VIP, heart for sub in original SVG.",
       "settings": {
         "schemaVersion": 3,
         "channel": "",
@@ -20497,7 +20455,7 @@
           "layout": "inline",
           "shape": "rect",
           "nameTreatment": "plain",
-          "accent": "none",
+          "accent": "roleIcons",
           "chipColor": "#A9CAFFFF",
           "columnWidth": 120,
           "initialSize": 40,
@@ -20583,18 +20541,13 @@
         "motion": 2,
         "retro": 3
       },
-      "channelPresentation": {
-        "badges": "mod shield; vip sword; sub heart; highest role only, accessible role label, never rely on color."
-      },
-      "galleryOrder": 40
+      "galleryOrder": 40,
+      "tagline": "Party roles with original fantasy-style icons"
     },
     {
       "id": "space-station",
       "name": "Space Station",
       "category": "Game styles",
-      "description": "Soft white speech pods and stable crew-color dots make the meeting feel social and readable.",
-      "designNotes": "Soft white speech pods and stable crew-color dots make the meeting feel social and readable.",
-      "frameRecipe": "Individual white bubbles, 20 px corners, 2 px slate border, 8 px left tail; 12 px crew dot with dark 1 px ring.",
       "settings": {
         "schemaVersion": 3,
         "channel": "",
@@ -21030,7 +20983,7 @@
           "layout": "inline",
           "shape": "speech",
           "nameTreatment": "plain",
-          "accent": "none",
+          "accent": "crewDot",
           "chipColor": "#A9CAFFFF",
           "columnWidth": 120,
           "initialSize": 40,
@@ -21092,10 +21045,8 @@
         "motion": 2,
         "retro": 1
       },
-      "channelPresentation": {
-        "crewDot": "Hash lowercase login with unsigned FNV-1a over UTF-8 bytes, modulo palette length; display name fallback. Palette: #C94949 #3978BF #38834E #9960B4 #BD7323 #438D91. Name remains visible; dot is decorative."
-      },
-      "galleryOrder": 41
+      "galleryOrder": 41,
+      "tagline": "Soft crew bubbles with stable color markers"
     }
   ],
   "settingsSchema": {
