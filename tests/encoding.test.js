@@ -22,6 +22,7 @@ test('HTML, JavaScript and CSS contain no common UTF-8 mojibake or replacement c
  for(const file of await sourceFiles(root)){
   const text=await readFile(file,'utf8');
   for(const marker of forbidden)if(text.includes(marker))offenders.push(`${path.relative(root,file)} contains U+${marker.codePointAt(0).toString(16).toUpperCase()}`);
+  if(/Preview only\s\?\s/.test(text))offenders.push(`${path.relative(root,file)} uses a question mark as a status separator`);
  }
  assert.deepEqual(offenders,[]);
 });

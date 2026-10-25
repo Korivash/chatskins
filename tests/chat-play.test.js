@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import {defaultChatPlay,normalizeChatPlay,parseChatPlayCommand,resolveAllowedSkin,permissionAllows,createChatPlayCooldowns,tallyVotes,matchRewardTitle,isAllowedSkin,makePlayBanner,encodePlaySource,decodePlaySource,buildChatPlayUrl,parseChatPlayFragment} from '../js/chat-play.js';
+import {defaultChatPlay,normalizeChatPlay,parseChatPlayCommand,resolveAllowedSkin,permissionAllows,createChatPlayCooldowns,tallyVotes,matchRewardTitle,isAllowedSkin,makePlayBanner,encodePlaySource,decodePlaySource,buildChatPlayUrl,parseChatPlayFragment,createChatPlayAdmission} from '../js/chat-play.js';
 import {buildEventSubSubscriptions,parseEventSubMessage} from '../js/eventsub.js';
 import {createChatPlayRewards} from '../js/chat-play-points.js';
 
@@ -43,4 +43,11 @@ const event=parseEventSubMessage(JSON.stringify({metadata:{message_type:'notific
 assert.equal(event.kind,'notification');assert.equal(event.rewardTitle,'Emote shower');assert.equal(event.redemptionId,'r');
 let requestBody;const rewardResult=await createChatPlayRewards({token:'t',broadcasterId:'42',rewards:[{effect:'rain',title:'Rain',cost:100}],fetchImpl:async(url,options={})=>{if(options.method==='POST')requestBody=JSON.parse(options.body);return{ok:true,status:200,json:async()=>({data:options.method==='POST'?[{id:'new',title:'Rain'}]:[]})}}});
 assert.equal(rewardResult.ok,true);assert.equal(requestBody.is_enabled,false);assert.equal(requestBody.should_redemptions_skip_request_queue,false);
+
+const liveCooldowns=createChatPlayCooldowns({now:()=>1000}),liveAdmission=createChatPlayAdmission({config,skins,cooldowns:liveCooldowns}),previewAdmission=createChatPlayAdmission({config,skins,cooldowns:liveCooldowns,bypassCooldowns:true});
+const command={userId:'preview-viewer',login:'preview_viewer',text:'!skin guild',id:'event-1'};
+assert.equal(liveAdmission.handle(command).accepted,true);
+assert.equal(previewAdmission.handle({...command,id:'preview-1'}).accepted,true);
+assert.equal(previewAdmission.handle({...command,id:'preview-2'}).accepted,true);
+assert.equal(liveAdmission.handle({...command,userId:'other-viewer',login:'other_viewer',id:'event-2'}).reason.includes('Wait'),true);
 console.log('chat-play.test.js passed');
