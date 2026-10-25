@@ -29,6 +29,8 @@ assert.match(renderer,/display=swap/);
 assert.match(css,/data-title-gradient=true/);
 assert.match(css,/data-title-effect=emboss/);
 assert.match(css,/data-title-effect=ghost/);
+assert.match(css,/data-title-gradient=true[^}]*\.template-plaque-title[^}]*text-shadow:none!important/);
+assert.match(css,/\.template-plaque-title-wrap[^}]*filter:drop-shadow/);
 
 for(const entry of frames){
   const plaque=entry.plaque;
