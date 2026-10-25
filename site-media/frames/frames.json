@@ -25,7 +25,11 @@
       "luminance": 0.028776,
       "ink": "#F7F5FF",
       "fill": "#2A2A29",
-      "medianLuminance": 0.026241
+      "medianLuminance": 0.026241,
+      "nudge": {
+        "x": 0,
+        "y": 0
+      }
     }
   },
   {
@@ -54,7 +58,11 @@
       "luminance": 0.018246,
       "ink": "#F7F5FF",
       "fill": "#1A1616",
-      "medianLuminance": 0.014022
+      "medianLuminance": 0.014022,
+      "nudge": {
+        "x": 0,
+        "y": 0
+      }
     }
   },
   {
@@ -83,7 +91,11 @@
       "luminance": 0.014038,
       "ink": "#F7F5FF",
       "fill": "#181818",
-      "medianLuminance": 0.012983
+      "medianLuminance": 0.012983,
+      "nudge": {
+        "x": 0,
+        "y": 0
+      }
     }
   },
   {
@@ -112,7 +124,11 @@
       "luminance": 0.05387,
       "ink": "#F7F5FF",
       "fill": "#483947",
-      "medianLuminance": 0.051292
+      "medianLuminance": 0.051292,
+      "nudge": {
+        "x": 0,
+        "y": 0
+      }
     }
   },
   {
@@ -141,7 +157,11 @@
       "luminance": 0.095468,
       "ink": "#F7F5FF",
       "fill": "#634D68",
-      "medianLuminance": 0.093786
+      "medianLuminance": 0.093786,
+      "nudge": {
+        "x": 0,
+        "y": 0
+      }
     }
   },
   {
@@ -170,7 +190,11 @@
       "luminance": 0.058022,
       "ink": "#F7F5FF",
       "fill": "#362B27",
-      "medianLuminance": 0.040192
+      "medianLuminance": 0.040192,
+      "nudge": {
+        "x": 0,
+        "y": 0
+      }
     }
   },
   {
@@ -199,7 +223,11 @@
       "luminance": 0.041057,
       "ink": "#F7F5FF",
       "fill": "#37251B",
-      "medianLuminance": 0.032661
+      "medianLuminance": 0.032661,
+      "nudge": {
+        "x": 0,
+        "y": 0
+      }
     }
   },
   {
@@ -228,7 +256,11 @@
       "luminance": 0.703919,
       "ink": "#2B1D12",
       "fill": "#ECD8B4",
-      "medianLuminance": 0.71139
+      "medianLuminance": 0.71139,
+      "nudge": {
+        "x": 0.004,
+        "y": 0
+      }
     }
   },
   {
@@ -257,7 +289,11 @@
       "luminance": 0.648538,
       "ink": "#2B1D12",
       "fill": "#E9D5A9",
-      "medianLuminance": 0.663306
+      "medianLuminance": 0.663306,
+      "nudge": {
+        "x": 0.004,
+        "y": 0
+      }
     }
   },
   {
@@ -286,7 +322,11 @@
       "luminance": 0.761065,
       "ink": "#2B1D12",
       "fill": "#E9E4DB",
-      "medianLuminance": 0.777676
+      "medianLuminance": 0.777676,
+      "nudge": {
+        "x": 0.004,
+        "y": 0
+      }
     }
   },
   {
@@ -315,7 +355,11 @@
       "luminance": 0.736483,
       "ink": "#2B1D12",
       "fill": "#EBE4D9",
-      "medianLuminance": 0.766226
+      "medianLuminance": 0.766226,
+      "nudge": {
+        "x": 0.004,
+        "y": 0
+      }
     }
   },
   {
@@ -344,7 +388,11 @@
       "luminance": 0.798374,
       "ink": "#2B1D12",
       "fill": "#F3E8D9",
-      "medianLuminance": 0.809906
+      "medianLuminance": 0.809906,
+      "nudge": {
+        "x": 0,
+        "y": 0
+      }
     }
   },
   {
@@ -373,7 +421,11 @@
       "luminance": 0.892516,
       "ink": "#2B1D12",
       "fill": "#FAF2E5",
-      "medianLuminance": 0.898232
+      "medianLuminance": 0.898232,
+      "nudge": {
+        "x": 0,
+        "y": 0
+      }
     }
   },
   {
@@ -402,7 +454,11 @@
       "luminance": 0.659789,
       "ink": "#2B1D12",
       "fill": "#EAD5AA",
-      "medianLuminance": 0.671073
+      "medianLuminance": 0.671073,
+      "nudge": {
+        "x": 0,
+        "y": 0
+      }
     }
   },
   {
@@ -431,7 +487,11 @@
       "luminance": 0.694619,
       "ink": "#2B1D12",
       "fill": "#EDD7B6",
-      "medianLuminance": 0.707078
+      "medianLuminance": 0.707078,
+      "nudge": {
+        "x": 0,
+        "y": 0
+      }
     }
   },
   {
@@ -460,7 +520,11 @@
       "luminance": 0.268001,
       "ink": "#2B1D12",
       "fill": "#878786",
-      "medianLuminance": 0.246201
+      "medianLuminance": 0.246201,
+      "nudge": {
+        "x": 0,
+        "y": 0
+      }
     }
   },
   {
@@ -489,7 +553,11 @@
       "luminance": 0.317768,
       "ink": "#2B1D12",
       "fill": "#979797",
-      "medianLuminance": 0.304987
+      "medianLuminance": 0.304987,
+      "nudge": {
+        "x": 0,
+        "y": 0
+      }
     }
   },
   {
@@ -518,7 +586,11 @@
       "luminance": 0.805759,
       "ink": "#2B1D12",
       "fill": "#E9E5FB",
-      "medianLuminance": 0.803273
+      "medianLuminance": 0.803273,
+      "nudge": {
+        "x": 0,
+        "y": 0
+      }
     }
   },
   {
@@ -547,7 +619,11 @@
       "luminance": 0.47664,
       "ink": "#2B1D12",
       "fill": "#FC96DA",
-      "medianLuminance": 0.459803
+      "medianLuminance": 0.459803,
+      "nudge": {
+        "x": 0,
+        "y": 0
+      }
     }
   },
   {
@@ -559,9 +635,9 @@
     "credit": "Korivash (ChatGPT)",
     "kind": "chat",
     "inner": {
-      "x": 0.19167,
+      "x": 0.24,
       "y": 0.25917,
-      "w": 0.63917,
+      "w": 0.58,
       "h": 0.53167
     },
     "plaque": {
@@ -574,7 +650,11 @@
       "tone": "dark",
       "none": true,
       "luminance": 0.05,
-      "ink": "#f9e9ff"
+      "ink": "#f9e9ff",
+      "nudge": {
+        "x": 0,
+        "y": 0
+      }
     }
   },
   {
@@ -586,9 +666,9 @@
     "credit": "Korivash (ChatGPT)",
     "kind": "chat",
     "inner": {
-      "x": 0.165,
+      "x": 0.24,
       "y": 0.22981,
-      "w": 0.6325,
+      "w": 0.58,
       "h": 0.62185
     },
     "plaque": {
@@ -601,7 +681,11 @@
       "tone": "dark",
       "none": true,
       "luminance": 0.05,
-      "ink": "#f9e9ff"
+      "ink": "#f9e9ff",
+      "nudge": {
+        "x": 0,
+        "y": 0
+      }
     }
   },
   {
@@ -630,7 +714,11 @@
       "luminance": 0.154984,
       "ink": "#F7F5FF",
       "fill": "#10091D",
-      "medianLuminance": 0.003948
+      "medianLuminance": 0.003948,
+      "nudge": {
+        "x": 0,
+        "y": 0
+      }
     }
   },
   {
@@ -642,9 +730,9 @@
     "credit": "Korivash (ChatGPT)",
     "kind": "chat",
     "inner": {
-      "x": 0.18875,
+      "x": 0.24,
       "y": 0.19333,
-      "w": 0.66875,
+      "w": 0.58,
       "h": 0.6575
     },
     "plaque": {
@@ -659,7 +747,11 @@
       "luminance": 0.155851,
       "ink": "#F7F5FF",
       "fill": "#10091D",
-      "medianLuminance": 0.003948
+      "medianLuminance": 0.003948,
+      "nudge": {
+        "x": 0,
+        "y": 0
+      }
     }
   },
   {
@@ -688,7 +780,11 @@
       "luminance": 0.53677,
       "ink": "#2B1D12",
       "fill": "#FDF4F5",
-      "medianLuminance": 0.921766
+      "medianLuminance": 0.921766,
+      "nudge": {
+        "x": 0.006,
+        "y": 0
+      }
     }
   },
   {
@@ -717,7 +813,11 @@
       "luminance": 0.509959,
       "ink": "#2B1D12",
       "fill": "#FDF5F5",
-      "medianLuminance": 0.9278
+      "medianLuminance": 0.9278,
+      "nudge": {
+        "x": 0.006,
+        "y": 0
+      }
     }
   },
   {
@@ -746,7 +846,11 @@
       "luminance": 0.243733,
       "ink": "#F7F5FF",
       "fill": "#090403",
-      "medianLuminance": 0.001767
+      "medianLuminance": 0.001767,
+      "nudge": {
+        "x": 0,
+        "y": 0
+      }
     }
   },
   {
@@ -775,7 +879,11 @@
       "luminance": 0.348174,
       "ink": "#F7F5FF",
       "fill": "#1A1815",
-      "medianLuminance": 0.00927
+      "medianLuminance": 0.00927,
+      "nudge": {
+        "x": 0,
+        "y": 0
+      }
     }
   },
   {
@@ -802,7 +910,11 @@
       "tone": "dark",
       "none": true,
       "luminance": 0.05,
-      "ink": "#F7F5FF"
+      "ink": "#F7F5FF",
+      "nudge": {
+        "x": 0,
+        "y": 0
+      }
     }
   },
   {
@@ -861,7 +973,11 @@
       "luminance": 0.114268,
       "ink": "#F7F5FF",
       "fill": "#370627",
-      "medianLuminance": 0.076245
+      "medianLuminance": 0.076245,
+      "nudge": {
+        "x": -0.006,
+        "y": 0.002
+      }
     }
   },
   {
@@ -890,7 +1006,11 @@
       "luminance": 0.018834,
       "ink": "#F7F5FF",
       "fill": "#271725",
-      "medianLuminance": 0.010138
+      "medianLuminance": 0.010138,
+      "nudge": {
+        "x": -0.006,
+        "y": 0.002
+      }
     }
   }
 ]

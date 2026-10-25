@@ -33,6 +33,17 @@ assert.ok(neon.inner.x>=.275,'Neon Kawaii Goth tall window clears the hanging ch
 const neonSkin=skins.find(skin=>skin.frameTemplate==='neon-kawaii-goth');
 const neonGeometry=previewPanel(neonSkin,neon);
 assert.ok(neonGeometry.rows.every(row=>row.left>=neonGeometry.windowRect.left-1),'Neon Kawaii Goth message rows stay clear of the chain-side frame edge');
+for(const entry of entries.filter(entry=>entry.id.startsWith('neon-kawaii-goth'))){
+ assert.ok(entry.inner.x>=.24,`${entry.id}/${entry.shape} starts beyond the hanging chain column`);
+ assert.ok(entry.inner.x+entry.inner.w<=.82,`${entry.id}/${entry.shape} ends inside the right frame border`);
+ const skin=skins.find(item=>item.frameTemplate===entry.id);if(!skin)continue;
+ const height=720*.92,width=height*(entry.w/entry.h);
+ const box=frameContentRect(width,height,entry,entry.inner,Math.max(2,width*.02));
+ const frameLeft=(1280-width)/2;
+ assert.ok(box.x+frameLeft>=frameLeft+width*.22-1,`${entry.id}/${entry.shape} message column clears left border`);
+ assert.ok(box.x+box.width+frameLeft<=frameLeft+width*.84+1,`${entry.id}/${entry.shape} message column clears right border`);
+ assert.ok(Math.abs(width/height-entry.w/entry.h)<.001,`${entry.id}/${entry.shape} panel follows its artwork aspect`);
+}
 for(const [width,height] of [[1440,900],[390,844]]){
  const panel={left:400,top:60,width:480,height:660};
  const fit=marketingPreviewTransform(width,height,1280,720,panel);
