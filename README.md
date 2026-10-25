@@ -6,7 +6,7 @@
 
 ChatSkins is a browser-based editor for Twitch chat overlays. It's built for the **Codex x TwitchCon Hackathon (2026)**. Streamers pick a one-click look inspired by popular game chats, like MMO guild chat, retro RPG dialog boxes or pixel sandbox chat, then change anything about it. There's no account, no install and no server. The overlay link *is* the whole configuration.
 
-**Live site:** https://chatskins.korivash.com/
+**Live site:** https://getchatskins.com/
 
 ## Demo
 
@@ -60,7 +60,7 @@ The editor shows a live preview with sample chat. Type a channel name to preview
 ---
 
 ## Use it in OBS
-1. Open the [editor](https://chatskins.korivash.com/).
+1. Open the [editor](https://getchatskins.com/).
 2. Pick a skin and change anything you like.
 3. Type your Twitch channel name and press **Copy overlay URL**.
 4. In OBS: **Sources > + > Browser**, paste the URL, set the size to your canvas (e.g. 1920 × 1080), and keep the background transparent.
@@ -138,4 +138,4 @@ ChatSkins was built with **OpenAI Codex**:
 ## License
 Copyright © 2026 Korivash. **All rights reserved.**
 
-This repository is public so people can view it and use the hosted editor. The code, design and skins may not be copied, modified, redistributed or submitted as someone else's work, including as an entry in any hackathon or contest, without written permission. Using the hosted site at https://chatskins.korivash.com/ to make overlays for your own stream is allowed and free. See [LICENSE](LICENSE).
+This repository is public so people can view it and use the hosted editor. The code, design and skins may not be copied, modified, redistributed or submitted as someone else's work, including as an entry in any hackathon or contest, without written permission. Using the hosted site at https://getchatskins.com/ to make overlays for your own stream is allowed and free. See [LICENSE](LICENSE).

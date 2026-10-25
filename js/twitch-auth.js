@@ -7,10 +7,23 @@ export function parseOAuthHash(hash) {
   return {accessToken: params.get('access_token') || '', state: params.get('state') || '', error: params.get('error') || ''};
 }
 export function checkOAuthState(expected, received) { return !!expected && !!received && expected === received; }
+export function getOAuthRedirectUri(locationLike=globalThis.location) {
+  if(!locationLike?.origin) throw new TypeError('OAuth redirect requires a page origin');
+  return `${locationLike.origin}/`;
+}
+export function buildTwitchAuthorizationUrl({state,location=globalThis.location}={}) {
+  const url=new URL('https://id.twitch.tv/oauth2/authorize');
+  url.searchParams.set('client_id',TWITCH_CLIENT_ID);
+  url.searchParams.set('redirect_uri',getOAuthRedirectUri(location));
+  url.searchParams.set('response_type','token');
+  url.searchParams.set('scope','');
+  url.searchParams.set('state',state||'');
+  return url.href;
+}
 export function beginTwitchAuth({sessionStorage=globalThis.sessionStorage, location=globalThis.location, random=globalThis.crypto?.randomUUID?.bind(globalThis.crypto)}={}) {
   const state = random ? random() : `${Date.now().toString(36)}${Math.random().toString(36).slice(2)}`;
   sessionStorage.setItem(STATE_KEY, state);
-  location.assign(`https://id.twitch.tv/oauth2/authorize?client_id=${TWITCH_CLIENT_ID}&redirect_uri=${encodeURIComponent('https://chatskins.korivash.com/')}&response_type=token&scope=&state=${encodeURIComponent(state)}`);
+  location.assign(buildTwitchAuthorizationUrl({state,location}));
 }
 export async function finishTwitchAuth({hash=globalThis.location.hash, sessionStorage=globalThis.sessionStorage, history=globalThis.history, fetchImpl=globalThis.fetch}={}) {
   const parsed = parseOAuthHash(hash);

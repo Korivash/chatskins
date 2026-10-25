@@ -58,9 +58,9 @@ test('queue deduplicates EventSub ids and repeated broadcaster/follower pairs',(
 test('alerts link codec round-trips config and keeps the token out of query strings',()=>{
  const alerts=normalizeAlerts(null,design),chatSettings=normalizeSettings({channel:'streamer'}),config={version:1,chatSettings,alerts,recipe:{title:'A world update',motion:'pop',iconTreatment:'outline',soundWave:'triangle'}};
  const encoded=encodeAlertConfig(config,design);assert.deepEqual(decodeAlertConfig(encoded,design).alerts,alerts);
- const token='secret-access-token';const url=new URL(buildAlertsUrl('https://chatskins.korivash.com/editor.html?old=1', {token,...config},design));assert.equal(url.search,'');assert.equal(url.hash.includes(encodeURIComponent(token)),true);assert.equal(url.search.includes(token),false);
+ const token='secret-access-token';const url=new URL(buildAlertsUrl('https://getchatskins.com/editor.html?old=1', {token,...config},design));assert.equal(url.search,'');assert.equal(url.hash.includes(encodeURIComponent(token)),true);assert.equal(url.search.includes(token),false);
  const parsed=parseAlertsFragment(url.hash,design);assert.equal(parsed.token,token);assert.equal(parsed.config.recipe.title,'A world update');
- const oauth=new URL(buildAlertsAuthorizationUrl({state:'private-state',scopes:ALERT_SCOPE_LIST}));assert.equal(oauth.origin,'https://id.twitch.tv');assert.equal(oauth.searchParams.get('scope'),ALERT_SCOPE_LIST.join(' '));assert.equal(oauth.searchParams.has('access_token'),false);assert.equal(oauth.searchParams.has('token'),false);
+ const oauth=new URL(buildAlertsAuthorizationUrl({state:'private-state',scopes:ALERT_SCOPE_LIST,location:{origin:'https://getchatskins.com'}}));assert.equal(oauth.origin,'https://id.twitch.tv');assert.equal(oauth.searchParams.get('redirect_uri'),'https://getchatskins.com/');assert.equal(oauth.searchParams.get('scope'),ALERT_SCOPE_LIST.join(' '));assert.equal(oauth.searchParams.has('access_token'),false);assert.equal(oauth.searchParams.has('token'),false);
  assert.equal(new URL(oauth.href).search.includes(token),false);
 });
 
