@@ -15,7 +15,7 @@ for(const skin of skins){
   assert.ok(style?.gradient&&style?.effect,`${skin.name}: painted title treatment`);
   const entries=frames.filter(frame=>frame.id===skin.frameTemplate);
   assert.ok(entries.length,`${skin.name}: frame entries`);
-  const titleColors=style.gradient&&style.gradient!=='none'?[...(style.gradient.match(/#[\da-f]{6}/ig)||[])]:[style.color];
+  const titleColors=[style.color,style.subtitleColor||style.color];
   for(const entry of entries){
     const plaque={...entry.plaque,...(skin.plaque||{})};
     const surface=plaque.none?luminance(skin.settings?.middleColor||'#17172a'):plaque.painted?luminance(plaque.fill):plaque.medianLuminance;
@@ -26,11 +26,8 @@ for(const skin of skins){
 assert.match(renderer,/applyPlaqueTitleStyle\(title,titleNode,subtitleNode,skin\?\.titleStyle,settings\.frameColor\)/);
 assert.match(renderer,/fonts\.googleapis\.com\/css2\?family=/);
 assert.match(renderer,/display=swap/);
-assert.match(css,/data-title-gradient=true/);
-assert.match(css,/data-title-effect=emboss/);
-assert.match(css,/data-title-effect=ghost/);
-assert.match(css,/data-title-gradient=true[^}]*\.template-plaque-title[^}]*text-shadow:none!important/);
-assert.match(css,/\.template-plaque-title-wrap[^}]*filter:drop-shadow/);
+for(const [,selector,declarations] of css.matchAll(/([^{}]+)\{([^{}]*)\}/g))if(selector.includes('template-plaque'))assert.doesNotMatch(declarations,/background-clip\s*:\s*text|-webkit-background-clip\s*:\s*text|-webkit-text-fill-color\s*:\s*transparent/i);
+assert.match(renderer,/plaque\.dataset\.titleGradient='false'/);
 
 for(const entry of frames){
   const plaque=entry.plaque;

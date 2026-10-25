@@ -33236,9 +33236,9 @@
         "gradient": "linear-gradient(90deg,#3A2410,#50351C)",
         "effect": "emboss",
         "subtitleFontFamily": "Cinzel Decorative",
-        "subtitleColor": "#2b1d00",
-        "shadow": "0 1px 0 #fff9,0 2px 3px #130b00",
-        "stroke": ".5px #fff8",
+        "subtitleColor": "#3A2410",
+        "shadow": "0 1px 0 #fff6",
+        "stroke": "0 transparent",
         "tilt": 0
       }
     },
@@ -33799,9 +33799,9 @@
         "gradient": "linear-gradient(90deg,#3A2410,#50351C)",
         "effect": "metallic",
         "subtitleFontFamily": "Cinzel Decorative",
-        "subtitleColor": "#2b1d00",
-        "shadow": "0 1px 0 #fff9,0 2px 3px #130b00",
-        "stroke": ".5px #fff8",
+        "subtitleColor": "#3A2410",
+        "shadow": "0 1px 0 #fff6",
+        "stroke": "0 transparent",
         "tilt": 0
       }
     },
@@ -34925,7 +34925,7 @@
         "gradient": "linear-gradient(90deg,#2B1D12,#40301C)",
         "effect": "glow",
         "subtitleFontFamily": "Cinzel",
-        "subtitleColor": "#f7e6a1",
+        "subtitleColor": "#2B1D12",
         "shadow": "0 0 7px #ffd77a",
         "stroke": "0 transparent",
         "tilt": 0
@@ -36610,11 +36610,11 @@
       "silhouette": "frame-neon-kawaii-goth",
       "titleStyle": {
         "fontFamily": "Permanent Marker",
-        "color": "#f9e9ff",
+        "color": "#FF67E8",
         "gradient": "linear-gradient(90deg,#ffd4ff,#f9e9ff)",
         "effect": "neon",
         "subtitleFontFamily": "Permanent Marker",
-        "subtitleColor": "#f9e9ff",
+        "subtitleColor": "#FF67E8",
         "shadow": "0 0 4px #ff4acb,0 0 9px #31d9ff",
         "stroke": "0 transparent",
         "tilt": 0
@@ -37173,11 +37173,11 @@
       "silhouette": "frame-neon-kawaii-goth-minimal",
       "titleStyle": {
         "fontFamily": "Permanent Marker",
-        "color": "#f9e9ff",
+        "color": "#FF67E8",
         "gradient": "linear-gradient(90deg,#ffd4ff,#f9e9ff)",
         "effect": "neon",
         "subtitleFontFamily": "Permanent Marker",
-        "subtitleColor": "#f9e9ff",
+        "subtitleColor": "#FF67E8",
         "shadow": "0 0 4px #ff4acb,0 0 9px #31d9ff",
         "stroke": "0 transparent",
         "tilt": 0
@@ -37740,9 +37740,9 @@
         "gradient": "linear-gradient(90deg,#8A1050,#6E103F)",
         "effect": "outline",
         "subtitleFontFamily": "Fredoka",
-        "subtitleColor": "#5c1638",
-        "shadow": "0 1px 2px #fff,0 2px 4px #0009",
-        "stroke": "1.25px #fff",
+        "subtitleColor": "#8A1050",
+        "shadow": "1px 0 #fff,-1px 0 #fff,0 1px #fff,0 -1px #fff",
+        "stroke": "0 transparent",
         "tilt": 0
       }
     },
@@ -38303,9 +38303,9 @@
         "gradient": "linear-gradient(90deg,#8A1050,#6E103F)",
         "effect": "outline",
         "subtitleFontFamily": "Fredoka",
-        "subtitleColor": "#5c1638",
-        "shadow": "0 1px 2px #fff,0 2px 4px #0009",
-        "stroke": "1.25px #fff",
+        "subtitleColor": "#8A1050",
+        "shadow": "1px 0 #fff,-1px 0 #fff,0 1px #fff,0 -1px #fff",
+        "stroke": "0 transparent",
         "tilt": 0
       }
     },
@@ -39425,13 +39425,13 @@
       "silhouette": "frame-tactical-gunmetal",
       "titleStyle": {
         "fontFamily": "Black Ops One",
-        "color": "#FFF8EA",
+        "color": "#FFF4E0",
         "gradient": "linear-gradient(90deg,#FFFFFF,#FF9B49)",
         "effect": "stencil",
         "subtitleFontFamily": "Black Ops One",
-        "subtitleColor": "#fff0d6",
-        "shadow": "0 1px 2px #15100b,0 0 3px #fff8",
-        "stroke": "1px #26170d",
+        "subtitleColor": "#FFF4E0",
+        "shadow": "1px 0 #26170d,-1px 0 #26170d,0 1px #26170d,0 -1px #26170d",
+        "stroke": "0 transparent",
         "tilt": 0
       }
     },
@@ -39992,9 +39992,9 @@
         "gradient": "linear-gradient(90deg,#F7F5FF,#E7E2FF)",
         "effect": "glow",
         "subtitleFontFamily": "Cormorant Garamond",
-        "subtitleColor": "#100905",
+        "subtitleColor": "#F7F5FF",
         "shadow": "0 0 7px #ffd77a",
-        "stroke": "1px #100905",
+        "stroke": "0 transparent",
         "tilt": 0,
         "followFrameColor": false
       }
