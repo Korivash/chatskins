@@ -37,5 +37,26 @@ From the research's "missing features" list, pick the top 5 that need NO login (
 - message grouping by user
 - max line length / truncation
 
+## 5. Must-have from the research: 7TV / BTTV / FFZ emotes (no login)
+Specify it in DESIGN.md:
+- **Channel id:** taken from the IRC ROOMSTATE `room-id` tag.
+- **Fetch the public channel and global emote sets:**
+  - 7TV: `https://7tv.io/v3/users/twitch/{id}` + `https://7tv.io/v3/emote-sets/global`
+  - BTTV: `https://api.betterttv.net/3/cached/users/twitch/{id}` + `/3/cached/emotes/global`
+  - FFZ: `https://api.frankerfacez.com/v1/room/id/{id}` + `/v1/set/global`
+- **Behavior:** cached in memory, refreshed every 10 minutes. Text tokens match whole words. A toggle exists per provider. Graceful fallback to text.
+- **Emote-only messages:** shown with bigger emotes.
+
+## 6. Editor polish (the editor looks rough right now)
+Specify a polished editor:
+- **Labels:** human labels for every control, never raw keys ("y", "enabled", "blur" → "Shadow offset Y", "Glow on", "Glow blur").
+- **Controls:**
+  - styled toggles instead of browser checkboxes
+  - color swatches with alpha
+  - sliders that show their value + unit
+- **Layout:** group related controls (Font / Color / Effects) inside each part, with collapsed advanced rows.
+- **Search box:** sticky, and it must not cover the content.
+- **Every section:** one "reset section" link.
+
 ## Deliverables
 Update design/DESIGN.md (a "Round 5" section), design/skins.json (all skins, new + polished) and design/mockup.html (show every skin, Featured first). Try git add/commit; if it's blocked, say so. Print a short summary listing the new skins and the 5 features.
