@@ -19,3 +19,12 @@
 .game .skin-live-preview .message-body{display:inline!important;overflow-wrap:anywhere!important;word-break:normal}
 .game .roster.portraits .skin-card{height:188px;min-height:188px;max-height:188px;flex:none}
 .game .roster.portraits .portrait-preview{height:100px;flex:0 0 100px}
+.game .skin-preview-measure{position:absolute;left:50%;top:50%;width:max-content;max-width:420px;transform:translate(-50%,-50%);transform-origin:center;overflow:visible}
+.game .skin-preview-measure .skin-live-preview{position:relative!important;inset:auto!important;left:auto!important;top:auto!important;bottom:auto!important;width:max-content!important;max-width:420px!important;max-height:none!important;min-height:0!important;padding:4px!important;transform:none!important;overflow:visible!important;gap:3px}
+.game .skin-preview-measure .chat-message{position:relative!important;display:block!important;width:max-content;max-width:420px;min-width:0;overflow:hidden!important;overflow-wrap:anywhere;white-space:normal!important;line-height:1.2!important;font-size:12px!important;padding:3px 5px!important}
+.game .skin-preview-measure .chat-identity{display:inline-flex!important;align-items:baseline;max-width:100%;white-space:nowrap}
+.game .skin-preview-measure .chat-name{display:inline-block!important;min-width:0;max-width:14ch!important;white-space:nowrap!important;overflow:hidden;text-overflow:ellipsis}
+.game .skin-preview-measure .chat-badges{display:inline-flex!important;vertical-align:middle;align-items:center;white-space:nowrap!important}
+.game .skin-preview-measure .message-body{display:inline!important;max-width:100%;white-space:normal!important;overflow-wrap:anywhere!important}
+.game .roster.portraits .skin-card{height:188px;min-height:188px;max-height:188px;flex:none;gap:4px;overflow:hidden}
+.game .skin-tagline{display:-webkit-box!important;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden!important;text-overflow:ellipsis;line-height:1.25;max-height:2.5em}

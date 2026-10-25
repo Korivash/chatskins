@@ -35,6 +35,11 @@ export function buildSkinCardModel(skin){
  return {id:skin.id,name:skin.name,tagline:skin.tagline||'',featured:!!skin.featured,previewElement:{tag:'div',className:'portrait-preview',messages:buildSkinPreviewMessages(skin,2)}};
 }
 
+export function fitSkinPreview(frame,wrapper){
+ const fit=()=>{const box=frame.getBoundingClientRect();wrapper.style.transform='translate(-50%,-50%)';const w=wrapper.offsetWidth,h=wrapper.offsetHeight;if(!w||!h)return;const scale=Math.min(box.width*.88/w,box.height*.85/h,1.4);wrapper.style.transform=`translate(-50%,-50%) scale(${scale})`;wrapper.dataset.scale=String(scale)};
+ fit();const observer=new ResizeObserver(fit);observer.observe(frame);document.fonts?.ready.then(fit);return fit;
+}
+
 export function formatSkinPreviewLine(message,settings){
  const {rule,notice}=resolveChannelRules(message,settings||{});
  const line=rule?fillChannelTemplate(rule.format,message):`${message.username}: ${message.text}`;
