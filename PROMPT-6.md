@@ -15,7 +15,20 @@ Build:
    - Old links that pointed at index.html with an editor hash (#...) or the Twitch OAuth return must still land in the editor with their settings (detect the hash on index.html and forward it).
    - The Twitch redirect URL stays `https://chatskins.korivash.com/`, so the landing page must forward `#access_token=...` to the editor's auth handler without losing it.
 5. **Accessibility:** keyboard navigation, focus rings, aria labels, AA contrast, reduced motion.
-6. **Keep working:** everything from earlier rounds:
+6. **"Request a skin"** (owner: streamers can still request new skins):
+   - A clear button on the landing page (skins showcase + footer) and in the editor's skin step.
+   - It opens `https://github.com/Korivash/chatskins/issues/new?template=skin-request.yml`.
+   - Add `.github/ISSUE_TEMPLATE/skin-request.yml`, a GitHub issue form with these fields:
+     - skin name idea
+     - game/style it's inspired by (inspired-by only; no copyrighted assets)
+     - colors
+     - font vibe
+     - frame/border idea
+     - example description
+     - Twitch channel (optional)
+   - Add `.github/ISSUE_TEMPLATE/config.yml` with `blank_issues_enabled: false`.
+   - The landing page also shows a small "Skins made from streamer requests" note area, empty for now.
+7. **Keep working:** everything from earlier rounds:
    - `__chatskinsFitOk` / `__chatskinsFrameOk` / `__chatskinsStats`
    - transparent background, undo/redo, My skins
    - fake chat (never in the overlay URL)
