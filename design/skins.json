@@ -9440,7 +9440,7 @@
             {
               "enabled": true,
               "match": "broadcaster",
-              "format": "? {name}: {message}",
+              "format": "▶ {name}: {message}",
               "textColor": "#F2D15B",
               "nameColor": "#F2D15B",
               "italic": false

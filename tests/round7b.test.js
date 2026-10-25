@@ -1,0 +1,3 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {readFile} from 'node:fs/promises';
+const data=JSON.parse(await readFile(new URL('../design/skins.json',import.meta.url),'utf8'));
+test('Retro RPG speaker marker is restored and no channel format or tagline has a placeholder question mark',()=>{const retro=data.skins.find(s=>s.id==='retro-rpg');assert.ok(retro);assert.equal(retro.settings.channels.rules[0].format,'▶ {name}: {message}');for(const skin of data.skins){assert.doesNotMatch(skin.tagline,/\?/u,skin.id+' tagline');for(const rule of skin.settings.channels?.rules||[])assert.doesNotMatch(rule.format,/\?/u,skin.id+' '+rule.match)}});
