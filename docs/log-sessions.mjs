@@ -31,7 +31,7 @@ ChatSkins was built entirely with **OpenAI Codex**. Instead of one giant thread,
 
 **Why many sessions instead of one thread**
 - **Token efficiency:** a fresh session per round keeps each context small. The agent reads only the brief, the design and the code it needs, instead of dragging hours of history. Design runs on Astra, and the bulk of the coding runs on Luna, the lighter model.
-- **Task management:** one round = one task = one session. Every task is written down as a prompt file in this repo (\`DESIGN-PROMPT*.md\` for Astra, \`PROMPT*.md\` for Luna), so you can match each session below with its exact prompt and its commit.
+- **Task management:** one round = one task = one session. Every task is written down as a prompt file in this repo under \`codex/prompts/\` (\`DESIGN-PROMPT*.md\` for Astra, \`PROMPT*.md\` for Luna), so you can match each session below with its exact prompt and its commit.
 - **Quality loop:** after every build we test in a real browser (and on live Twitch chat), measure what's wrong, and write those measurements into the next session's prompt.
 
 The list below is generated from the local Codex session logs by \`log-sessions.mjs\`, so no row is typed by hand.
