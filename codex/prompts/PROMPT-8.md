@@ -35,3 +35,8 @@ Run each test file with node directly. Try git add + commit; if it's blocked, sa
 - **Opt out:** the user can still turn the background back on in the editor (Background → Transparent off), and that choice is saved in their URL.
 - **Old URLs:** URLs that explicitly set transparent=false keep their background. Old URLs with no transparent key: decide sensibly and document it. Keep old links looking the same as before by treating "missing key" as the old default (off), and only set the new default ON for links created from now on.
 - **Test:** links created from every skin default to transparent; an explicit off is respected; old URLs decode unchanged.
+
+## ALSO: the site moves to getchatskins.com
+- The Twitch OAuth `redirect_uri` is currently hard-coded to `https://chatskins.korivash.com/` in js/twitch-auth.js (and the alerts auth). Make it `location.origin + '/'` so it works on https://getchatskins.com/ (the new main domain) and the old host. Both are registered on the Twitch app.
+- Replace visible references to chatskins.korivash.com in the site copy, docs content (docs/content/*.md) and README with **getchatskins.com**. Keep code working on any origin; no hard-coded host anywhere except docs text.
+- Test: the authorize URL builder uses the current origin.
