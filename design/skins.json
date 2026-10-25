@@ -474,6 +474,10 @@
           "ffz": true,
           "emoteOnlyScale": 2,
           "inlineSize": 28
+        },
+        "channels": {
+          "enabled": false,
+          "rules": []
         }
       },
       "featured": true,
@@ -957,6 +961,10 @@
           "ffz": true,
           "emoteOnlyScale": 2,
           "inlineSize": 28
+        },
+        "channels": {
+          "enabled": false,
+          "rules": []
         }
       },
       "featured": true,
@@ -1440,6 +1448,10 @@
           "ffz": true,
           "emoteOnlyScale": 2,
           "inlineSize": 28
+        },
+        "channels": {
+          "enabled": false,
+          "rules": []
         }
       },
       "featured": true,
@@ -1923,6 +1935,10 @@
           "ffz": true,
           "emoteOnlyScale": 2,
           "inlineSize": 28
+        },
+        "channels": {
+          "enabled": false,
+          "rules": []
         }
       },
       "featured": true,
@@ -2406,6 +2422,10 @@
           "ffz": true,
           "emoteOnlyScale": 2,
           "inlineSize": 28
+        },
+        "channels": {
+          "enabled": false,
+          "rules": []
         }
       },
       "featured": true,
@@ -2889,6 +2909,10 @@
           "ffz": true,
           "emoteOnlyScale": 2,
           "inlineSize": 28
+        },
+        "channels": {
+          "enabled": false,
+          "rules": []
         }
       },
       "featured": true,
@@ -3372,6 +3396,10 @@
           "ffz": true,
           "emoteOnlyScale": 2,
           "inlineSize": 28
+        },
+        "channels": {
+          "enabled": false,
+          "rules": []
         }
       },
       "featured": false,
@@ -3855,6 +3883,10 @@
           "ffz": true,
           "emoteOnlyScale": 2,
           "inlineSize": 28
+        },
+        "channels": {
+          "enabled": false,
+          "rules": []
         }
       },
       "featured": false,
@@ -4338,6 +4370,10 @@
           "ffz": true,
           "emoteOnlyScale": 2,
           "inlineSize": 28
+        },
+        "channels": {
+          "enabled": false,
+          "rules": []
         }
       },
       "featured": false,
@@ -4821,6 +4857,10 @@
           "ffz": true,
           "emoteOnlyScale": 2,
           "inlineSize": 28
+        },
+        "channels": {
+          "enabled": false,
+          "rules": []
         }
       },
       "featured": false,
@@ -5304,6 +5344,10 @@
           "ffz": true,
           "emoteOnlyScale": 2,
           "inlineSize": 28
+        },
+        "channels": {
+          "enabled": false,
+          "rules": []
         }
       },
       "featured": false,
@@ -5787,6 +5831,10 @@
           "ffz": true,
           "emoteOnlyScale": 2,
           "inlineSize": 28
+        },
+        "channels": {
+          "enabled": false,
+          "rules": []
         }
       },
       "featured": false,
@@ -6268,6 +6316,83 @@
           "ffz": true,
           "emoteOnlyScale": 2,
           "inlineSize": 28
+        },
+        "channels": {
+          "enabled": true,
+          "rules": [
+            {
+              "enabled": true,
+              "match": "broadcaster",
+              "format": "[Guild Master] [{name}]: {message}",
+              "textColor": "#40FF40",
+              "nameColor": "#FFD100",
+              "italic": false
+            },
+            {
+              "enabled": true,
+              "match": "mod",
+              "format": "[Officer] [{name}]: {message}",
+              "textColor": "#40C040",
+              "nameColor": "#40C040",
+              "italic": false
+            },
+            {
+              "enabled": true,
+              "match": "allCaps",
+              "format": "[{name}] yells: {message}",
+              "textColor": "#FF4040",
+              "nameColor": "#FF4040",
+              "italic": false
+            },
+            {
+              "enabled": true,
+              "match": "action",
+              "format": "{name} {message}",
+              "textColor": "#FF8040",
+              "nameColor": "#FF8040",
+              "italic": true
+            },
+            {
+              "enabled": true,
+              "match": "mentionsChannel",
+              "format": "[{name}] whispers: {message}",
+              "textColor": "#FF80FF",
+              "nameColor": "#FF80FF",
+              "italic": false
+            },
+            {
+              "enabled": true,
+              "match": "vip",
+              "format": "[Party] [{name}]: {message}",
+              "textColor": "#AAAAFF",
+              "nameColor": "#AAAAFF",
+              "italic": false
+            },
+            {
+              "enabled": true,
+              "match": "sub",
+              "format": "[Guild] [{name}]: {message}",
+              "textColor": "#40FF40",
+              "nameColor": "#40FF40",
+              "italic": false
+            },
+            {
+              "enabled": true,
+              "match": "everyone",
+              "format": "[{name}] says: {message}",
+              "textColor": "#FFFFFF",
+              "nameColor": "#FFFFFF",
+              "italic": false
+            },
+            {
+              "enabled": true,
+              "match": "firstTime",
+              "format": "{name} has come online.",
+              "textColor": "#FFFF00",
+              "nameColor": "#FFFF00",
+              "italic": false
+            }
+          ]
         }
       },
       "category": "Game styles",
@@ -6751,6 +6876,67 @@
           "ffz": true,
           "emoteOnlyScale": 2,
           "inlineSize": 28
+        },
+        "channels": {
+          "enabled": true,
+          "rules": [
+            {
+              "enabled": true,
+              "match": "broadcaster",
+              "format": "[Linkshell] [{name}]: {message}",
+              "textColor": "#B8E986",
+              "nameColor": "#FFD982",
+              "italic": false
+            },
+            {
+              "enabled": true,
+              "match": "mod",
+              "format": "[Party] [{name}]: {message}",
+              "textColor": "#79D8FF",
+              "nameColor": "#79D8FF",
+              "italic": false
+            },
+            {
+              "enabled": true,
+              "match": "mentionsChannel",
+              "format": "[{name}] whispers: {message}",
+              "textColor": "#DCA7FF",
+              "nameColor": "#DCA7FF",
+              "italic": false
+            },
+            {
+              "enabled": true,
+              "match": "vip",
+              "format": "[Party] [{name}]: {message}",
+              "textColor": "#79D8FF",
+              "nameColor": "#79D8FF",
+              "italic": false
+            },
+            {
+              "enabled": true,
+              "match": "sub",
+              "format": "[Linkshell] [{name}]: {message}",
+              "textColor": "#B8E986",
+              "nameColor": "#B8E986",
+              "italic": false
+            },
+            {
+              "enabled": true,
+              "match": "everyone",
+              "format": "[{name}] says: {message}",
+              "textColor": "#F5EBD1",
+              "nameColor": "#F5EBD1",
+              "italic": false
+            },
+            {
+              "enabled": true,
+              "match": "firstTime",
+              "format": "{name} joins the adventure.",
+              "textColor": "#FFD982",
+              "nameColor": "#FFD982",
+              "italic": false
+            }
+          ]
         }
       },
       "category": "Game styles",
@@ -6784,7 +6970,7 @@
         "outlineColor": "#000000",
         "shadowEnabled": false,
         "shadowColor": "#000000",
-        "shadowOpacity": 1.0,
+        "shadowOpacity": 1,
         "shadowBlur": 0,
         "borderStyle": "pixel",
         "borderColor": "#829A6F",
@@ -7234,6 +7420,10 @@
           "ffz": true,
           "emoteOnlyScale": 2,
           "inlineSize": 28
+        },
+        "channels": {
+          "enabled": false,
+          "rules": []
         }
       },
       "category": "Game styles",
@@ -7717,6 +7907,67 @@
           "ffz": true,
           "emoteOnlyScale": 2,
           "inlineSize": 28
+        },
+        "channels": {
+          "enabled": true,
+          "rules": [
+            {
+              "enabled": true,
+              "match": "broadcaster",
+              "format": "[Leader] {name}: {message}",
+              "textColor": "#E5C76B",
+              "nameColor": "#E5C76B",
+              "italic": false
+            },
+            {
+              "enabled": true,
+              "match": "mod",
+              "format": "[Guard] {name}: {message}",
+              "textColor": "#85C9A4",
+              "nameColor": "#85C9A4",
+              "italic": false
+            },
+            {
+              "enabled": true,
+              "match": "allCaps",
+              "format": "[{name}] shouts: {message}",
+              "textColor": "#EE8178",
+              "nameColor": "#EE8178",
+              "italic": false
+            },
+            {
+              "enabled": true,
+              "match": "action",
+              "format": "* {name} {message}",
+              "textColor": "#F1A76F",
+              "nameColor": "#F1A76F",
+              "italic": true
+            },
+            {
+              "enabled": true,
+              "match": "mentionsChannel",
+              "format": "[{name}] tells the party: {message}",
+              "textColor": "#C5A8E5",
+              "nameColor": "#C5A8E5",
+              "italic": false
+            },
+            {
+              "enabled": true,
+              "match": "everyone",
+              "format": "{name}: {message}",
+              "textColor": "#E8E2CC",
+              "nameColor": "#E8E2CC",
+              "italic": false
+            },
+            {
+              "enabled": true,
+              "match": "firstTime",
+              "format": "{name} entered the room.",
+              "textColor": "#E5C76B",
+              "nameColor": "#E5C76B",
+              "italic": false
+            }
+          ]
         }
       },
       "category": "Game styles",
@@ -8200,6 +8451,10 @@
           "ffz": true,
           "emoteOnlyScale": 2,
           "inlineSize": 28
+        },
+        "channels": {
+          "enabled": false,
+          "rules": []
         }
       },
       "category": "Game styles",
@@ -8683,6 +8938,10 @@
           "ffz": true,
           "emoteOnlyScale": 2,
           "inlineSize": 28
+        },
+        "channels": {
+          "enabled": false,
+          "rules": []
         }
       },
       "category": "Game styles",
@@ -8716,7 +8975,7 @@
         "outlineColor": "#000000",
         "shadowEnabled": false,
         "shadowColor": "#000000",
-        "shadowOpacity": 1.0,
+        "shadowOpacity": 1,
         "shadowBlur": 0,
         "borderStyle": "double",
         "borderColor": "#EBF2FF",
@@ -9166,6 +9425,83 @@
           "ffz": true,
           "emoteOnlyScale": 2,
           "inlineSize": 28
+        },
+        "channels": {
+          "enabled": true,
+          "rules": [
+            {
+              "enabled": true,
+              "match": "broadcaster",
+              "format": "? {name}: {message}",
+              "textColor": "#F2D15B",
+              "nameColor": "#F2D15B",
+              "italic": false
+            },
+            {
+              "enabled": true,
+              "match": "mod",
+              "format": "[Guide] {name}: {message}",
+              "textColor": "#7FE0A2",
+              "nameColor": "#7FE0A2",
+              "italic": false
+            },
+            {
+              "enabled": true,
+              "match": "allCaps",
+              "format": "{name} shouts! {message}",
+              "textColor": "#FF6B6B",
+              "nameColor": "#FF6B6B",
+              "italic": false
+            },
+            {
+              "enabled": true,
+              "match": "action",
+              "format": "{name} {message}",
+              "textColor": "#FFAD66",
+              "nameColor": "#FFAD66",
+              "italic": true
+            },
+            {
+              "enabled": true,
+              "match": "mentionsChannel",
+              "format": "{name} whispers: {message}",
+              "textColor": "#E58AD8",
+              "nameColor": "#E58AD8",
+              "italic": false
+            },
+            {
+              "enabled": true,
+              "match": "vip",
+              "format": "{name} (ally): {message}",
+              "textColor": "#91B8FF",
+              "nameColor": "#91B8FF",
+              "italic": false
+            },
+            {
+              "enabled": true,
+              "match": "sub",
+              "format": "{name} (member): {message}",
+              "textColor": "#8FDB98",
+              "nameColor": "#8FDB98",
+              "italic": false
+            },
+            {
+              "enabled": true,
+              "match": "everyone",
+              "format": "{name}: {message}",
+              "textColor": "#F4F0D7",
+              "nameColor": "#F4F0D7",
+              "italic": false
+            },
+            {
+              "enabled": true,
+              "match": "firstTime",
+              "format": "{name} has joined your party.",
+              "textColor": "#F2D15B",
+              "nameColor": "#F2D15B",
+              "italic": false
+            }
+          ]
         }
       },
       "category": "Game styles",
@@ -9650,6 +9986,10 @@
           "ffz": true,
           "emoteOnlyScale": 2,
           "inlineSize": 28
+        },
+        "channels": {
+          "enabled": false,
+          "rules": []
         }
       },
       "description": "Magenta cut-corner panels and cyan callsigns; a hard-edged city HUD.",
@@ -10133,6 +10473,10 @@
           "ffz": true,
           "emoteOnlyScale": 2,
           "inlineSize": 28
+        },
+        "channels": {
+          "enabled": false,
+          "rules": []
         }
       },
       "description": "Purple cabinet bezel, butter-yellow score names and static scanlines.",
@@ -10616,6 +10960,10 @@
           "ffz": true,
           "emoteOnlyScale": 2,
           "inlineSize": 28
+        },
+        "channels": {
+          "enabled": false,
+          "rules": []
         }
       },
       "description": "Steel-blue communications panel with long technical corner brackets.",
@@ -11099,6 +11447,10 @@
           "ffz": true,
           "emoteOnlyScale": 2,
           "inlineSize": 28
+        },
+        "channels": {
+          "enabled": false,
+          "rules": []
         }
       },
       "description": "Ivory dialogue cards with a heavy blue-ink rim and friendly tall lettering.",
@@ -11582,6 +11934,10 @@
           "ffz": true,
           "emoteOnlyScale": 2,
           "inlineSize": 28
+        },
+        "channels": {
+          "enabled": false,
+          "rules": []
         }
       },
       "description": "Stone-grey bevel, small brass corner diamonds and firelit serif names.",
@@ -12065,6 +12421,10 @@
           "ffz": true,
           "emoteOnlyScale": 2,
           "inlineSize": 28
+        },
+        "channels": {
+          "enabled": false,
+          "rules": []
         }
       },
       "description": "Warm wood plaques, cream lettering and small peg dots at the corners.",
@@ -12548,6 +12908,10 @@
           "ffz": true,
           "emoteOnlyScale": 2,
           "inlineSize": 28
+        },
+        "channels": {
+          "enabled": false,
+          "rules": []
         }
       },
       "description": "Dusty red emergency slips; light body text instead of low-contrast blood red.",
@@ -13031,6 +13395,10 @@
           "ffz": true,
           "emoteOnlyScale": 2,
           "inlineSize": 28
+        },
+        "channels": {
+          "enabled": false,
+          "rules": []
         }
       },
       "description": "Orange start stripe with small white corner wedges and compact team calls.",
@@ -13514,6 +13882,10 @@
           "ffz": true,
           "emoteOnlyScale": 2,
           "inlineSize": 28
+        },
+        "channels": {
+          "enabled": false,
+          "rules": []
         }
       },
       "description": "Sun-yellow racing capsules with a mint lane stripe; wide, playful spacing.",
@@ -13996,6 +14368,10 @@
           "ffz": true,
           "emoteOnlyScale": 2,
           "inlineSize": 28
+        },
+        "channels": {
+          "enabled": false,
+          "rules": []
         }
       },
       "category": "Colorful",
@@ -14479,6 +14855,10 @@
           "ffz": true,
           "emoteOnlyScale": 2,
           "inlineSize": 28
+        },
+        "channels": {
+          "enabled": false,
+          "rules": []
         }
       },
       "category": "Colorful",
@@ -14963,6 +15343,10 @@
           "ffz": true,
           "emoteOnlyScale": 2,
           "inlineSize": 28
+        },
+        "channels": {
+          "enabled": false,
+          "rules": []
         }
       },
       "description": "Pink candy tiles with cream-to-mint pastel fill and small diamond corners.",
@@ -15450,6 +15834,10 @@
           "ffz": true,
           "emoteOnlyScale": 2,
           "inlineSize": 28
+        },
+        "channels": {
+          "enabled": false,
+          "rules": []
         }
       },
       "description": "Prismatic static perimeter around a sober midnight card; white names stay still.",
@@ -15932,6 +16320,10 @@
           "ffz": true,
           "emoteOnlyScale": 2,
           "inlineSize": 28
+        },
+        "channels": {
+          "enabled": false,
+          "rules": []
         }
       },
       "category": "Animated",
@@ -16416,6 +16808,10 @@
           "ffz": true,
           "emoteOnlyScale": 2,
           "inlineSize": 28
+        },
+        "channels": {
+          "enabled": false,
+          "rules": []
         }
       },
       "description": "Plum-to-ocean gradient ribbons with fine lilac twin lines and mint names.",
