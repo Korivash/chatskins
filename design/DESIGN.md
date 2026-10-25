@@ -1,3 +1,146 @@
+# Round 6b: Game-menu website
+
+This round supersedes Round 6 website composition, tokens and navigation. **The site is a game menu; the product is still a simple Twitch chat overlay generator.** This package is design-only, entirely inside `design/`. Round 6's six-control mapping, full-settings URL serialization, legacy hash migration, preservation rules and Advanced inventory remain authoritative. Round 5's 34 skin settings are unchanged. New `stats` are catalog metadata outside `settings`, never serialized into overlay URLs.
+
+## Direction: the chat cartridge
+
+The folded speech-card mark becomes a glowing title emblem; chat specimens become selectable characters; the editor becomes a stream-monitor loadout; requests become quests. The signature is **folded conversation cards, sea-glass light and a gold diamond selector**. Original CSS/SVG geometry, Google Fonts, no borrowed game UI, logo, font, art or sound sample. No fake XP, rarity, popularity, loading delay or locked content.
+
+Plan critique: a neon hero on a conventional marketing layout would repeat the generic SaaS problem. Replace it with an actual title/menu composition and a separate character-select roster. Keep ordinary labels in forms; spend visual personality on the title, selection states and monitor silhouette. Research input `../research/TOP-CHAT-UIS.md` prioritizes presets, realistic preview, readable chat, community emotes and one OBS link. The direct-use flow preserves those priorities. Research is supplied context, not freshly verified evidence.
+
+```text
+HOME                              SKINS
+shared top bar                    shared top bar
+logo / PRESS START | HUD chat      group buttons / portraits | large sample
+vertical menu      | skin cycle    arrows / hover select     | stats / actions
+3 steps / features / FAQ
+
+EDITOR                            REQUEST
+1 Skin / 2 Customize / 3 Link      invitation | quest form
+6 controls | monitor | Get link    Discord    | Post quest / inline result
+Advanced   | backdrop choices
+```
+
+## Shared identity and tokens
+
+All four new pages load **`game-tokens.css`**, the sole new website token source, and `game-menu.css` for shared components. Historical Round 6 sheets retain their historical CSS; never load both shells in production. Core palette: Void #101528, Deck #1B2640, Ink #F3F5FF, Signal #8CECE0, Gold #FFDA8A, Lilac #C7B5FF. Functional muted text #B9C8DF; control boundary #8599B7. Use Void text on pastel buttons. Signal marks location; Gold marks selected item/primary action, reinforced by diamond, underline or text.
+
+**Chakra Petch 500/600/700** for title/navigation/action labels; **Barlow 400/500/600/700** for body/forms. Google Fonts stylesheet links, display=swap, sans-serif fallback; production subset actual weights. Skin fonts stay independent. Hero 46–90 px, page title 36–64, section 30, body 17/25.5, helper 14/21. Spacing 4/8/12/16/24/32/48/64 px. Content ≤1400 px, desktop gutters 32 px, phone 16 px. Controls ≥48 px, 6 px radius. Monitors have rounded top bezels, squared lower edges and a small signal strip. Do not clip focus rings for decorative corners.
+
+Reuse `chatskins-mark.svg` with a new large HTML wordmark in Chakra Petch, static sea-glass glow and offset shadow. The old Fredoka `chatskins-wordmark.svg` remains historical; the new shell does not use it. Preserve brand clear space and accessible name. No scanlines across text or moving glow filters.
+
+| Public route | Review file | Purpose |
+| --- | --- | --- |
+| `/` | `home-mockup.html` | Title screen |
+| `/skins.html` | `skins-mockup.html` | Character select |
+| `/editor.html?skin=<id>` | `editor-mockup.html?skin=<id>` | Loadout |
+| `/request.html` | `request-mockup.html` | Quest board |
+
+Every page: brand → Home; **Home / Skins / Customize / Request**; Sound off and Pause motion. Current page uses underline and aria-current. On phones nav wraps to a full-width second row, keeping all destinations visible. Request nav goes to its page; “Request a skin” buttons open the same form as a modal from Home, Skins or Editor. Production uses one reusable form component; the review uses an iframe of the request page. Skip link, main landmark, one h1 and footer are required. Footer: “Built with OpenAI Codex for the Codex x TwitchCon Hackathon”, [GitHub](https://github.com/Korivash/chatskins), “© Korivash”.
+
+Legacy root settings hashes redirect intact to editor. Skin query opens Step 2. Production editor with no query uses catalog default Clean; the review starts with Bubble Lift to compare with Round 6. Unknown ID displays “That skin isn’t available. Pick another starting point.” with Skins link. Browser Back preserves edits, channel and selection. UI mode, group, sound, stats and preview background are not overlay settings.
+
+## Home: title screen
+
+Equal desktop split: ChatSkins emblem, “Your Twitch chat. Ready to play.”, “Free chat skins. One link for OBS. No login needed.” and vertical menu at left; framed sample HUD at right. **PRESS START** is a real link to Skins, slow 1.6-second stepped opacity pulse, never fully invisible. No boot gate. Click/Enter activate; Space on this link also activates. On an otherwise unfocused page Enter/Space starts. Never hijack keys inside inputs, dialogs or other controls.
+
+Menu: **Start / Customize / Request a skin / How to use in OBS / About**. Up/down moves focus and Gold diamond; Enter activates focused item. Mouse hover moves selector without stealing focus. Tab navigation remains normal. Space retains native button behavior, except explicit PRESS START support. OBS and About are same-page anchors. No global arrow handlers on other pages.
+
+Attract background: two radial-gradient star layers drifting over 70 seconds; perspective grid fading into Void. CSS only; decorative layers aria-hidden and pointer-events:none. No canvas, video or per-frame JavaScript. Sound starts OFF; create/resume WebAudio only after explicit opt-in. Selection bleep: sine 660→880 Hz over 45 ms, ≤80 ms total, gain ≤0.018 ramped to zero. Throttle pointer sounds to ≥80 ms apart. No arrival/scroll sounds. Visible On/Off and aria-pressed; unsupported audio never blocks navigation.
+
+HUD explicitly labels Sample chat. Cycle **Bubble Lift → Glass Card → Name Tag → Comic Burst → Pastel Pop → Esports Slash**, six seconds each, with name and count synchronized. Previous/Next work when paused or reduced. Pause freezes stars, prompt blink, arrivals and cycle. System reduced motion removes movement and auto-rotation; Resume cannot override it. Keep one complete sample visible. Actual production samples use the shared renderer, not the mockup's approximations.
+
+Below fold: only three setup steps, flat feature checklist, six native FAQ disclosures and footer, as in mockup. No second gallery or conversion-banner stack. Features remain contingent on Round 6 builder verification, not claims of measured performance.
+
+## Skins: character select
+
+Four group controls: **Streamer favorites / Game styles / Animated / Colorful**, counts 12/16/2/4. Preserve catalog order and six Featured first. These are a labeled button group, not falsely declared ARIA tabs. Selection uses Gold border, diamond, “Selected” and aria-pressed. Each portrait has two live-style miniature rows and full skin name. Sample rows aria-hidden; accessible button name is skin name. Static idle samples; replay arrival on hover/focus; production updates only visible active previews. No 34-card animation storm.
+
+Desktop: three portrait columns and 400–520 px side panel; medium two columns. Phone: selected preview first, roster below, two columns only while names remain readable. Hover/focus/tap selects, never opens a dialog. Left/right moves one portrait, up/down one visual row, Home/End first/last visible. Compute row length from current layout. Production uses a roving tab stop; review keeps all cards tabbable for inspection. Group change restores its last selection or selects first. Announce count, not fake messages.
+
+Side panel: live sample, name, description, four segmented stat bars with visible n/5. **Use this skin** is primary; **Customize** links to editor with that skin. No editor is required to use a premade skin.
+
+Use opens a native dialog with two steps:
+
+1. **Your channel**: Twitch name field, optional Connect with Twitch. Manual path always visible. Trim whitespace, remove one @/# prefix, lowercase, validate 1–25 ASCII letters/digits/underscores. Syntax readiness is not account verification. Invalid input stays inline/focused. Cancelled/unavailable OAuth returns to manual entry without losing skin. Minimum identity permission only; no tokens in overlay links.
+2. **Copy into OBS**: full selectable canonical settings URL, Copy OBS link, actual clipboard success or “Copy this URL manually.” OBS instructions: Sources → + → Browser, 1280 × 720, above game capture. Back retains name. Close/Escape retains draft and restores opener focus; background inert and focus contained. Regenerate from edited settings if entered from Editor. Changed looks need a new copied link.
+
+Review uses explicitly labeled `example.invalid` links and no OAuth; builder must implement real serialization. No misleading working-link claim in the study.
+
+### Style stats
+
+Each of 34 records has `stats: {readability, flair, motion, retro}` with integer 1–5 values. They are art-directed descriptors, **not benchmark, popularity or accessibility scores**. Render from catalog, outside settings; do not infer from category. Readability: 1 ornamental → 5 clear reading hierarchy; Flair: 1 minimal → 5 expressive; Motion: 1 still, 2 gentle arrival, 3 pronounced arrival, 4 sustained decoration, 5 dominant kinetic identity; Retro: 1 contemporary → 5 old dialogue/terminal/pixel styling. Current defaults only need Motion 1–3. Terminal remains 1 despite Animated category. High Motion is not “better”; Readability 5 does not certify contrast over arbitrary gameplay. `game-catalog.js` is a generated review subset, not another source of truth.
+
+## Editor: loadout
+
+Retain **1 Skin / 2 Customize / 3 Get your link**, with Step 1 going to separate Skins page. Desktop: 300 px controls, central monitor, 230 px deployment rail. Medium: deployment below. Phone: preview, controls, link action in document order. Step 3 remains visible in navigation and emphasized in deployment; saving or Advanced is never required.
+
+Exactly six Simple appearance controls: **Font; Text size; Accent color; Background; Frame; Entrance animation**. Advanced editor is a separate switch. Native select/range/numeric/color/checkbox behavior; text size has editable px value, color has hex value. Background Solid/Glass/Transparent; entrance None/Fade/Slide/Pop. **Use the unchanged Round 6 Simple mapping below**, including mixed/custom values, alpha preservation, readable-name correction, one-step undo and no mutation on mode change. Mockup bindings demonstrate appearance only, not canonical setting writes.
+
+Advanced includes the actual complete prior field inventory, restyled into the loadout rail, with collapsed sections. Preserve production search, per-section reset, Undo/Redo, imports/exports, My skins, Custom CSS and Round 3/5 dependencies. `editor-round6-reference.html` retains the full prior sheet for comparison. Advanced fields in the new study are visual specimens, not working settings bindings. Production preview uses the shared renderer and true source scale/5% safe area from Round 6; study enlarges chat for visual review. Default Stream; Dark/Light/Checker options. Preview backdrop is never exported. Keep all Round 6 connectivity, font, clipboard and provider recovery states.
+
+## Request: quest board
+
+Title “The next skin starts with you.” Gold-edged posting sheet, original diamond seal, ordinary labels. **Post quest** is the action. Colors offers free text plus two pickers; picker changes write two hex values, while free text may describe a palette. Optional contact information is visibly described as shared with the team. Requests are ideas, not guaranteed commissions. Small [Or join us on Discord](https://discord.gg/YxFRuEPSxZ) link remains available.
+
+| JSON key | Label | Maximum | Required |
+| --- | --- | ---: | --- |
+| name | Skin name idea | 60 | yes |
+| inspired | Inspired by (game/style) | 80 | yes |
+| colors | Colors | 80 | yes |
+| font | Font vibe | 60 | no |
+| frame | Frame idea | 120 | no |
+| description | Description | 800 | yes |
+| channel | Twitch channel (optional) | 25 | no |
+| discord | Discord name (optional) | 40 | no |
+| website | Honeypot | 200 | must be empty |
+
+Required-fields helper lists name, inspiration, colors, description. Optional fields default to empty. Trim, validate types, count Unicode code points server-side; client maxlength is only an early guard. Nonempty channel uses the same name syntax above. Field errors use aria-invalid/aria-describedby and focused summary. Retain drafts on 400/429/offline/delivery failure and modal reopening; no automatic persistent storage of contact information on shared devices.
+
+Pending: “Posting your quest…” with repeat submission disabled. Success only after backend confirmation: **“Quest posted! The guild has been notified.”** Offer Post another quest. Error: “Your quest couldn’t be delivered. Your draft is still here. Try again.” Rate limit: “Quest board is busy. Try again in {time}. Your draft is safe.” The mockup outcome selector demonstrates success, field error, rate limit and delivery failure; it must not ship.
+
+### Backend specification: POST /api/skin-request
+
+Design contract only; no backend is built in this round. Same-origin application/json body:
+
+```json
+{"name":"Lunar tavern","inspired":"Cozy space fantasy","colors":"#8CECE0, #C7B5FF","font":"Soft and readable","frame":"A small brass window","description":"Moonlit chat for late-night streams.","channel":"cozy_channel","discord":"","website":""}
+```
+
+- Limit body to 8 KiB before parsing. Malformed JSON, arrays, unknown fields, non-string values, missing required values and values beyond the table limits return 400 field errors. Do not silently truncate. Plain text only, never execute HTML/CSS. Validate before forwarding; required strings empty after sanitation are invalid.
+- Honeypot website is visually offscreen, tabindex=-1, aria-hidden. Nonempty gets generic 400 form error, never forwarded.
+- **3 accepted requests per IP per rolling hour and 50 accepted requests per rolling 24 hours globally.** Atomic shared persistent counters across instances; reserve quota before delivery, release on definite failure, count successful submissions. Concurrent requests must not exceed either bound. Transport abuse protection may additionally limit invalid attempts.
+- Resolve IP through trusted deployment proxy configuration, never arbitrary X-Forwarded-For. Store keyed IP hashes with TTL, not raw IPs in Discord. Return Retry-After seconds from the later applicable reset. Global exhaustion does not disclose submitter information.
+- Forward one Discord webhook embed titled “New skin quest”, description and labeled fields, server timestamp, optional fields omitted when empty. **DISCORD_SKIN_REQUEST_WEBHOOK_URL stays server-side only**: never bundled in client code, URLs, logs, source maps or responses. Fixed configured destination, never user supplied. No IPs, cookies or tokens in embeds.
+- Sanitize every field: strip case-insensitive @everyone, @here and all `<@...>` mention tokens (including user/role forms), plus `<#...>` channel mentions and control characters. Escape Discord markdown. Send `allowed_mentions: {parse:[], users:[], roles:[], replied_user:false}` as defense in depth. Validate original lengths, reject required values emptied by sanitation.
+- Links stay unembedded: plain text inside embed fields only, no webhook content, markdown hyperlinks, embed url, image or thumbnail properties. Escape markdown-link syntax and wrap literal http(s) URLs in angle brackets to suppress previews. Never fetch submitted links. Verify raw URLs/markdown links/mentions against actual Discord output when implementing.
+- Bound webhook timeout to 5 seconds. Return 200 only after Discord confirms delivery. Return generic 503 on delivery failure; do not expose webhook details. On timeout/uncertain delivery, do not blindly retry: use submission ID and dedupe record. Optional Idempotency-Key header per attempt permits exact-body retry without duplicate notifications or quota consumption; reject different body for the same key. Builder must verify current Discord embed limits and suppression behavior.
+- Same-origin use only, verify Origin when present, no wildcard CORS. No login required. No-store responses. Missing server configuration is a delivery failure, never success.
+
+```text
+200 {"ok":true}
+400 {"ok":false,"errors":{"description":"Use 800 characters or fewer."}}
+429 {"ok":false,"error":"rate_limited","retryAfter":2520}
+    Retry-After: 2520
+503 {"ok":false,"error":"delivery_failed"}
+```
+
+Errors may use any field key or form for invalid payload/honeypot. 503 adds the necessary operational failure state. Test quotas at boundaries and concurrently, spoofed proxy headers, Unicode limits, mentions, links, failed/timeout webhook and duplicate retry before release.
+
+## Access, motion, performance and review boundary
+
+AA targets: body/helper ≥4.5:1, large text and essential boundaries/focus ≥3:1. Gold focus ring 3 px, offset 4 px. Verify computed contrast for hover/selected/error and skin composites. Arbitrary custom overlays are not automatically AA. No information relies only on color, sound, animation or hover. Visible numbers on stats; native dialog focus/Escape/close/restore; status announcements for user actions, never sample chat. Test 200% text and 400% zoom.
+
+Reduced motion removes stars, blinking, arrivals, auto-rotation, animated effects and transitions; manual selection still works. Resume never overrides OS preference. Production pauses offscreen/hidden-tab previews and limits live miniatures. No per-frame JS or image/video background; local sample text makes no Twitch/emote requests. Production budgets: ≤100 KB gzip initial shell code, ≤150 KB brand fonts; lazy-load catalog/editor and skin fonts. The study includes full Advanced for inspection, not production payload architecture.
+
+Review at 320/390/768/1280/1440/1920 widths and 1280×720 height, touch, keyboard, font failure, blocked clipboard, muted audio and reduced motion. All destinations/actions must remain reachable, with no page overflow. Judge path: Press Start → arrow to Comic Burst → see preview/stats → Use this skin → channel → real copied OBS link, without Editor. Then six-control edit, Advanced edit and quest success/error. Verify actual OBS output and retained Round 6 URL/emote/migration behavior.
+
+Deliverables: four new/updated mockups; shared game-tokens.css, game-menu.css and game-menu.js; generated game-catalog.js; reproducible round6b.py; retained editor-round6-reference.html. Open locally or serve design/. Navigation, synthesized sound, selection, sample cycling, illustrative edits, example-copy modal and simulated quest outcomes are reviewable. No real sign-in, request delivery, state engine or overlay serialization. Advanced and entrance choices are visual specimens; final bindings use the existing renderer.
+
+Browser capture was attempted with installed Chrome but failed with sandbox access denied. Responsive rendering and visual/focus behavior remain unverified here; do not describe them as browser-tested. Static validation covers catalog preservation, all stats, local references, unique IDs, JavaScript syntax and core shell contrast. No production files changed.
+
+---
+
 # Round 6: Website
 
 This is the website design handoff for chatskins.korivash.com, not an application build. Round 6 supersedes earlier website composition, UI tokens, initial preview background and onboarding rules. Round 5 remains authoritative for the 34 skin recipes, Featured order, renderer geometry, schema, emotes and preservation rules; Round 3 still supplies the full per-part editor contract. All earlier rounds remain below. No application files or preset settings are changed by this round.

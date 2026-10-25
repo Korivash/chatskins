@@ -1,0 +1,9 @@
+﻿/* Round 6b: the only website token source. Skin colors remain catalog data. */
+:root {
+ --void:#101528;--panel:#1b2640;--raised:#293753;--ink:#f3f5ff;--muted:#b9c8df;
+ --signal:#8cece0;--gold:#ffda8a;--lilac:#c7b5ff;--danger:#ffb6bb;--edge:#8599b7;--rule:#435570;
+ --body:'Barlow',sans-serif;--display:'Chakra Petch',sans-serif;
+ --s1:4px;--s2:8px;--s3:12px;--s4:16px;--s6:24px;--s8:32px;--s12:48px;--s16:64px;
+ --hit:48px;--radius:6px;--content:1400px;--fast:160ms;--focus:3px solid var(--gold);
+ --shadow:8px 8px 0 #080e1c;--glow:0 0 38px #8cece033;
+}

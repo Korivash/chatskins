@@ -477,7 +477,13 @@
         }
       },
       "featured": true,
-      "galleryOrder": 0
+      "galleryOrder": 0,
+      "stats": {
+        "readability": 5,
+        "flair": 3,
+        "motion": 2,
+        "retro": 1
+      }
     },
     {
       "id": "glass-card",
@@ -954,7 +960,13 @@
         }
       },
       "featured": true,
-      "galleryOrder": 1
+      "galleryOrder": 1,
+      "stats": {
+        "readability": 5,
+        "flair": 3,
+        "motion": 2,
+        "retro": 1
+      }
     },
     {
       "id": "name-tag",
@@ -1431,7 +1443,13 @@
         }
       },
       "featured": true,
-      "galleryOrder": 2
+      "galleryOrder": 2,
+      "stats": {
+        "readability": 5,
+        "flair": 3,
+        "motion": 2,
+        "retro": 1
+      }
     },
     {
       "id": "comic-burst",
@@ -1908,7 +1926,13 @@
         }
       },
       "featured": true,
-      "galleryOrder": 3
+      "galleryOrder": 3,
+      "stats": {
+        "readability": 5,
+        "flair": 5,
+        "motion": 3,
+        "retro": 2
+      }
     },
     {
       "id": "pastel-pop",
@@ -2385,7 +2409,13 @@
         }
       },
       "featured": true,
-      "galleryOrder": 4
+      "galleryOrder": 4,
+      "stats": {
+        "readability": 5,
+        "flair": 4,
+        "motion": 3,
+        "retro": 1
+      }
     },
     {
       "id": "esports-slash",
@@ -2862,7 +2892,13 @@
         }
       },
       "featured": true,
-      "galleryOrder": 5
+      "galleryOrder": 5,
+      "stats": {
+        "readability": 5,
+        "flair": 5,
+        "motion": 3,
+        "retro": 2
+      }
     },
     {
       "id": "quiet-line",
@@ -3339,7 +3375,13 @@
         }
       },
       "featured": false,
-      "galleryOrder": 6
+      "galleryOrder": 6,
+      "stats": {
+        "readability": 5,
+        "flair": 1,
+        "motion": 2,
+        "retro": 1
+      }
     },
     {
       "id": "neon-edge",
@@ -3816,7 +3858,13 @@
         }
       },
       "featured": false,
-      "galleryOrder": 7
+      "galleryOrder": 7,
+      "stats": {
+        "readability": 5,
+        "flair": 4,
+        "motion": 2,
+        "retro": 2
+      }
     },
     {
       "id": "sticker-stack",
@@ -4293,7 +4341,13 @@
         }
       },
       "featured": false,
-      "galleryOrder": 8
+      "galleryOrder": 8,
+      "stats": {
+        "readability": 5,
+        "flair": 4,
+        "motion": 3,
+        "retro": 1
+      }
     },
     {
       "id": "initial-card",
@@ -4770,7 +4824,13 @@
         }
       },
       "featured": false,
-      "galleryOrder": 9
+      "galleryOrder": 9,
+      "stats": {
+        "readability": 5,
+        "flair": 3,
+        "motion": 2,
+        "retro": 1
+      }
     },
     {
       "id": "signal-console",
@@ -5247,7 +5307,13 @@
         }
       },
       "featured": false,
-      "galleryOrder": 10
+      "galleryOrder": 10,
+      "stats": {
+        "readability": 5,
+        "flair": 3,
+        "motion": 1,
+        "retro": 4
+      }
     },
     {
       "id": "announcer",
@@ -5724,7 +5790,13 @@
         }
       },
       "featured": false,
-      "galleryOrder": 11
+      "galleryOrder": 11,
+      "stats": {
+        "readability": 5,
+        "flair": 4,
+        "motion": 2,
+        "retro": 2
+      }
     },
     {
       "id": "guild-chat",
@@ -6201,7 +6273,13 @@
       "category": "Game styles",
       "description": "Reference preserved: two continuous gold rings, green guild dialogue and a deep forest pane.",
       "featured": false,
-      "galleryOrder": 12
+      "galleryOrder": 12,
+      "stats": {
+        "readability": 5,
+        "flair": 4,
+        "motion": 2,
+        "retro": 4
+      }
     },
     {
       "id": "fantasy-mmo",
@@ -6678,7 +6756,13 @@
       "category": "Game styles",
       "description": "Lavender double window with inset diamond corners; softer and cooler than Guild.",
       "featured": false,
-      "galleryOrder": 13
+      "galleryOrder": 13,
+      "stats": {
+        "readability": 5,
+        "flair": 4,
+        "motion": 2,
+        "retro": 4
+      }
     },
     {
       "id": "block-craft",
@@ -7155,7 +7239,13 @@
       "category": "Game styles",
       "description": "Moss-grey stepped blocks and bright grass names; compact square rows.",
       "featured": false,
-      "galleryOrder": 14
+      "galleryOrder": 14,
+      "stats": {
+        "readability": 4,
+        "flair": 4,
+        "motion": 1,
+        "retro": 5
+      }
     },
     {
       "id": "old-school-mmo",
@@ -7632,7 +7722,13 @@
       "category": "Game styles",
       "description": "Ochre ledger in a brass bevel; a sober single pane with yellow dialogue.",
       "featured": false,
-      "galleryOrder": 15
+      "galleryOrder": 15,
+      "stats": {
+        "readability": 4,
+        "flair": 3,
+        "motion": 1,
+        "retro": 5
+      }
     },
     {
       "id": "battle-arena",
@@ -8109,7 +8205,13 @@
       "category": "Game styles",
       "description": "Teal tactical pane with squared corner brackets and an aligned squad column.",
       "featured": false,
-      "galleryOrder": 16
+      "galleryOrder": 16,
+      "stats": {
+        "readability": 5,
+        "flair": 3,
+        "motion": 3,
+        "retro": 2
+      }
     },
     {
       "id": "battle-royale",
@@ -8586,7 +8688,13 @@
       "category": "Game styles",
       "description": "Sand-yellow notched field cards; condensed names and individual charcoal plates.",
       "featured": false,
-      "galleryOrder": 17
+      "galleryOrder": 17,
+      "stats": {
+        "readability": 5,
+        "flair": 4,
+        "motion": 3,
+        "retro": 2
+      }
     },
     {
       "id": "retro-rpg",
@@ -9063,7 +9171,13 @@
       "category": "Game styles",
       "description": "Cobalt dialogue window with a bright twin rim and triangular speaker prompt.",
       "featured": false,
-      "galleryOrder": 18
+      "galleryOrder": 18,
+      "stats": {
+        "readability": 4,
+        "flair": 5,
+        "motion": 1,
+        "retro": 5
+      }
     },
     {
       "id": "cyber-city",
@@ -9540,7 +9654,13 @@
       },
       "description": "Magenta cut-corner panels and cyan callsigns; a hard-edged city HUD.",
       "featured": false,
-      "galleryOrder": 19
+      "galleryOrder": 19,
+      "stats": {
+        "readability": 5,
+        "flair": 5,
+        "motion": 3,
+        "retro": 3
+      }
     },
     {
       "id": "arcade-cabinet",
@@ -10017,7 +10137,13 @@
       },
       "description": "Purple cabinet bezel, butter-yellow score names and static scanlines.",
       "featured": false,
-      "galleryOrder": 20
+      "galleryOrder": 20,
+      "stats": {
+        "readability": 4,
+        "flair": 5,
+        "motion": 2,
+        "retro": 5
+      }
     },
     {
       "id": "space-command",
@@ -10494,7 +10620,13 @@
       },
       "description": "Steel-blue communications panel with long technical corner brackets.",
       "featured": false,
-      "galleryOrder": 21
+      "galleryOrder": 21,
+      "stats": {
+        "readability": 5,
+        "flair": 3,
+        "motion": 2,
+        "retro": 3
+      }
     },
     {
       "id": "monster-trainer",
@@ -10971,7 +11103,13 @@
       },
       "description": "Ivory dialogue cards with a heavy blue-ink rim and friendly tall lettering.",
       "featured": false,
-      "galleryOrder": 22
+      "galleryOrder": 22,
+      "stats": {
+        "readability": 5,
+        "flair": 4,
+        "motion": 3,
+        "retro": 4
+      }
     },
     {
       "id": "dungeon-crawler",
@@ -11448,7 +11586,13 @@
       },
       "description": "Stone-grey bevel, small brass corner diamonds and firelit serif names.",
       "featured": false,
-      "galleryOrder": 23
+      "galleryOrder": 23,
+      "stats": {
+        "readability": 4,
+        "flair": 4,
+        "motion": 2,
+        "retro": 4
+      }
     },
     {
       "id": "cozy-farm",
@@ -11925,7 +12069,13 @@
       },
       "description": "Warm wood plaques, cream lettering and small peg dots at the corners.",
       "featured": false,
-      "galleryOrder": 24
+      "galleryOrder": 24,
+      "stats": {
+        "readability": 5,
+        "flair": 4,
+        "motion": 2,
+        "retro": 3
+      }
     },
     {
       "id": "horror-survival",
@@ -12402,7 +12552,13 @@
       },
       "description": "Dusty red emergency slips; light body text instead of low-contrast blood red.",
       "featured": false,
-      "galleryOrder": 25
+      "galleryOrder": 25,
+      "stats": {
+        "readability": 5,
+        "flair": 3,
+        "motion": 2,
+        "retro": 3
+      }
     },
     {
       "id": "hero-shooter",
@@ -12879,7 +13035,13 @@
       },
       "description": "Orange start stripe with small white corner wedges and compact team calls.",
       "featured": false,
-      "galleryOrder": 26
+      "galleryOrder": 26,
+      "stats": {
+        "readability": 5,
+        "flair": 4,
+        "motion": 3,
+        "retro": 2
+      }
     },
     {
       "id": "kart-racer",
@@ -13356,7 +13518,13 @@
       },
       "description": "Sun-yellow racing capsules with a mint lane stripe; wide, playful spacing.",
       "featured": false,
-      "galleryOrder": 27
+      "galleryOrder": 27,
+      "stats": {
+        "readability": 5,
+        "flair": 5,
+        "motion": 3,
+        "retro": 2
+      }
     },
     {
       "id": "bubble-chat",
@@ -13833,7 +14001,13 @@
       "category": "Colorful",
       "description": "Classic pale lavender inline capsules; deliberately compact beside Bubble Lift.",
       "featured": false,
-      "galleryOrder": 28
+      "galleryOrder": 28,
+      "stats": {
+        "readability": 5,
+        "flair": 3,
+        "motion": 3,
+        "retro": 1
+      }
     },
     {
       "id": "clean",
@@ -14310,7 +14484,13 @@
       "category": "Colorful",
       "description": "Neutral navy reading strips with stronger backing and clear bold names.",
       "featured": false,
-      "galleryOrder": 29
+      "galleryOrder": 29,
+      "stats": {
+        "readability": 5,
+        "flair": 1,
+        "motion": 2,
+        "retro": 1
+      }
     },
     {
       "id": "candy-pop",
@@ -14787,7 +14967,13 @@
       },
       "description": "Pink candy tiles with cream-to-mint pastel fill and small diamond corners.",
       "featured": false,
-      "galleryOrder": 30
+      "galleryOrder": 30,
+      "stats": {
+        "readability": 5,
+        "flair": 5,
+        "motion": 3,
+        "retro": 1
+      }
     },
     {
       "id": "rainbow-border",
@@ -15268,7 +15454,13 @@
       },
       "description": "Prismatic static perimeter around a sober midnight card; white names stay still.",
       "featured": false,
-      "galleryOrder": 31
+      "galleryOrder": 31,
+      "stats": {
+        "readability": 5,
+        "flair": 5,
+        "motion": 2,
+        "retro": 2
+      }
     },
     {
       "id": "terminal",
@@ -15745,7 +15937,13 @@
       "category": "Animated",
       "description": "A single forest-green console pane; plain prompts and no animated typing.",
       "featured": false,
-      "galleryOrder": 32
+      "galleryOrder": 32,
+      "stats": {
+        "readability": 5,
+        "flair": 2,
+        "motion": 1,
+        "retro": 5
+      }
     },
     {
       "id": "vaporwave",
@@ -16222,7 +16420,13 @@
       },
       "description": "Plum-to-ocean gradient ribbons with fine lilac twin lines and mint names.",
       "featured": false,
-      "galleryOrder": 33
+      "galleryOrder": 33,
+      "stats": {
+        "readability": 5,
+        "flair": 5,
+        "motion": 3,
+        "retro": 4
+      }
     }
   ],
   "settingsSchema": {
