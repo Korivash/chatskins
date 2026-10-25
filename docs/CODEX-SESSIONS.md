@@ -15,7 +15,7 @@ ChatSkins was built entirely with **OpenAI Codex**. Instead of one giant thread,
 
 The list below is generated from the local Codex session logs by `log-sessions.mjs`, so no row is typed by hand.
 
-Total: **19** sessions.
+Total: **23** sessions.
 
 | # | Started (UTC) | Session ID | Model | Role | Area | Task (first line of the prompt) |
 |---|---|---|---|---|---|---|
@@ -38,3 +38,7 @@ Total: **19** sessions.
 | 17 | 2026-10-25 07:49:34 | `01a17209-4c53-76d2-868f-646acd4abaa7` | gpt-6-luna | trailer art (Luna) | trailer art |  |
 | 18 | 2026-10-25 07:55:19 | `01a1720e-8ef6-7b72-bdd6-008cece473d5` | gpt-6-luna | build (Luna) | app | Round 5 build. Read design/DESIGN.md (the "Round 5" section), design/skins.json and design/mockup.html, then t |
 | 19 | 2026-10-25 08:02:31 | `01a17215-2627-7ca3-97a4-9a358899cd50` | gpt-6-astra | design (Astra) | app | Round 6 design: the WHOLE WEBSITE, judge-ready. You are the designer. Read BRIEF.md, research/TOP-CHAT-UIS.md, |
+| 20 | 2026-10-25 08:20:19 | `01a17225-72bd-72a1-bd89-b0ad667466b4` | gpt-6-luna | build (Luna) | app | Deploy ChatSkins. Run exactly this one command and nothing else: bash C:/ops/chatskins/deploy.sh 0a115c1 . The |
+| 21 | 2026-10-25 08:22:03 | `01a17227-0a34-7df1-b83e-da84f91d5cc5` | gpt-6-luna | trailer art (Luna) | trailer art |  |
+| 22 | 2026-10-25 08:29:10 | `01a1722d-8c5f-7100-abcc-874ff93dabe8` | gpt-6-astra | design (Astra) | app | Round 6b design: make the website UNFORGETTABLE. You are the designer. Read your round 6 design (DESIGN.md "Ro |
+| 23 | 2026-10-25 09:13:20 | `01a17255-fe17-7480-a7e6-0a6f5f5ded80` | gpt-6-astra | design (Astra) | app | Round 7a design: MORE game-inspired skins with chat channels. You are the designer. Read DESIGN.md (especially |
