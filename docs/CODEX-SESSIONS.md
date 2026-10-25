@@ -15,7 +15,7 @@ ChatSkins was built entirely with **OpenAI Codex**. Instead of one giant thread,
 
 The list below is generated from the local Codex session logs by `log-sessions.mjs`, so no row is typed by hand.
 
-Total: **23** sessions.
+Total: **30** sessions.
 
 | # | Started (UTC) | Session ID | Model | Role | Area | Task (first line of the prompt) |
 |---|---|---|---|---|---|---|
@@ -42,3 +42,10 @@ Total: **23** sessions.
 | 21 | 2026-10-25 08:22:03 | `01a17227-0a34-7df1-b83e-da84f91d5cc5` | gpt-6-luna | trailer art (Luna) | trailer art |  |
 | 22 | 2026-10-25 08:29:10 | `01a1722d-8c5f-7100-abcc-874ff93dabe8` | gpt-6-astra | design (Astra) | app | Round 6b design: make the website UNFORGETTABLE. You are the designer. Read your round 6 design (DESIGN.md "Ro |
 | 23 | 2026-10-25 09:13:20 | `01a17255-fe17-7480-a7e6-0a6f5f5ded80` | gpt-6-astra | design (Astra) | app | Round 7a design: MORE game-inspired skins with chat channels. You are the designer. Read DESIGN.md (especially |
+| 24 | 2026-10-25 10:37:28 | `01a172a3-0383-7030-b850-15f4391a6b1c` | gpt-6-astra | design (Astra) | app | Round 7 design: ALERTS. You are the designer. Read BRIEF.md, the DESIGN.md sections from all rounds (including |
+| 25 | 2026-10-25 10:41:40 | `01a172a6-dd38-7673-8d94-f8b83713f4cf` | gpt-6-luna | build (Luna) | app | Round 7e: the skin showcase pictures look off (owner: "some of the pictures that showcase the chatskins are of |
+| 26 | 2026-10-25 10:44:57 | `01a172a9-dbee-7ac1-983d-a5892a769424` | gpt-6-astra | design (Astra) | app | Round 9 design: a PREMIUM website look + GitBook-style DOCS. You are the designer. Work only inside design/. D |
+| 27 | 2026-10-25 10:46:38 | `01a172ab-68f4-7562-9a0e-779cab3fd3a0` | gpt-6-luna | build (Luna) | app | Round 7f: redo the skin-preview fix. Round 7e made it WORSE and the lead reverted it (commit e2b6f18 was rever |
+| 28 | 2026-10-25 11:18:18 | `01a172c8-6608-7a22-87f5-61ab8f09e584` | gpt-6-luna | build (Luna) | app | Round 6f: a live bug in server/skin-request.mjs (the request form fails for every real visitor). Change only t |
+| 29 | 2026-10-25 11:26:06 | `01a172cf-8904-7ce2-8d39-d96851056728` | gpt-6-astra | design (Astra) | app | Round 8 design: CHAT-POWERED SKINS. Viewers play with the overlay. You are the designer. Read DESIGN.md (all r |
+| 30 | 2026-10-25 11:29:35 | `01a172d2-b8fa-7793-9ad4-91c3e53619fa` | gpt-6-luna | build (Luna) | app | Round 9c: the previews don't run a test chat (owner: "the previews are not working, it should be doing a fake  |
