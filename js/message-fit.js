@@ -5,8 +5,13 @@ export function fitPanelMessages(panel, maxHeight) {
   const messages = () => [...panel.children].filter(child => child.classList?.contains('message'));
   let removed = 0;
   while (panel.scrollHeight > limit) {
-    const oldest = messages()[0];
+    const rows = messages();
+    const oldest = rows[0];
     if (!oldest) break;
+    if (rows.length === 1) {
+      console.warn('Chat panel is shorter than its newest message; preserving that message.');
+      break;
+    }
     const wasHeader=!oldest.classList.contains('grouped');
     const next=oldest.nextElementSibling;
     oldest.remove();

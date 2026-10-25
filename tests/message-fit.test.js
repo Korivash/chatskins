@@ -17,3 +17,12 @@ test('does not remove messages when content is within the max height', () => {
   assert.equal(fitPanelMessages(panel,30),0);
   assert.deepEqual(panel.children,[row]);
 });
+
+test('preserves the newest message when the available height is shorter than one row', () => {
+  const makeMessage=name=>({name,classList:{contains:value=>value==='message'},remove(){panel.children.splice(panel.children.indexOf(this),1)}});
+  const panel={children:[makeMessage('older'),makeMessage('newest')],get scrollHeight(){return this.children.length*40}};
+  const warn=console.warn;console.warn=()=>{};
+  try { assert.equal(fitPanelMessages(panel,20),1); }
+  finally { console.warn=warn; }
+  assert.deepEqual(panel.children.map(row=>row.name),['newest']);
+});
