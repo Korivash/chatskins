@@ -1,33 +1,30 @@
-<!-- Outline: Your 60-second setup | Browser Source settings | Make it yours | Where to go next -->
+<!-- Outline: Make your overlay | Set up everything | Add one Browser Source | Keep editing -->
 
 # Getting started
 
-Your chat belongs in your stream. Pick a skin, enter your Twitch channel, and add one link to your streaming app. No account or plugin is needed for ordinary chat.
+Pick a skin, make a few choices, and add one link to your stream. Ordinary chat works without signing in.
 
-## Your 60-second setup
-1. Open Skins and pick a look. Use the live sample to check names, long messages, and contrast.
-2. Choose Make my overlay. Enter your Twitch channel name, without the channel URL. Connect with Twitch is an optional shortcut.
-3. Copy the generated overlay URL in full.
-4. In your streaming app, add a Browser Source and paste the URL.
-5. Set the source to 1920 × 1080, or 1280 × 720 for a 720p canvas. Place ChatSkins above your game capture.
+## Make your overlay
+1. Open **Skins**, choose a look, then select **Customize**.
+2. On your first visit, answer the three **Make it mine** questions: vibe, colors, and chat size. Each answer updates the preview.
+3. Use the tabs **Look · Style · Chat · Viewers · Alerts · Get link** to keep customizing.
+4. Choose **Get my OBS link** in the sticky bottom bar. It opens **Get link** when you are ready to copy.
 
-> Tip: Send a new message in your Twitch chat to check the connection. Sample messages in the editor are a preview, not proof that live chat is connected.
+## Set up everything with Twitch
+In **Viewers**, turn on the features you want, then choose **Set up everything with Twitch**. One sign-in sets up the selected chat commands, channel-point rewards, and alerts.
 
-## Browser Source settings
-Use your generated URL. Keep custom CSS empty. Turn off Shutdown source when not visible and Refresh browser when scene becomes active where those options are available. Set FPS to 30, or 60 if you want smoother motion.
+When available, the default rewards are created and turned on. The checkbox **Create rewards turned off (I'll turn them on in Twitch)** leaves new rewards off for you to enable later. If your channel cannot create rewards, chat commands and alerts can still be ready.
 
-```text
-URL: paste your complete overlay URL
-Width: 1920
-Height: 1080
-FPS: 30 or 60
-Shutdown source when not visible: Off
-Refresh browser when scene becomes active: Off
-Custom CSS: empty
-```
+The editor gives you **one OBS link** for chat, chat commands, channel points, and alerts. Keep it private because it includes access to your Twitch setup.
 
-## Make it yours
-Open Customize to change type, spacing, frames, and motion. Copy the updated link into your Browser Source after editing. A previously copied URL does not automatically pick up a new design.
+## Add one Browser Source
+1. Copy the complete link in **Get link**.
+2. In OBS, add a Browser Source and paste the link.
+3. Set its size to your canvas: **1920 × 1080** or **1280 × 720**.
+4. Put the source above your game capture.
+5. Send a new message in Twitch chat to check it.
 
-## Where to go next
-Read Add to your streaming app for source setup, Choosing a skin for the collections, or The editor for a guided tour.
+The preview is a test. It does not confirm that live chat is connected.
+
+## Keep editing
+Use **Undo** or **Redo** in the bottom bar while you work. Choose **Reset** to restore the current skin's starting settings. Copy a fresh link after changing your design.

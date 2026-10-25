@@ -1,16 +1,23 @@
-<!-- Outline: What the connection reads | What happens to the token | Cancel or try again -->
+<!-- Outline: Set up selected features | Connect without setting everything up | Keep your link private -->
 
 # Connect with Twitch
 
-You can type your channel name without signing in. Connect with Twitch is an optional convenience that fills in your channel name.
+You can use ordinary chat by typing your channel name. Sign in only when you want to set up channel-point rewards or alerts.
 
-## What the connection reads
-The current channel-name connection requests no additional OAuth scopes and uses Twitch's user lookup to read the signed-in account's login. It does not post chat, moderate users, or grant channel-point access.
+## Set up selected features
+1. Open the editor's **Viewers** tab and turn on the features you want. Set alert types in **Alerts**.
+2. Choose **Set up everything with Twitch**.
+3. Sign in once. ChatSkins prepares the selected features and creates the default channel-point rewards when your channel can do so.
+4. Copy the single OBS link and add it as a Browser Source.
 
-## What happens to the token
-The token is never stored by ChatSkins in local storage, session storage, or an overlay link. It is handled briefly in memory, removed from the callback URL before the lookup, and sent to Twitch for the account lookup. ChatSkins then attempts to revoke it. Session storage holds the sign-in state and editor restoration settings, not the token.
+The default rewards are **ChatSkins: Swap skin** (500 points) and **ChatSkins: Emote rain** (250 points). They are enabled unless you check **Create rewards turned off (I'll turn them on in Twitch)**. If matching rewards already exist but are off, turn them on in Twitch or use the offered turn-on action.
 
-## Cancel or try again
-If you cancel, state verification fails, or the lookup fails, enter the channel name manually. Your ordinary chat overlay does not need a persistent sign-in.
+The **Chat commands**, **Channel points**, and **Alerts** cards show a status chip and a **Test it** button. **Needs your channel** means a channel name is missing. **Needs Twitch login** means the selected feature still needs a connection. **Ready** means it is set up. **Problem** appears only when setup hits an error.
 
-> Note: Alerts and channel-point controls require their own connection design. This channel-name shortcut does not authorize those capabilities.
+## Connect without setting everything up
+Turn on only the feature you want, then use its connection controls under **Show all options · Fine-tune**. Chat commands work with no sign-in. Channel-point rewards require an Affiliate or Partner channel.
+
+Use **Enable chat play** in the Chat play controls to stop viewer skin commands and reward actions. The feature cards also let you switch an individual feature off. Alerts have their own switch.
+
+## Keep your link private
+The one OBS link contains access for the connected features. Treat it like a password: do not share it publicly. If you think someone else has it, disconnect the feature and make a fresh link in the editor.

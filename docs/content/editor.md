@@ -1,16 +1,21 @@
-<!-- Outline: A useful editing order | Preview before copying | Keep your result -->
+<!-- Outline: The six tabs | Show all options | Preview and history -->
 
 # The editor
 
-The editor keeps your controls beside a live preview so you can see each change before copying the link. Begin with Simple mode. Open advanced controls when you need to style individual parts.
+The editor keeps a live preview beside your controls. Its six tabs put the main choices in one place: **Look · Style · Chat · Viewers · Alerts · Get link**.
 
-## A useful editing order
-Choose your skin, set the channel, and adjust size and contrast first. Then work on layout, frames, and backgrounds. Add animation last so you can judge whether it helps the conversation.
+## The tabs
+- **Look:** choose a skin and use the first-visit **Make it mine** flow for vibe, colors, and size.
+- **Style:** adjust colors, fonts, frames, and the background.
+- **Chat:** choose what appears, how messages fit, and how they move.
+- **Viewers:** set up chat commands and channel-point rewards.
+- **Alerts:** choose the alerts you want and test them.
+- **Get link:** copy the one link for your OBS Browser Source.
 
-## Preview before copying
-Use sample messages to inspect roles, short lines, long lines, and emote-only messages. Test both bright and dark backdrops. The preview is scaled to fit your window; source pixels are the values that matter in your streaming app.
+## Show all options
+Each section has a **Show all options** switch. Turn it on to reveal the less-used controls for that section. The main controls stay visible when it is off.
 
-## Keep your result
-Copy the complete overlay URL and replace the old Browser Source URL. Use My skins for reusable local designs. Keep an exported backup before clearing browser data.
+## Preview and history
+The preview updates as you make changes. Use **Test Chat** to inspect names, long lines, roles, and emotes. For a frame skin, the preview uses the same frame window as the overlay.
 
-> Tip: Change one section at a time. If a look becomes hard to read, return to typography and background contrast before adding more effects.
+The sticky bottom bar has **Undo**, **Redo**, **Reset**, and **Get my OBS link**. Undo and Redo step through your recent edits. Reset restores the selected skin's starting settings. **Get my OBS link** opens the one-link setup in the **Get link** tab.

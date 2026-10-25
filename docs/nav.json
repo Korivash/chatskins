@@ -1,7 +1,131 @@
 [
-  {"group":"Start here","pages":[["getting-started","Getting started"],["streaming-apps","Add to your streaming app"],["choosing-a-skin","Choosing a skin"]]},
-  {"group":"Customize","pages":[["editor","The editor"],["simple-mode","Simple mode"],["part-styling","Part styling"],["frames","Frames"],["backgrounds","Backgrounds"],["name-format","Name format"],["layout","Layout"],["animation-effects","Animation & effects"],["roles-colors","Roles & colors"],["filters","Filters"],["my-skins","My skins"],["custom-css","Custom CSS"]]},
-  {"group":"Connect & play","pages":[["mmo-channels","MMO chat channels"],["emotes","Emotes"],["connect-twitch","Connect with Twitch"],["alerts","Alerts"],["chat-powered-skins","Chat-powered skins"]]},
-  {"group":"Guides","pages":[["transparent-background","Transparent background & gameplay"],["troubleshooting","Troubleshooting"]]},
-  {"group":"Reference","pages":[["privacy-safety","Privacy & safety"],["request-a-skin","Request a skin"],["faq","FAQ"],["changelog","Changelog"]]}
+  {
+    "group": "Start here",
+    "pages": [
+      [
+        "getting-started",
+        "Getting started"
+      ],
+      [
+        "streaming-apps",
+        "Add to your streaming app"
+      ],
+      [
+        "choosing-a-skin",
+        "Choosing a skin"
+      ]
+    ]
+  },
+  {
+    "group": "Customize",
+    "pages": [
+      [
+        "editor",
+        "The editor"
+      ],
+      [
+        "frames",
+        "Frames"
+      ],
+      [
+        "simple-mode",
+        "Simple mode"
+      ],
+      [
+        "part-styling",
+        "Part styling"
+      ],
+      [
+        "backgrounds",
+        "Backgrounds"
+      ],
+      [
+        "name-format",
+        "Name format"
+      ],
+      [
+        "layout",
+        "Layout"
+      ],
+      [
+        "animation-effects",
+        "Animation & effects"
+      ],
+      [
+        "roles-colors",
+        "Roles & colors"
+      ],
+      [
+        "filters",
+        "Filters"
+      ],
+      [
+        "my-skins",
+        "My skins"
+      ],
+      [
+        "custom-css",
+        "Custom CSS"
+      ]
+    ]
+  },
+  {
+    "group": "Connect & play",
+    "pages": [
+      [
+        "mmo-channels",
+        "MMO chat channels"
+      ],
+      [
+        "emotes",
+        "Emotes"
+      ],
+      [
+        "connect-twitch",
+        "Connect with Twitch"
+      ],
+      [
+        "alerts",
+        "Alerts"
+      ],
+      [
+        "chat-powered-skins",
+        "Chat-powered skins"
+      ]
+    ]
+  },
+  {
+    "group": "Guides",
+    "pages": [
+      [
+        "transparent-background",
+        "Transparent background & gameplay"
+      ],
+      [
+        "troubleshooting",
+        "Troubleshooting"
+      ]
+    ]
+  },
+  {
+    "group": "Reference",
+    "pages": [
+      [
+        "privacy-safety",
+        "Privacy & safety"
+      ],
+      [
+        "request-a-skin",
+        "Request a skin"
+      ],
+      [
+        "faq",
+        "FAQ"
+      ],
+      [
+        "changelog",
+        "Changelog"
+      ]
+    ]
+  }
 ]

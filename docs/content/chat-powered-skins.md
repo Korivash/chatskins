@@ -1,33 +1,24 @@
-<!-- Outline: Choose who can change skins | Direct changes with !skin | Voting with !skinvote | Channel points | Cooldowns | The panic button -->
+<!-- Outline: Viewers cards | One-click setup | Turn features off | Viewer controls -->
 
 # Chat-powered skins
 
-Let viewers change the look of chat while you keep control of what can happen. Choose a small approved skin list before turning audience controls on.
+Let viewers change the look while you choose which actions are allowed. These controls are in the editor's **Viewers** tab.
 
-Chat play is off by default. Turn it on in the editor, choose the allowed skins, and copy a fresh overlay link. Older links without Chat play settings remain off.
+## Viewers cards
+Each feature card has an **On/Off** switch, a status chip, a short checklist, and **Test it**. Turn on **Show all options** to open **Fine-tune** controls.
 
-## Choose who can change skins
-Set separate permissions for direct changes, starting a vote, casting ballots, and resetting the skin. Mods can reset by default. Only skins in your allowed list can be selected; viewers cannot submit arbitrary CSS or URLs.
+- **Chat commands:** viewers can use `!skin`, `!skinvote`, and `!skinreset` when allowed. The status is **Needs your channel** until you enter a channel name, then **Ready** when the settings are usable.
+- **Channel points:** viewers can spend points on the enabled rewards. The status shows whether it is off, ready, waiting for Twitch, or needs attention.
+- **Alerts:** choose event types and test how each alert looks. Its status shows whether alerts are off, ready, or waiting for Twitch.
 
-## Direct changes with !skin
-Use `!skin` followed by an allowed skin name or alias. A permitted command changes the overlay temporarily, then returns home. Unknown names and requests outside the allowed list leave the current skin unchanged.
+## One-click setup
+Turn on the features you want, then choose **Set up everything with Twitch**. One sign-in requests the access needed for those selected features. Chat commands do not need a Twitch sign-in.
 
-```text
-!skin guild
-```
+When Channel points are on, ChatSkins creates the default rewards and turns them on if Twitch allows it. The defaults are **ChatSkins: Swap skin** (500 points) and **ChatSkins: Emote rain** (250 points). Check **Create rewards turned off (I'll turn them on in Twitch)** if you want new rewards left off.
 
-## Voting with !skinvote
-Eligible viewers can use `!skinvote` to open a ballot. Viewers vote with `1`, `2`, or `3`; each vote can be changed after the short ballot cooldown. At the end, a tied result is chosen at random from the tied skins. The vote panel shows the options and remaining time.
+A channel that cannot create rewards can still use chat commands and alerts. Twitch channel-point rewards require an Affiliate or Partner channel.
 
-```text
-!skinvote bubble-lift
-```
+## Turn chat play off
+The **Enable chat play** switch in **Fine-tune viewer options** turns viewer skin commands and reward actions off. The feature cards also have their own switches, so you can turn off just one feature. Alerts have a separate switch in **Alerts**.
 
-## Channel points
-Connect channel points separately and map reward titles to Chat play effects. Reading redemptions requires its own Twitch authorization. Creating rewards requests `channel:manage:redemptions`; new rewards are created disabled so you can review them in Twitch. The private OBS link contains Twitch access, so keep it secret. A non-affiliate channel may not be able to create rewards.
-
-## Cooldowns
-The defaults are a 15-second global cooldown and a 120-second per-viewer cooldown for skin commands. Requests during a cooldown do not queue. Ballots have a separate one-second per-viewer cooldown.
-
-## The panic button
-Use **Panic: freeze skin** to restore the home skin and pause commands, votes, and rewards. Resume explicitly when you are ready. OBS Interact also supports Ctrl+Shift+F to freeze and Ctrl+Shift+R to resume. Reduced motion is respected, and the overlay never sends chat messages.
+ChatSkins only accepts skins from your allowed list. It never posts messages to Twitch. Reduced motion is respected. Use **Panic: freeze skin** to freeze viewer-driven skin changes on the home skin.
