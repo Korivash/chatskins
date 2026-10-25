@@ -1,0 +1,15 @@
+{
+ "title_rule": "Every frame title plaque shows the STREAMER NAME (channel by default, editable). Sub-label LIVE CHAT editable.",
+ "message_styles": {
+  "neon-hex": "Angular borders, pill name labels in neon pink/cyan, crystal-charm role badges.",
+  "mothlight": "Hex botanical badges before names, thin gold dividers between messages, serif text.",
+  "velvet-seance": "Burgundy rows, carved-silver small badge before names, candlelit warm text.",
+  "spirit-post": "Each message on its own torn paper slip, red stamp-seal badges.",
+  "abyssal-relay": "Numbered messages (01, 02...) in small cyan boxes, industrial mono-ish labels.",
+  "sugar-static": "Pill-shaped username labels, each message on its own glossy bar.",
+  "frostbound": "Glowing diamond badges, dark-blue panel, silver text accents.",
+  "honeybyte-cafe": "Receipt-style messages on cream paper, sage/coffee accents.",
+  "phantom-signal": "Green phosphor mono text with [hh:mm] timestamps, scanlines, red highlight for bots.",
+  "solar-oracle": "Lavender message panels, sun-and-moon badges, gold accents."
+ }
+}

@@ -1,0 +1,290 @@
+[
+ {
+  "id": "cozy-cafe",
+  "shape": "tall",
+  "file": "site-media/frames/cozy-cafe-tall.webp",
+  "w": 800,
+  "h": 1200,
+  "credit": "Codex",
+  "kind": "chat"
+ },
+ {
+  "id": "demon-throne",
+  "shape": "tall",
+  "file": "site-media/frames/demon-throne-tall.webp",
+  "w": 800,
+  "h": 1200,
+  "credit": "Codex",
+  "kind": "chat"
+ },
+ {
+  "id": "demon-throne",
+  "shape": "wide",
+  "file": "site-media/frames/demon-throne-wide.webp",
+  "w": 1200,
+  "h": 800,
+  "credit": "Codex",
+  "kind": "chat"
+ },
+ {
+  "id": "haunted-manor",
+  "shape": "tall",
+  "file": "site-media/frames/haunted-manor-tall.webp",
+  "w": 800,
+  "h": 1200,
+  "credit": "Codex",
+  "kind": "chat"
+ },
+ {
+  "id": "haunted-manor",
+  "shape": "wide",
+  "file": "site-media/frames/haunted-manor-wide.webp",
+  "w": 1200,
+  "h": 800,
+  "credit": "Codex",
+  "kind": "chat"
+ },
+ {
+  "id": "lava-forge",
+  "shape": "tall",
+  "file": "site-media/frames/lava-forge-tall.webp",
+  "w": 800,
+  "h": 1200,
+  "credit": "Codex",
+  "kind": "chat"
+ },
+ {
+  "id": "lava-forge",
+  "shape": "wide",
+  "file": "site-media/frames/lava-forge-wide.webp",
+  "w": 1200,
+  "h": 800,
+  "credit": "Codex",
+  "kind": "chat"
+ },
+ {
+  "id": "mothlight",
+  "shape": "tall",
+  "file": "site-media/frames/mothlight-tall.webp",
+  "w": 800,
+  "h": 1200,
+  "credit": "Codex",
+  "kind": "chat"
+ },
+ {
+  "id": "mothlight",
+  "shape": "wide",
+  "file": "site-media/frames/mothlight-wide.webp",
+  "w": 1200,
+  "h": 800,
+  "credit": "Codex",
+  "kind": "chat"
+ },
+ {
+  "id": "royal-court",
+  "shape": "tall",
+  "file": "site-media/frames/royal-court-tall.webp",
+  "w": 800,
+  "h": 1200,
+  "credit": "Codex",
+  "kind": "chat"
+ },
+ {
+  "id": "royal-court",
+  "shape": "wide",
+  "file": "site-media/frames/royal-court-wide.webp",
+  "w": 1200,
+  "h": 800,
+  "credit": "Codex",
+  "kind": "chat"
+ },
+ {
+  "id": "solar-oracle",
+  "shape": "tall",
+  "file": "site-media/frames/solar-oracle-tall.webp",
+  "w": 800,
+  "h": 1200,
+  "credit": "Codex",
+  "kind": "chat"
+ },
+ {
+  "id": "solar-oracle",
+  "shape": "wide",
+  "file": "site-media/frames/solar-oracle-wide.webp",
+  "w": 1200,
+  "h": 800,
+  "credit": "Codex",
+  "kind": "chat"
+ },
+ {
+  "id": "star-oracle",
+  "shape": "tall",
+  "file": "site-media/frames/star-oracle-tall.webp",
+  "w": 800,
+  "h": 1200,
+  "credit": "Codex",
+  "kind": "chat"
+ },
+ {
+  "id": "star-oracle",
+  "shape": "wide",
+  "file": "site-media/frames/star-oracle-wide.webp",
+  "w": 1200,
+  "h": 800,
+  "credit": "Codex",
+  "kind": "chat"
+ },
+ {
+  "id": "sticker-bomb",
+  "shape": "tall",
+  "file": "site-media/frames/sticker-bomb-tall.webp",
+  "w": 800,
+  "h": 1200,
+  "credit": "Codex",
+  "kind": "chat"
+ },
+ {
+  "id": "sticker-bomb",
+  "shape": "wide",
+  "file": "site-media/frames/sticker-bomb-wide.webp",
+  "w": 1200,
+  "h": 800,
+  "credit": "Codex",
+  "kind": "chat"
+ },
+ {
+  "id": "sugar-static",
+  "shape": "tall",
+  "file": "site-media/frames/sugar-static-tall.webp",
+  "w": 800,
+  "h": 1200,
+  "credit": "Codex",
+  "kind": "chat"
+ },
+ {
+  "id": "sugar-static",
+  "shape": "wide",
+  "file": "site-media/frames/sugar-static-wide.webp",
+  "w": 1200,
+  "h": 800,
+  "credit": "Codex",
+  "kind": "chat"
+ },
+ {
+  "id": "neon-kawaii-goth",
+  "shape": "square",
+  "file": "site-media/frames/neon-kawaii-goth-square.webp",
+  "w": 1200,
+  "h": 1200,
+  "credit": "Korivash (ChatGPT)",
+  "kind": "chat"
+ },
+ {
+  "id": "neon-kawaii-goth",
+  "shape": "wide",
+  "file": "site-media/frames/neon-kawaii-goth-wide.webp",
+  "w": 1200,
+  "h": 675,
+  "credit": "Korivash (ChatGPT)",
+  "kind": "chat"
+ },
+ {
+  "id": "neon-kawaii-goth",
+  "shape": "tall",
+  "file": "site-media/frames/neon-kawaii-goth-tall.webp",
+  "w": 800,
+  "h": 1200,
+  "credit": "Korivash (ChatGPT)",
+  "kind": "chat"
+ },
+ {
+  "id": "neon-kawaii-goth-minimal",
+  "shape": "tall",
+  "file": "site-media/frames/neon-kawaii-goth-minimal-tall.webp",
+  "w": 800,
+  "h": 1200,
+  "credit": "Korivash (ChatGPT)",
+  "kind": "chat"
+ },
+ {
+  "id": "bunny-princess",
+  "shape": "tall",
+  "file": "site-media/frames/bunny-princess-tall.webp",
+  "w": 800,
+  "h": 1200,
+  "credit": "KittyVenom (ChatGPT)",
+  "kind": "chat"
+ },
+ {
+  "id": "crowned-kittens",
+  "shape": "tall",
+  "file": "site-media/frames/crowned-kittens-tall.webp",
+  "w": 800,
+  "h": 1200,
+  "credit": "KittyVenom (ChatGPT)",
+  "kind": "chat"
+ },
+ {
+  "id": "sword-and-shield",
+  "shape": "tall",
+  "file": "site-media/frames/sword-and-shield-tall.webp",
+  "w": 800,
+  "h": 1200,
+  "credit": "KittyVenom (ChatGPT)",
+  "kind": "chat"
+ },
+ {
+  "id": "tactical-gunmetal",
+  "shape": "tall",
+  "file": "site-media/frames/tactical-gunmetal-tall.webp",
+  "w": 800,
+  "h": 1200,
+  "credit": "KittyVenom (ChatGPT)",
+  "kind": "chat"
+ },
+ {
+  "id": "crescent-moon",
+  "shape": "tall",
+  "file": "site-media/frames/crescent-moon-tall.webp",
+  "w": 800,
+  "h": 1200,
+  "credit": "KittyVenom (ChatGPT)",
+  "kind": "chat"
+ },
+ {
+  "id": "neon-kawaii-goth",
+  "shape": "webcam",
+  "file": "site-media/frames/neon-kawaii-goth-webcam.webp",
+  "w": 1200,
+  "h": 675,
+  "credit": "KittyVenom (ChatGPT)",
+  "kind": "webcam"
+ },
+ {
+  "id": "bunny-princess",
+  "shape": "webcam",
+  "file": "site-media/frames/bunny-princess-webcam.webp",
+  "w": 1200,
+  "h": 675,
+  "credit": "KittyVenom (ChatGPT)",
+  "kind": "webcam"
+ },
+ {
+  "id": "neon-hex",
+  "shape": "tall",
+  "file": "site-media/frames/neon-hex-tall.webp",
+  "w": 800,
+  "h": 1200,
+  "credit": "Codex",
+  "kind": "chat"
+ },
+ {
+  "id": "neon-hex",
+  "shape": "wide",
+  "file": "site-media/frames/neon-hex-wide.webp",
+  "w": 1200,
+  "h": 800,
+  "credit": "Codex",
+  "kind": "chat"
+ }
+]
