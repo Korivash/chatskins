@@ -88,7 +88,7 @@ js/
   chat.js         chat connection wrapper
   emotes.js       IRC emote tag -> text/image parts
   filters.js      command / bot / link filters
-  fakechat.js     sample chat for the preview
+  fakechat.js     Test Chat generator for the preview
   editor.js       editor UI
   overlay.js      overlay page
 design/           design spec, skins.json, design mockup

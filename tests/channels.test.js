@@ -32,7 +32,7 @@ test('channel templates substitute text tokens without interpreting markup',()=>
  assert.equal(fillChannelTemplate('[{name}] says: {message} {badges}',{username:'<img src=x>',text:'<b>hi</b>',badges:{moderator:'1'}}),'[<img src=x>] says: <b>hi</b> ✦');
 });
 
-test('fake chat cycles through every guild channel match',()=>{
+test('Test Chat cycles through every guild channel match',()=>{
  const messages=Array.from({length:9},()=>nextFakeMessage(()=>0,'room'));
  assert(messages.some(m=>m.badges.broadcaster));
  assert(messages.some(m=>m.badges.moderator));

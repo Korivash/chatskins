@@ -2,11 +2,8 @@
 (() => {
  const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
  const catalog=window.reviewSkins, reduced=matchMedia('(prefers-reduced-motion: reduce)');
- let lastBleep=0;
- let paused=reduced.matches, sound=false, audio, selected=catalog.find(s=>s.id===new URLSearchParams(location.search).get('skin'))||catalog[0];
+ let paused=reduced.matches, selected=catalog.find(s=>s.id===new URLSearchParams(location.search).get('skin'))||catalog[0];
  const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
- function bleep(){if(!sound||performance.now()-lastBleep<80)return;lastBleep=performance.now();try{audio||=new (window.AudioContext||window.webkitAudioContext)();audio.resume();const o=audio.createOscillator(),g=audio.createGain(),t=audio.currentTime;o.type='sine';o.frequency.setValueAtTime(660,t);o.frequency.exponentialRampToValueAtTime(880,t+.045);g.gain.setValueAtTime(.018,t);g.gain.exponentialRampToValueAtTime(.001,t+.07);o.connect(g);g.connect(audio.destination);o.start(t);o.stop(t+.08);}catch{sound=false;$('#sound').textContent='Sound unavailable';$('#sound').setAttribute('aria-pressed','false');}}
- $('#sound').onclick=()=>{sound=!sound;$('#sound').textContent=sound?'♫ Sound on':'♫ Sound off';$('#sound').setAttribute('aria-pressed',String(sound));bleep();};
  function syncPause(){document.body.classList.toggle('paused',paused||reduced.matches);$('#pause').textContent=reduced.matches?'Motion off (device)':paused?'Resume motion':'Pause motion';$('#pause').disabled=reduced.matches;$('#pause').setAttribute('aria-pressed',String(paused));}
  $('#pause').onclick=()=>{paused=!paused;syncPause();};reduced.addEventListener('change',syncPause);syncPause();
  function chat(el,skin,mini=false){if(!el)return;el.className='chat-sample '+skin.id;el.style.cssText=`--skin-bg:${skin.bg};--skin-border:${skin.border};--skin-text:${skin.text};--skin-name:${skin.nameColor};--skin-radius:${Math.min(skin.radius,24)}px`;
@@ -21,18 +18,18 @@
  // Title screen keyboard navigation is limited to the menu and otherwise-unfocused page.
  if($('.menu')){
  const entries=$$('.menu a,.menu button');let index=0;
- function mark(i,focus=false){index=(i+entries.length)%entries.length;entries.forEach((e,j)=>e.classList.toggle('selected',j===index));if(focus)entries[index].focus();bleep();}
+ function mark(i,focus=false){index=(i+entries.length)%entries.length;entries.forEach((e,j)=>e.classList.toggle('selected',j===index));if(focus)entries[index].focus();}
  entries.forEach((e,i)=>{e.addEventListener('pointerenter',()=>mark(i));e.addEventListener('focus',()=>{index=i;entries.forEach((x,j)=>x.classList.toggle('selected',j===i));});});
  document.addEventListener('keydown',e=>{if($('dialog[open]'))return;const idle=e.target===document.body,menu=entries.includes(e.target);if((idle||menu)&&['ArrowDown','ArrowUp'].includes(e.key)){e.preventDefault();mark(index+(e.key==='ArrowDown'?1:-1),true);}else if(idle&&['Enter',' '].includes(e.key)){e.preventDefault();location.href='skins-mockup.html';}else if(e.target.matches('.start')&&e.key===' '){e.preventDefault();e.target.click();}});
  const featured=catalog.filter(s=>s.featured);let i=0;
  function show(){chat($('#hero-chat'),featured[i]);$('#hero-name').textContent=featured[i].name;$('#hero-count').textContent=`${i+1} / ${featured.length}`;}
- $('#previous').onclick=()=>{i=(i+featured.length-1)%featured.length;show();bleep();};$('#next').onclick=()=>{i=(i+1)%featured.length;show();bleep();};show();
+ $('#previous').onclick=()=>{i=(i+featured.length-1)%featured.length;show();};$('#next').onclick=()=>{i=(i+1)%featured.length;show();};show();
  setInterval(()=>{if(paused||reduced.matches||document.hidden||!$('#hero-chat').getBoundingClientRect().bottom||$('.attract').getBoundingClientRect().bottom<0)return;i=(i+1)%featured.length;show();},6000);
  }
  function select(s){selected=s;chat($('#selected-chat'),s);if($('#selected-name')){$('#selected-name').textContent=s.name;$('#selected-description').textContent=s.description;$('#customize-link').href='editor-mockup.html?skin='+s.id;$('#stats').innerHTML=Object.entries(s.stats).map(([k,v])=>`<div class="stat"><span>${k[0].toUpperCase()+k.slice(1)}</span><span class="segments" aria-hidden="true">${Array.from({length:5},(_,i)=>'<i class="'+(i<v?'on':'')+'"></i>').join('')}</span><span>${v}/5</span></div>`).join('');$$('.portrait').forEach(b=>{const yes=b.dataset.skin===s.id;b.setAttribute('aria-pressed',String(yes));b.querySelector('.chosen').textContent=yes?'◆ Selected':(catalog.find(x=>x.id===b.dataset.skin).featured?'Featured':'Select skin');});}}
  if($('#portraits')){
- function roster(group){const skins=catalog.filter(s=>s.category===group);$('#portraits').innerHTML=skins.map(s=>`<button class="portrait" data-skin="${s.id}" aria-pressed="false"><span class="chat-sample" aria-hidden="true"></span><h3>${esc(s.name)}</h3><span class="chosen">Select skin</span></button>`).join('');$('#roster-count').textContent=`${skins.length} skins / ${group}`;$$('.portrait').forEach((b,i)=>{chat(b.querySelector('.chat-sample'),skins[i],true);const activate=()=>{select(skins[i]);bleep();};b.onclick=activate;b.onpointerenter=activate;b.onfocus=()=>select(skins[i]);b.onkeydown=e=>{const cols=getComputedStyle($('#portraits')).gridTemplateColumns.split(' ').length;const shifts={ArrowRight:1,ArrowLeft:-1,ArrowDown:cols,ArrowUp:-cols,Home:-i,End:skins.length-i-1};if(e.key in shifts){e.preventDefault();const n=Math.max(0,Math.min(skins.length-1,i+shifts[e.key]));$$('.portrait')[n].focus();bleep();}};});select(skins.find(s=>s.id===selected.id)||skins[0]);}
- $$('[data-group]').forEach(b=>b.onclick=()=>{$$('[data-group]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));roster(b.dataset.group);bleep();});roster('Streamer favorites');
+ function roster(group){const skins=catalog.filter(s=>s.category===group);$('#portraits').innerHTML=skins.map(s=>`<button class="portrait" data-skin="${s.id}" aria-pressed="false"><span class="chat-sample" aria-hidden="true"></span><h3>${esc(s.name)}</h3><span class="chosen">Select skin</span></button>`).join('');$('#roster-count').textContent=`${skins.length} skins / ${group}`;$$('.portrait').forEach((b,i)=>{chat(b.querySelector('.chat-sample'),skins[i],true);const activate=()=>{select(skins[i]);};b.onclick=activate;b.onpointerenter=activate;b.onfocus=()=>select(skins[i]);b.onkeydown=e=>{const cols=getComputedStyle($('#portraits')).gridTemplateColumns.split(' ').length;const shifts={ArrowRight:1,ArrowLeft:-1,ArrowDown:cols,ArrowUp:-cols,Home:-i,End:skins.length-i-1};if(e.key in shifts){e.preventDefault();const n=Math.max(0,Math.min(skins.length-1,i+shifts[e.key]));$$('.portrait')[n].focus();}};});select(skins.find(s=>s.id===selected.id)||skins[0]);}
+ $$('[data-group]').forEach(b=>b.onclick=()=>{$$('[data-group]').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));roster(b.dataset.group);});roster('Streamer favorites');
  }
  if($('#editor-chat')){
  chat($('#editor-chat'),selected);$('#loadout-name').textContent=selected.name;$('#equipped-name').textContent=selected.name;
