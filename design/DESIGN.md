@@ -1,3 +1,226 @@
+# Round 8: Chat-powered skins
+
+Design-only handoff, October 25, 2026. Review `chatplay-mockup.html`; nothing in this round implements IRC, OAuth, reward creation or production overlay behavior. All work stays in `design/`. This section defines audience interaction; Round 7 owns alerts/authentication, Round 7a owns the 42-skin catalog and skin recipes, and the already-present Round 9 owns the latest website shell. Earlier appearance, migration, emote and moderation contracts remain intact. Round 8 replaces the provisional audience behavior in Round 9 where more specific. No existing preset or saved-skin schema is changed.
+
+## Direction: the audience gets a turn
+
+**“Let chat change the scenery.”** A viewer's ordinary message becomes a visible, temporary change to the shared conversation. The satisfying sequence is sender → command → transformation → named credit → return home. Keep the conversation itself stable. Viewers change how chat looks, never its channel, filters, text, source position or the streamer's saved design.
+
+The supplied `research/TOP-CHAT-UIS.md` establishes strong existing customization, emotes and low-friction Browser Source tools. Its evidence does not establish that every competitor is static or lacks interactive integrations. Our differentiator is the packaged experience: no-login commands, curated skin choices, an in-world vote and a reliable return home. Do not market this as the world's first reactive overlay. Emote effects alone are not the novelty.
+
+Equal-weight judging plan:
+
+| Criterion | Reviewable design evidence | Implementation evidence still needed |
+| --- | --- | --- |
+| Innovation | A message visibly changes the same conversation; the vote panel belongs to its current skin | Compare the complete workflow with existing widgets, not just animation |
+| Impact | Streamer picks the wardrobe and can stop it; viewers get credit and collective choice | Observe a streamer and community using it without explanation |
+| Technical | Bounded effects, explicit state transitions, permissions, replay handling and separate test events | Codex implements this contract with deterministic clock/event fixtures, codec checks and OBS profiling; no invented performance result |
+| Design | One optional step, no login for commands or tests, stable chat, readable countdown, visible emergency control | Keyboard, narrow-screen, reduced-motion and gameplay readability review |
+
+Visual plan: use Round 9 Canvas #05070D, Surface #0B1425, Raised #101E34, Text #F3F7FF, Muted #A6B6CD and Cyan #38BDF8. Familjen Grotesk headings, Manrope controls; skin fonts remain Lato, VT323, Pixelify Sans and Barlow/Chakra Petch. Native system fallbacks keep the standalone specimen usable offline. Layout is left-aligned settings beside a large conversation; the memorable element is the conversation changing worlds. No flashing page chrome, faux popularity counts or decorative activity graph.
+
+```text
+1 Skin / 2 Customize / 3 Alerts / 4 Chat play / 5 Get your links
+Enable chat play                   Preview only · Simulated viewer
+Chat commands                      [credit banner + return countdown]
+  who / cooldowns                  [same messages, new frame and type]
+Allowed skins + aliases             [in-world vote, when active]
+Effects / Channel points           Try commands / Try every effect
+Copy chat instructions             Panic: freeze skin / Resume chat play
+```
+
+Plan critique: an effect-button dashboard would hide the product's difference. The specimen leads with an actual `!skin guild` exchange and puts the small control surface below the chat. Keep account setup in a disclosure; keep all tests reachable before connecting. Home and Skins placements are shown on the same review sheet, with a shared looping example; existing website files need not be rewritten for this handoff.
+
+## Two sources, one admission policy
+
+**Commands:** keep the existing anonymous IRC read connection; never request chat login or send chat replies. Parse before `hideCommands` display filtering, but after channel/blocked-user/bot eligibility. Require the configured room; reject forwarded Shared Chat messages whose source room differs. Read role badges/mod/subscriber/user-id from server metadata, never typed names or text badges. Request tags and commands capabilities. Missing role metadata fails closed for restricted actions; ordinary everyone commands can use the server-provided login as identity fallback. Broadcaster is verified room/user ID equality or broadcaster metadata, not display-name equality. Twitch's current IRC documentation describes authenticated bots; anonymous compatibility is an existing-project dependency to verify in the builder, not a new documented Twitch guarantee. [IRC capabilities and tags](https://dev.twitch.tv/docs/chat/irc/).
+
+| Input | Default permission | Result |
+| --- | --- | --- |
+| `!skin <name>` | Everyone | Allowed skin for 60 s; then full home appearance returns |
+| `!skinvote` | Everyone | Start a 45 s vote, 3 distinct random allowed skins; winner for 120 s |
+| `1`, `2`, `3` while voting | Everyone, separately configurable | One current ballot per server identity; latest eligible choice replaces it |
+| `!skinreset` | Mods + broadcaster | Cancel active vote, swap, chaos and transient effects; return home immediately |
+
+Swap/start-vote/ballot permissions each offer **Everyone / Subs / VIP / Mods**. These are sets, not a fictitious role ladder: Subs includes subs/founders, mods and broadcaster; VIP includes VIPs, mods and broadcaster; Mods includes mods and broadcaster. Subs does not implicitly include VIPs, nor vice versa. Reset has **Mods + broadcaster / Broadcaster only**, never Everyone/Subs/VIP: the requested emergency privilege cannot be widened accidentally. Master off/frozen overrides all inputs. Reset does not resume a frozen session. Broadcaster/mod reset bypasses cooldowns; other mod commands obey them.
+
+Trim outer whitespace, command token ASCII-case-insensitive, match whole token only. Swap consumes the remaining trimmed name (multiword catalog names supported); vote/reset reject trailing arguments. Maximum parsed command 160 code points. Normalize names with NFKC, trim, collapse spaces and case-fold; compare exact normalized catalog ID, display name or alias in the allowed map. No fuzzy/substrings, remote URLs or CSS. Reject collisions across aliases, display names and IDs with “That name already selects {skin}. Choose a different alias.” Alias is 1–24 ASCII letters/digits/hyphens; comma-separated entry UI, maximum 8 aliases per skin. Unknown/disallowed: “Choose an allowed skin: {short list}.” Missing argument: “Use !skin followed by a skin name, like !skin guild.” No network resolution for a name.
+
+Default cooldowns for accepted swap and vote-start: **120 s per viewer**, **15 s global**, shared across those two commands, measured from admission. Each has its own enable/permission setting but cannot bypass the common clock by alternating commands. Rejected, duplicate or malformed attempts do not extend clocks. Ballot changes have an independent fixed 1 s per-viewer interval and no global cooldown; reset bypasses both. Ignore command-message ID replays for 10 min, bounded to 10,000 IDs. Use monotonic deadlines and prune expired viewer entries; cap identities at 10,000 and reject new identities until space expires rather than evicting active cooldowns. Error counts aggregate in editor diagnostics, never produce an on-stream flood. A single neutral “Chat play is busy” state indicator may remain beside the countdown; do not display repeated per-user rejections. Copy instructions explain the cooldown because this read-only tool cannot reply in Twitch chat.
+
+**Channel points:** Affiliate/Partner feature, off by default, reuse Round 7 broadcaster login and EventSub WebSocket subscription `channel.channel_points_custom_reward_redemption.add` v1. Read existing rewards with `channel:read:redemptions`; existing manage permission also suffices. Request `channel:manage:redemptions` only from the explicit creation flow. Reuse an existing redemption subscription within a source, never subscribe twice for alerts and play. Match the configured broadcaster and exact, case-sensitive reward title; no prefix matching. Titles below are editable with 1–45 characters and unique among mappings. Ignore canceled/unknown events. Bind successful matches to reward IDs in connection state for diagnostics; title rename stops matching and shows “Reward title changed. Update the match or rename it in Twitch.” [EventSub subscription permissions](https://dev.twitch.tv/docs/eventsub/eventsub-subscription-types/#channelchannel_points_custom_reward_redemptionadd).
+
+| Reward title (exact defaults) | Input and result | Suggested creation cost / Twitch cooldown |
+| --- | --- | --- |
+| ChatSkins: Swap skin | Required skin name or alias → swap for 60 s | 500 points / 60 s |
+| ChatSkins: Emote rain | Required emote codes → those resolved emotes, 6 s | 250 points / 60 s |
+| ChatSkins: Chaos mode | Optional allowed skin name → first skin; remaining skins random; blank → random first | 1,000 points / 180 s |
+| ChatSkins: Frame flash (optional, off) | No input → accent pulse | 100 points / 60 s |
+| ChatSkins: Spotlight (optional, off) | Required message → pinned message for 10 s | 500 points / 60 s |
+
+“User input = skin name” applies to skin-selection rewards; rain needs emote codes and spotlight needs message text. Do not accidentally pass rain text through the skin-name parser. No additional public commands are added for these three effects in this round; their live triggers are the optional reward mappings, and all five effects have offline test buttons.
+
+The redemption event supplies plain `user_input`, not IRC emote offsets. Resolve whole emote codes through already-cached enabled provider sets and known native emote mappings; do not scrape or guess sub-only assets. No emotes resolved: show a small text receipt “{name} sent an emote rain” with zero particles and editor helper “No supported emotes found. Try a channel emote code.” Never substitute another viewer's recent message. Spotlight uses this event's input; a future message-ID picker is not part of v1. [Redemption event fields](https://dev.twitch.tv/docs/eventsub/eventsub-reference/#channel-points-custom-reward-redemption-add-event).
+
+Rewards bypass chat-command role/cooldown rules because Twitch controls who can redeem. They still obey master, frozen state, allowed list, effect enables and a separate 15 s global / 60 s per-redeemer admission cooldown. Do not queue play events; an active swap/vote/winner/chaos session rejects all new play except reset, and one transient effect at a time is allowed only while home. This deliberately trades stacking for a readable shared moment. Explain this on every reward: “One chat effect at a time. Busy or frozen requests may need a manual refund.” Keep Twitch request queue enabled. Round 8 does **not** mark fulfilled, cancel or auto-refund redemptions, even with manage scope. Editor records played/skipped plus reason and redemption ID for manual Twitch review (session only, latest 100). Dedupe both EventSub message ID and redemption ID for 10 min, bounded 10,000; never count a retry as a new effect. Mapped play rewards suppress the generic Round 7 redemption toast, including skipped requests; other rewards still use alerts. Put mapped titles in both copied configs so separate sources agree without cross-window messaging.
+
+### Connect and create copy
+
+Heading **“Make channel points part of the show.”** Helper **“Optional. Requires Affiliate or Partner status. Chat commands and preview tests work without signing in.”** Actions **“Connect channel points”**, **“Create the rewards for me”**, **“Set them up myself”**. Connection states: Not connected / Authorized, checking rewards / Ready / Permission needed / Not available for this channel / Connection lost. Ready requires matching account, socket and subscription, not merely OAuth success. Use Round 7 account mismatch, cancellation, expiry, reconnect/revoke and partial-failure handling. Expired points access disables points only; anonymous commands continue.
+
+Creation opens a review of selected titles, prompts, editable integer costs (1–1,000,000 design range), input requirements and cooldowns. Default select first three, optional two unchecked. Explain “This adds rewards to your Twitch channel. It does not spend viewers' points.” Then **“Continue to Twitch”** only if scope is missing, followed by **“Create 3 rewards”** after authorization. Create disabled rewards so the streamer can check OBS before enabling them in Twitch. Set `should_redemptions_skip_request_queue=false`. Read existing titles first; offer “Use existing” instead of duplicate creation. Store successful IDs in connection state; on timeout refetch before retrying, retain partial success, show “2 created. Retry the remaining reward.” Do not modify existing rewards silently. No scope grant is implied by the mockup. API constraints: unique titles, maximum 50 rewards total, owner token, manage scope for creation. [Twitch custom rewards API](https://dev.twitch.tv/docs/api/reference/#create-custom-rewards).
+
+Manual instructions, fully visible without login:
+
+1. Open Twitch Creator Dashboard → Viewer Rewards → Channel Points → Manage Rewards & Challenges → Add New Custom Reward (labels may vary).
+2. Copy a title exactly from the table. Set its cost and copy its prompt. For Swap turn on required text; for Rain require emote codes; Chaos text is optional; Spotlight requires text; Flash needs none.
+3. Set the suggested cooldown. Keep the request queue on so skipped requests can be reviewed/refunded manually. Leave the reward paused while setting up.
+4. In ChatSkins choose Connect channel points as the channel owner, allow reading redemptions, and check each title says “Matched”. Creation permission is not needed for this path.
+5. Copy the private play source into OBS, replacing the ordinary chat source for this configuration. Send offline tests first, enable rewards in Twitch, then redeem once to verify. Review that redemption in Twitch; tests spend no points.
+
+Prompts: Swap — “Choose an allowed skin: guild, rpg, pixel or signature. Shows for 60 seconds. One effect at a time; skipped requests need manual review.” Rain — “Enter emote codes from this channel, separated by spaces. They fall for 6 seconds. Unsupported codes stay text; busy requests need manual review.” Chaos — “Optional: choose an allowed starting skin. Chat changes every 8 seconds for 40 seconds. One effect at a time; busy requests need manual review.” Flash — “Pulse the chat frame in its accent color. Motion settings apply. Busy requests need manual review.” Spotlight — “Write a message to feature in the overlay for 10 seconds. Channel filters apply. Busy requests need manual review.” Generate the allowed examples from actual settings before copying.
+
+## Session and vote behavior
+
+The **home skin** is the streamer's complete edited appearance snapshot, not the last temporary skin. `home → swap → home`, `home → vote → winner → home`, `home → chaos → home`. There is no stack of restoration timers. Only one session owns the appearance. Same-home selection is a no-op with “Already wearing {skin}”; no cooldown spent. Manual baseline edits or channel changes cancel play before replacing the baseline. Normal off cancels and returns home. Reload starts home without replay; freeze latch persists per source in local storage, never in share exports. If latch storage fails, report it in controls and advise disabling/replacing the OBS source for a persistent stop. No promise of cross-device persistence.
+
+During a temporary appearance, preserve home channel/room, filters, providers, name readability policy, grouping, message limits/lifetimes, max messages, source width, position/inset, direction, alignment, reduceMotion, `hideFrames` and `transparentBackground`. Swap only approved preset typography, paint, frame construction, presentation and channel-format recipes, bounded to the existing source footprint. Keep message IDs, arrival times, moderation state and order; reflow once after font readiness, no replayed entrances. Custom CSS and external background images are excluded from viewer-selectable skins in v1; only bundled catalog IDs are allowed. Home custom CSS stays stored and is restored on credential-free command sources. Never execute custom CSS on a token-bearing source.
+
+Voting samples three unique allowed IDs uniformly without replacement (home may be a candidate). Require at least three allowed skins: otherwise disable start-vote with “Allow at least 3 skins to start a vote.” Freeze candidate order and panel appearance at start. Vote is an overlay-local poll, not Twitch Polls; no poll scope. Show numbers, full names, counts and “Type 1, 2 or 3 in chat · {seconds}s left”. Render bars with static widths updated at most once a second, no animated width. Ballots are exact trimmed single digits only, received after start and before the 45 s monotonic deadline. Existing chat-number messages are not replayed as votes. Permission is checked per ballot. One current vote per user; repeat same choice does nothing, changes replace previous counts. Sample ceiling 10,000 voters; show editor notice if full. No voter list goes on stream or into saved settings.
+
+Unique most votes wins; hold winner **120 s after crossfade completes**. Tie or zero votes keeps the home skin and shows “Tie — keeping {skin}” / “No votes this time — keeping {skin}” for 3 s; no random tie breaker. Winning card: “Chat chose {skin} · {votes} votes · Back home in 2:00”. Reset cancels without picking a winner. During IRC loss cancel the vote and return home (cannot conduct a fair partial vote); a timed swap/chaos can complete using its local deadline. Fresh connection starts no old action. Deleted messages/users remove retained ballots and spotlight content; channel clear cancels vote/spotlight. A played skin swap need not be undone for deletion of its command. All retained message copies receive moderation removal, including crossfade layers.
+
+Priority: local panic/master off → authorized reset → moderation removal → deadline completion → new accepted command/reward. Simultaneous arrivals are processed in receive order. Admission/expiry are single transactions; a late timer cannot restore an obsolete snapshot. Pause/hidden editor demos stop; OBS deadlines continue logically while hidden/throttled. On waking, recompute the current state, never play missed chaos frames in a burst.
+
+## Five effects and skin-owned feedback
+
+| Effect | Default and motion recipe | Reduced-motion equivalent |
+| --- | --- | --- |
+| Swap skin | 300 ms opacity crossfade of at most 2 bounded chat layers, old layer aria-hidden; identical messages, no layout tween. Banner 4 s: “{name} switched the chat to Guild Chat”. Separate timer persists for the 60 s hold | Immediate new appearance; static banner and timer |
+| Emote rain | 6 s total; maximum 18 cached static emote images, 24–40 px, up to 6 unique codes recycled. Precompute lanes and delays once; last particle completes by 6 s. CSS translateY/rotate/opacity only, behind text and inside source bounds | Static row of up to 6 emotes with sender credit for 6 s |
+| Frame flash | Two gentle 900 ms pulses (1.8 s total), accent ring opacity .15→.55→.15; no full-screen flash, text opacity unchanged, hidden-frame preference respected | Static accent marker for 1.8 s; no pulse |
+| Spotlight | One pinned card above chat for 10 s, name 18 px and message 28 px/1.4, 240 graphemes max/3 visible lines, wrap; 180 ms opacity entrance/exit within duration. Original chat stays underneath; no Twitch pin API | Static card with identical content and 10 s hold |
+| Chaos mode | 40 s, exactly five choices at t=0/8/16/24/32 s, excluding immediate repeats; restore home at 40 s. Require ≥2 allowed IDs. Optional input sets first choice. Label “{name} started chaos · {remaining}s” | Choose one allowed skin at t=0, hold 40 s, return home; say “Chaos, calm edition” |
+
+All new animation uses CSS keyframes on opacity/transform, never canvas, video, physics, animated filter/shadow/blur, layout dimensions or per-frame JavaScript. Timers may change session state and whole-second labels. Suspend inherited ambient skin animation during play so the effect remains the only moving layer. Use static emote assets for rain even when motion is on, preventing animated media from defeating the budget. Remove temporary nodes/timers at completion, reset, off, panic and teardown. At most 30 message nodes per layer, two layers during crossfade only, one panel/banner and 18 particles. These are budgets to profile in OBS, not measured guarantees.
+
+Vote/banner/spotlight inherit the current skin's actual frame, type and colors through the Round 7 recipe binding; no generic purple plate. Guild: continuous double gold ring and forest surface; Retro: full white dialog rings and blue backing; Block: square stepped frame; Signature: mint/violet ring with flow stopped. Bind current appearance once per effect. Minimum foreground contrast 4.5:1 with local opaque backing if needed. Respect explicit hidden-frame/transparency preferences as in Round 7. Vote minimum body 18 source px; header 20, option number 24. At default 480 px chat width, panel sits above chat with 12 px gap; reserve its measured height, temporarily evict oldest complete chat rows if necessary. Do not cover or shrink newest text. On very short sources use a compact three-line option list; no clipping. All status text wraps; display names capped at 50 graphemes, never interpolated as markup. Banner and vote are mutually exclusive; countdown remains small and readable. No sounds in Round 8.
+
+## Settings schema and defaults
+
+New separate **chatPlay v1** config; do not add it to existing closed savedSkinSchema or mutate chat v3. All objects closed; all leaves in this default instance required after normalization. Types and bounds below are normative. Missing config migrates to enabled=false. Invalid/future version disables live play, retains existing chat and offline tests, and reports “These Chat play settings need updating.” Invalid roles/IDs never broaden permissions; keep last valid editor draft. Unknown keys dropped with notice. Persist only configuration in `chat-studio.chat-play.v1`; credentials and session state never enter this object.
+
+```json
+{
+  "version": 1,
+  "enabled": false,
+  "commands": {
+    "enabled": true,
+    "swap": {"enabled": true, "permission": "everyone"},
+    "vote": {"enabled": true, "permission": "everyone", "voterPermission": "everyone"},
+    "reset": {"enabled": true, "permission": "mods"},
+    "userCooldownSeconds": 120,
+    "globalCooldownSeconds": 15
+  },
+  "allowedSkinIds": ["chatskins-signature", "guild-chat", "retro-rpg", "block-craft"],
+  "aliases": [
+    {"skinId": "chatskins-signature", "names": ["signature"]},
+    {"skinId": "guild-chat", "names": ["guild"]},
+    {"skinId": "retro-rpg", "names": ["rpg"]},
+    {"skinId": "block-craft", "names": ["pixel"]}
+  ],
+  "effects": {
+    "swap": {"enabled": true, "holdSeconds": 60},
+    "rain": {"enabled": true, "durationSeconds": 6},
+    "flash": {"enabled": true, "durationMs": 1800},
+    "spotlight": {"enabled": true, "holdSeconds": 10},
+    "chaos": {"enabled": false, "intervalSeconds": 8, "durationSeconds": 40}
+  },
+  "vote": {"durationSeconds": 45, "winnerSeconds": 120, "optionCount": 3, "tie": "keep-home"},
+  "points": {
+    "enabled": false,
+    "userCooldownSeconds": 60,
+    "globalCooldownSeconds": 15,
+    "rewards": [
+      {"effect": "swap", "enabled": true, "title": "ChatSkins: Swap skin"},
+      {"effect": "rain", "enabled": true, "title": "ChatSkins: Emote rain"},
+      {"effect": "chaos", "enabled": false, "title": "ChatSkins: Chaos mode"},
+      {"effect": "flash", "enabled": false, "title": "ChatSkins: Frame flash"},
+      {"effect": "spotlight", "enabled": false, "title": "ChatSkins: Spotlight"}
+    ]
+  },
+  "feedback": {"banner": true, "countdown": true},
+  "reduceMotion": false,
+  "panic": {"restore": "home", "latch": true}
+}
+```
+
+| Path/type | Bounds and control |
+| --- | --- |
+| version integer | const 1 |
+| enabled, all nested enabled, feedback flags, reduceMotion | booleans; labeled switches; master initially off |
+| commands swap/vote permission and voterPermission | enum everyone/subs/vip/mods; three independent selects |
+| commands.reset.permission | enum mods/broadcaster; separate safety select |
+| commands and points cooldown numbers | integer global 0–600 s, per-user 0–3600 s; 0 means none; paired numeric fields with seconds |
+| allowedSkinIds | 0–42 unique bundled catalog IDs, no custom/imported IDs in v1; checkbox gallery/search, Selected n; zero prevents enabling play |
+| aliases | 0–42 entries, one per allowed ID, names array 0–8 unique normalized 1–24 char aliases; editable beside each selected skin |
+| effects.swap.holdSeconds | integer 10–600 s; “Return home after” number field |
+| rain.durationSeconds / flash.durationMs / spotlight.holdSeconds | constants 6 / 1800 / 10 in v1; read-only duration captions |
+| chaos.intervalSeconds / durationSeconds | constants 8 / 40; read-only caption, independent opt-in toggle |
+| vote durationSeconds / winnerSeconds / optionCount / tie | constants 45 / 120 / 3 / keep-home; read-only explanatory copy |
+| points.rewards | exactly five unique effect enum entries swap/rain/chaos/flash/spotlight; enabled toggle and unique trimmed title 1–45 code points |
+| panic.restore / latch | constants home / true; frozen runtime flag is separate, never imported |
+
+Creation-only draft is outside this config: selected effect IDs, cost integer 1–1,000,000 per effect, prompt 0–200 code points, Twitch cooldown integer 60–604800 s and required-input flag. Defaults come from the reward table/prompts. Do not serialize creation requests or reward IDs into saved skins. Effective enable for a reward = master AND points AND mapping AND effect AND connection-ready AND not frozen. Vote also requires swap enabled; resetting remains available even if swap disabled. When creating Chaos explain “This reward stays disabled until you enable Chaos mode in Chat play and enable the reward in Twitch.”
+
+The play source envelope must snapshot `{version:1, chatSettings:<complete home v3>, chatPlay:<above>, allowedSkins:[{id,name,settings,alertRecipe,channelPresentation,frameRecipe}]}` with complete normalized bundled recipes. Validate recipes as data, no executable CSS/SVG supplied by chat or imports. This preserves Round 6 full-snapshot links rather than catalog-ID-only restoration. IDs select within that snapshot. Size >16,000 characters keeps the existing length warning and credential-free JSON export; no external shortener. Builder must implement this envelope/codec before exporting it. No invented working URL appears in this specimen.
+
+## Safety and source control
+
+Master label **“Enable chat play”**, helper **“Viewers can change the look. Your messages, filters and saved skin stay yours.”** Panic label **“Panic: freeze skin”**, no confirmation; cancel everything, restore home immediately and latch frozen. Status **“Frozen on {home}. Commands and rewards are paused.”** Separate **“Resume chat play”** deliberately releases latch; resume starts home and admits only new events, preserving cooldowns. Chat continues rendering while frozen. No chat command can resume. This intentionally means freeze on the safe home look, not freeze a potentially unwelcome temporary look.
+
+All viewer text uses text nodes; normalize controls/bidi controls and clamp lengths before measuring. No HTML, CSS, script, clickable URLs or arbitrary image fetches from messages. Allowed skin IDs are validated again at execution. Filters apply to spotlight and its text copy. Keep secrets out of config, samples, logs, copy text and exports. Channel point reward creation is the only explicitly requested write to Twitch; playback itself never posts, moderates, spends points on behalf of viewers or changes OBS scenes.
+
+**Cross-source boundary:** a browser editor is not an OBS remote. Preview controls always say “Preview only”. For command-only use the credential-free chat source with the new envelope. For points, propose a **private combined chat + play Browser Source** replacing that ordinary chat source, reusing Round 7 auth and subscription logic in the same rendering context. Keep the separate alerts source if wanted; it is not expected to change another source's CSS. Do not rely on BroadcastChannel/localStorage shared between Chrome and OBS, or invent a working remote-control link. Two copies of a source may select different random candidates; v1 supports one active play source per channel, not synchronized multi-instance elections.
+
+In OBS → source → Interact, **Ctrl+Shift+F** invokes freeze locally, **Ctrl+Shift+R** resumes; announce status only to accessibility APIs and show the restored look, never draw editor controls over the broadcast. Setup instructions expose both shortcuts plus “You can always hide this Browser Source in OBS.” On the editor show “This freezes your preview. To freeze OBS, use Interact → Ctrl+Shift+F.” A future remotely acknowledged control service is separate work, not implied by this button. Test shortcuts with OBS focus before release. Source reload preserves the local freeze latch where storage works.
+
+Private play links use Round 7 fragment-only token transport, immediate fragment removal, no analytics/remote scripts, hourly token validation, revoke/expiry workflow and explicit private-copy warning. Remote images and custom CSS are disabled on this credential-bearing page; use bundled fonts/assets and a fixed allowlist for existing emote CDN image requests. Show before copy: “Channel points uses a private play link. Custom CSS and background images are not included.” This extends Round 7's token exception only to the new private play source; ordinary share/chat links remain credential-free. Keep full appearance values in the draft for returning to command-only use. Authentication and secure source architecture need builder verification; the mockup does not create links or connect.
+
+Effective reduced motion = OS preference OR existing chat reduceMotion OR chatPlay.reduceMotion; no override of OS setting. Turning it on during rain removes moving particles immediately; during chaos stops cycling on the current allowed skin until its original deadline, then returns home. Disable all inherited ambient motion. Countdown/content remains visible. Website demos stop auto-looping and expose manual Next moment. No screen-reader announcement on each sample row or countdown tick; announce explicit tests, copy results and state changes politely.
+
+## Editor UI and exact copy
+
+Optional Chat play follows optional Alerts and precedes links; skip either independently without account gates. Title **“Give chat a turn.”** Helper **“Pick the looks. Set the limits. Let your viewers play.”** Two source sections: **“Chat commands — no login”** open by default; **“Channel points — optional”** closed. Display **“Home skin: {name} · your edited look”** above preview. Changing the allowlist or permissions cancels active preview play, preserving the last valid configuration and showing a status. Removing an allowed skin removes its aliases in one undoable transaction; never silently redirect them.
+
+Controls: master; source enable; per-command enables and permission selects; independent “Who can vote?”; “Wait between viewers” and “Wait per viewer”; “Return home after”; allowed-skin search/checkboxes and alias rows; five effect switches with duration captions; reduced-motion switch; reward title matches, connection/creation/manual controls. Reset stays visibly a safety command. Fewer than three allowed shows the vote helper beside the disabled start command. Fewer than two disables Chaos. Master off keeps editing and **all preview tests** available. Test mode bypasses live enable and cooldowns but uses the selected appearance/motion; optional “Check permissions” uses simulated roles and demonstrates denials.
+
+Preview toolbar: **“Preview only · simulate a viewer”**, sender name (default Moss), role (Everyone/Sub/VIP/Mod/Broadcaster), message field, **“Send sample command”**. Shortcuts **“Test !skin”**, **“Test !skinvote”**, **“Test !skinreset”**; effect buttons **“Swap skin”**, **“Emote rain”**, **“Frame flash”**, **“Spotlight”**, **“Chaos mode”**. Vote preview shows three numbered ballot buttons with “Simulate another viewer”; optional “Finish vote now” is explicitly a preview shortcut. Test action replaces an active test rather than failing behind a cooldown. Tests never enter OBS, consume points, save as live state or require login. Use full specified durations; only the public showcase is compressed and labeled.
+
+Copy box **“Tell your chat”** with **“Copy chat instructions”** (manual selection fallback, honest success):
+
+> Type !skin guild to change my chat! Try guild, rpg, pixel or signature. Each look lasts 60 seconds, then we go home. Type !skinvote to pick our next look together: vote 1, 2 or 3 within 45 seconds; the winner stays for 2 minutes. One event at a time. Skin commands have a 15-second shared cooldown and a 120-second cooldown per viewer. Mods can use !skinreset.
+
+Generate from enabled commands, actual aliases, roles and cooldowns. Remove vote clause when unavailable. Restricted swap says “Subscribers can type…” / “VIPs can type…” / “Mods can type…” with “Mods and the broadcaster can always use eligible restricted commands.” When master is off prefix **“After you enable Chat play:”** outside the copied text. Do not auto-post it. Reward setup and copy operations stay explicit user actions.
+
+Additional exact status copy: “Chat play is off. Try it in the preview.” / “Ready for the next viewer.” / “Back home in {m:ss}” / “Vote already running. Type 1, 2 or 3.” / “Wait {seconds}s before another skin command.” / “This command is for {role}.” / “That skin isn't allowed. Try {alias}.” / “Chat connection lost. Voting stopped; your home skin is back.” / “Channel points access ended. Reconnect and replace the private play link in OBS.” / “No rewards matched. Check the titles or create the rewards.” Diagnostics stay off stream except the intended credit, vote and countdown.
+
+## Home and Skins showcase
+
+Replace the home hero's arbitrary skin cycling with a single scripted **sample** exchange. On Skins put the same demo in a labeled “See chat take over” region above the gallery; it does not select cards or alter the inspector's chosen skin. Keep the 42-skin gallery and manual selection intact. In this deliverable both placements are reviewable at `chatplay-mockup.html#showcase`; no production home/skins code is built.
+
+12 s illustrative loop: 0–2 s Signature conversation; 2–3 s Moss types `!skin guild`; 3–7 s crossfade to Guild, credit appears; 7–10 s chat reacts “we're a guild now”; 10–12 s restore Signature. Caption **“Sample interaction · timing shortened. Live swaps last 60 seconds.”** Keep the same messages through the change. Display **“Chat chooses. You stay in control.”** and **“Try a viewer command”** → Chat play editor preview. Only the visible placement runs; shared pause halts both; offscreen and hidden-document suspend; no network chat/provider requests. Reduced motion starts with a complete static scene and **“Next moment”**; manual stepping still shows cause and consequence. Provide a static before/after text alternative. No audio, automatic votes or rotating all 42 skins.
+
+## Review and builder acceptance
+
+The standalone mockup supplies functional **local simulations**, not a built feature: command/effect tests, skinned vote with simulated ballots, panic/resume, reduced motion, alias/allowlist editing, copy, reward review/manual instructions and both demo placements. Four skin treatments are approximations for design review; the builder must use the canonical renderer for all 42, including Round 7a channels. No OAuth requests, reward writes, IRC connections, production module imports or source URL generation.
+
+Before implementation signoff verify: anonymous tag/identity availability; Everyone/Subs/VIP/Mods combinations and reset floor; alias collisions/malformed Unicode/HTML text; hidden-command processing; disallowed and empty lists; cooldown boundaries and replay; 0 votes/ties/changed votes/deleted voters; busy rewards and manual refund copy; expiry/reset/panic races; no stacked timers; short source/long text; preserved messages and full home snapshot; reload/freeze persistence; EventSub dedupe and title rename; read-only vs manage grants and partial creation; private link revocation and no credential leaks; OBS Interact shortcuts; no cross-window control claims. Codex should build against event/clock fixtures from these cases, then measure an hour-long OBS session. Verify keyboard, 320/390/768/1280/1920 widths, font failure, copy failure, black/white gameplay and reduced motion. Runtime quality and judging scores are not asserted by a design artifact.
+
+---
+
+Round 8 artifact checks: inline JavaScript syntax, unique static HTML IDs, default JSON parsing and all four allowed catalog IDs passed. All prior-round text is retained. Headless Chrome failed to launch with Windows access denied, so no successful browser screenshot, interaction or OBS verification is claimed. A temporary `design/.chatplay-chrome-review/` profile remains because cleanup was policy-blocked; it is not a deliverable. Git staging failed because `.git/index.lock` could not be created (permission denied); a path-limited commit also failed because the new mockup could not be staged.
+
 # Round 7: Alerts
 
 Design-only handoff, October 25, 2026. All changes are inside `design/`; Codex implements the application afterward. This round adds alerts to the current **42-skin** catalog, including Round 7a. It supersedes earlier “alerts out of scope” notes and the prohibition on tokens in **alerts** links only. Ordinary chat/share links remain credential-free. Round 6b supplies website styling; Round 6's Simple mappings, URL preservation and recovery rules still apply. Existing chat settings, preset IDs, gallery order and saved-skin schema are unchanged.
