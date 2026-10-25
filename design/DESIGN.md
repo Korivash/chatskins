@@ -1,6 +1,6 @@
 # Chat overlay design handoff
 
-This is a design package, not the application. `mockup.html` is a static review sheet with an editor composition and ten five-message specimens. It has no chat connection, URL logic or functioning settings. `skins.json` is the complete preset data; no preset relies on hidden defaults. BRIEF.md is the product source. The requested gallery-first grouping supersedes the older group order in PROMPT.md.
+This is a design package, not the application. `mockup.html` is a static review sheet with an editor composition and 22 five-message specimens. It has no chat connection, URL logic or functioning settings. `skins.json` is the complete preset data; no preset relies on hidden defaults. BRIEF.md is the product source. The requested gallery-first grouping supersedes the older group order in PROMPT.md.
 
 ## Design direction
 
@@ -57,7 +57,7 @@ Same 1280 × 720 source, now scaled to 1472 × 828 (1.15); 22 px text appears 25
 
 - Gallery selection replaces appearance/layout/animation keys, including name format and badges. Preserve `channel` and all four filter keys. Loading a copied URL uses every serialized key. Mark the selected card with a border plus check; after an appearance edit label it “Clean · Modified” (or the originating skin). Track that label only in editor state. Each card uses a one-line live sample driven by its own preset.
 - Font: searchable Google Fonts picker plus system font options; size, available weight and line height. Only request selected fonts in production; the design sheet loads all sample families. Pixelify Sans and VT323 have intentionally limited weight choices. Fallback: monospace for Terminal/Block Craft/Retro RPG, sans-serif otherwise. Wait for fonts before measuring preview. Font loading failure shows a small editor notice, not an overlay notice.
-- Text & Colors: fixed/Twitch username color toggle, fixed fallback swatch, message and system colors, editable name format with token help, show badges, outline width/color and shadow enabled/color/opacity/blur. Badge fills do not change name/text by role; per-role styling stays out of v1.
+- Text & Colors: fixed/Twitch username color toggle, fixed fallback swatch, message and system colors, editable name format with token help, show badges, outline width/color and shadow enabled/color/opacity/blur. Badge fills do not change name/text by role; role colors are specified in the round 2 extension below.
 - Border: style, color, thickness, corner radius. Zero thickness removes the frame. Pixel style disables radius with “Pixel frames use square corners.” Background: color, opacity and message/panel scope. Panel scope uses one wrapper; message scope styles each row independently. Background opacity never fades text or borders.
 - Layout: horizontal/vertical padding, message spacing, max messages, lifetime (Never checkbox writes 0), newest at top/bottom, left/center/right alignment, stack width and edge inset. Animation: entrance and duration. Filters: hide commands, hide listed bots with editable comma-separated list, hide links. Invalid numeric/text input retains the last valid preview and displays inline guidance; clamp valid numeric values to schema ranges on commit.
 - Copy generates the actual overlay page URL with base64url UTF-8 JSON in the hash; include all setting keys. Button becomes “Copied” for 2 seconds with a polite status announcement. If clipboard fails, reveal a selectable URL and “Copy this URL manually.” Disable copy only while channel is empty/invalid, with “Enter a channel to create your overlay URL.” Preview still works with samples.
@@ -130,7 +130,7 @@ For each framed element set `box-sizing:border-box; position:relative; isolation
 | bevel | Solid b borderColor; top/left border use `color-mix(in srgb, var(--bc), white 28%)`; bottom/right use `color-mix(in srgb, var(--bc), black 40%)`. Fallback to solid borderColor. |
 | pixel | Solid b borderColor, radius 0, `box-shadow:inset var(--b) var(--b) 0 #ffffff33,inset calc(-1 * var(--b)) calc(-1 * var(--b)) 0 #00000066`; add b to content padding for inset steps. CSS geometry only. |
 
-Use `mockup.html`'s `.frame-*` rules as the literal recipe reference. `borderWidth=0` switches to `.frame-none` regardless of selected recipe. Frames/backgrounds are static in panel scope; animate incoming rows only. Fade: opacity 0→1; slide: opacity 0→1 plus translateY(+10px→0) for bottom, −10px→0 for top; pop: opacity 0→1 and scale(.96→1), origin aligned to the row's anchor. All use `cubic-bezier(.2,.7,.2,1)` over animationDuration. None is immediate. No typewriter or blinking effects. Lifetime timer starts on arrival; when expired, fade for 160 ms then remove; 0 never expires. Max-message and height overflow removal is immediate. Preview/overlay use the same renderer and CSS.
+Use `mockup.html`'s `.frame-*` rules as the literal recipe reference. `borderWidth=0` switches to `.frame-none` regardless of selected recipe. Frames/backgrounds are static in panel scope; animate incoming rows only. Fade: opacity 0→1; slide: opacity 0→1 plus translateY(+10px→0) for bottom, −10px→0 for top; pop: opacity 0→1 and scale(.96→1), origin aligned to the row's anchor. All use `cubic-bezier(.2,.7,.2,1)` over animationDuration. None is immediate. Round 2 adds the bounded text and ambient effects specified below. Lifetime timer starts on arrival; when expired, fade for 160 ms then remove; 0 never expires. Max-message and height overflow removal is immediate. Preview/overlay use the same renderer and CSS.
 
 ## Skin specifications
 
@@ -230,4 +230,96 @@ The following records spell out every visual value; the JSON additionally repeat
 
 Open `design/mockup.html` in a browser with internet access for Google Fonts. It contains no JavaScript; gallery, buttons and fields are visual samples. Font/network fallback can change wrapping. Resize to 1280 × 720 and 1920 × 1080 to inspect the layout; the source stage uses matching container-scaled typography. Scroll below the editor for full-size specimens; each has exactly five rows including a moderator, a subscriber, one emote placeholder and a system notice. The static controls show Clean values.
 
-Builder acceptance: selecting each preset yields the corresponding specimen at source scale; overriding every setting works in both preview and overlay; panel frames are not repeated per message; URL round-trip reproduces appearance, channel and filters; no checkerboard or editor chrome leaks into OBS. At both target sizes the action footer stays visible and settings scroll independently. Verify long usernames, long links, emoji and multi-line messages; reduced motion; keyboard selection; filter exclusions; copy failure and font fallback. Do not introduce per-role colors, custom CSS, accounts, alert integrations or third-party emote services in v1.
+Builder acceptance: selecting each preset yields the corresponding specimen at source scale; overriding every setting works in both preview and overlay; panel frames are not repeated per message; URL round-trip reproduces appearance, channel and filters; no checkerboard or editor chrome leaks into OBS. At both target sizes the action footer stays visible and settings scroll independently. Verify long usernames, long links, emoji and multi-line messages; reduced motion; keyboard selection; filter exclusions; copy failure and font fallback. Round 2 adds role colors and mention highlights; custom CSS, accounts, alert integrations and third-party emote services remain out of scope.
+
+
+## Round 2 ? expressive skins, restrained runtime
+
+This extension supersedes conflicting round 1 animation, gallery, role-color and schema rules. The application is not changed by this package. Existing ten presets retain their visual settings; new effect defaults are off. Guild Chat remains the reference for readable, atmospheric panel styling. Keep the slate editor tokens, left alignment, 400 px rail and responsive stage from round 1. Spend color and movement inside samples rather than on editor chrome.
+
+### Gallery and controls
+
+Use three labeled disclosure groups in the same scroll area, two columns with 8 px gaps; cards become 172 ? 100 px to fit a title and a 44 px sample. All groups start expanded. Keep one radio selection across groups, roving focus and arrow keys across visible cards; category headings are not choices. Categories are browsing metadata, not exclusive claims about a skin's capabilities. Exactly 22 cards, with no duplicates:
+
+- **Game styles (16):** Guild Chat, Fantasy MMO, Block Craft, Old-School MMO, Battle Arena, Battle Royale, Retro RPG Dialog Box, Cyber City, Arcade Cabinet, Space Command, Monster Trainer, Dungeon Crawler, Cozy Farm, Horror Survival, Hero Shooter, Kart Racer.
+- **Animated (2):** Terminal, Vaporwave. Terminal is the restrained baseline for this collection; its default remains static.
+- **Colorful (4):** Bubble Chat, Clean, Candy Pop, Rainbow Border. Clean is the neutral baseline.
+
+Each card uses its preset's typography, frame and effects. Play entrance once on visibility, and replay on focus/hover; ongoing effects run only while visible. Static presets remain static. The review sheet loops short entrances every eight seconds so they can be inspected without application logic; production must not loop message entrances. Card text is decorative beside its accessible skin name. No live-region announcements for samples.
+
+Keep the original control order. Text & Colors adds Name effect, two gradient swatches (shown only for gradient), Text effect, Typewriter duration, Use role colors with four role swatches, and Highlight channel mentions with its swatch. Border adds Effect, Secondary effect color and Cycle duration (seconds; helper: ?Higher values move more slowly?). Background adds Treatment, Secondary color, Effect and Ambient detail. Animation adds bounce, zoom, glitch and Reduce motion. Hide irrelevant controls without resetting their stored values. A persistent note beside the toggle reads ?System reduced motion is always respected.? Skin changes and Reset preserve the user's reduceMotion value, channel and filters; all other appearance keys are replaced. URLs serialize reduceMotion.
+
+### Version 2 settings contract
+
+Envelope is now `{schemaVersion:2, defaultSkinId:"clean", skins:[{id,name,category,settings}]}`. Category is one of the three exact labels above; it is not a URL setting. Every settings object is complete. All round 1 keys remain; `schemaVersion` becomes integer 2. Decode version 1 by validating its existing keys, merging the following inert defaults and setting version 2. Missing version means version 1. Unknown future versions use Clean and an editor notice. Invalid new values fall back per key; never accept CSS or HTML. Defaults below are the actual Clean record.
+
+| Key | Type | Default | Range / contract |
+| --- | --- | --- | --- |
+| `borderEffect` | enum | `none` | none / glow / pulse / animatedGradient / rainbowCycle |
+| `borderEffectSpeed` | number | `6` | 2?20 seconds per cycle, step 0.5; ignored for none/glow |
+| `borderEffectColor` | color | `#E5A9FF` | #RRGGBB; second stop for animatedGradient; first is borderColor |
+| `nameEffect` | enum | `none` | none / rainbow / gradient / glow |
+| `nameGradientColor1` | color | `#A9CAFF` | #RRGGBB; first gradient stop |
+| `nameGradientColor2` | color | `#E5A9FF` | #RRGGBB; second gradient stop |
+| `textEffect` | enum | `none` | none / typewriter / wave / modShake |
+| `typewriterDuration` | integer | `700` | 200?1500 ms, step 50; whole message reveal duration |
+| `animationIn` | enum | `fade` | none / fade / slide / pop / bounce / zoom / glitch |
+| `animationDuration` | integer | `180` | 80?500 ms, step 10; ignored for none |
+| `backgroundEffect` | enum | `none` | none / scanlines / gradientDrift / sparkles |
+| `backgroundSecondaryColor` | color | `#273B59` | #RRGGBB; second gradient/confetti color |
+| `backgroundTreatment` | enum | `solid` | solid / gradient / rainbow / boards / confetti; CSS geometry only |
+| `ambientEffect` | enum | `none` | none / scan / torch / flicker; separate from message text |
+| `roleColorsEnabled` | boolean | `false` | true / false |
+| `broadcasterNameColor` | color | `#FFB7A5` | #RRGGBB |
+| `modNameColor` | color | `#97E8B2` | #RRGGBB |
+| `vipNameColor` | color | `#E6B0FF` | #RRGGBB |
+| `subNameColor` | color | `#FFE095` | #RRGGBB |
+| `mentionHighlightEnabled` | boolean | `false` | true / false |
+| `mentionHighlightColor` | color | `#F4D38D` | #RRGGBB; 3 px inline-start marker plus 12% tint on mentioned row |
+| `reduceMotion` | boolean | `false` | true / false; OR with prefers-reduced-motion: reduce |
+| `borderStyle` | enum | `none` | original none / line / double / corners / bevel / pixel, plus hud / slab |
+
+Role resolution: broadcaster > moderator > VIP > subscriber > ordinary. When enabled, a recognized role's name color takes precedence over Twitch/fixed color and over gradient/rainbow name effects. Glow can still use that resolved role color. Otherwise rainbow replaces the name color, gradient uses the two swatches, glow uses the resolved Twitch/fixed color. Badges remain recognizable independently. System rows receive neither role effects nor mentions. Mention matching uses case-insensitive exact channel tokens with optional @, bounded by non-username characters (ASCII letters/digits/underscore are username characters); empty channel never matches. Inspect message text, not emote URLs. Preserve message foreground color and reserve marker space on all rows to avoid a layout jump.
+
+### Frame, color and motion recipes
+
+Frame and effects are independent, reusable settings: no renderer branches on skin IDs. hud uses a thin base line and four 16 px diagonal corner brackets at inset 5 px; reserve 16 px minimum internal padding. slab uses a 4 px orange inline-start stripe and white 10 px corner wedges, CSS linear gradients; reserve 16 px padding so angled ornament never clips text. Zero borderWidth or borderStyle none disables border effects. For panel scope effects attach once to the panel; entrance and text effects attach only to rows. Decorative layers never intercept input or cover glyphs.
+
+Boards: flat brown background with 1 px horizontal seams every 32 px and inset bevel; no grain image. Confetti: alternate backgroundColor and backgroundSecondaryColor by visible row index, with a static cream-to-mint gradient on every third row (panel scope uses that gradient once). Rainbow treatment: pastel #FFD2E6, #FFF1BA, backgroundSecondaryColor, #DCCBFF over 135 degrees. Gradient treatment uses backgroundColor and backgroundSecondaryColor at 135 degrees. Apply backgroundOpacity to background layers only.
+
+Border glow uses a static inset 8 px glow; pulse varies a separate glow layer's opacity .35?.7?.35, never text opacity. animatedGradient crossfades two reversed two-stop border layers; rainbowCycle crossfades two offset rainbow border layers. Keep the center transparent using a mask with a solid border fallback. No rotating full-size canvases or animated blur. Names cycle through #FFB4D9, #FFE49A, #A0F1BE, #9DE8FF, #D7BEFF in 8 seconds; use dark counterparts #8A285C, #775800, #22633B, #165A78, #58388F on light backgrounds. Name gradient is static, glow is static (4 px maximum). If background-clip text is unsupported, use the resolved solid name color.
+
+Scanlines are a static repeating-linear-gradient of 1 px black at 8% alpha every 4 px, behind content. Gradient drift crossfades two reversed gradient layers over 16 seconds. Sparkles are at most three CSS diamond marks inside the row's end padding, opacity and scale only, 600 ms once per arrival. Scan is a 1 px cyan decorative line, translating along the frame edge over 6 seconds; never sweep across glyphs. Torch is an amber inset glow whose opacity changes .25/.38/.29/.4/.25 over 3.8 seconds with soft interpolation. Horror flicker changes only the dim red border/glow layer .75?.88?.8?.9?.75 over 5 seconds; text stays fully legible, no blackouts or strobing.
+
+Entrance runs on an outer row, text effect on an inner body; effects must not overwrite each other's transform animation. Bounce: translateY(8px), then -3px at 60%, then 0. Zoom: scale(.9)?1 and opacity 0?1. Glitch: translateX(-2px/+2px/-1px/0), no text copies, flashes or infinite jitter. Hero Shooter uses the existing slide with 120 ms duration. Wave is one whole text-body translateY(0/-3px/0) over 350 ms, not per-letter sine waves. modShake is one translateX(0/-2px/2px/0) over 240 ms only when moderator badge is present, not merely because role colors are enabled. Other senders remain still.
+
+Typewriter reveals actual grapheme clusters with CSS stepped opacity and bounded animation-delay, with the final layout reserved from arrival. Segment once on insertion, maximum 160 animated graphemes, reveal the remaining tail together at the duration endpoint. Emotes are atomic units; their alt text is not split. Maintain an accessible unsplit message and aria-hide decorative glyph spans. Never animate width/height or force single-line clipping in production. The sheet uses a stepped clip reveal on a wrapping body to demonstrate pacing without JavaScript; the builder must implement grapheme reveal for true multiline typing. Lifetime starts at arrival as before; effects do not extend it.
+
+### Reduced motion and long-session budget
+
+Effective reduce motion = system preference OR toggle. Disable all entrance, exit, typewriter, wave, shake, scan, flicker, glow pulse, rainbow cycling, gradient drift and sparkles. Show final text immediately. Keep static gradients, scanlines, frames and modest static glow. Remove transforms and clipping along with animation; do not use a near-zero-duration loop. Toggling off never replays old message entrances. System preference cannot be overridden by the toggle. The review sheet includes a working CSS-only Reduce motion checkbox; its other settings remain visual samples.
+
+CSS keyframes only: no requestAnimationFrame, per-character timers, canvas, GIF/video textures, animated filters or layout animation. Keyframes may run continuously only on decorative frame/background layers and names. Cap at 30 rendered messages, no permanent will-change; at most two continuous decorative layers per framed surface and three transient sparkle marks per incoming row. Pause offscreen gallery cards with visibility observation and pause all samples on hidden document; event-driven observation is permitted, animation loops are not. Remove expired nodes and their animations. Retain original maximum-message/height eviction. Production loads only active fonts; the review sheet deliberately loads every sample family.
+
+### New preset direction
+
+Exact colors, metrics, effect selections and durations are authoritative in skins.json. All twelve reuse the Google Fonts already loaded in round 1, avoiding a new font request for each novelty.
+
+| Skin | Distinctive treatment | Motion |
+| --- | --- | --- |
+| Cyber City | Magenta frame, cyan names, deep plum, Barlow | 4 s glow pulse; 180 ms glitch |
+| Arcade Cabinet | Pixelify Sans, purple pixel frame, static CRT scanlines | 8 s rainbow names; 200 ms zoom |
+| Space Command | Cyan HUD brackets on navy, Barlow | 6 s edge scan; slide |
+| Monster Trainer | VT323, opaque ivory, 4 px dark rounded border | 700 ms typewriter |
+| Dungeon Crawler | Roboto Slab on grey stone-colored bevel | Warm 3.8 s torch glow |
+| Cozy Farm | Nunito Sans cream lettering, brown CSS board seams | Soft 400 ms bounce |
+| Horror Survival | IBM Plex Mono, readable blood-red lettering on near-black | 700 ms typewriter; faint 5 s border flicker |
+| Hero Shooter | Barlow Condensed, orange stripe and white angled wedges | Fast 120 ms slide |
+| Kart Racer | Nunito Sans, yellow/mint pills, dark ink | 400 ms bouncy entrance |
+| Candy Pop | Pastel rainbow bubbles, dark plum ink | Pop plus 600 ms sparkles |
+| Vaporwave | Pink/teal gradient, pink-to-mint names | 16 s slow background drift |
+| Rainbow Border | Clean light type on navy, rainbow outline | 8 s border cycle; 200 ms zoom |
+
+### Round 2 acceptance
+
+Review all 22 cards and 22 five-row specimens, including multi-line bodies and emote placeholders. The extra effect strip demonstrates wave, moderator shake, glow and animated gradient even though they are not defaulted together in a skin. Verify both reduced-motion sources reveal complete text and freeze every decorative layer. Inspect at 320, 1280 and 1920 px widths. Builder checks: URL v1 migration, v2 round-trip of every key, role priority with multiple badges, mention boundaries and empty channel, overriding every effect on every frame, max-capacity eviction and no font/layout shifts during typewriter. Profile an hour-long OBS session separately: this design sheet is not proof of runtime CPU performance.
