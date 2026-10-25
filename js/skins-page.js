@@ -7,6 +7,7 @@ import {beginTwitchAuth,saveEditorRestore} from './twitch-auth.js';
 
 initSite();
 const skins=(await(await fetch('./design/skins.json')).json()).skins.sort((a,b)=>(a.galleryOrder??999)-(b.galleryOrder??999));
+const total=document.querySelector('#skin-total');if(total)total.textContent=String(skins.length);
 const groups=['Featured','Streamer favorites','Game styles','Animated','Colorful'];
 let group=new URLSearchParams(location.search).get('group')||'Featured';
 let selected=skins.find(s=>s.id===new URLSearchParams(location.search).get('skin'))||skins[0],opener=null,previewsPaused=false;

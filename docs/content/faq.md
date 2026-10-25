@@ -5,7 +5,7 @@
 Quick answers before you go live.
 
 ## Is ChatSkins free?
-Yes. The 42 catalog skins and ordinary overlay setup are free. No login is required to display public Twitch chat.
+Yes. The {{skin-count}} catalog skins and ordinary overlay setup are free. No login is required to display public Twitch chat.
 
 ## Do I need a plugin?
 No. Use a Browser Source or web source in your streaming app. Paste your generated overlay link and set the canvas dimensions.

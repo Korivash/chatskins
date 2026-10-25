@@ -2,7 +2,7 @@
 
 # Choosing a skin
 
-Start with the look that fits your stream, then tune it in the editor. Every skin is free. The catalog contains 42 skins; Featured is a selection from that catalog, not an extra collection of unique skins.
+Start with the look that fits your stream, then tune it in the editor. Every skin is free. The catalog contains {{skin-count}} skins; Featured is a selection from that catalog, not an extra collection of unique skins.
 
 ## Featured
 Start here for a compact selection of expressive, readable looks. Watch the preview before choosing: a moving frame can feel different over gameplay than on a still page.

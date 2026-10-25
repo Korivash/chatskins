@@ -5,6 +5,7 @@ import {buildSkinPreviewMessages} from './skin-preview.js';
 
 if(!forwardLegacyRoot()){
  const data=await(await fetch('./design/skins.json')).json(),skins=data.skins.sort((a,b)=>(a.galleryOrder??999)-(b.galleryOrder??999)),featured=skins.filter(s=>s.featured),reduced=matchMedia('(prefers-reduced-motion: reduce)');
+ for(const id of ['skin-count-copy','skin-count-link','skin-count-stat','skin-count-faq']){const node=document.getElementById(id);if(node)node.textContent=String(skins.length)}
  const byId=id=>skins.find(s=>s.id===id),central=document.querySelector('#home-sample'),cycleName=document.querySelector('#cycle-name');
  let index=Math.max(0,featured.findIndex(s=>s.id===central.dataset.skin)),paused=reduced.matches;
  function draw(host,skin,count=2){if(!host||!skin)return;const settings=applySkinMetadata(normalizeSettings(structuredClone(skin.settings)),skin);for(const part of Object.values(settings.parts||{}))part.fontSize=host===central?14:12;settings.reduceMotion=paused||reduced.matches;const chat=document.createElement('div');chat.className='chat chat-panel skin-live-preview';applyChatStyle(chat,settings);for(const message of buildSkinPreviewMessages(skin,count))chat.append(createMessage(message,settings));chat.querySelectorAll('.msg').forEach(row=>row.dataset.motionPaused=String(!host._motionVisible||paused||reduced.matches||document.hidden));host.replaceChildren(chat);host.dataset.skin=skin.id}

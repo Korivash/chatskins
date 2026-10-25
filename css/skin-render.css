@@ -366,3 +366,9 @@ body.overlay{margin:0;min-height:100vh;background:transparent;overflow:hidden}
 .chat-message .channel-identity>.role-icon,.chat-message .channel-identity>.badge{flex:none}
 .chat-message .channel-message{display:inline;flex:1 1 10ch;min-width:10ch;max-width:100%;overflow-wrap:anywhere;word-break:normal}
 .chat-message.msg[data-round10=true] .channel-flow{display:flex;flex-wrap:wrap;max-width:100%!important}
+.msg[data-round10=true].skin-bubble-chat .name::after{content:none!important}
+/* Preserve spaces stored in skin formats; the templates supply their own separators. */
+.chat-message .chat-name,.chat-identity .chat-name{display:inline-block;white-space:pre-wrap;overflow:visible;text-overflow:clip}
+.chat-name-user,.channel-name{display:inline-block;flex:none;max-width:none!important;overflow:visible!important;text-overflow:clip!important;white-space:nowrap!important;word-break:keep-all!important;overflow-wrap:normal!important}
+.chat-message .channel-flow{gap:0}
+.chat-message .channel-identity{display:block;flex:0 1 auto;white-space:pre-wrap}
