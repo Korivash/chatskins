@@ -39,3 +39,12 @@
 .chat[data-hide-frames=true]::before,.chat[data-hide-frames=true]::after,.chat-message[data-hide-frames=true]::before,.chat-message[data-hide-frames=true]::after{display:none!important}
 
 .skin-sample[data-transparent-sample=true]{background-color:#344254;background-image:linear-gradient(45deg,#526174 25%,transparent 25%),linear-gradient(-45deg,#526174 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#526174 75%),linear-gradient(-45deg,transparent 75%,#526174 75%);background-size:12px 12px;background-position:0 0,0 6px,6px -6px,-6px 0}.skin-sample.chat{width:172%;transform:scale(.58)}.toolbar #transparent-toggle{white-space:nowrap}
+
+/* Shared bounded chat panel layout for OBS and the scaled editor source. */
+.overlay-root>.chat.chat-panel,.source .chat.chat-panel{position:absolute;height:auto;max-height:var(--panel-max-height,calc(100% - 40px));overflow:hidden;box-sizing:border-box;}
+.overlay-root>.chat.chat-panel,.source[data-direction=bottom] .chat.chat-panel{top:auto;bottom:var(--inset,20px)}
+.overlay-root[data-direction=top]>.chat.chat-panel,.source[data-direction=top] .chat.chat-panel{top:var(--inset,20px);bottom:auto;flex-direction:column-reverse}
+.overlay-root[data-alignment=left]>.chat.chat-panel,.source[data-alignment=left] .chat.chat-panel{left:var(--inset,20px);right:auto;transform:none}
+.overlay-root[data-alignment=center]>.chat.chat-panel,.source[data-alignment=center] .chat.chat-panel{left:50%;right:auto;transform:translateX(-50%)}
+.overlay-root[data-alignment=right]>.chat.chat-panel,.source[data-alignment=right] .chat.chat-panel{left:auto;right:var(--inset,20px);transform:none}
+.actions{grid-template-columns:minmax(0,1fr) 140px;align-items:end}.actions .channel-label{grid-column:1/-1;font-size:20px;line-height:26px;color:#F2F5FA;font-weight:700}.actions #channel{grid-column:1}.actions #copy{grid-column:2;grid-row:2}.setup-steps{grid-column:1/-1;display:flex;justify-content:space-between;gap:8px;list-style:none;counter-reset:step;padding:10px 0 0;margin:0;border-top:1px solid #34465E;color:#AFBDD0;font-size:12px}.setup-steps li{counter-increment:step}.setup-steps li:before{content:counter(step) ' ';color:#A9CAFF;font-weight:700}

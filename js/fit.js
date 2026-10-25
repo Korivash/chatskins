@@ -13,3 +13,7 @@ export function fitMessageIndices(heights, availableHeight, spacing = 0, directi
   }
   return heights.map((_, i) => i).filter(i => keep.has(i));
 }
+
+export function panelMaxHeight(viewportHeight, inset, frameOffset = 0, frameWidth = 0, ornamentOverflow = 0) {
+  return Math.max(0, Number(viewportHeight || 0) - 2 * Math.max(0, Number(inset) || 0) - 2 * (Math.max(0, Number(frameOffset) || 0) + Math.max(0, Number(frameWidth) || 0)) - 2 * Math.max(0, Number(ornamentOverflow) || 0));
+}
