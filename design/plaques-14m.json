@@ -1,0 +1,245 @@
+{
+  "bunny-princess-tall": {
+    "x": 0.15625,
+    "y": 0.075833,
+    "w": 0.25625,
+    "h": 0.064167,
+    "painted": true,
+    "tone": "light"
+  },
+  "cozy-cafe-tall": {
+    "x": 0.375,
+    "y": 0.028333,
+    "w": 0.2375,
+    "h": 0.065833,
+    "painted": false,
+    "tone": "dark"
+  },
+  "crescent-moon-tall": {
+    "x": 0.11,
+    "y": 0.14,
+    "w": 0.78,
+    "h": 0.035,
+    "painted": false,
+    "tone": "dark",
+    "none": true
+  },
+  "crowned-kittens-tall": {
+    "x": 0.15625,
+    "y": 0.075833,
+    "w": 0.25625,
+    "h": 0.064167,
+    "painted": true,
+    "tone": "light"
+  },
+  "demon-throne-tall": {
+    "x": 0.32875,
+    "y": 0.138333,
+    "w": 0.14,
+    "h": 0.03,
+    "painted": false,
+    "tone": "dark"
+  },
+  "demon-throne-wide": {
+    "x": 0.3875,
+    "y": 0.16,
+    "w": 0.091667,
+    "h": 0.04,
+    "painted": false,
+    "tone": "dark"
+  },
+  "haunted-manor-tall": {
+    "x": 0.41875,
+    "y": 0.040833,
+    "w": 0.1625,
+    "h": 0.059167,
+    "painted": false,
+    "tone": "dark"
+  },
+  "haunted-manor-wide": {
+    "x": 0.45,
+    "y": 0.0575,
+    "w": 0.095833,
+    "h": 0.095,
+    "painted": false,
+    "tone": "dark"
+  },
+  "lava-forge-tall": {
+    "x": 0.41,
+    "y": 0.045,
+    "w": 0.18125,
+    "h": 0.048333,
+    "painted": false,
+    "tone": "dark"
+  },
+  "lava-forge-wide": {
+    "x": 0.35,
+    "y": 0.07125,
+    "w": 0.3,
+    "h": 0.05375,
+    "painted": false,
+    "tone": "dark"
+  },
+  "mothlight-tall": {
+    "x": 0.33,
+    "y": 0.138333,
+    "w": 0.09,
+    "h": 0.031667,
+    "painted": false,
+    "tone": "light"
+  },
+  "mothlight-wide": {
+    "x": 0.386667,
+    "y": 0.20375,
+    "w": 0.086667,
+    "h": 0.03125,
+    "painted": false,
+    "tone": "light"
+  },
+  "neon-hex-tall": {
+    "x": 0.1575,
+    "y": 0.1025,
+    "w": 0.26375,
+    "h": 0.043333,
+    "painted": false,
+    "tone": "dark"
+  },
+  "neon-hex-wide": {
+    "x": 0.0925,
+    "y": 0.09125,
+    "w": 0.181667,
+    "h": 0.03875,
+    "painted": false,
+    "tone": "dark"
+  },
+  "neon-kawaii-goth-minimal-tall": {
+    "x": 0.18125,
+    "y": 0.079167,
+    "w": 0.21375,
+    "h": 0.055,
+    "painted": true,
+    "tone": "dark"
+  },
+  "neon-kawaii-goth-square": {
+    "x": 0.21,
+    "y": 0.27,
+    "w": 0.6,
+    "h": 0.04,
+    "painted": false,
+    "tone": "dark",
+    "none": true
+  },
+  "neon-kawaii-goth-tall": {
+    "x": 0.21375,
+    "y": 0.07,
+    "w": 0.32875,
+    "h": 0.065833,
+    "painted": true,
+    "tone": "dark"
+  },
+  "neon-kawaii-goth-wide": {
+    "x": 0.18,
+    "y": 0.245926,
+    "w": 0.6,
+    "h": 0.059259,
+    "painted": false,
+    "tone": "dark",
+    "none": true
+  },
+  "royal-court-tall": {
+    "x": 0.32875,
+    "y": 0.116667,
+    "w": 0.3425,
+    "h": 0.03,
+    "painted": false,
+    "tone": "light"
+  },
+  "royal-court-wide": {
+    "x": 0.381667,
+    "y": 0.15125,
+    "w": 0.233333,
+    "h": 0.035,
+    "painted": false,
+    "tone": "light"
+  },
+  "solar-oracle-tall": {
+    "x": 0.24375,
+    "y": 0.158333,
+    "w": 0.145,
+    "h": 0.023333,
+    "painted": false,
+    "tone": "light"
+  },
+  "solar-oracle-wide": {
+    "x": 0.336667,
+    "y": 0.15,
+    "w": 0.100833,
+    "h": 0.02625,
+    "painted": false,
+    "tone": "light"
+  },
+  "star-oracle-tall": {
+    "x": 0.33625,
+    "y": 0.140833,
+    "w": 0.3275,
+    "h": 0.016667,
+    "painted": false,
+    "tone": "light"
+  },
+  "star-oracle-wide": {
+    "x": 0.385833,
+    "y": 0.1575,
+    "w": 0.226667,
+    "h": 0.03125,
+    "painted": false,
+    "tone": "light"
+  },
+  "sticker-bomb-tall": {
+    "x": 0.2275,
+    "y": 0.056667,
+    "w": 0.48375,
+    "h": 0.039167,
+    "painted": false,
+    "tone": "light"
+  },
+  "sticker-bomb-wide": {
+    "x": 0.280833,
+    "y": 0.06875,
+    "w": 0.27,
+    "h": 0.0875,
+    "painted": false,
+    "tone": "light"
+  },
+  "sugar-static-tall": {
+    "x": 0.345,
+    "y": 0.153333,
+    "w": 0.315,
+    "h": 0.024167,
+    "painted": false,
+    "tone": "light"
+  },
+  "sugar-static-wide": {
+    "x": 0.375833,
+    "y": 0.12,
+    "w": 0.236667,
+    "h": 0.06375,
+    "painted": false,
+    "tone": "light"
+  },
+  "sword-and-shield-tall": {
+    "x": 0.13875,
+    "y": 0.073333,
+    "w": 0.30625,
+    "h": 0.068333,
+    "painted": true,
+    "tone": "dark"
+  },
+  "tactical-gunmetal-tall": {
+    "x": 0.15375,
+    "y": 0.073333,
+    "w": 0.27125,
+    "h": 0.059167,
+    "painted": true,
+    "tone": "dark"
+  }
+}
