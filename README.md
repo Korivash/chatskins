@@ -14,7 +14,7 @@ ChatSkins is a browser-based editor for Twitch chat overlays. It's built for the
 
 **Full demo** (2:46, narrated, original music): [docs/media/demo.mp4](docs/media/demo.mp4). It shows every feature on the live site, then how the Codex agent team built it.
 
-**How we built it** (2:36, narrated, original music): [docs/media/making-of.mp4](docs/media/making-of.mp4). It covers the idea, the agent team (Astra designs, Luna builds, Claude tests and ships), a real prompt, Astra's mockups, a live Luna build log, testing all 52 skins through the real overlay, and the 31-session / 120-commit loop.
+**How we built it** (2:36, narrated, original music): [docs/media/making-of.mp4](docs/media/making-of.mp4). It covers the idea, the agent team (Astra designs, Luna builds, Claude tests and ships), a real prompt, Astra's mockups, a live Luna build log, testing the full skin catalog through the real overlay, and the 31-session / 120-commit loop.
 
 ### Gallery
 | | |
@@ -27,13 +27,13 @@ ChatSkins is a browser-based editor for Twitch chat overlays. It's built for the
 ![ChatSkins editor: skin gallery and settings on the left, live preview on the right](docs/media/editor.png)
 
 ### Skin catalog
-![All 52 ChatSkins skins, rendered by the real overlay](docs/media/skins.png)
+![The ChatSkins catalog, rendered by the real overlay](docs/media/skins.png)
 
 ---
 
 ## Features
 
-### 52 chat skins
+### Chat skins
 
 | Group | Skins |
 |---|---|
