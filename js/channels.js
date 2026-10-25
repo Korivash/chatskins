@@ -34,5 +34,5 @@ export function resolveChannelRules(message,settings){
 
 export function fillChannelTemplate(template,message){
  const badges=Object.entries(message.badges||{}).filter(([,value])=>!!value).map(([key])=>({broadcaster:'★',moderator:'✦',mod:'✦',vip:'◆',subscriber:'●',sub:'●'}[key]||'')).join('');
- return String(template||'').replace(/\{(name|message|badges)\}/g,(_,token)=>token==='name'?String(message.username||''):token==='message'?String(message.text||''):badges);
+ return String(template||'').replace(/([^\s])\{message\}/g,'$1 {message}').replace(/\{(name|message|badges)\}/g,(_,token)=>token==='name'?String(message.username||''):token==='message'?String(message.text||''):badges);
 }
