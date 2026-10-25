@@ -1053,11 +1053,11 @@
       "galleryOrder": 1,
       "stats": {
         "readability": 5,
-        "flair": 3,
+        "flair": 4,
         "motion": 2,
         "retro": 1
       },
-      "tagline": "Soft teal bubbles with a playful chat tail",
+      "tagline": "Every voice gets a real speech bubble.",
       "alertRecipe": {
         "version": 1,
         "title": "A little celebration",
@@ -1075,6 +1075,36 @@
         "paddingPx": 20,
         "columnGapPx": 16,
         "followMessage": "{name} joined the adventure!"
+      },
+      "round10Recipe": {
+        "version": 10,
+        "status": "design-only; authoritative over earlier visual recipes; settings retained as v3 fallback",
+        "silhouette": "Deep speech balloon with a real 12px left-pointing tail",
+        "layout": "Sender on top; body inset from tail",
+        "typography": {
+          "nameFamily": "Trebuchet MS",
+          "bodyFamily": "Trebuchet MS",
+          "nameSizePx": 20,
+          "bodySizePx": 22,
+          "lineHeight": 1.45,
+          "fallback": "sans-serif"
+        },
+        "palette": {
+          "ink": "#EFFFFB",
+          "surface": "#123C40",
+          "accent": "#8AE9D6"
+        },
+        "motion": {
+          "keyframes": [
+            "lift-in"
+          ],
+          "cycleSeconds": 0.32,
+          "maximumAnimatedLayersPerMessage": 1,
+          "trigger": "entry only",
+          "reduced": "No animation; full text and final silhouette immediately; static accent and texture. No burst, bolts, travel or typing."
+        },
+        "geometryReference": "round10.css .skin-bubble-lift",
+        "content": "Reserve ornaments outside content; wrap names and long words; no text clipping; preserve badges, emotes and moderation."
       }
     },
     {
@@ -1558,11 +1588,11 @@
       "galleryOrder": 2,
       "stats": {
         "readability": 5,
-        "flair": 3,
+        "flair": 4,
         "motion": 2,
         "retro": 1
       },
-      "tagline": "Cool translucent cards, crisp and calm",
+      "tagline": "A glass slide, held up to the light.",
       "alertRecipe": {
         "version": 1,
         "title": "Stream moment",
@@ -1580,6 +1610,36 @@
         "paddingPx": 20,
         "columnGapPx": 16,
         "followMessage": "{name} joined the adventure!"
+      },
+      "round10Recipe": {
+        "version": 10,
+        "status": "design-only; authoritative over earlier visual recipes; settings retained as v3 fallback",
+        "silhouette": "Transparent glass slide held by two offset opaque corner tabs",
+        "layout": "Sender in a top tab; body floats on a blue glass slide",
+        "typography": {
+          "nameFamily": "Segoe UI",
+          "bodyFamily": "Segoe UI",
+          "nameSizePx": 20,
+          "bodySizePx": 22,
+          "lineHeight": 1.45,
+          "fallback": "sans-serif"
+        },
+        "palette": {
+          "ink": "#F4FAFF",
+          "surface": "#203D50",
+          "accent": "#B7DFFF"
+        },
+        "motion": {
+          "keyframes": [
+            "glass-in"
+          ],
+          "cycleSeconds": 0.4,
+          "maximumAnimatedLayersPerMessage": 1,
+          "trigger": "entry only",
+          "reduced": "No animation; full text and final silhouette immediately; static accent and texture. No burst, bolts, travel or typing."
+        },
+        "geometryReference": "round10.css .skin-glass-card",
+        "content": "Reserve ornaments outside content; wrap names and long words; no text clipping; preserve badges, emotes and moderation."
       }
     },
     {
@@ -2063,11 +2123,11 @@
       "galleryOrder": 3,
       "stats": {
         "readability": 5,
-        "flair": 3,
+        "flair": 4,
         "motion": 2,
         "retro": 1
       },
-      "tagline": "A tidy name rail for quick reading",
+      "tagline": "Put every name on the guest list.",
       "alertRecipe": {
         "version": 1,
         "title": "Community update",
@@ -2085,6 +2145,36 @@
         "paddingPx": 20,
         "columnGapPx": 16,
         "followMessage": "{name} joined the adventure!"
+      },
+      "round10Recipe": {
+        "version": 10,
+        "status": "design-only; authoritative over earlier visual recipes; settings retained as v3 fallback",
+        "silhouette": "Two stacked badge strips; short name tab over wide square body strip",
+        "layout": "Name tag protrudes left; body starts 18px to its right",
+        "typography": {
+          "nameFamily": "Arial Narrow",
+          "bodyFamily": "Arial Narrow",
+          "nameSizePx": 20,
+          "bodySizePx": 22,
+          "lineHeight": 1.45,
+          "fallback": "sans-serif"
+        },
+        "palette": {
+          "ink": "#F4F8FF",
+          "surface": "#203759",
+          "accent": "#B1D0FF"
+        },
+        "motion": {
+          "keyframes": [
+            "tag-in"
+          ],
+          "cycleSeconds": 0.28,
+          "maximumAnimatedLayersPerMessage": 1,
+          "trigger": "entry only",
+          "reduced": "No animation; full text and final silhouette immediately; static accent and texture. No burst, bolts, travel or typing."
+        },
+        "geometryReference": "round10.css .skin-name-tag",
+        "content": "Reserve ornaments outside content; wrap names and long words; no text clipping; preserve badges, emotes and moderation."
       }
     },
     {
@@ -2567,12 +2657,12 @@
       "featured": true,
       "galleryOrder": 4,
       "stats": {
-        "readability": 5,
-        "flair": 5,
-        "motion": 3,
-        "retro": 2
+        "readability": 4,
+        "flair": 4,
+        "motion": 2,
+        "retro": 4
       },
-      "tagline": "Bold speech bubbles with comic-book punch",
+      "tagline": "Big panel energy for the best lines.",
       "alertRecipe": {
         "version": 1,
         "title": "Big moment!",
@@ -2590,6 +2680,36 @@
         "paddingPx": 20,
         "columnGapPx": 16,
         "followMessage": "{name} joined the adventure!"
+      },
+      "round10Recipe": {
+        "version": 10,
+        "status": "design-only; authoritative over earlier visual recipes; settings retained as v3 fallback",
+        "silhouette": "Irregular eight-corner comic panel with offset hard ink shadow",
+        "layout": "Oversized italic sender; halftone margin and upright body",
+        "typography": {
+          "nameFamily": "Impact",
+          "bodyFamily": "Segoe UI",
+          "nameSizePx": 20,
+          "bodySizePx": 22,
+          "lineHeight": 1.45,
+          "fallback": "sans-serif"
+        },
+        "palette": {
+          "ink": "#241B30",
+          "surface": "#FFF0AC",
+          "accent": "#211B2D"
+        },
+        "motion": {
+          "keyframes": [
+            "comic-in"
+          ],
+          "cycleSeconds": 0.28,
+          "maximumAnimatedLayersPerMessage": 1,
+          "trigger": "entry only",
+          "reduced": "No animation; full text and final silhouette immediately; static accent and texture. No burst, bolts, travel or typing."
+        },
+        "geometryReference": "round10.css .skin-comic-burst",
+        "content": "Reserve ornaments outside content; wrap names and long words; no text clipping; preserve badges, emotes and moderation."
       }
     },
     {
@@ -3074,10 +3194,10 @@
       "stats": {
         "readability": 5,
         "flair": 4,
-        "motion": 3,
+        "motion": 2,
         "retro": 1
       },
-      "tagline": "Lavender cards with bright pastel energy",
+      "tagline": "A ticket to the softer side of chat.",
       "alertRecipe": {
         "version": 1,
         "title": "Something lovely",
@@ -3095,6 +3215,36 @@
         "paddingPx": 20,
         "columnGapPx": 16,
         "followMessage": "{name} joined the adventure!"
+      },
+      "round10Recipe": {
+        "version": 10,
+        "status": "design-only; authoritative over earlier visual recipes; settings retained as v3 fallback",
+        "silhouette": "Ticket stub with paired inward semicircle notches and perforation",
+        "layout": "Sender in the narrow stub; message in the main ticket",
+        "typography": {
+          "nameFamily": "Verdana",
+          "bodyFamily": "Verdana",
+          "nameSizePx": 20,
+          "bodySizePx": 22,
+          "lineHeight": 1.45,
+          "fallback": "sans-serif"
+        },
+        "palette": {
+          "ink": "#342245",
+          "surface": "#EAD9F2",
+          "accent": "#765083"
+        },
+        "motion": {
+          "keyframes": [
+            "ticket-in"
+          ],
+          "cycleSeconds": 0.35,
+          "maximumAnimatedLayersPerMessage": 1,
+          "trigger": "entry only",
+          "reduced": "No animation; full text and final silhouette immediately; static accent and texture. No burst, bolts, travel or typing."
+        },
+        "geometryReference": "round10.css .skin-pastel-pop",
+        "content": "Reserve ornaments outside content; wrap names and long words; no text clipping; preserve badges, emotes and moderation."
       }
     },
     {
@@ -3578,11 +3728,11 @@
       "galleryOrder": 6,
       "stats": {
         "readability": 5,
-        "flair": 5,
-        "motion": 3,
-        "retro": 2
+        "flair": 4,
+        "motion": 2,
+        "retro": 1
       },
-      "tagline": "Sharp lime accents for match-day chat",
+      "tagline": "Sharp calls. A sharper silhouette.",
       "alertRecipe": {
         "version": 1,
         "title": "Squad milestone",
@@ -3600,6 +3750,36 @@
         "paddingPx": 20,
         "columnGapPx": 16,
         "followMessage": "{name} joined the adventure!"
+      },
+      "round10Recipe": {
+        "version": 10,
+        "status": "design-only; authoritative over earlier visual recipes; settings retained as v3 fallback",
+        "silhouette": "Forward spear plate with a split swallowtail at the left",
+        "layout": "Wide condensed sender header; message aligned to spear base",
+        "typography": {
+          "nameFamily": "Arial Narrow",
+          "bodyFamily": "Arial Narrow",
+          "nameSizePx": 20,
+          "bodySizePx": 22,
+          "lineHeight": 1.45,
+          "fallback": "sans-serif"
+        },
+        "palette": {
+          "ink": "#F4FFE9",
+          "surface": "#203023",
+          "accent": "#B6F477"
+        },
+        "motion": {
+          "keyframes": [
+            "slash-in"
+          ],
+          "cycleSeconds": 0.2,
+          "maximumAnimatedLayersPerMessage": 1,
+          "trigger": "entry only",
+          "reduced": "No animation; full text and final silhouette immediately; static accent and texture. No burst, bolts, travel or typing."
+        },
+        "geometryReference": "round10.css .skin-esports-slash",
+        "content": "Reserve ornaments outside content; wrap names and long words; no text clipping; preserve badges, emotes and moderation."
       }
     },
     {
@@ -4083,11 +4263,11 @@
       "galleryOrder": 7,
       "stats": {
         "readability": 5,
-        "flair": 1,
+        "flair": 2,
         "motion": 2,
-        "retro": 1
+        "retro": 4
       },
-      "tagline": "Warm accents for calm, readable chat",
+      "tagline": "A byline, a thought, a quiet rule.",
       "alertRecipe": {
         "version": 1,
         "title": "Thank you",
@@ -4105,6 +4285,36 @@
         "paddingPx": 20,
         "columnGapPx": 16,
         "followMessage": "{name} joined the adventure!"
+      },
+      "round10Recipe": {
+        "version": 10,
+        "status": "design-only; authoritative over earlier visual recipes; settings retained as v3 fallback",
+        "silhouette": "Borderless newspaper ticker with one short lower rule",
+        "layout": "Small serif byline inline with the message",
+        "typography": {
+          "nameFamily": "Georgia",
+          "bodyFamily": "Georgia",
+          "nameSizePx": 20,
+          "bodySizePx": 22,
+          "lineHeight": 1.45,
+          "fallback": "serif"
+        },
+        "palette": {
+          "ink": "#F0EADF",
+          "surface": "#18232E",
+          "accent": "#DCD1B7"
+        },
+        "motion": {
+          "keyframes": [
+            "quiet-in"
+          ],
+          "cycleSeconds": 0.4,
+          "maximumAnimatedLayersPerMessage": 1,
+          "trigger": "entry only",
+          "reduced": "No animation; full text and final silhouette immediately; static accent and texture. No burst, bolts, travel or typing."
+        },
+        "geometryReference": "round10.css .skin-quiet-line",
+        "content": "Reserve ornaments outside content; wrap names and long words; no text clipping; preserve badges, emotes and moderation."
       }
     },
     {
@@ -4590,9 +4800,9 @@
         "readability": 5,
         "flair": 4,
         "motion": 2,
-        "retro": 2
+        "retro": 1
       },
-      "tagline": "A violet edge against midnight purple",
+      "tagline": "One bright bracket. Plenty of attitude.",
       "alertRecipe": {
         "version": 1,
         "title": "Signal received",
@@ -4610,6 +4820,36 @@
         "paddingPx": 20,
         "columnGapPx": 16,
         "followMessage": "{name} joined the adventure!"
+      },
+      "round10Recipe": {
+        "version": 10,
+        "status": "design-only; authoritative over earlier visual recipes; settings retained as v3 fallback",
+        "silhouette": "Unclosed L-shaped neon bracket; no top or right perimeter",
+        "layout": "Tall sender at the elbow; body aligned to vertical rail",
+        "typography": {
+          "nameFamily": "Arial Narrow",
+          "bodyFamily": "Arial Narrow",
+          "nameSizePx": 20,
+          "bodySizePx": 22,
+          "lineHeight": 1.45,
+          "fallback": "sans-serif"
+        },
+        "palette": {
+          "ink": "#FFF0FF",
+          "surface": "#281B34",
+          "accent": "#DBAEFF"
+        },
+        "motion": {
+          "keyframes": [
+            "edge-in"
+          ],
+          "cycleSeconds": 0.28,
+          "maximumAnimatedLayersPerMessage": 1,
+          "trigger": "entry only",
+          "reduced": "No animation; full text and final silhouette immediately; static accent and texture. No burst, bolts, travel or typing."
+        },
+        "geometryReference": "round10.css .skin-neon-edge",
+        "content": "Reserve ornaments outside content; wrap names and long words; no text clipping; preserve badges, emotes and moderation."
       }
     },
     {
@@ -5092,12 +5332,12 @@
       "featured": false,
       "galleryOrder": 9,
       "stats": {
-        "readability": 5,
+        "readability": 4,
         "flair": 4,
-        "motion": 3,
+        "motion": 2,
         "retro": 1
       },
-      "tagline": "Apricot name stickers with a playful pop",
+      "tagline": "Leave a little note for the stream.",
       "alertRecipe": {
         "version": 1,
         "title": "New sticker moment",
@@ -5115,6 +5355,36 @@
         "paddingPx": 20,
         "columnGapPx": 16,
         "followMessage": "{name} joined the adventure!"
+      },
+      "round10Recipe": {
+        "version": 10,
+        "status": "design-only; authoritative over earlier visual recipes; settings retained as v3 fallback",
+        "silhouette": "Tilted sticky note with a folded lower-right corner",
+        "layout": "Handwritten sender across the note; left-aligned informal body",
+        "typography": {
+          "nameFamily": "Segoe Print",
+          "bodyFamily": "Segoe Print",
+          "nameSizePx": 20,
+          "bodySizePx": 22,
+          "lineHeight": 1.45,
+          "fallback": "sans-serif"
+        },
+        "palette": {
+          "ink": "#392B21",
+          "surface": "#FFE5A9",
+          "accent": "#A86639"
+        },
+        "motion": {
+          "keyframes": [
+            "note-in"
+          ],
+          "cycleSeconds": 0.4,
+          "maximumAnimatedLayersPerMessage": 1,
+          "trigger": "entry only",
+          "reduced": "No animation; full text and final silhouette immediately; static accent and texture. No burst, bolts, travel or typing."
+        },
+        "geometryReference": "round10.css .skin-sticker-stack",
+        "content": "Reserve ornaments outside content; wrap names and long words; no text clipping; preserve badges, emotes and moderation."
       }
     },
     {
@@ -5598,11 +5868,11 @@
       "galleryOrder": 10,
       "stats": {
         "readability": 5,
-        "flair": 3,
+        "flair": 4,
         "motion": 2,
         "retro": 1
       },
-      "tagline": "A circular initial anchors each message",
+      "tagline": "A face for every name, without a photo.",
       "alertRecipe": {
         "version": 1,
         "title": "Community moment",
@@ -5620,6 +5890,36 @@
         "paddingPx": 20,
         "columnGapPx": 16,
         "followMessage": "{name} joined the adventure!"
+      },
+      "round10Recipe": {
+        "version": 10,
+        "status": "design-only; authoritative over earlier visual recipes; settings retained as v3 fallback",
+        "silhouette": "Pill chip with a separate circular initial medallion overlapping its start",
+        "layout": "Initial spans two rows; bold name then compact body",
+        "typography": {
+          "nameFamily": "Trebuchet MS",
+          "bodyFamily": "Trebuchet MS",
+          "nameSizePx": 20,
+          "bodySizePx": 22,
+          "lineHeight": 1.45,
+          "fallback": "sans-serif"
+        },
+        "palette": {
+          "ink": "#EEF5FF",
+          "surface": "#283957",
+          "accent": "#B7CEFA"
+        },
+        "motion": {
+          "keyframes": [
+            "pill-in"
+          ],
+          "cycleSeconds": 0.3,
+          "maximumAnimatedLayersPerMessage": 1,
+          "trigger": "entry only",
+          "reduced": "No animation; full text and final silhouette immediately; static accent and texture. No burst, bolts, travel or typing."
+        },
+        "geometryReference": "round10.css .skin-initial-card",
+        "content": "Reserve ornaments outside content; wrap names and long words; no text clipping; preserve badges, emotes and moderation."
       }
     },
     {
@@ -6103,11 +6403,11 @@
       "galleryOrder": 11,
       "stats": {
         "readability": 5,
-        "flair": 3,
-        "motion": 1,
+        "flair": 4,
+        "motion": 2,
         "retro": 4
       },
-      "tagline": "Mint console blocks with crisp amber prompts",
+      "tagline": "Message received. Receipt printed.",
       "alertRecipe": {
         "version": 1,
         "title": "Event received",
@@ -6125,6 +6425,36 @@
         "paddingPx": 20,
         "columnGapPx": 16,
         "followMessage": "{name} joined the adventure!"
+      },
+      "round10Recipe": {
+        "version": 10,
+        "status": "design-only; authoritative over earlier visual recipes; settings retained as v3 fallback",
+        "silhouette": "Receipt with zigzag torn bottom and a narrow printed top strip",
+        "layout": "Monospaced sender header, dashed rule, message below",
+        "typography": {
+          "nameFamily": "Consolas",
+          "bodyFamily": "Consolas",
+          "nameSizePx": 20,
+          "bodySizePx": 22,
+          "lineHeight": 1.45,
+          "fallback": "monospace"
+        },
+        "palette": {
+          "ink": "#163B30",
+          "surface": "#DAF2DB",
+          "accent": "#38765E"
+        },
+        "motion": {
+          "keyframes": [
+            "receipt-in"
+          ],
+          "cycleSeconds": 0.4,
+          "maximumAnimatedLayersPerMessage": 1,
+          "trigger": "entry only",
+          "reduced": "No animation; full text and final silhouette immediately; static accent and texture. No burst, bolts, travel or typing."
+        },
+        "geometryReference": "round10.css .skin-signal-console",
+        "content": "Reserve ornaments outside content; wrap names and long words; no text clipping; preserve badges, emotes and moderation."
       }
     },
     {
@@ -6610,9 +6940,9 @@
         "readability": 5,
         "flair": 4,
         "motion": 2,
-        "retro": 2
+        "retro": 1
       },
-      "tagline": "Big gold names for the latest updates",
+      "tagline": "Give every line the headline treatment.",
       "alertRecipe": {
         "version": 1,
         "title": "In the spotlight",
@@ -6630,6 +6960,36 @@
         "paddingPx": 20,
         "columnGapPx": 16,
         "followMessage": "{name} joined the adventure!"
+      },
+      "round10Recipe": {
+        "version": 10,
+        "status": "design-only; authoritative over earlier visual recipes; settings retained as v3 fallback",
+        "silhouette": "Retro TV caption bar with projecting left station tab and stair-step right end",
+        "layout": "Large condensed sender; body on a separate black caption baseline",
+        "typography": {
+          "nameFamily": "Arial Narrow",
+          "bodyFamily": "Arial Narrow",
+          "nameSizePx": 28,
+          "bodySizePx": 22,
+          "lineHeight": 1.45,
+          "fallback": "sans-serif"
+        },
+        "palette": {
+          "ink": "#FFF9E5",
+          "surface": "#22222B",
+          "accent": "#FFE095"
+        },
+        "motion": {
+          "keyframes": [
+            "caption-in"
+          ],
+          "cycleSeconds": 0.25,
+          "maximumAnimatedLayersPerMessage": 1,
+          "trigger": "entry only",
+          "reduced": "No animation; full text and final silhouette immediately; static accent and texture. No burst, bolts, travel or typing."
+        },
+        "geometryReference": "round10.css .skin-announcer",
+        "content": "Reserve ornaments outside content; wrap names and long words; no text clipping; preserve badges, emotes and moderation."
       }
     },
     {
@@ -14891,11 +15251,11 @@
       "galleryOrder": 28,
       "stats": {
         "readability": 5,
-        "flair": 3,
-        "motion": 3,
+        "flair": 4,
+        "motion": 2,
         "retro": 1
       },
-      "tagline": "Lilac inline bubbles for lighter conversations",
+      "tagline": "For the thoughts chat cannot keep in.",
       "alertRecipe": {
         "version": 1,
         "title": "A happy update",
@@ -14913,6 +15273,36 @@
         "paddingPx": 20,
         "columnGapPx": 16,
         "followMessage": "{name} joined the adventure!"
+      },
+      "round10Recipe": {
+        "version": 10,
+        "status": "design-only; authoritative over earlier visual recipes; settings retained as v3 fallback",
+        "silhouette": "Double-lobed thought cloud with two detached trailing dots",
+        "layout": "Inline rounded bold name and airy message",
+        "typography": {
+          "nameFamily": "Trebuchet MS",
+          "bodyFamily": "Trebuchet MS",
+          "nameSizePx": 20,
+          "bodySizePx": 22,
+          "lineHeight": 1.45,
+          "fallback": "sans-serif"
+        },
+        "palette": {
+          "ink": "#372D56",
+          "surface": "#EDE8FF",
+          "accent": "#BBAEDB"
+        },
+        "motion": {
+          "keyframes": [
+            "cloud-in"
+          ],
+          "cycleSeconds": 0.4,
+          "maximumAnimatedLayersPerMessage": 1,
+          "trigger": "entry only",
+          "reduced": "No animation; full text and final silhouette immediately; static accent and texture. No burst, bolts, travel or typing."
+        },
+        "geometryReference": "round10.css .skin-bubble-chat",
+        "content": "Reserve ornaments outside content; wrap names and long words; no text clipping; preserve badges, emotes and moderation."
       }
     },
     {
@@ -15396,11 +15786,11 @@
       "galleryOrder": 29,
       "stats": {
         "readability": 5,
-        "flair": 1,
+        "flair": 2,
         "motion": 2,
-        "retro": 1
+        "retro": 4
       },
-      "tagline": "Simple, readable chat with a calm dark backing",
+      "tagline": "Just the words, on a fresh page.",
       "alertRecipe": {
         "version": 1,
         "title": "Community update",
@@ -15418,6 +15808,36 @@
         "paddingPx": 20,
         "columnGapPx": 16,
         "followMessage": "{name} joined the adventure!"
+      },
+      "round10Recipe": {
+        "version": 10,
+        "status": "design-only; authoritative over earlier visual recipes; settings retained as v3 fallback",
+        "silhouette": "Plain typewriter sheet with a red left margin and stepped paper top",
+        "layout": "Monospaced sender above full-width typed body; no reveal delay",
+        "typography": {
+          "nameFamily": "Consolas",
+          "bodyFamily": "Consolas",
+          "nameSizePx": 20,
+          "bodySizePx": 22,
+          "lineHeight": 1.45,
+          "fallback": "monospace"
+        },
+        "palette": {
+          "ink": "#263346",
+          "surface": "#F1F5F9",
+          "accent": "#657891"
+        },
+        "motion": {
+          "keyframes": [
+            "paper-in"
+          ],
+          "cycleSeconds": 0.22,
+          "maximumAnimatedLayersPerMessage": 1,
+          "trigger": "entry only",
+          "reduced": "No animation; full text and final silhouette immediately; static accent and texture. No burst, bolts, travel or typing."
+        },
+        "geometryReference": "round10.css .skin-clean",
+        "content": "Reserve ornaments outside content; wrap names and long words; no text clipping; preserve badges, emotes and moderation."
       }
     },
     {
@@ -15901,11 +16321,11 @@
       "galleryOrder": 30,
       "stats": {
         "readability": 5,
-        "flair": 5,
-        "motion": 3,
-        "retro": 1
+        "flair": 4,
+        "motion": 2,
+        "retro": 4
       },
-      "tagline": "Sweet pink tiles with soft pastel colors",
+      "tagline": "Deal your chat a sweeter hand.",
       "alertRecipe": {
         "version": 1,
         "title": "Sweet moment",
@@ -15923,6 +16343,36 @@
         "paddingPx": 20,
         "columnGapPx": 16,
         "followMessage": "{name} joined the adventure!"
+      },
+      "round10Recipe": {
+        "version": 10,
+        "status": "design-only; authoritative over earlier visual recipes; settings retained as v3 fallback",
+        "silhouette": "Playing card with rounded top, clipped bottom and opposite diamond pips",
+        "layout": "Serif sender at top; friendly sans body; pips in reserved corners",
+        "typography": {
+          "nameFamily": "Georgia",
+          "bodyFamily": "Segoe UI",
+          "nameSizePx": 20,
+          "bodySizePx": 22,
+          "lineHeight": 1.45,
+          "fallback": "serif"
+        },
+        "palette": {
+          "ink": "#562841",
+          "surface": "#FFE0EB",
+          "accent": "#A84570"
+        },
+        "motion": {
+          "keyframes": [
+            "card-in"
+          ],
+          "cycleSeconds": 0.35,
+          "maximumAnimatedLayersPerMessage": 1,
+          "trigger": "entry only",
+          "reduced": "No animation; full text and final silhouette immediately; static accent and texture. No burst, bolts, travel or typing."
+        },
+        "geometryReference": "round10.css .skin-candy-pop",
+        "content": "Reserve ornaments outside content; wrap names and long words; no text clipping; preserve badges, emotes and moderation."
       }
     },
     {
@@ -16410,11 +16860,11 @@
       "galleryOrder": 31,
       "stats": {
         "readability": 5,
-        "flair": 5,
+        "flair": 4,
         "motion": 2,
-        "retro": 2
+        "retro": 1
       },
-      "tagline": "A colorful frame around clear midnight chat",
+      "tagline": "Frame the lines worth remembering.",
       "alertRecipe": {
         "version": 1,
         "title": "A colorful milestone",
@@ -16432,6 +16882,36 @@
         "paddingPx": 20,
         "columnGapPx": 16,
         "followMessage": "{name} joined the adventure!"
+      },
+      "round10Recipe": {
+        "version": 10,
+        "status": "design-only; authoritative over earlier visual recipes; settings retained as v3 fallback",
+        "silhouette": "Polaroid with square rainbow rim and a deep white caption foot",
+        "layout": "Dark photo-well body above the sender caption",
+        "typography": {
+          "nameFamily": "Verdana",
+          "bodyFamily": "Verdana",
+          "nameSizePx": 20,
+          "bodySizePx": 22,
+          "lineHeight": 1.45,
+          "fallback": "sans-serif"
+        },
+        "palette": {
+          "ink": "#F7F3FF",
+          "surface": "#24243C",
+          "accent": "#E8C6FF"
+        },
+        "motion": {
+          "keyframes": [
+            "photo-in"
+          ],
+          "cycleSeconds": 0.38,
+          "maximumAnimatedLayersPerMessage": 1,
+          "trigger": "entry only",
+          "reduced": "No animation; full text and final silhouette immediately; static accent and texture. No burst, bolts, travel or typing."
+        },
+        "geometryReference": "round10.css .skin-rainbow-border",
+        "content": "Reserve ornaments outside content; wrap names and long words; no text clipping; preserve badges, emotes and moderation."
       }
     },
     {
@@ -16915,11 +17395,11 @@
       "galleryOrder": 32,
       "stats": {
         "readability": 5,
-        "flair": 2,
-        "motion": 1,
-        "retro": 5
+        "flair": 4,
+        "motion": 4,
+        "retro": 4
       },
-      "tagline": "A quiet green console with crisp prompts",
+      "tagline": "The conversation, straight from the feed.",
       "alertRecipe": {
         "version": 1,
         "title": "event > received",
@@ -16937,6 +17417,36 @@
         "paddingPx": 20,
         "columnGapPx": 16,
         "followMessage": "{name} joined the adventure!"
+      },
+      "round10Recipe": {
+        "version": 10,
+        "status": "design-only; authoritative over earlier visual recipes; settings retained as v3 fallback",
+        "silhouette": "Continuous-feed terminal paper with punched left holes",
+        "layout": "Monospaced prompt column and command body; full text on arrival",
+        "typography": {
+          "nameFamily": "Consolas",
+          "bodyFamily": "Consolas",
+          "nameSizePx": 20,
+          "bodySizePx": 22,
+          "lineHeight": 1.45,
+          "fallback": "monospace"
+        },
+        "palette": {
+          "ink": "#CBF5D9",
+          "surface": "#11271C",
+          "accent": "#87D6A5"
+        },
+        "motion": {
+          "keyframes": [
+            "terminal-cursor"
+          ],
+          "cycleSeconds": 2,
+          "maximumAnimatedLayersPerMessage": 1,
+          "trigger": "ambient",
+          "reduced": "No animation; full text and final silhouette immediately; static accent and texture. No burst, bolts, travel or typing."
+        },
+        "geometryReference": "round10.css .skin-terminal",
+        "content": "Reserve ornaments outside content; wrap names and long words; no text clipping; preserve badges, emotes and moderation."
       }
     },
     {
@@ -17419,12 +17929,12 @@
       "featured": false,
       "galleryOrder": 33,
       "stats": {
-        "readability": 5,
-        "flair": 5,
-        "motion": 3,
-        "retro": 4
+        "readability": 4,
+        "flair": 4,
+        "motion": 4,
+        "retro": 1
       },
-      "tagline": "Slow neon gradients with a cool retro feel",
+      "tagline": "Late-night chat on a drifting mixtape.",
       "alertRecipe": {
         "version": 1,
         "title": "New frequency",
@@ -17442,6 +17952,36 @@
         "paddingPx": 20,
         "columnGapPx": 16,
         "followMessage": "{name} joined the adventure!"
+      },
+      "round10Recipe": {
+        "version": 10,
+        "status": "design-only; authoritative over earlier visual recipes; settings retained as v3 fallback",
+        "silhouette": "Cassette label with chamfered top shoulders and twin reel windows",
+        "layout": "Italic wide sender on label band; plain body underneath",
+        "typography": {
+          "nameFamily": "Trebuchet MS",
+          "bodyFamily": "Trebuchet MS",
+          "nameSizePx": 20,
+          "bodySizePx": 22,
+          "lineHeight": 1.45,
+          "fallback": "sans-serif"
+        },
+        "palette": {
+          "ink": "#FFF0FF",
+          "surface": "#35264C",
+          "accent": "#FAB5E9"
+        },
+        "motion": {
+          "keyframes": [
+            "tape-drift"
+          ],
+          "cycleSeconds": 16,
+          "maximumAnimatedLayersPerMessage": 1,
+          "trigger": "ambient",
+          "reduced": "No animation; full text and final silhouette immediately; static accent and texture. No burst, bolts, travel or typing."
+        },
+        "geometryReference": "round10.css .skin-vaporwave",
+        "content": "Reserve ornaments outside content; wrap names and long words; no text clipping; preserve badges, emotes and moderation."
       }
     },
     {
@@ -21802,6 +22342,5361 @@
         "paddingPx": 20,
         "columnGapPx": 16,
         "followMessage": "{name} joined the adventure!"
+      }
+    },
+    {
+      "id": "aurora",
+      "name": "Aurora",
+      "settings": {
+        "schemaVersion": 3,
+        "channel": "",
+        "fontFamily": "Trebuchet MS",
+        "fontSize": 22,
+        "fontWeight": 500,
+        "lineHeight": 1.4,
+        "textColor": "#F3F7FF",
+        "nameColorMode": "fixed",
+        "nameColor": "#8EF8D1",
+        "systemColor": "#F6F8FC",
+        "nameFormat": "{name}:",
+        "showBadges": true,
+        "outlineWidth": 0,
+        "outlineColor": "#000000",
+        "shadowEnabled": false,
+        "shadowColor": "#000000",
+        "shadowOpacity": 0.651,
+        "shadowBlur": 3,
+        "borderStyle": "line",
+        "borderColor": "#8EF8D1",
+        "borderWidth": 2,
+        "backgroundColor": "#0C202B",
+        "backgroundOpacity": 1,
+        "backgroundScope": "message",
+        "cornerRadius": 6,
+        "paddingX": 16,
+        "paddingY": 12,
+        "messageSpacing": 10,
+        "maxMessages": 8,
+        "messageLifetime": 30,
+        "direction": "bottom",
+        "alignment": "left",
+        "overlayWidth": 480,
+        "edgeInset": 20,
+        "animationIn": "none",
+        "animationDuration": 180,
+        "hideCommands": true,
+        "hideBots": true,
+        "botNames": [
+          "nightbot",
+          "streamelements"
+        ],
+        "hideLinks": false,
+        "borderEffect": "none",
+        "borderEffectSpeed": 6,
+        "borderEffectColor": "#E5A9FF",
+        "nameEffect": "none",
+        "nameGradientColor1": "#A9CAFF",
+        "nameGradientColor2": "#E5A9FF",
+        "textEffect": "none",
+        "typewriterDuration": 700,
+        "backgroundEffect": "none",
+        "backgroundSecondaryColor": "#273B59",
+        "backgroundTreatment": "solid",
+        "ambientEffect": "none",
+        "roleColorsEnabled": false,
+        "broadcasterNameColor": "#FFB7A5",
+        "modNameColor": "#97E8B2",
+        "vipNameColor": "#E6B0FF",
+        "subNameColor": "#FFE095",
+        "mentionHighlightEnabled": false,
+        "mentionHighlightColor": "#F4D38D",
+        "reduceMotion": false,
+        "parts": {
+          "panel": {
+            "fontFamily": "Trebuchet MS",
+            "fontSize": 22,
+            "fontWeight": 500,
+            "italic": false,
+            "letterSpacing": 0,
+            "uppercase": false,
+            "lineHeight": 1.4,
+            "inheritTypography": false,
+            "paint": {
+              "mode": "solid",
+              "color": "#F3F7FFFF",
+              "angle": 135,
+              "stops": [
+                {
+                  "color": "#A9CAFFFF",
+                  "position": 0
+                },
+                {
+                  "color": "#E5A9FFFF",
+                  "position": 100
+                }
+              ]
+            },
+            "outline": {
+              "width": 0,
+              "color": "#000000FF"
+            },
+            "shadow": {
+              "enabled": false,
+              "color": "#000000A6",
+              "x": 0,
+              "y": 1,
+              "blur": 3
+            },
+            "glow": {
+              "enabled": false,
+              "color": "#A9CAFF80",
+              "blur": 4,
+              "spread": 0
+            }
+          },
+          "messageBox": {
+            "fontFamily": "Trebuchet MS",
+            "fontSize": 22,
+            "fontWeight": 500,
+            "italic": false,
+            "letterSpacing": 0,
+            "uppercase": false,
+            "lineHeight": 1.4,
+            "inheritTypography": false,
+            "paint": {
+              "mode": "solid",
+              "color": "#F3F7FFFF",
+              "angle": 135,
+              "stops": [
+                {
+                  "color": "#A9CAFFFF",
+                  "position": 0
+                },
+                {
+                  "color": "#E5A9FFFF",
+                  "position": 100
+                }
+              ]
+            },
+            "outline": {
+              "width": 0,
+              "color": "#000000FF"
+            },
+            "shadow": {
+              "enabled": false,
+              "color": "#000000A6",
+              "x": 0,
+              "y": 1,
+              "blur": 3
+            },
+            "glow": {
+              "enabled": false,
+              "color": "#A9CAFF80",
+              "blur": 4,
+              "spread": 0
+            }
+          },
+          "name": {
+            "fontFamily": "Trebuchet MS",
+            "fontSize": 22,
+            "fontWeight": 700,
+            "italic": false,
+            "letterSpacing": 0,
+            "uppercase": false,
+            "lineHeight": 1.4,
+            "inheritTypography": false,
+            "paint": {
+              "mode": "solid",
+              "color": "#8EF8D1FF",
+              "angle": 135,
+              "stops": [
+                {
+                  "color": "#A9CAFFFF",
+                  "position": 0
+                },
+                {
+                  "color": "#E5A9FFFF",
+                  "position": 100
+                }
+              ]
+            },
+            "outline": {
+              "width": 0,
+              "color": "#000000FF"
+            },
+            "shadow": {
+              "enabled": false,
+              "color": "#000000A6",
+              "x": 0,
+              "y": 1,
+              "blur": 3
+            },
+            "glow": {
+              "enabled": false,
+              "color": "#A9CAFF80",
+              "blur": 4,
+              "spread": 0
+            }
+          },
+          "messageText": {
+            "fontFamily": "Trebuchet MS",
+            "fontSize": 22,
+            "fontWeight": 500,
+            "italic": false,
+            "letterSpacing": 0,
+            "uppercase": false,
+            "lineHeight": 1.4,
+            "inheritTypography": false,
+            "paint": {
+              "mode": "solid",
+              "color": "#F3F7FFFF",
+              "angle": 135,
+              "stops": [
+                {
+                  "color": "#A9CAFFFF",
+                  "position": 0
+                },
+                {
+                  "color": "#E5A9FFFF",
+                  "position": 100
+                }
+              ]
+            },
+            "outline": {
+              "width": 0,
+              "color": "#000000FF"
+            },
+            "shadow": {
+              "enabled": false,
+              "color": "#000000A6",
+              "x": 0,
+              "y": 1,
+              "blur": 3
+            },
+            "glow": {
+              "enabled": false,
+              "color": "#A9CAFF80",
+              "blur": 4,
+              "spread": 0
+            }
+          },
+          "badges": {
+            "fontFamily": "Trebuchet MS",
+            "fontSize": 14,
+            "fontWeight": 500,
+            "italic": false,
+            "letterSpacing": 0,
+            "uppercase": false,
+            "lineHeight": 1.4,
+            "inheritTypography": false,
+            "paint": {
+              "mode": "solid",
+              "color": "#F3F7FFFF",
+              "angle": 135,
+              "stops": [
+                {
+                  "color": "#A9CAFFFF",
+                  "position": 0
+                },
+                {
+                  "color": "#E5A9FFFF",
+                  "position": 100
+                }
+              ]
+            },
+            "outline": {
+              "width": 0,
+              "color": "#000000FF"
+            },
+            "shadow": {
+              "enabled": false,
+              "color": "#000000A6",
+              "x": 0,
+              "y": 1,
+              "blur": 3
+            },
+            "glow": {
+              "enabled": false,
+              "color": "#A9CAFF80",
+              "blur": 4,
+              "spread": 0
+            }
+          },
+          "system": {
+            "fontFamily": "Trebuchet MS",
+            "fontSize": 22,
+            "fontWeight": 500,
+            "italic": false,
+            "letterSpacing": 0,
+            "uppercase": false,
+            "lineHeight": 1.4,
+            "inheritTypography": false,
+            "paint": {
+              "mode": "solid",
+              "color": "#F3F7FFFF",
+              "angle": 135,
+              "stops": [
+                {
+                  "color": "#A9CAFFFF",
+                  "position": 0
+                },
+                {
+                  "color": "#E5A9FFFF",
+                  "position": 100
+                }
+              ]
+            },
+            "outline": {
+              "width": 0,
+              "color": "#000000FF"
+            },
+            "shadow": {
+              "enabled": false,
+              "color": "#000000A6",
+              "x": 0,
+              "y": 1,
+              "blur": 3
+            },
+            "glow": {
+              "enabled": false,
+              "color": "#A9CAFF80",
+              "blur": 4,
+              "spread": 0
+            }
+          }
+        },
+        "frame": {
+          "target": "message",
+          "style": "solid",
+          "width": 2,
+          "paint": {
+            "mode": "solid",
+            "color": "#8EF8D1FF",
+            "angle": 135,
+            "stops": [
+              {
+                "color": "#A9CAFFFF",
+                "position": 0
+              },
+              {
+                "color": "#E5A9FFFF",
+                "position": 100
+              }
+            ]
+          },
+          "radius": {
+            "topLeft": 6,
+            "topRight": 6,
+            "bottomRight": 6,
+            "bottomLeft": 6
+          },
+          "padding": {
+            "top": 12,
+            "right": 16,
+            "bottom": 12,
+            "left": 16
+          },
+          "doubleGap": 2,
+          "pixelStep": 4,
+          "outer": {
+            "enabled": false,
+            "width": 1,
+            "color": "#7487A1FF",
+            "offset": 2
+          },
+          "ornament": {
+            "style": "none",
+            "color": "#7487A1FF",
+            "size": 12,
+            "width": 1,
+            "inset": 2
+          },
+          "legacyDetail": "none"
+        },
+        "backgrounds": {
+          "message": {
+            "mode": "solid",
+            "color": "#0C202BFF",
+            "stops": [
+              {
+                "color": "#111C2EFF",
+                "position": 0
+              },
+              {
+                "color": "#273B59FF",
+                "position": 100
+              }
+            ],
+            "angle": 135,
+            "radialCenterX": 50,
+            "radialCenterY": 50,
+            "imageUrl": "",
+            "imageFit": "cover",
+            "imageOpacity": 1,
+            "opacity": 1,
+            "backdropBlur": 0,
+            "recipe": "none"
+          },
+          "panel": {
+            "mode": "solid",
+            "color": "#111C2EFF",
+            "stops": [
+              {
+                "color": "#111C2EFF",
+                "position": 0
+              },
+              {
+                "color": "#273B59FF",
+                "position": 100
+              }
+            ],
+            "angle": 135,
+            "radialCenterX": 50,
+            "radialCenterY": 50,
+            "imageUrl": "",
+            "imageFit": "cover",
+            "imageOpacity": 1,
+            "opacity": 0,
+            "backdropBlur": 0,
+            "recipe": "none"
+          }
+        },
+        "nameTemplate": "{badges} {name}: ",
+        "animationOut": "fade",
+        "animationOutDuration": 160,
+        "customCSS": {
+          "enabled": false,
+          "source": ""
+        },
+        "effectColors": {
+          "broadcaster": "#FFB7A5FF",
+          "moderator": "#97E8B2FF",
+          "vip": "#E6B0FFFF",
+          "subscriber": "#FFE095FF",
+          "mention": "#F4D38DFF",
+          "borderSecondary": "#E5A9FFFF"
+        },
+        "transparentBackground": true,
+        "hideFrames": false,
+        "presentation": {
+          "layout": "inline",
+          "shape": "rect",
+          "nameTreatment": "plain",
+          "accent": "none",
+          "chipColor": "#7487A1FF",
+          "columnWidth": 120,
+          "initialSize": 40,
+          "tailSize": 10,
+          "cutSize": 12
+        },
+        "nameStyle": {
+          "readableColors": true,
+          "minContrast": 4.5
+        },
+        "grouping": {
+          "enabled": false,
+          "windowSeconds": 20
+        },
+        "messageLimits": {
+          "maxLineCh": 38,
+          "maxLines": 0
+        },
+        "lifecycle": {
+          "fadeMaskPx": 0
+        },
+        "emphasis": {
+          "firstMessage": false,
+          "color": "#FFE095FF"
+        },
+        "emotes": {
+          "sevenTV": true,
+          "bttv": true,
+          "ffz": true,
+          "emoteOnlyScale": 2,
+          "inlineSize": 28
+        },
+        "channels": {
+          "enabled": false,
+          "rules": []
+        }
+      },
+      "category": "Animated",
+      "featured": false,
+      "galleryOrder": 42,
+      "stats": {
+        "readability": 4,
+        "flair": 5,
+        "motion": 5,
+        "retro": 1
+      },
+      "tagline": "Northern lights, right on the edge.",
+      "alertRecipe": {
+        "version": 1,
+        "title": "Aurora update",
+        "frameNote": "Asymmetric auroral arch; 36px upper-left and 4px lower-right corners",
+        "tokenBindings": "alertDesign.tokenBindings",
+        "iconSet": "alertDesign.icons",
+        "iconTreatment": "outline",
+        "motion": "fade",
+        "soundWave": "sine",
+        "typeDefaults": "alertDesign.types",
+        "surfaceOpacityFloor": 0.94,
+        "titleSizePx": 16,
+        "bodySizePx": "clamp(20, resolved messageText fontSize, 32)",
+        "iconSizePx": 36,
+        "paddingPx": 20,
+        "columnGapPx": 16,
+        "followMessage": "{name} joined the adventure!"
+      },
+      "round10Recipe": {
+        "version": 10,
+        "status": "design-only; authoritative over earlier visual recipes; settings retained as v3 fallback",
+        "silhouette": "Asymmetric auroral arch; 36px upper-left and 4px lower-right corners",
+        "layout": "Small spaced sender above a wide calm text field",
+        "typography": {
+          "nameFamily": "Trebuchet MS",
+          "bodyFamily": "Trebuchet MS",
+          "nameSizePx": 20,
+          "bodySizePx": 22,
+          "lineHeight": 1.45,
+          "fallback": "sans-serif"
+        },
+        "palette": {
+          "ink": "#F3F7FF",
+          "surface": "#0C202B",
+          "accent": "#8EF8D1"
+        },
+        "motion": {
+          "keyframes": [
+            "aurora-flow"
+          ],
+          "cycleSeconds": 14,
+          "maximumAnimatedLayersPerMessage": 1,
+          "trigger": "ambient + entry",
+          "reduced": "No animation; full text and final silhouette immediately; static accent and texture. No burst, bolts, travel or typing."
+        },
+        "geometryReference": "round10.css .skin-aurora",
+        "content": "Reserve ornaments outside content; wrap names and long words; no text clipping; preserve badges, emotes and moderation."
+      }
+    },
+    {
+      "id": "glitter-bomb",
+      "name": "Glitter Bomb",
+      "settings": {
+        "schemaVersion": 3,
+        "channel": "",
+        "fontFamily": "Verdana",
+        "fontSize": 22,
+        "fontWeight": 500,
+        "lineHeight": 1.4,
+        "textColor": "#FFF2FC",
+        "nameColorMode": "fixed",
+        "nameColor": "#FFD1EE",
+        "systemColor": "#F6F8FC",
+        "nameFormat": "{name}:",
+        "showBadges": true,
+        "outlineWidth": 0,
+        "outlineColor": "#000000",
+        "shadowEnabled": false,
+        "shadowColor": "#000000",
+        "shadowOpacity": 0.651,
+        "shadowBlur": 3,
+        "borderStyle": "line",
+        "borderColor": "#FFD1EE",
+        "borderWidth": 2,
+        "backgroundColor": "#341833",
+        "backgroundOpacity": 1,
+        "backgroundScope": "message",
+        "cornerRadius": 6,
+        "paddingX": 16,
+        "paddingY": 12,
+        "messageSpacing": 10,
+        "maxMessages": 8,
+        "messageLifetime": 30,
+        "direction": "bottom",
+        "alignment": "left",
+        "overlayWidth": 480,
+        "edgeInset": 20,
+        "animationIn": "none",
+        "animationDuration": 180,
+        "hideCommands": true,
+        "hideBots": true,
+        "botNames": [
+          "nightbot",
+          "streamelements"
+        ],
+        "hideLinks": false,
+        "borderEffect": "none",
+        "borderEffectSpeed": 6,
+        "borderEffectColor": "#E5A9FF",
+        "nameEffect": "none",
+        "nameGradientColor1": "#A9CAFF",
+        "nameGradientColor2": "#E5A9FF",
+        "textEffect": "none",
+        "typewriterDuration": 700,
+        "backgroundEffect": "none",
+        "backgroundSecondaryColor": "#273B59",
+        "backgroundTreatment": "solid",
+        "ambientEffect": "none",
+        "roleColorsEnabled": false,
+        "broadcasterNameColor": "#FFB7A5",
+        "modNameColor": "#97E8B2",
+        "vipNameColor": "#E6B0FF",
+        "subNameColor": "#FFE095",
+        "mentionHighlightEnabled": false,
+        "mentionHighlightColor": "#F4D38D",
+        "reduceMotion": false,
+        "parts": {
+          "panel": {
+            "fontFamily": "Verdana",
+            "fontSize": 22,
+            "fontWeight": 500,
+            "italic": false,
+            "letterSpacing": 0,
+            "uppercase": false,
+            "lineHeight": 1.4,
+            "inheritTypography": false,
+            "paint": {
+              "mode": "solid",
+              "color": "#FFF2FCFF",
+              "angle": 135,
+              "stops": [
+                {
+                  "color": "#A9CAFFFF",
+                  "position": 0
+                },
+                {
+                  "color": "#E5A9FFFF",
+                  "position": 100
+                }
+              ]
+            },
+            "outline": {
+              "width": 0,
+              "color": "#000000FF"
+            },
+            "shadow": {
+              "enabled": false,
+              "color": "#000000A6",
+              "x": 0,
+              "y": 1,
+              "blur": 3
+            },
+            "glow": {
+              "enabled": false,
+              "color": "#A9CAFF80",
+              "blur": 4,
+              "spread": 0
+            }
+          },
+          "messageBox": {
+            "fontFamily": "Verdana",
+            "fontSize": 22,
+            "fontWeight": 500,
+            "italic": false,
+            "letterSpacing": 0,
+            "uppercase": false,
+            "lineHeight": 1.4,
+            "inheritTypography": false,
+            "paint": {
+              "mode": "solid",
+              "color": "#FFF2FCFF",
+              "angle": 135,
+              "stops": [
+                {
+                  "color": "#A9CAFFFF",
+                  "position": 0
+                },
+                {
+                  "color": "#E5A9FFFF",
+                  "position": 100
+                }
+              ]
+            },
+            "outline": {
+              "width": 0,
+              "color": "#000000FF"
+            },
+            "shadow": {
+              "enabled": false,
+              "color": "#000000A6",
+              "x": 0,
+              "y": 1,
+              "blur": 3
+            },
+            "glow": {
+              "enabled": false,
+              "color": "#A9CAFF80",
+              "blur": 4,
+              "spread": 0
+            }
+          },
+          "name": {
+            "fontFamily": "Verdana",
+            "fontSize": 22,
+            "fontWeight": 700,
+            "italic": false,
+            "letterSpacing": 0,
+            "uppercase": false,
+            "lineHeight": 1.4,
+            "inheritTypography": false,
+            "paint": {
+              "mode": "solid",
+              "color": "#FFD1EEFF",
+              "angle": 135,
+              "stops": [
+                {
+                  "color": "#A9CAFFFF",
+                  "position": 0
+                },
+                {
+                  "color": "#E5A9FFFF",
+                  "position": 100
+                }
+              ]
+            },
+            "outline": {
+              "width": 0,
+              "color": "#000000FF"
+            },
+            "shadow": {
+              "enabled": false,
+              "color": "#000000A6",
+              "x": 0,
+              "y": 1,
+              "blur": 3
+            },
+            "glow": {
+              "enabled": false,
+              "color": "#A9CAFF80",
+              "blur": 4,
+              "spread": 0
+            }
+          },
+          "messageText": {
+            "fontFamily": "Verdana",
+            "fontSize": 22,
+            "fontWeight": 500,
+            "italic": false,
+            "letterSpacing": 0,
+            "uppercase": false,
+            "lineHeight": 1.4,
+            "inheritTypography": false,
+            "paint": {
+              "mode": "solid",
+              "color": "#FFF2FCFF",
+              "angle": 135,
+              "stops": [
+                {
+                  "color": "#A9CAFFFF",
+                  "position": 0
+                },
+                {
+                  "color": "#E5A9FFFF",
+                  "position": 100
+                }
+              ]
+            },
+            "outline": {
+              "width": 0,
+              "color": "#000000FF"
+            },
+            "shadow": {
+              "enabled": false,
+              "color": "#000000A6",
+              "x": 0,
+              "y": 1,
+              "blur": 3
+            },
+            "glow": {
+              "enabled": false,
+              "color": "#A9CAFF80",
+              "blur": 4,
+              "spread": 0
+            }
+          },
+          "badges": {
+            "fontFamily": "Verdana",
+            "fontSize": 14,
+            "fontWeight": 500,
+            "italic": false,
+            "letterSpacing": 0,
+            "uppercase": false,
+            "lineHeight": 1.4,
+            "inheritTypography": false,
+            "paint": {
+              "mode": "solid",
+              "color": "#FFF2FCFF",
+              "angle": 135,
+              "stops": [
+                {
+                  "color": "#A9CAFFFF",
+                  "position": 0
+                },
+                {
+                  "color": "#E5A9FFFF",
+                  "position": 100
+                }
+              ]
+            },
+            "outline": {
+              "width": 0,
+              "color": "#000000FF"
+            },
+            "shadow": {
+              "enabled": false,
+              "color": "#000000A6",
+              "x": 0,
+              "y": 1,
+              "blur": 3
+            },
+            "glow": {
+              "enabled": false,
+              "color": "#A9CAFF80",
+              "blur": 4,
+              "spread": 0
+            }
+          },
+          "system": {
+            "fontFamily": "Verdana",
+            "fontSize": 22,
+            "fontWeight": 500,
+            "italic": false,
+            "letterSpacing": 0,
+            "uppercase": false,
+            "lineHeight": 1.4,
+            "inheritTypography": false,
+            "paint": {
+              "mode": "solid",
+              "color": "#FFF2FCFF",
+              "angle": 135,
+              "stops": [
+                {
+                  "color": "#A9CAFFFF",
+                  "position": 0
+                },
+                {
+                  "color": "#E5A9FFFF",
+                  "position": 100
+                }
+              ]
+            },
+            "outline": {
+              "width": 0,
+              "color": "#000000FF"
+            },
+            "shadow": {
+              "enabled": false,
+              "color": "#000000A6",
+              "x": 0,
+              "y": 1,
+              "blur": 3
+            },
+            "glow": {
+              "enabled": false,
+              "color": "#A9CAFF80",
+              "blur": 4,
+              "spread": 0
+            }
+          }
+        },
+        "frame": {
+          "target": "message",
+          "style": "solid",
+          "width": 2,
+          "paint": {
+            "mode": "solid",
+            "color": "#FFD1EEFF",
+            "angle": 135,
+            "stops": [
+              {
+                "color": "#A9CAFFFF",
+                "position": 0
+              },
+              {
+                "color": "#E5A9FFFF",
+                "position": 100
+              }
+            ]
+          },
+          "radius": {
+            "topLeft": 6,
+            "topRight": 6,
+            "bottomRight": 6,
+            "bottomLeft": 6
+          },
+          "padding": {
+            "top": 12,
+            "right": 16,
+            "bottom": 12,
+            "left": 16
+          },
+          "doubleGap": 2,
+          "pixelStep": 4,
+          "outer": {
+            "enabled": false,
+            "width": 1,
+            "color": "#7487A1FF",
+            "offset": 2
+          },
+          "ornament": {
+            "style": "none",
+            "color": "#7487A1FF",
+            "size": 12,
+            "width": 1,
+            "inset": 2
+          },
+          "legacyDetail": "none"
+        },
+        "backgrounds": {
+          "message": {
+            "mode": "solid",
+            "color": "#341833FF",
+            "stops": [
+              {
+                "color": "#111C2EFF",
+                "position": 0
+              },
+              {
+                "color": "#273B59FF",
+                "position": 100
+              }
+            ],
+            "angle": 135,
+            "radialCenterX": 50,
+            "radialCenterY": 50,
+            "imageUrl": "",
+            "imageFit": "cover",
+            "imageOpacity": 1,
+            "opacity": 1,
+            "backdropBlur": 0,
+            "recipe": "none"
+          },
+          "panel": {
+            "mode": "solid",
+            "color": "#111C2EFF",
+            "stops": [
+              {
+                "color": "#111C2EFF",
+                "position": 0
+              },
+              {
+                "color": "#273B59FF",
+                "position": 100
+              }
+            ],
+            "angle": 135,
+            "radialCenterX": 50,
+            "radialCenterY": 50,
+            "imageUrl": "",
+            "imageFit": "cover",
+            "imageOpacity": 1,
+            "opacity": 0,
+            "backdropBlur": 0,
+            "recipe": "none"
+          }
+        },
+        "nameTemplate": "{badges} {name}: ",
+        "animationOut": "fade",
+        "animationOutDuration": 160,
+        "customCSS": {
+          "enabled": false,
+          "source": ""
+        },
+        "effectColors": {
+          "broadcaster": "#FFB7A5FF",
+          "moderator": "#97E8B2FF",
+          "vip": "#E6B0FFFF",
+          "subscriber": "#FFE095FF",
+          "mention": "#F4D38DFF",
+          "borderSecondary": "#E5A9FFFF"
+        },
+        "transparentBackground": true,
+        "hideFrames": false,
+        "presentation": {
+          "layout": "inline",
+          "shape": "rect",
+          "nameTreatment": "plain",
+          "accent": "none",
+          "chipColor": "#7487A1FF",
+          "columnWidth": 120,
+          "initialSize": 40,
+          "tailSize": 10,
+          "cutSize": 12
+        },
+        "nameStyle": {
+          "readableColors": true,
+          "minContrast": 4.5
+        },
+        "grouping": {
+          "enabled": false,
+          "windowSeconds": 20
+        },
+        "messageLimits": {
+          "maxLineCh": 38,
+          "maxLines": 0
+        },
+        "lifecycle": {
+          "fadeMaskPx": 0
+        },
+        "emphasis": {
+          "firstMessage": false,
+          "color": "#FFE095FF"
+        },
+        "emotes": {
+          "sevenTV": true,
+          "bttv": true,
+          "ffz": true,
+          "emoteOnlyScale": 2,
+          "inlineSize": 28
+        },
+        "channels": {
+          "enabled": false,
+          "rules": []
+        }
+      },
+      "category": "Animated",
+      "featured": false,
+      "galleryOrder": 43,
+      "stats": {
+        "readability": 4,
+        "flair": 5,
+        "motion": 5,
+        "retro": 1
+      },
+      "tagline": "A little sparkle. A grand entrance.",
+      "alertRecipe": {
+        "version": 1,
+        "title": "Glitter Bomb update",
+        "frameNote": "Scalloped party seal with six shallow teeth on each side",
+        "tokenBindings": "alertDesign.tokenBindings",
+        "iconSet": "alertDesign.icons",
+        "iconTreatment": "outline",
+        "motion": "fade",
+        "soundWave": "sine",
+        "typeDefaults": "alertDesign.types",
+        "surfaceOpacityFloor": 0.94,
+        "titleSizePx": 16,
+        "bodySizePx": "clamp(20, resolved messageText fontSize, 32)",
+        "iconSizePx": 36,
+        "paddingPx": 20,
+        "columnGapPx": 16,
+        "followMessage": "{name} joined the adventure!"
+      },
+      "round10Recipe": {
+        "version": 10,
+        "status": "design-only; authoritative over earlier visual recipes; settings retained as v3 fallback",
+        "silhouette": "Scalloped party seal with six shallow teeth on each side",
+        "layout": "Bold centered sender over left-aligned message",
+        "typography": {
+          "nameFamily": "Verdana",
+          "bodyFamily": "Verdana",
+          "nameSizePx": 20,
+          "bodySizePx": 22,
+          "lineHeight": 1.45,
+          "fallback": "sans-serif"
+        },
+        "palette": {
+          "ink": "#FFF2FC",
+          "surface": "#341833",
+          "accent": "#FFD1EE"
+        },
+        "motion": {
+          "keyframes": [
+            "glitter-twinkle",
+            "glitter-entry"
+          ],
+          "cycleSeconds": 4.6,
+          "maximumAnimatedLayersPerMessage": 2,
+          "trigger": "ambient + entry",
+          "reduced": "No animation; full text and final silhouette immediately; static accent and texture. No burst, bolts, travel or typing."
+        },
+        "geometryReference": "round10.css .skin-glitter-bomb",
+        "content": "Reserve ornaments outside content; wrap names and long words; no text clipping; preserve badges, emotes and moderation."
+      }
+    },
+    {
+      "id": "neon-pulse",
+      "name": "Neon Pulse",
+      "settings": {
+        "schemaVersion": 3,
+        "channel": "",
+        "fontFamily": "Arial Narrow",
+        "fontSize": 22,
+        "fontWeight": 500,
+        "lineHeight": 1.4,
+        "textColor": "#FFF3FA",
+        "nameColorMode": "fixed",
+        "nameColor": "#FF8EDB",
+        "systemColor": "#F6F8FC",
+        "nameFormat": "{name}:",
+        "showBadges": true,
+        "outlineWidth": 0,
+        "outlineColor": "#000000",
+        "shadowEnabled": false,
+        "shadowColor": "#000000",
+        "shadowOpacity": 0.651,
+        "shadowBlur": 3,
+        "borderStyle": "line",
+        "borderColor": "#FF8EDB",
+        "borderWidth": 2,
+        "backgroundColor": "#251225",
+        "backgroundOpacity": 1,
+        "backgroundScope": "message",
+        "cornerRadius": 6,
+        "paddingX": 16,
+        "paddingY": 12,
+        "messageSpacing": 10,
+        "maxMessages": 8,
+        "messageLifetime": 30,
+        "direction": "bottom",
+        "alignment": "left",
+        "overlayWidth": 480,
+        "edgeInset": 20,
+        "animationIn": "none",
+        "animationDuration": 180,
+        "hideCommands": true,
+        "hideBots": true,
+        "botNames": [
+          "nightbot",
+          "streamelements"
+        ],
+        "hideLinks": false,
+        "borderEffect": "none",
+        "borderEffectSpeed": 6,
+        "borderEffectColor": "#E5A9FF",
+        "nameEffect": "none",
+        "nameGradientColor1": "#A9CAFF",
+        "nameGradientColor2": "#E5A9FF",
+        "textEffect": "none",
+        "typewriterDuration": 700,
+        "backgroundEffect": "none",
+        "backgroundSecondaryColor": "#273B59",
+        "backgroundTreatment": "solid",
+        "ambientEffect": "none",
+        "roleColorsEnabled": false,
+        "broadcasterNameColor": "#FFB7A5",
+        "modNameColor": "#97E8B2",
+        "vipNameColor": "#E6B0FF",
+        "subNameColor": "#FFE095",
+        "mentionHighlightEnabled": false,
+        "mentionHighlightColor": "#F4D38D",
+        "reduceMotion": false,
+        "parts": {
+          "panel": {
+            "fontFamily": "Arial Narrow",
+            "fontSize": 22,
+            "fontWeight": 500,
+            "italic": false,
+            "letterSpacing": 0,
+            "uppercase": false,
+            "lineHeight": 1.4,
+            "inheritTypography": false,
+            "paint": {
+              "mode": "solid",
+              "color": "#FFF3FAFF",
+              "angle": 135,
+              "stops": [
+                {
+                  "color": "#A9CAFFFF",
+                  "position": 0
+                },
+                {
+                  "color": "#E5A9FFFF",
+                  "position": 100
+                }
+              ]
+            },
+            "outline": {
+              "width": 0,
+              "color": "#000000FF"
+            },
+            "shadow": {
+              "enabled": false,
+              "color": "#000000A6",
+              "x": 0,
+              "y": 1,
+              "blur": 3
+            },
+            "glow": {
+              "enabled": false,
+              "color": "#A9CAFF80",
+              "blur": 4,
+              "spread": 0
+            }
+          },
+          "messageBox": {
+            "fontFamily": "Arial Narrow",
+            "fontSize": 22,
+            "fontWeight": 500,
+            "italic": false,
+            "letterSpacing": 0,
+            "uppercase": false,
+            "lineHeight": 1.4,
+            "inheritTypography": false,
+            "paint": {
+              "mode": "solid",
+              "color": "#FFF3FAFF",
+              "angle": 135,
+              "stops": [
+                {
+                  "color": "#A9CAFFFF",
+                  "position": 0
+                },
+                {
+                  "color": "#E5A9FFFF",
+                  "position": 100
+                }
+              ]
+            },
+            "outline": {
+              "width": 0,
+              "color": "#000000FF"
+            },
+            "shadow": {
+              "enabled": false,
+              "color": "#000000A6",
+              "x": 0,
+              "y": 1,
+              "blur": 3
+            },
+            "glow": {
+              "enabled": false,
+              "color": "#A9CAFF80",
+              "blur": 4,
+              "spread": 0
+            }
+          },
+          "name": {
+            "fontFamily": "Arial Narrow",
+            "fontSize": 22,
+            "fontWeight": 700,
+            "italic": false,
+            "letterSpacing": 0,
+            "uppercase": false,
+            "lineHeight": 1.4,
+            "inheritTypography": false,
+            "paint": {
+              "mode": "solid",
+              "color": "#FF8EDBFF",
+              "angle": 135,
+              "stops": [
+                {
+                  "color": "#A9CAFFFF",
+                  "position": 0
+                },
+                {
+                  "color": "#E5A9FFFF",
+                  "position": 100
+                }
+              ]
+            },
+            "outline": {
+              "width": 0,
+              "color": "#000000FF"
+            },
+            "shadow": {
+              "enabled": false,
+              "color": "#000000A6",
+              "x": 0,
+              "y": 1,
+              "blur": 3
+            },
+            "glow": {
+              "enabled": false,
+              "color": "#A9CAFF80",
+              "blur": 4,
+              "spread": 0
+            }
+          },
+          "messageText": {
+            "fontFamily": "Arial Narrow",
+            "fontSize": 22,
+            "fontWeight": 500,
+            "italic": false,
+            "letterSpacing": 0,
+            "uppercase": false,
+            "lineHeight": 1.4,
+            "inheritTypography": false,
+            "paint": {
+              "mode": "solid",
+              "color": "#FFF3FAFF",
+              "angle": 135,
+              "stops": [
+                {
+                  "color": "#A9CAFFFF",
+                  "position": 0
+                },
+                {
+                  "color": "#E5A9FFFF",
+                  "position": 100
+                }
+              ]
+            },
+            "outline": {
+              "width": 0,
+              "color": "#000000FF"
+            },
+            "shadow": {
+              "enabled": false,
+              "color": "#000000A6",
+              "x": 0,
+              "y": 1,
+              "blur": 3
+            },
+            "glow": {
+              "enabled": false,
+              "color": "#A9CAFF80",
+              "blur": 4,
+              "spread": 0
+            }
+          },
+          "badges": {
+            "fontFamily": "Arial Narrow",
+            "fontSize": 14,
+            "fontWeight": 500,
+            "italic": false,
+            "letterSpacing": 0,
+            "uppercase": false,
+            "lineHeight": 1.4,
+            "inheritTypography": false,
+            "paint": {
+              "mode": "solid",
+              "color": "#FFF3FAFF",
+              "angle": 135,
+              "stops": [
+                {
+                  "color": "#A9CAFFFF",
+                  "position": 0
+                },
+                {
+                  "color": "#E5A9FFFF",
+                  "position": 100
+                }
+              ]
+            },
+            "outline": {
+              "width": 0,
+              "color": "#000000FF"
+            },
+            "shadow": {
+              "enabled": false,
+              "color": "#000000A6",
+              "x": 0,
+              "y": 1,
+              "blur": 3
+            },
+            "glow": {
+              "enabled": false,
+              "color": "#A9CAFF80",
+              "blur": 4,
+              "spread": 0
+            }
+          },
+          "system": {
+            "fontFamily": "Arial Narrow",
+            "fontSize": 22,
+            "fontWeight": 500,
+            "italic": false,
+            "letterSpacing": 0,
+            "uppercase": false,
+            "lineHeight": 1.4,
+            "inheritTypography": false,
+            "paint": {
+              "mode": "solid",
+              "color": "#FFF3FAFF",
+              "angle": 135,
+              "stops": [
+                {
+                  "color": "#A9CAFFFF",
+                  "position": 0
+                },
+                {
+                  "color": "#E5A9FFFF",
+                  "position": 100
+                }
+              ]
+            },
+            "outline": {
+              "width": 0,
+              "color": "#000000FF"
+            },
+            "shadow": {
+              "enabled": false,
+              "color": "#000000A6",
+              "x": 0,
+              "y": 1,
+              "blur": 3
+            },
+            "glow": {
+              "enabled": false,
+              "color": "#A9CAFF80",
+              "blur": 4,
+              "spread": 0
+            }
+          }
+        },
+        "frame": {
+          "target": "message",
+          "style": "solid",
+          "width": 2,
+          "paint": {
+            "mode": "solid",
+            "color": "#FF8EDBFF",
+            "angle": 135,
+            "stops": [
+              {
+                "color": "#A9CAFFFF",
+                "position": 0
+              },
+              {
+                "color": "#E5A9FFFF",
+                "position": 100
+              }
+            ]
+          },
+          "radius": {
+            "topLeft": 6,
+            "topRight": 6,
+            "bottomRight": 6,
+            "bottomLeft": 6
+          },
+          "padding": {
+            "top": 12,
+            "right": 16,
+            "bottom": 12,
+            "left": 16
+          },
+          "doubleGap": 2,
+          "pixelStep": 4,
+          "outer": {
+            "enabled": false,
+            "width": 1,
+            "color": "#7487A1FF",
+            "offset": 2
+          },
+          "ornament": {
+            "style": "none",
+            "color": "#7487A1FF",
+            "size": 12,
+            "width": 1,
+            "inset": 2
+          },
+          "legacyDetail": "none"
+        },
+        "backgrounds": {
+          "message": {
+            "mode": "solid",
+            "color": "#251225FF",
+            "stops": [
+              {
+                "color": "#111C2EFF",
+                "position": 0
+              },
+              {
+                "color": "#273B59FF",
+                "position": 100
+              }
+            ],
+            "angle": 135,
+            "radialCenterX": 50,
+            "radialCenterY": 50,
+            "imageUrl": "",
+            "imageFit": "cover",
+            "imageOpacity": 1,
+            "opacity": 1,
+            "backdropBlur": 0,
+            "recipe": "none"
+          },
+          "panel": {
+            "mode": "solid",
+            "color": "#111C2EFF",
+            "stops": [
+              {
+                "color": "#111C2EFF",
+                "position": 0
+              },
+              {
+                "color": "#273B59FF",
+                "position": 100
+              }
+            ],
+            "angle": 135,
+            "radialCenterX": 50,
+            "radialCenterY": 50,
+            "imageUrl": "",
+            "imageFit": "cover",
+            "imageOpacity": 1,
+            "opacity": 0,
+            "backdropBlur": 0,
+            "recipe": "none"
+          }
+        },
+        "nameTemplate": "{badges} {name}: ",
+        "animationOut": "fade",
+        "animationOutDuration": 160,
+        "customCSS": {
+          "enabled": false,
+          "source": ""
+        },
+        "effectColors": {
+          "broadcaster": "#FFB7A5FF",
+          "moderator": "#97E8B2FF",
+          "vip": "#E6B0FFFF",
+          "subscriber": "#FFE095FF",
+          "mention": "#F4D38DFF",
+          "borderSecondary": "#E5A9FFFF"
+        },
+        "transparentBackground": true,
+        "hideFrames": false,
+        "presentation": {
+          "layout": "inline",
+          "shape": "rect",
+          "nameTreatment": "plain",
+          "accent": "none",
+          "chipColor": "#7487A1FF",
+          "columnWidth": 120,
+          "initialSize": 40,
+          "tailSize": 10,
+          "cutSize": 12
+        },
+        "nameStyle": {
+          "readableColors": true,
+          "minContrast": 4.5
+        },
+        "grouping": {
+          "enabled": false,
+          "windowSeconds": 20
+        },
+        "messageLimits": {
+          "maxLineCh": 38,
+          "maxLines": 0
+        },
+        "lifecycle": {
+          "fadeMaskPx": 0
+        },
+        "emphasis": {
+          "firstMessage": false,
+          "color": "#FFE095FF"
+        },
+        "emotes": {
+          "sevenTV": true,
+          "bttv": true,
+          "ffz": true,
+          "emoteOnlyScale": 2,
+          "inlineSize": 28
+        },
+        "channels": {
+          "enabled": false,
+          "rules": []
+        }
+      },
+      "category": "Animated",
+      "featured": false,
+      "galleryOrder": 44,
+      "stats": {
+        "readability": 4,
+        "flair": 5,
+        "motion": 5,
+        "retro": 1
+      },
+      "tagline": "The sign is on. Chat is alive.",
+      "alertRecipe": {
+        "version": 1,
+        "title": "Neon Pulse update",
+        "frameNote": "Open-ended neon tube; squared left, semicircular right",
+        "tokenBindings": "alertDesign.tokenBindings",
+        "iconSet": "alertDesign.icons",
+        "iconTreatment": "outline",
+        "motion": "fade",
+        "soundWave": "sine",
+        "typeDefaults": "alertDesign.types",
+        "surfaceOpacityFloor": 0.94,
+        "titleSizePx": 16,
+        "bodySizePx": "clamp(20, resolved messageText fontSize, 32)",
+        "iconSizePx": 36,
+        "paddingPx": 20,
+        "columnGapPx": 16,
+        "followMessage": "{name} joined the adventure!"
+      },
+      "round10Recipe": {
+        "version": 10,
+        "status": "design-only; authoritative over earlier visual recipes; settings retained as v3 fallback",
+        "silhouette": "Open-ended neon tube; squared left, semicircular right",
+        "layout": "Condensed sender on a small black sign above body",
+        "typography": {
+          "nameFamily": "Arial Narrow",
+          "bodyFamily": "Arial Narrow",
+          "nameSizePx": 20,
+          "bodySizePx": 22,
+          "lineHeight": 1.45,
+          "fallback": "sans-serif"
+        },
+        "palette": {
+          "ink": "#FFF3FA",
+          "surface": "#251225",
+          "accent": "#FF8EDB"
+        },
+        "motion": {
+          "keyframes": [
+            "neon-breathe",
+            "neon-arrive"
+          ],
+          "cycleSeconds": 3.8,
+          "maximumAnimatedLayersPerMessage": 1,
+          "trigger": "ambient + entry",
+          "reduced": "No animation; full text and final silhouette immediately; static accent and texture. No burst, bolts, travel or typing."
+        },
+        "geometryReference": "round10.css .skin-neon-pulse",
+        "content": "Reserve ornaments outside content; wrap names and long words; no text clipping; preserve badges, emotes and moderation."
+      }
+    },
+    {
+      "id": "prism-shift",
+      "name": "Prism Shift",
+      "settings": {
+        "schemaVersion": 3,
+        "channel": "",
+        "fontFamily": "Verdana",
+        "fontSize": 22,
+        "fontWeight": 500,
+        "lineHeight": 1.4,
+        "textColor": "#F5F6FF",
+        "nameColorMode": "fixed",
+        "nameColor": "#BFC6FF",
+        "systemColor": "#F6F8FC",
+        "nameFormat": "{name}:",
+        "showBadges": true,
+        "outlineWidth": 0,
+        "outlineColor": "#000000",
+        "shadowEnabled": false,
+        "shadowColor": "#000000",
+        "shadowOpacity": 0.651,
+        "shadowBlur": 3,
+        "borderStyle": "line",
+        "borderColor": "#BFC6FF",
+        "borderWidth": 2,
+        "backgroundColor": "#171B38",
+        "backgroundOpacity": 1,
+        "backgroundScope": "message",
+        "cornerRadius": 6,
+        "paddingX": 16,
+        "paddingY": 12,
+        "messageSpacing": 10,
+        "maxMessages": 8,
+        "messageLifetime": 30,
+        "direction": "bottom",
+        "alignment": "left",
+        "overlayWidth": 480,
+        "edgeInset": 20,
+        "animationIn": "none",
+        "animationDuration": 180,
+        "hideCommands": true,
+        "hideBots": true,
+        "botNames": [
+          "nightbot",
+          "streamelements"
+        ],
+        "hideLinks": false,
+        "borderEffect": "none",
+        "borderEffectSpeed": 6,
+        "borderEffectColor": "#E5A9FF",
+        "nameEffect": "none",
+        "nameGradientColor1": "#A9CAFF",
+        "nameGradientColor2": "#E5A9FF",
+        "textEffect": "none",
+        "typewriterDuration": 700,
+        "backgroundEffect": "none",
+        "backgroundSecondaryColor": "#273B59",
+        "backgroundTreatment": "solid",
+        "ambientEffect": "none",
+        "roleColorsEnabled": false,
+        "broadcasterNameColor": "#FFB7A5",
+        "modNameColor": "#97E8B2",
+        "vipNameColor": "#E6B0FF",
+        "subNameColor": "#FFE095",
+        "mentionHighlightEnabled": false,
+        "mentionHighlightColor": "#F4D38D",
+        "reduceMotion": false,
+        "parts": {
+          "panel": {
+            "fontFamily": "Verdana",
+            "fontSize": 22,
+            "fontWeight": 500,
+            "italic": false,
+            "letterSpacing": 0,
+            "uppercase": false,
+            "lineHeight": 1.4,
+            "inheritTypography": false,
+            "paint": {
+              "mode": "solid",
+              "color": "#F5F6FFFF",
+              "angle": 135,
+              "stops": [
+                {
+                  "color": "#A9CAFFFF",
+                  "position": 0
+                },
+                {
+                  "color": "#E5A9FFFF",
+                  "position": 100
+                }
+              ]
+            },
+            "outline": {
+              "width": 0,
+              "color": "#000000FF"
+            },
+            "shadow": {
+              "enabled": false,
+              "color": "#000000A6",
+              "x": 0,
+              "y": 1,
+              "blur": 3
+            },
+            "glow": {
+              "enabled": false,
+              "color": "#A9CAFF80",
+              "blur": 4,
+              "spread": 0
+            }
+          },
+          "messageBox": {
+            "fontFamily": "Verdana",
+            "fontSize": 22,
+            "fontWeight": 500,
+            "italic": false,
+            "letterSpacing": 0,
+            "uppercase": false,
+            "lineHeight": 1.4,
+            "inheritTypography": false,
+            "paint": {
+              "mode": "solid",
+              "color": "#F5F6FFFF",
+              "angle": 135,
+              "stops": [
+                {
+                  "color": "#A9CAFFFF",
+                  "position": 0
+                },
+                {
+                  "color": "#E5A9FFFF",
+                  "position": 100
+                }
+              ]
+            },
+            "outline": {
+              "width": 0,
+              "color": "#000000FF"
+            },
+            "shadow": {
+              "enabled": false,
+              "color": "#000000A6",
+              "x": 0,
+              "y": 1,
+              "blur": 3
+            },
+            "glow": {
+              "enabled": false,
+              "color": "#A9CAFF80",
+              "blur": 4,
+              "spread": 0
+            }
+          },
+          "name": {
+            "fontFamily": "Verdana",
+            "fontSize": 22,
+            "fontWeight": 700,
+            "italic": false,
+            "letterSpacing": 0,
+            "uppercase": false,
+            "lineHeight": 1.4,
+            "inheritTypography": false,
+            "paint": {
+              "mode": "solid",
+              "color": "#BFC6FFFF",
+              "angle": 135,
+              "stops": [
+                {
+                  "color": "#A9CAFFFF",
+                  "position": 0
+                },
+                {
+                  "color": "#E5A9FFFF",
+                  "position": 100
+                }
+              ]
+            },
+            "outline": {
+              "width": 0,
+              "color": "#000000FF"
+            },
+            "shadow": {
+              "enabled": false,
+              "color": "#000000A6",
+              "x": 0,
+              "y": 1,
+              "blur": 3
+            },
+            "glow": {
+              "enabled": false,
+              "color": "#A9CAFF80",
+              "blur": 4,
+              "spread": 0
+            }
+          },
+          "messageText": {
+            "fontFamily": "Verdana",
+            "fontSize": 22,
+            "fontWeight": 500,
+            "italic": false,
+            "letterSpacing": 0,
+            "uppercase": false,
+            "lineHeight": 1.4,
+            "inheritTypography": false,
+            "paint": {
+              "mode": "solid",
+              "color": "#F5F6FFFF",
+              "angle": 135,
+              "stops": [
+                {
+                  "color": "#A9CAFFFF",
+                  "position": 0
+                },
+                {
+                  "color": "#E5A9FFFF",
+                  "position": 100
+                }
+              ]
+            },
+            "outline": {
+              "width": 0,
+              "color": "#000000FF"
+            },
+            "shadow": {
+              "enabled": false,
+              "color": "#000000A6",
+              "x": 0,
+              "y": 1,
+              "blur": 3
+            },
+            "glow": {
+              "enabled": false,
+              "color": "#A9CAFF80",
+              "blur": 4,
+              "spread": 0
+            }
+          },
+          "badges": {
+            "fontFamily": "Verdana",
+            "fontSize": 14,
+            "fontWeight": 500,
+            "italic": false,
+            "letterSpacing": 0,
+            "uppercase": false,
+            "lineHeight": 1.4,
+            "inheritTypography": false,
+            "paint": {
+              "mode": "solid",
+              "color": "#F5F6FFFF",
+              "angle": 135,
+              "stops": [
+                {
+                  "color": "#A9CAFFFF",
+                  "position": 0
+                },
+                {
+                  "color": "#E5A9FFFF",
+                  "position": 100
+                }
+              ]
+            },
+            "outline": {
+              "width": 0,
+              "color": "#000000FF"
+            },
+            "shadow": {
+              "enabled": false,
+              "color": "#000000A6",
+              "x": 0,
+              "y": 1,
+              "blur": 3
+            },
+            "glow": {
+              "enabled": false,
+              "color": "#A9CAFF80",
+              "blur": 4,
+              "spread": 0
+            }
+          },
+          "system": {
+            "fontFamily": "Verdana",
+            "fontSize": 22,
+            "fontWeight": 500,
+            "italic": false,
+            "letterSpacing": 0,
+            "uppercase": false,
+            "lineHeight": 1.4,
+            "inheritTypography": false,
+            "paint": {
+              "mode": "solid",
+              "color": "#F5F6FFFF",
+              "angle": 135,
+              "stops": [
+                {
+                  "color": "#A9CAFFFF",
+                  "position": 0
+                },
+                {
+                  "color": "#E5A9FFFF",
+                  "position": 100
+                }
+              ]
+            },
+            "outline": {
+              "width": 0,
+              "color": "#000000FF"
+            },
+            "shadow": {
+              "enabled": false,
+              "color": "#000000A6",
+              "x": 0,
+              "y": 1,
+              "blur": 3
+            },
+            "glow": {
+              "enabled": false,
+              "color": "#A9CAFF80",
+              "blur": 4,
+              "spread": 0
+            }
+          }
+        },
+        "frame": {
+          "target": "message",
+          "style": "solid",
+          "width": 2,
+          "paint": {
+            "mode": "solid",
+            "color": "#BFC6FFFF",
+            "angle": 135,
+            "stops": [
+              {
+                "color": "#A9CAFFFF",
+                "position": 0
+              },
+              {
+                "color": "#E5A9FFFF",
+                "position": 100
+              }
+            ]
+          },
+          "radius": {
+            "topLeft": 6,
+            "topRight": 6,
+            "bottomRight": 6,
+            "bottomLeft": 6
+          },
+          "padding": {
+            "top": 12,
+            "right": 16,
+            "bottom": 12,
+            "left": 16
+          },
+          "doubleGap": 2,
+          "pixelStep": 4,
+          "outer": {
+            "enabled": false,
+            "width": 1,
+            "color": "#7487A1FF",
+            "offset": 2
+          },
+          "ornament": {
+            "style": "none",
+            "color": "#7487A1FF",
+            "size": 12,
+            "width": 1,
+            "inset": 2
+          },
+          "legacyDetail": "none"
+        },
+        "backgrounds": {
+          "message": {
+            "mode": "solid",
+            "color": "#171B38FF",
+            "stops": [
+              {
+                "color": "#111C2EFF",
+                "position": 0
+              },
+              {
+                "color": "#273B59FF",
+                "position": 100
+              }
+            ],
+            "angle": 135,
+            "radialCenterX": 50,
+            "radialCenterY": 50,
+            "imageUrl": "",
+            "imageFit": "cover",
+            "imageOpacity": 1,
+            "opacity": 1,
+            "backdropBlur": 0,
+            "recipe": "none"
+          },
+          "panel": {
+            "mode": "solid",
+            "color": "#111C2EFF",
+            "stops": [
+              {
+                "color": "#111C2EFF",
+                "position": 0
+              },
+              {
+                "color": "#273B59FF",
+                "position": 100
+              }
+            ],
+            "angle": 135,
+            "radialCenterX": 50,
+            "radialCenterY": 50,
+            "imageUrl": "",
+            "imageFit": "cover",
+            "imageOpacity": 1,
+            "opacity": 0,
+            "backdropBlur": 0,
+            "recipe": "none"
+          }
+        },
+        "nameTemplate": "{badges} {name}: ",
+        "animationOut": "fade",
+        "animationOutDuration": 160,
+        "customCSS": {
+          "enabled": false,
+          "source": ""
+        },
+        "effectColors": {
+          "broadcaster": "#FFB7A5FF",
+          "moderator": "#97E8B2FF",
+          "vip": "#E6B0FFFF",
+          "subscriber": "#FFE095FF",
+          "mention": "#F4D38DFF",
+          "borderSecondary": "#E5A9FFFF"
+        },
+        "transparentBackground": true,
+        "hideFrames": false,
+        "presentation": {
+          "layout": "inline",
+          "shape": "rect",
+          "nameTreatment": "plain",
+          "accent": "none",
+          "chipColor": "#7487A1FF",
+          "columnWidth": 120,
+          "initialSize": 40,
+          "tailSize": 10,
+          "cutSize": 12
+        },
+        "nameStyle": {
+          "readableColors": true,
+          "minContrast": 4.5
+        },
+        "grouping": {
+          "enabled": false,
+          "windowSeconds": 20
+        },
+        "messageLimits": {
+          "maxLineCh": 38,
+          "maxLines": 0
+        },
+        "lifecycle": {
+          "fadeMaskPx": 0
+        },
+        "emphasis": {
+          "firstMessage": false,
+          "color": "#FFE095FF"
+        },
+        "emotes": {
+          "sevenTV": true,
+          "bttv": true,
+          "ffz": true,
+          "emoteOnlyScale": 2,
+          "inlineSize": 28
+        },
+        "channels": {
+          "enabled": false,
+          "rules": []
+        }
+      },
+      "category": "Animated",
+      "featured": false,
+      "galleryOrder": 45,
+      "stats": {
+        "readability": 4,
+        "flair": 5,
+        "motion": 5,
+        "retro": 1
+      },
+      "tagline": "Every color gets its moment.",
+      "alertRecipe": {
+        "version": 1,
+        "title": "Prism Shift update",
+        "frameNote": "Faceted six-sided prism with clipped opposite points",
+        "tokenBindings": "alertDesign.tokenBindings",
+        "iconSet": "alertDesign.icons",
+        "iconTreatment": "outline",
+        "motion": "fade",
+        "soundWave": "sine",
+        "typeDefaults": "alertDesign.types",
+        "surfaceOpacityFloor": 0.94,
+        "titleSizePx": 16,
+        "bodySizePx": "clamp(20, resolved messageText fontSize, 32)",
+        "iconSizePx": 36,
+        "paddingPx": 20,
+        "columnGapPx": 16,
+        "followMessage": "{name} joined the adventure!"
+      },
+      "round10Recipe": {
+        "version": 10,
+        "status": "design-only; authoritative over earlier visual recipes; settings retained as v3 fallback",
+        "silhouette": "Faceted six-sided prism with clipped opposite points",
+        "layout": "Independent rainbow sender chip above plain white body",
+        "typography": {
+          "nameFamily": "Verdana",
+          "bodyFamily": "Verdana",
+          "nameSizePx": 20,
+          "bodySizePx": 22,
+          "lineHeight": 1.45,
+          "fallback": "sans-serif"
+        },
+        "palette": {
+          "ink": "#F5F6FF",
+          "surface": "#171B38",
+          "accent": "#BFC6FF"
+        },
+        "motion": {
+          "keyframes": [
+            "prism-hue"
+          ],
+          "cycleSeconds": 12,
+          "maximumAnimatedLayersPerMessage": 2,
+          "trigger": "ambient + entry",
+          "reduced": "No animation; full text and final silhouette immediately; static accent and texture. No burst, bolts, travel or typing."
+        },
+        "geometryReference": "round10.css .skin-prism-shift",
+        "content": "Reserve ornaments outside content; wrap names and long words; no text clipping; preserve badges, emotes and moderation."
+      }
+    },
+    {
+      "id": "holo-foil",
+      "name": "Holo Foil",
+      "settings": {
+        "schemaVersion": 3,
+        "channel": "",
+        "fontFamily": "Consolas",
+        "fontSize": 22,
+        "fontWeight": 500,
+        "lineHeight": 1.4,
+        "textColor": "#F1F8FF",
+        "nameColorMode": "fixed",
+        "nameColor": "#B9EDF2",
+        "systemColor": "#F6F8FC",
+        "nameFormat": "{name}:",
+        "showBadges": true,
+        "outlineWidth": 0,
+        "outlineColor": "#000000",
+        "shadowEnabled": false,
+        "shadowColor": "#000000",
+        "shadowOpacity": 0.651,
+        "shadowBlur": 3,
+        "borderStyle": "line",
+        "borderColor": "#B9EDF2",
+        "borderWidth": 2,
+        "backgroundColor": "#152B37",
+        "backgroundOpacity": 1,
+        "backgroundScope": "message",
+        "cornerRadius": 6,
+        "paddingX": 16,
+        "paddingY": 12,
+        "messageSpacing": 10,
+        "maxMessages": 8,
+        "messageLifetime": 30,
+        "direction": "bottom",
+        "alignment": "left",
+        "overlayWidth": 480,
+        "edgeInset": 20,
+        "animationIn": "none",
+        "animationDuration": 180,
+        "hideCommands": true,
+        "hideBots": true,
+        "botNames": [
+          "nightbot",
+          "streamelements"
+        ],
+        "hideLinks": false,
+        "borderEffect": "none",
+        "borderEffectSpeed": 6,
+        "borderEffectColor": "#E5A9FF",
+        "nameEffect": "none",
+        "nameGradientColor1": "#A9CAFF",
+        "nameGradientColor2": "#E5A9FF",
+        "textEffect": "none",
+        "typewriterDuration": 700,
+        "backgroundEffect": "none",
+        "backgroundSecondaryColor": "#273B59",
+        "backgroundTreatment": "solid",
+        "ambientEffect": "none",
+        "roleColorsEnabled": false,
+        "broadcasterNameColor": "#FFB7A5",
+        "modNameColor": "#97E8B2",
+        "vipNameColor": "#E6B0FF",
+        "subNameColor": "#FFE095",
+        "mentionHighlightEnabled": false,
+        "mentionHighlightColor": "#F4D38D",
+        "reduceMotion": false,
+        "parts": {
+          "panel": {
+            "fontFamily": "Consolas",
+            "fontSize": 22,
+            "fontWeight": 500,
+            "italic": false,
+            "letterSpacing": 0,
+            "uppercase": false,
+            "lineHeight": 1.4,
+            "inheritTypography": false,
+            "paint": {
+              "mode": "solid",
+              "color": "#F1F8FFFF",
+              "angle": 135,
+              "stops": [
+                {
+                  "color": "#A9CAFFFF",
+                  "position": 0
+                },
+                {
+                  "color": "#E5A9FFFF",
+                  "position": 100
+                }
+              ]
+            },
+            "outline": {
+              "width": 0,
+              "color": "#000000FF"
+            },
+            "shadow": {
+              "enabled": false,
+              "color": "#000000A6",
+              "x": 0,
+              "y": 1,
+              "blur": 3
+            },
+            "glow": {
+              "enabled": false,
+              "color": "#A9CAFF80",
+              "blur": 4,
+              "spread": 0
+            }
+          },
+          "messageBox": {
+            "fontFamily": "Consolas",
+            "fontSize": 22,
+            "fontWeight": 500,
+            "italic": false,
+            "letterSpacing": 0,
+            "uppercase": false,
+            "lineHeight": 1.4,
+            "inheritTypography": false,
+            "paint": {
+              "mode": "solid",
+              "color": "#F1F8FFFF",
+              "angle": 135,
+              "stops": [
+                {
+                  "color": "#A9CAFFFF",
+                  "position": 0
+                },
+                {
+                  "color": "#E5A9FFFF",
+                  "position": 100
+                }
+              ]
+            },
+            "outline": {
+              "width": 0,
+              "color": "#000000FF"
+            },
+            "shadow": {
+              "enabled": false,
+              "color": "#000000A6",
+              "x": 0,
+              "y": 1,
+              "blur": 3
+            },
+            "glow": {
+              "enabled": false,
+              "color": "#A9CAFF80",
+              "blur": 4,
+              "spread": 0
+            }
+          },
+          "name": {
+            "fontFamily": "Consolas",
+            "fontSize": 22,
+            "fontWeight": 700,
+            "italic": false,
+            "letterSpacing": 0,
+            "uppercase": false,
+            "lineHeight": 1.4,
+            "inheritTypography": false,
+            "paint": {
+              "mode": "solid",
+              "color": "#B9EDF2FF",
+              "angle": 135,
+              "stops": [
+                {
+                  "color": "#A9CAFFFF",
+                  "position": 0
+                },
+                {
+                  "color": "#E5A9FFFF",
+                  "position": 100
+                }
+              ]
+            },
+            "outline": {
+              "width": 0,
+              "color": "#000000FF"
+            },
+            "shadow": {
+              "enabled": false,
+              "color": "#000000A6",
+              "x": 0,
+              "y": 1,
+              "blur": 3
+            },
+            "glow": {
+              "enabled": false,
+              "color": "#A9CAFF80",
+              "blur": 4,
+              "spread": 0
+            }
+          },
+          "messageText": {
+            "fontFamily": "Consolas",
+            "fontSize": 22,
+            "fontWeight": 500,
+            "italic": false,
+            "letterSpacing": 0,
+            "uppercase": false,
+            "lineHeight": 1.4,
+            "inheritTypography": false,
+            "paint": {
+              "mode": "solid",
+              "color": "#F1F8FFFF",
+              "angle": 135,
+              "stops": [
+                {
+                  "color": "#A9CAFFFF",
+                  "position": 0
+                },
+                {
+                  "color": "#E5A9FFFF",
+                  "position": 100
+                }
+              ]
+            },
+            "outline": {
+              "width": 0,
+              "color": "#000000FF"
+            },
+            "shadow": {
+              "enabled": false,
+              "color": "#000000A6",
+              "x": 0,
+              "y": 1,
+              "blur": 3
+            },
+            "glow": {
+              "enabled": false,
+              "color": "#A9CAFF80",
+              "blur": 4,
+              "spread": 0
+            }
+          },
+          "badges": {
+            "fontFamily": "Consolas",
+            "fontSize": 14,
+            "fontWeight": 500,
+            "italic": false,
+            "letterSpacing": 0,
+            "uppercase": false,
+            "lineHeight": 1.4,
+            "inheritTypography": false,
+            "paint": {
+              "mode": "solid",
+              "color": "#F1F8FFFF",
+              "angle": 135,
+              "stops": [
+                {
+                  "color": "#A9CAFFFF",
+                  "position": 0
+                },
+                {
+                  "color": "#E5A9FFFF",
+                  "position": 100
+                }
+              ]
+            },
+            "outline": {
+              "width": 0,
+              "color": "#000000FF"
+            },
+            "shadow": {
+              "enabled": false,
+              "color": "#000000A6",
+              "x": 0,
+              "y": 1,
+              "blur": 3
+            },
+            "glow": {
+              "enabled": false,
+              "color": "#A9CAFF80",
+              "blur": 4,
+              "spread": 0
+            }
+          },
+          "system": {
+            "fontFamily": "Consolas",
+            "fontSize": 22,
+            "fontWeight": 500,
+            "italic": false,
+            "letterSpacing": 0,
+            "uppercase": false,
+            "lineHeight": 1.4,
+            "inheritTypography": false,
+            "paint": {
+              "mode": "solid",
+              "color": "#F1F8FFFF",
+              "angle": 135,
+              "stops": [
+                {
+                  "color": "#A9CAFFFF",
+                  "position": 0
+                },
+                {
+                  "color": "#E5A9FFFF",
+                  "position": 100
+                }
+              ]
+            },
+            "outline": {
+              "width": 0,
+              "color": "#000000FF"
+            },
+            "shadow": {
+              "enabled": false,
+              "color": "#000000A6",
+              "x": 0,
+              "y": 1,
+              "blur": 3
+            },
+            "glow": {
+              "enabled": false,
+              "color": "#A9CAFF80",
+              "blur": 4,
+              "spread": 0
+            }
+          }
+        },
+        "frame": {
+          "target": "message",
+          "style": "solid",
+          "width": 2,
+          "paint": {
+            "mode": "solid",
+            "color": "#B9EDF2FF",
+            "angle": 135,
+            "stops": [
+              {
+                "color": "#A9CAFFFF",
+                "position": 0
+              },
+              {
+                "color": "#E5A9FFFF",
+                "position": 100
+              }
+            ]
+          },
+          "radius": {
+            "topLeft": 6,
+            "topRight": 6,
+            "bottomRight": 6,
+            "bottomLeft": 6
+          },
+          "padding": {
+            "top": 12,
+            "right": 16,
+            "bottom": 12,
+            "left": 16
+          },
+          "doubleGap": 2,
+          "pixelStep": 4,
+          "outer": {
+            "enabled": false,
+            "width": 1,
+            "color": "#7487A1FF",
+            "offset": 2
+          },
+          "ornament": {
+            "style": "none",
+            "color": "#7487A1FF",
+            "size": 12,
+            "width": 1,
+            "inset": 2
+          },
+          "legacyDetail": "none"
+        },
+        "backgrounds": {
+          "message": {
+            "mode": "solid",
+            "color": "#152B37FF",
+            "stops": [
+              {
+                "color": "#111C2EFF",
+                "position": 0
+              },
+              {
+                "color": "#273B59FF",
+                "position": 100
+              }
+            ],
+            "angle": 135,
+            "radialCenterX": 50,
+            "radialCenterY": 50,
+            "imageUrl": "",
+            "imageFit": "cover",
+            "imageOpacity": 1,
+            "opacity": 1,
+            "backdropBlur": 0,
+            "recipe": "none"
+          },
+          "panel": {
+            "mode": "solid",
+            "color": "#111C2EFF",
+            "stops": [
+              {
+                "color": "#111C2EFF",
+                "position": 0
+              },
+              {
+                "color": "#273B59FF",
+                "position": 100
+              }
+            ],
+            "angle": 135,
+            "radialCenterX": 50,
+            "radialCenterY": 50,
+            "imageUrl": "",
+            "imageFit": "cover",
+            "imageOpacity": 1,
+            "opacity": 0,
+            "backdropBlur": 0,
+            "recipe": "none"
+          }
+        },
+        "nameTemplate": "{badges} {name}: ",
+        "animationOut": "fade",
+        "animationOutDuration": 160,
+        "customCSS": {
+          "enabled": false,
+          "source": ""
+        },
+        "effectColors": {
+          "broadcaster": "#FFB7A5FF",
+          "moderator": "#97E8B2FF",
+          "vip": "#E6B0FFFF",
+          "subscriber": "#FFE095FF",
+          "mention": "#F4D38DFF",
+          "borderSecondary": "#E5A9FFFF"
+        },
+        "transparentBackground": true,
+        "hideFrames": false,
+        "presentation": {
+          "layout": "inline",
+          "shape": "rect",
+          "nameTreatment": "plain",
+          "accent": "none",
+          "chipColor": "#7487A1FF",
+          "columnWidth": 120,
+          "initialSize": 40,
+          "tailSize": 10,
+          "cutSize": 12
+        },
+        "nameStyle": {
+          "readableColors": true,
+          "minContrast": 4.5
+        },
+        "grouping": {
+          "enabled": false,
+          "windowSeconds": 20
+        },
+        "messageLimits": {
+          "maxLineCh": 38,
+          "maxLines": 0
+        },
+        "lifecycle": {
+          "fadeMaskPx": 0
+        },
+        "emphasis": {
+          "firstMessage": false,
+          "color": "#FFE095FF"
+        },
+        "emotes": {
+          "sevenTV": true,
+          "bttv": true,
+          "ffz": true,
+          "emoteOnlyScale": 2,
+          "inlineSize": 28
+        },
+        "channels": {
+          "enabled": false,
+          "rules": []
+        }
+      },
+      "category": "Animated",
+      "featured": false,
+      "galleryOrder": 46,
+      "stats": {
+        "readability": 4,
+        "flair": 5,
+        "motion": 5,
+        "retro": 4
+      },
+      "tagline": "Catch the light as the chat rolls in.",
+      "alertRecipe": {
+        "version": 1,
+        "title": "Holo Foil update",
+        "frameNote": "Foil pass with one deep concave right notch",
+        "tokenBindings": "alertDesign.tokenBindings",
+        "iconSet": "alertDesign.icons",
+        "iconTreatment": "outline",
+        "motion": "fade",
+        "soundWave": "sine",
+        "typeDefaults": "alertDesign.types",
+        "surfaceOpacityFloor": 0.94,
+        "titleSizePx": 16,
+        "bodySizePx": "clamp(20, resolved messageText fontSize, 32)",
+        "iconSizePx": 36,
+        "paddingPx": 20,
+        "columnGapPx": 16,
+        "followMessage": "{name} joined the adventure!"
+      },
+      "round10Recipe": {
+        "version": 10,
+        "status": "design-only; authoritative over earlier visual recipes; settings retained as v3 fallback",
+        "silhouette": "Foil pass with one deep concave right notch",
+        "layout": "Monospaced sender beside a vertical foil registration strip",
+        "typography": {
+          "nameFamily": "Consolas",
+          "bodyFamily": "Consolas",
+          "nameSizePx": 20,
+          "bodySizePx": 22,
+          "lineHeight": 1.45,
+          "fallback": "monospace"
+        },
+        "palette": {
+          "ink": "#F1F8FF",
+          "surface": "#152B37",
+          "accent": "#B9EDF2"
+        },
+        "motion": {
+          "keyframes": [
+            "holo-sweep"
+          ],
+          "cycleSeconds": 7,
+          "maximumAnimatedLayersPerMessage": 1,
+          "trigger": "ambient + entry",
+          "reduced": "No animation; full text and final silhouette immediately; static accent and texture. No burst, bolts, travel or typing."
+        },
+        "geometryReference": "round10.css .skin-holo-foil",
+        "content": "Reserve ornaments outside content; wrap names and long words; no text clipping; preserve badges, emotes and moderation."
+      }
+    },
+    {
+      "id": "lava-lamp",
+      "name": "Lava Lamp",
+      "settings": {
+        "schemaVersion": 3,
+        "channel": "",
+        "fontFamily": "Trebuchet MS",
+        "fontSize": 22,
+        "fontWeight": 500,
+        "lineHeight": 1.4,
+        "textColor": "#FFF2E6",
+        "nameColorMode": "fixed",
+        "nameColor": "#FFBD82",
+        "systemColor": "#F6F8FC",
+        "nameFormat": "{name}:",
+        "showBadges": true,
+        "outlineWidth": 0,
+        "outlineColor": "#000000",
+        "shadowEnabled": false,
+        "shadowColor": "#000000",
+        "shadowOpacity": 0.651,
+        "shadowBlur": 3,
+        "borderStyle": "line",
+        "borderColor": "#FFBD82",
+        "borderWidth": 2,
+        "backgroundColor": "#361919",
+        "backgroundOpacity": 1,
+        "backgroundScope": "message",
+        "cornerRadius": 6,
+        "paddingX": 16,
+        "paddingY": 12,
+        "messageSpacing": 10,
+        "maxMessages": 8,
+        "messageLifetime": 30,
+        "direction": "bottom",
+        "alignment": "left",
+        "overlayWidth": 480,
+        "edgeInset": 20,
+        "animationIn": "none",
+        "animationDuration": 180,
+        "hideCommands": true,
+        "hideBots": true,
+        "botNames": [
+          "nightbot",
+          "streamelements"
+        ],
+        "hideLinks": false,
+        "borderEffect": "none",
+        "borderEffectSpeed": 6,
+        "borderEffectColor": "#E5A9FF",
+        "nameEffect": "none",
+        "nameGradientColor1": "#A9CAFF",
+        "nameGradientColor2": "#E5A9FF",
+        "textEffect": "none",
+        "typewriterDuration": 700,
+        "backgroundEffect": "none",
+        "backgroundSecondaryColor": "#273B59",
+        "backgroundTreatment": "solid",
+        "ambientEffect": "none",
+        "roleColorsEnabled": false,
+        "broadcasterNameColor": "#FFB7A5",
+        "modNameColor": "#97E8B2",
+        "vipNameColor": "#E6B0FF",
+        "subNameColor": "#FFE095",
+        "mentionHighlightEnabled": false,
+        "mentionHighlightColor": "#F4D38D",
+        "reduceMotion": false,
+        "parts": {
+          "panel": {
+            "fontFamily": "Trebuchet MS",
+            "fontSize": 22,
+            "fontWeight": 500,
+            "italic": false,
+            "letterSpacing": 0,
+            "uppercase": false,
+            "lineHeight": 1.4,
+            "inheritTypography": false,
+            "paint": {
+              "mode": "solid",
+              "color": "#FFF2E6FF",
+              "angle": 135,
+              "stops": [
+                {
+                  "color": "#A9CAFFFF",
+                  "position": 0
+                },
+                {
+                  "color": "#E5A9FFFF",
+                  "position": 100
+                }
+              ]
+            },
+            "outline": {
+              "width": 0,
+              "color": "#000000FF"
+            },
+            "shadow": {
+              "enabled": false,
+              "color": "#000000A6",
+              "x": 0,
+              "y": 1,
+              "blur": 3
+            },
+            "glow": {
+              "enabled": false,
+              "color": "#A9CAFF80",
+              "blur": 4,
+              "spread": 0
+            }
+          },
+          "messageBox": {
+            "fontFamily": "Trebuchet MS",
+            "fontSize": 22,
+            "fontWeight": 500,
+            "italic": false,
+            "letterSpacing": 0,
+            "uppercase": false,
+            "lineHeight": 1.4,
+            "inheritTypography": false,
+            "paint": {
+              "mode": "solid",
+              "color": "#FFF2E6FF",
+              "angle": 135,
+              "stops": [
+                {
+                  "color": "#A9CAFFFF",
+                  "position": 0
+                },
+                {
+                  "color": "#E5A9FFFF",
+                  "position": 100
+                }
+              ]
+            },
+            "outline": {
+              "width": 0,
+              "color": "#000000FF"
+            },
+            "shadow": {
+              "enabled": false,
+              "color": "#000000A6",
+              "x": 0,
+              "y": 1,
+              "blur": 3
+            },
+            "glow": {
+              "enabled": false,
+              "color": "#A9CAFF80",
+              "blur": 4,
+              "spread": 0
+            }
+          },
+          "name": {
+            "fontFamily": "Trebuchet MS",
+            "fontSize": 22,
+            "fontWeight": 700,
+            "italic": false,
+            "letterSpacing": 0,
+            "uppercase": false,
+            "lineHeight": 1.4,
+            "inheritTypography": false,
+            "paint": {
+              "mode": "solid",
+              "color": "#FFBD82FF",
+              "angle": 135,
+              "stops": [
+                {
+                  "color": "#A9CAFFFF",
+                  "position": 0
+                },
+                {
+                  "color": "#E5A9FFFF",
+                  "position": 100
+                }
+              ]
+            },
+            "outline": {
+              "width": 0,
+              "color": "#000000FF"
+            },
+            "shadow": {
+              "enabled": false,
+              "color": "#000000A6",
+              "x": 0,
+              "y": 1,
+              "blur": 3
+            },
+            "glow": {
+              "enabled": false,
+              "color": "#A9CAFF80",
+              "blur": 4,
+              "spread": 0
+            }
+          },
+          "messageText": {
+            "fontFamily": "Trebuchet MS",
+            "fontSize": 22,
+            "fontWeight": 500,
+            "italic": false,
+            "letterSpacing": 0,
+            "uppercase": false,
+            "lineHeight": 1.4,
+            "inheritTypography": false,
+            "paint": {
+              "mode": "solid",
+              "color": "#FFF2E6FF",
+              "angle": 135,
+              "stops": [
+                {
+                  "color": "#A9CAFFFF",
+                  "position": 0
+                },
+                {
+                  "color": "#E5A9FFFF",
+                  "position": 100
+                }
+              ]
+            },
+            "outline": {
+              "width": 0,
+              "color": "#000000FF"
+            },
+            "shadow": {
+              "enabled": false,
+              "color": "#000000A6",
+              "x": 0,
+              "y": 1,
+              "blur": 3
+            },
+            "glow": {
+              "enabled": false,
+              "color": "#A9CAFF80",
+              "blur": 4,
+              "spread": 0
+            }
+          },
+          "badges": {
+            "fontFamily": "Trebuchet MS",
+            "fontSize": 14,
+            "fontWeight": 500,
+            "italic": false,
+            "letterSpacing": 0,
+            "uppercase": false,
+            "lineHeight": 1.4,
+            "inheritTypography": false,
+            "paint": {
+              "mode": "solid",
+              "color": "#FFF2E6FF",
+              "angle": 135,
+              "stops": [
+                {
+                  "color": "#A9CAFFFF",
+                  "position": 0
+                },
+                {
+                  "color": "#E5A9FFFF",
+                  "position": 100
+                }
+              ]
+            },
+            "outline": {
+              "width": 0,
+              "color": "#000000FF"
+            },
+            "shadow": {
+              "enabled": false,
+              "color": "#000000A6",
+              "x": 0,
+              "y": 1,
+              "blur": 3
+            },
+            "glow": {
+              "enabled": false,
+              "color": "#A9CAFF80",
+              "blur": 4,
+              "spread": 0
+            }
+          },
+          "system": {
+            "fontFamily": "Trebuchet MS",
+            "fontSize": 22,
+            "fontWeight": 500,
+            "italic": false,
+            "letterSpacing": 0,
+            "uppercase": false,
+            "lineHeight": 1.4,
+            "inheritTypography": false,
+            "paint": {
+              "mode": "solid",
+              "color": "#FFF2E6FF",
+              "angle": 135,
+              "stops": [
+                {
+                  "color": "#A9CAFFFF",
+                  "position": 0
+                },
+                {
+                  "color": "#E5A9FFFF",
+                  "position": 100
+                }
+              ]
+            },
+            "outline": {
+              "width": 0,
+              "color": "#000000FF"
+            },
+            "shadow": {
+              "enabled": false,
+              "color": "#000000A6",
+              "x": 0,
+              "y": 1,
+              "blur": 3
+            },
+            "glow": {
+              "enabled": false,
+              "color": "#A9CAFF80",
+              "blur": 4,
+              "spread": 0
+            }
+          }
+        },
+        "frame": {
+          "target": "message",
+          "style": "solid",
+          "width": 2,
+          "paint": {
+            "mode": "solid",
+            "color": "#FFBD82FF",
+            "angle": 135,
+            "stops": [
+              {
+                "color": "#A9CAFFFF",
+                "position": 0
+              },
+              {
+                "color": "#E5A9FFFF",
+                "position": 100
+              }
+            ]
+          },
+          "radius": {
+            "topLeft": 6,
+            "topRight": 6,
+            "bottomRight": 6,
+            "bottomLeft": 6
+          },
+          "padding": {
+            "top": 12,
+            "right": 16,
+            "bottom": 12,
+            "left": 16
+          },
+          "doubleGap": 2,
+          "pixelStep": 4,
+          "outer": {
+            "enabled": false,
+            "width": 1,
+            "color": "#7487A1FF",
+            "offset": 2
+          },
+          "ornament": {
+            "style": "none",
+            "color": "#7487A1FF",
+            "size": 12,
+            "width": 1,
+            "inset": 2
+          },
+          "legacyDetail": "none"
+        },
+        "backgrounds": {
+          "message": {
+            "mode": "solid",
+            "color": "#361919FF",
+            "stops": [
+              {
+                "color": "#111C2EFF",
+                "position": 0
+              },
+              {
+                "color": "#273B59FF",
+                "position": 100
+              }
+            ],
+            "angle": 135,
+            "radialCenterX": 50,
+            "radialCenterY": 50,
+            "imageUrl": "",
+            "imageFit": "cover",
+            "imageOpacity": 1,
+            "opacity": 1,
+            "backdropBlur": 0,
+            "recipe": "none"
+          },
+          "panel": {
+            "mode": "solid",
+            "color": "#111C2EFF",
+            "stops": [
+              {
+                "color": "#111C2EFF",
+                "position": 0
+              },
+              {
+                "color": "#273B59FF",
+                "position": 100
+              }
+            ],
+            "angle": 135,
+            "radialCenterX": 50,
+            "radialCenterY": 50,
+            "imageUrl": "",
+            "imageFit": "cover",
+            "imageOpacity": 1,
+            "opacity": 0,
+            "backdropBlur": 0,
+            "recipe": "none"
+          }
+        },
+        "nameTemplate": "{badges} {name}: ",
+        "animationOut": "fade",
+        "animationOutDuration": 160,
+        "customCSS": {
+          "enabled": false,
+          "source": ""
+        },
+        "effectColors": {
+          "broadcaster": "#FFB7A5FF",
+          "moderator": "#97E8B2FF",
+          "vip": "#E6B0FFFF",
+          "subscriber": "#FFE095FF",
+          "mention": "#F4D38DFF",
+          "borderSecondary": "#E5A9FFFF"
+        },
+        "transparentBackground": true,
+        "hideFrames": false,
+        "presentation": {
+          "layout": "inline",
+          "shape": "rect",
+          "nameTreatment": "plain",
+          "accent": "none",
+          "chipColor": "#7487A1FF",
+          "columnWidth": 120,
+          "initialSize": 40,
+          "tailSize": 10,
+          "cutSize": 12
+        },
+        "nameStyle": {
+          "readableColors": true,
+          "minContrast": 4.5
+        },
+        "grouping": {
+          "enabled": false,
+          "windowSeconds": 20
+        },
+        "messageLimits": {
+          "maxLineCh": 38,
+          "maxLines": 0
+        },
+        "lifecycle": {
+          "fadeMaskPx": 0
+        },
+        "emphasis": {
+          "firstMessage": false,
+          "color": "#FFE095FF"
+        },
+        "emotes": {
+          "sevenTV": true,
+          "bttv": true,
+          "ffz": true,
+          "emoteOnlyScale": 2,
+          "inlineSize": 28
+        },
+        "channels": {
+          "enabled": false,
+          "rules": []
+        }
+      },
+      "category": "Animated",
+      "featured": false,
+      "galleryOrder": 47,
+      "stats": {
+        "readability": 4,
+        "flair": 5,
+        "motion": 5,
+        "retro": 1
+      },
+      "tagline": "Slow lava. Warm conversation.",
+      "alertRecipe": {
+        "version": 1,
+        "title": "Lava Lamp update",
+        "frameNote": "Organic kidney lozenge with unequal bulbous ends",
+        "tokenBindings": "alertDesign.tokenBindings",
+        "iconSet": "alertDesign.icons",
+        "iconTreatment": "outline",
+        "motion": "fade",
+        "soundWave": "sine",
+        "typeDefaults": "alertDesign.types",
+        "surfaceOpacityFloor": 0.94,
+        "titleSizePx": 16,
+        "bodySizePx": "clamp(20, resolved messageText fontSize, 32)",
+        "iconSizePx": 36,
+        "paddingPx": 20,
+        "columnGapPx": 16,
+        "followMessage": "{name} joined the adventure!"
+      },
+      "round10Recipe": {
+        "version": 10,
+        "status": "design-only; authoritative over earlier visual recipes; settings retained as v3 fallback",
+        "silhouette": "Organic kidney lozenge with unequal bulbous ends",
+        "layout": "Heavy rounded sender, indented message below",
+        "typography": {
+          "nameFamily": "Trebuchet MS",
+          "bodyFamily": "Trebuchet MS",
+          "nameSizePx": 20,
+          "bodySizePx": 22,
+          "lineHeight": 1.45,
+          "fallback": "sans-serif"
+        },
+        "palette": {
+          "ink": "#FFF2E6",
+          "surface": "#361919",
+          "accent": "#FFBD82"
+        },
+        "motion": {
+          "keyframes": [
+            "lava-drift-a",
+            "lava-drift-b"
+          ],
+          "cycleSeconds": 11,
+          "maximumAnimatedLayersPerMessage": 2,
+          "trigger": "ambient + entry",
+          "reduced": "No animation; full text and final silhouette immediately; static accent and texture. No burst, bolts, travel or typing."
+        },
+        "geometryReference": "round10.css .skin-lava-lamp",
+        "content": "Reserve ornaments outside content; wrap names and long words; no text clipping; preserve badges, emotes and moderation."
+      }
+    },
+    {
+      "id": "electric-storm",
+      "name": "Electric Storm",
+      "settings": {
+        "schemaVersion": 3,
+        "channel": "",
+        "fontFamily": "Rockwell",
+        "fontSize": 22,
+        "fontWeight": 500,
+        "lineHeight": 1.4,
+        "textColor": "#EFF8FF",
+        "nameColorMode": "fixed",
+        "nameColor": "#B9DFFF",
+        "systemColor": "#F6F8FC",
+        "nameFormat": "{name}:",
+        "showBadges": true,
+        "outlineWidth": 0,
+        "outlineColor": "#000000",
+        "shadowEnabled": false,
+        "shadowColor": "#000000",
+        "shadowOpacity": 0.651,
+        "shadowBlur": 3,
+        "borderStyle": "line",
+        "borderColor": "#B9DFFF",
+        "borderWidth": 2,
+        "backgroundColor": "#121F38",
+        "backgroundOpacity": 1,
+        "backgroundScope": "message",
+        "cornerRadius": 6,
+        "paddingX": 16,
+        "paddingY": 12,
+        "messageSpacing": 10,
+        "maxMessages": 8,
+        "messageLifetime": 30,
+        "direction": "bottom",
+        "alignment": "left",
+        "overlayWidth": 480,
+        "edgeInset": 20,
+        "animationIn": "none",
+        "animationDuration": 180,
+        "hideCommands": true,
+        "hideBots": true,
+        "botNames": [
+          "nightbot",
+          "streamelements"
+        ],
+        "hideLinks": false,
+        "borderEffect": "none",
+        "borderEffectSpeed": 6,
+        "borderEffectColor": "#E5A9FF",
+        "nameEffect": "none",
+        "nameGradientColor1": "#A9CAFF",
+        "nameGradientColor2": "#E5A9FF",
+        "textEffect": "none",
+        "typewriterDuration": 700,
+        "backgroundEffect": "none",
+        "backgroundSecondaryColor": "#273B59",
+        "backgroundTreatment": "solid",
+        "ambientEffect": "none",
+        "roleColorsEnabled": false,
+        "broadcasterNameColor": "#FFB7A5",
+        "modNameColor": "#97E8B2",
+        "vipNameColor": "#E6B0FF",
+        "subNameColor": "#FFE095",
+        "mentionHighlightEnabled": false,
+        "mentionHighlightColor": "#F4D38D",
+        "reduceMotion": false,
+        "parts": {
+          "panel": {
+            "fontFamily": "Rockwell",
+            "fontSize": 22,
+            "fontWeight": 500,
+            "italic": false,
+            "letterSpacing": 0,
+            "uppercase": false,
+            "lineHeight": 1.4,
+            "inheritTypography": false,
+            "paint": {
+              "mode": "solid",
+              "color": "#EFF8FFFF",
+              "angle": 135,
+              "stops": [
+                {
+                  "color": "#A9CAFFFF",
+                  "position": 0
+                },
+                {
+                  "color": "#E5A9FFFF",
+                  "position": 100
+                }
+              ]
+            },
+            "outline": {
+              "width": 0,
+              "color": "#000000FF"
+            },
+            "shadow": {
+              "enabled": false,
+              "color": "#000000A6",
+              "x": 0,
+              "y": 1,
+              "blur": 3
+            },
+            "glow": {
+              "enabled": false,
+              "color": "#A9CAFF80",
+              "blur": 4,
+              "spread": 0
+            }
+          },
+          "messageBox": {
+            "fontFamily": "Rockwell",
+            "fontSize": 22,
+            "fontWeight": 500,
+            "italic": false,
+            "letterSpacing": 0,
+            "uppercase": false,
+            "lineHeight": 1.4,
+            "inheritTypography": false,
+            "paint": {
+              "mode": "solid",
+              "color": "#EFF8FFFF",
+              "angle": 135,
+              "stops": [
+                {
+                  "color": "#A9CAFFFF",
+                  "position": 0
+                },
+                {
+                  "color": "#E5A9FFFF",
+                  "position": 100
+                }
+              ]
+            },
+            "outline": {
+              "width": 0,
+              "color": "#000000FF"
+            },
+            "shadow": {
+              "enabled": false,
+              "color": "#000000A6",
+              "x": 0,
+              "y": 1,
+              "blur": 3
+            },
+            "glow": {
+              "enabled": false,
+              "color": "#A9CAFF80",
+              "blur": 4,
+              "spread": 0
+            }
+          },
+          "name": {
+            "fontFamily": "Rockwell",
+            "fontSize": 22,
+            "fontWeight": 700,
+            "italic": false,
+            "letterSpacing": 0,
+            "uppercase": false,
+            "lineHeight": 1.4,
+            "inheritTypography": false,
+            "paint": {
+              "mode": "solid",
+              "color": "#B9DFFFFF",
+              "angle": 135,
+              "stops": [
+                {
+                  "color": "#A9CAFFFF",
+                  "position": 0
+                },
+                {
+                  "color": "#E5A9FFFF",
+                  "position": 100
+                }
+              ]
+            },
+            "outline": {
+              "width": 0,
+              "color": "#000000FF"
+            },
+            "shadow": {
+              "enabled": false,
+              "color": "#000000A6",
+              "x": 0,
+              "y": 1,
+              "blur": 3
+            },
+            "glow": {
+              "enabled": false,
+              "color": "#A9CAFF80",
+              "blur": 4,
+              "spread": 0
+            }
+          },
+          "messageText": {
+            "fontFamily": "Rockwell",
+            "fontSize": 22,
+            "fontWeight": 500,
+            "italic": false,
+            "letterSpacing": 0,
+            "uppercase": false,
+            "lineHeight": 1.4,
+            "inheritTypography": false,
+            "paint": {
+              "mode": "solid",
+              "color": "#EFF8FFFF",
+              "angle": 135,
+              "stops": [
+                {
+                  "color": "#A9CAFFFF",
+                  "position": 0
+                },
+                {
+                  "color": "#E5A9FFFF",
+                  "position": 100
+                }
+              ]
+            },
+            "outline": {
+              "width": 0,
+              "color": "#000000FF"
+            },
+            "shadow": {
+              "enabled": false,
+              "color": "#000000A6",
+              "x": 0,
+              "y": 1,
+              "blur": 3
+            },
+            "glow": {
+              "enabled": false,
+              "color": "#A9CAFF80",
+              "blur": 4,
+              "spread": 0
+            }
+          },
+          "badges": {
+            "fontFamily": "Rockwell",
+            "fontSize": 14,
+            "fontWeight": 500,
+            "italic": false,
+            "letterSpacing": 0,
+            "uppercase": false,
+            "lineHeight": 1.4,
+            "inheritTypography": false,
+            "paint": {
+              "mode": "solid",
+              "color": "#EFF8FFFF",
+              "angle": 135,
+              "stops": [
+                {
+                  "color": "#A9CAFFFF",
+                  "position": 0
+                },
+                {
+                  "color": "#E5A9FFFF",
+                  "position": 100
+                }
+              ]
+            },
+            "outline": {
+              "width": 0,
+              "color": "#000000FF"
+            },
+            "shadow": {
+              "enabled": false,
+              "color": "#000000A6",
+              "x": 0,
+              "y": 1,
+              "blur": 3
+            },
+            "glow": {
+              "enabled": false,
+              "color": "#A9CAFF80",
+              "blur": 4,
+              "spread": 0
+            }
+          },
+          "system": {
+            "fontFamily": "Rockwell",
+            "fontSize": 22,
+            "fontWeight": 500,
+            "italic": false,
+            "letterSpacing": 0,
+            "uppercase": false,
+            "lineHeight": 1.4,
+            "inheritTypography": false,
+            "paint": {
+              "mode": "solid",
+              "color": "#EFF8FFFF",
+              "angle": 135,
+              "stops": [
+                {
+                  "color": "#A9CAFFFF",
+                  "position": 0
+                },
+                {
+                  "color": "#E5A9FFFF",
+                  "position": 100
+                }
+              ]
+            },
+            "outline": {
+              "width": 0,
+              "color": "#000000FF"
+            },
+            "shadow": {
+              "enabled": false,
+              "color": "#000000A6",
+              "x": 0,
+              "y": 1,
+              "blur": 3
+            },
+            "glow": {
+              "enabled": false,
+              "color": "#A9CAFF80",
+              "blur": 4,
+              "spread": 0
+            }
+          }
+        },
+        "frame": {
+          "target": "message",
+          "style": "solid",
+          "width": 2,
+          "paint": {
+            "mode": "solid",
+            "color": "#B9DFFFFF",
+            "angle": 135,
+            "stops": [
+              {
+                "color": "#A9CAFFFF",
+                "position": 0
+              },
+              {
+                "color": "#E5A9FFFF",
+                "position": 100
+              }
+            ]
+          },
+          "radius": {
+            "topLeft": 6,
+            "topRight": 6,
+            "bottomRight": 6,
+            "bottomLeft": 6
+          },
+          "padding": {
+            "top": 12,
+            "right": 16,
+            "bottom": 12,
+            "left": 16
+          },
+          "doubleGap": 2,
+          "pixelStep": 4,
+          "outer": {
+            "enabled": false,
+            "width": 1,
+            "color": "#7487A1FF",
+            "offset": 2
+          },
+          "ornament": {
+            "style": "none",
+            "color": "#7487A1FF",
+            "size": 12,
+            "width": 1,
+            "inset": 2
+          },
+          "legacyDetail": "none"
+        },
+        "backgrounds": {
+          "message": {
+            "mode": "solid",
+            "color": "#121F38FF",
+            "stops": [
+              {
+                "color": "#111C2EFF",
+                "position": 0
+              },
+              {
+                "color": "#273B59FF",
+                "position": 100
+              }
+            ],
+            "angle": 135,
+            "radialCenterX": 50,
+            "radialCenterY": 50,
+            "imageUrl": "",
+            "imageFit": "cover",
+            "imageOpacity": 1,
+            "opacity": 1,
+            "backdropBlur": 0,
+            "recipe": "none"
+          },
+          "panel": {
+            "mode": "solid",
+            "color": "#111C2EFF",
+            "stops": [
+              {
+                "color": "#111C2EFF",
+                "position": 0
+              },
+              {
+                "color": "#273B59FF",
+                "position": 100
+              }
+            ],
+            "angle": 135,
+            "radialCenterX": 50,
+            "radialCenterY": 50,
+            "imageUrl": "",
+            "imageFit": "cover",
+            "imageOpacity": 1,
+            "opacity": 0,
+            "backdropBlur": 0,
+            "recipe": "none"
+          }
+        },
+        "nameTemplate": "{badges} {name}: ",
+        "animationOut": "fade",
+        "animationOutDuration": 160,
+        "customCSS": {
+          "enabled": false,
+          "source": ""
+        },
+        "effectColors": {
+          "broadcaster": "#FFB7A5FF",
+          "moderator": "#97E8B2FF",
+          "vip": "#E6B0FFFF",
+          "subscriber": "#FFE095FF",
+          "mention": "#F4D38DFF",
+          "borderSecondary": "#E5A9FFFF"
+        },
+        "transparentBackground": true,
+        "hideFrames": false,
+        "presentation": {
+          "layout": "inline",
+          "shape": "rect",
+          "nameTreatment": "plain",
+          "accent": "none",
+          "chipColor": "#7487A1FF",
+          "columnWidth": 120,
+          "initialSize": 40,
+          "tailSize": 10,
+          "cutSize": 12
+        },
+        "nameStyle": {
+          "readableColors": true,
+          "minContrast": 4.5
+        },
+        "grouping": {
+          "enabled": false,
+          "windowSeconds": 20
+        },
+        "messageLimits": {
+          "maxLineCh": 38,
+          "maxLines": 0
+        },
+        "lifecycle": {
+          "fadeMaskPx": 0
+        },
+        "emphasis": {
+          "firstMessage": false,
+          "color": "#FFE095FF"
+        },
+        "emotes": {
+          "sevenTV": true,
+          "bttv": true,
+          "ffz": true,
+          "emoteOnlyScale": 2,
+          "inlineSize": 28
+        },
+        "channels": {
+          "enabled": false,
+          "rules": []
+        }
+      },
+      "category": "Animated",
+      "featured": false,
+      "galleryOrder": 48,
+      "stats": {
+        "readability": 4,
+        "flair": 5,
+        "motion": 5,
+        "retro": 4
+      },
+      "tagline": "A charged edge. Mods bring the thunder.",
+      "alertRecipe": {
+        "version": 1,
+        "title": "Electric Storm update",
+        "frameNote": "Jagged lightning plate with serrated side cuts",
+        "tokenBindings": "alertDesign.tokenBindings",
+        "iconSet": "alertDesign.icons",
+        "iconTreatment": "outline",
+        "motion": "fade",
+        "soundWave": "sine",
+        "typeDefaults": "alertDesign.types",
+        "surfaceOpacityFloor": 0.94,
+        "titleSizePx": 16,
+        "bodySizePx": "clamp(20, resolved messageText fontSize, 32)",
+        "iconSizePx": 36,
+        "paddingPx": 20,
+        "columnGapPx": 16,
+        "followMessage": "{name} joined the adventure!"
+      },
+      "round10Recipe": {
+        "version": 10,
+        "status": "design-only; authoritative over earlier visual recipes; settings retained as v3 fallback",
+        "silhouette": "Jagged lightning plate with serrated side cuts",
+        "layout": "Slab sender on a high rail, body in a recessed well",
+        "typography": {
+          "nameFamily": "Rockwell",
+          "bodyFamily": "Rockwell",
+          "nameSizePx": 20,
+          "bodySizePx": 22,
+          "lineHeight": 1.45,
+          "fallback": "serif"
+        },
+        "palette": {
+          "ink": "#EFF8FF",
+          "surface": "#121F38",
+          "accent": "#B9DFFF"
+        },
+        "motion": {
+          "keyframes": [
+            "storm-crackle",
+            "mod-bolt"
+          ],
+          "cycleSeconds": 5.2,
+          "maximumAnimatedLayersPerMessage": 2,
+          "trigger": "ambient + entry",
+          "reduced": "No animation; full text and final silhouette immediately; static accent and texture. No burst, bolts, travel or typing."
+        },
+        "geometryReference": "round10.css .skin-electric-storm",
+        "content": "Reserve ornaments outside content; wrap names and long words; no text clipping; preserve badges, emotes and moderation."
+      }
+    },
+    {
+      "id": "starfall",
+      "name": "Starfall",
+      "settings": {
+        "schemaVersion": 3,
+        "channel": "",
+        "fontFamily": "Georgia",
+        "fontSize": 22,
+        "fontWeight": 500,
+        "lineHeight": 1.4,
+        "textColor": "#F5F2FF",
+        "nameColorMode": "fixed",
+        "nameColor": "#DDD3FF",
+        "systemColor": "#F6F8FC",
+        "nameFormat": "{name}:",
+        "showBadges": true,
+        "outlineWidth": 0,
+        "outlineColor": "#000000",
+        "shadowEnabled": false,
+        "shadowColor": "#000000",
+        "shadowOpacity": 0.651,
+        "shadowBlur": 3,
+        "borderStyle": "line",
+        "borderColor": "#DDD3FF",
+        "borderWidth": 2,
+        "backgroundColor": "#191B39",
+        "backgroundOpacity": 1,
+        "backgroundScope": "message",
+        "cornerRadius": 6,
+        "paddingX": 16,
+        "paddingY": 12,
+        "messageSpacing": 10,
+        "maxMessages": 8,
+        "messageLifetime": 30,
+        "direction": "bottom",
+        "alignment": "left",
+        "overlayWidth": 480,
+        "edgeInset": 20,
+        "animationIn": "none",
+        "animationDuration": 180,
+        "hideCommands": true,
+        "hideBots": true,
+        "botNames": [
+          "nightbot",
+          "streamelements"
+        ],
+        "hideLinks": false,
+        "borderEffect": "none",
+        "borderEffectSpeed": 6,
+        "borderEffectColor": "#E5A9FF",
+        "nameEffect": "none",
+        "nameGradientColor1": "#A9CAFF",
+        "nameGradientColor2": "#E5A9FF",
+        "textEffect": "none",
+        "typewriterDuration": 700,
+        "backgroundEffect": "none",
+        "backgroundSecondaryColor": "#273B59",
+        "backgroundTreatment": "solid",
+        "ambientEffect": "none",
+        "roleColorsEnabled": false,
+        "broadcasterNameColor": "#FFB7A5",
+        "modNameColor": "#97E8B2",
+        "vipNameColor": "#E6B0FF",
+        "subNameColor": "#FFE095",
+        "mentionHighlightEnabled": false,
+        "mentionHighlightColor": "#F4D38D",
+        "reduceMotion": false,
+        "parts": {
+          "panel": {
+            "fontFamily": "Georgia",
+            "fontSize": 22,
+            "fontWeight": 500,
+            "italic": false,
+            "letterSpacing": 0,
+            "uppercase": false,
+            "lineHeight": 1.4,
+            "inheritTypography": false,
+            "paint": {
+              "mode": "solid",
+              "color": "#F5F2FFFF",
+              "angle": 135,
+              "stops": [
+                {
+                  "color": "#A9CAFFFF",
+                  "position": 0
+                },
+                {
+                  "color": "#E5A9FFFF",
+                  "position": 100
+                }
+              ]
+            },
+            "outline": {
+              "width": 0,
+              "color": "#000000FF"
+            },
+            "shadow": {
+              "enabled": false,
+              "color": "#000000A6",
+              "x": 0,
+              "y": 1,
+              "blur": 3
+            },
+            "glow": {
+              "enabled": false,
+              "color": "#A9CAFF80",
+              "blur": 4,
+              "spread": 0
+            }
+          },
+          "messageBox": {
+            "fontFamily": "Georgia",
+            "fontSize": 22,
+            "fontWeight": 500,
+            "italic": false,
+            "letterSpacing": 0,
+            "uppercase": false,
+            "lineHeight": 1.4,
+            "inheritTypography": false,
+            "paint": {
+              "mode": "solid",
+              "color": "#F5F2FFFF",
+              "angle": 135,
+              "stops": [
+                {
+                  "color": "#A9CAFFFF",
+                  "position": 0
+                },
+                {
+                  "color": "#E5A9FFFF",
+                  "position": 100
+                }
+              ]
+            },
+            "outline": {
+              "width": 0,
+              "color": "#000000FF"
+            },
+            "shadow": {
+              "enabled": false,
+              "color": "#000000A6",
+              "x": 0,
+              "y": 1,
+              "blur": 3
+            },
+            "glow": {
+              "enabled": false,
+              "color": "#A9CAFF80",
+              "blur": 4,
+              "spread": 0
+            }
+          },
+          "name": {
+            "fontFamily": "Georgia",
+            "fontSize": 22,
+            "fontWeight": 700,
+            "italic": false,
+            "letterSpacing": 0,
+            "uppercase": false,
+            "lineHeight": 1.4,
+            "inheritTypography": false,
+            "paint": {
+              "mode": "solid",
+              "color": "#DDD3FFFF",
+              "angle": 135,
+              "stops": [
+                {
+                  "color": "#A9CAFFFF",
+                  "position": 0
+                },
+                {
+                  "color": "#E5A9FFFF",
+                  "position": 100
+                }
+              ]
+            },
+            "outline": {
+              "width": 0,
+              "color": "#000000FF"
+            },
+            "shadow": {
+              "enabled": false,
+              "color": "#000000A6",
+              "x": 0,
+              "y": 1,
+              "blur": 3
+            },
+            "glow": {
+              "enabled": false,
+              "color": "#A9CAFF80",
+              "blur": 4,
+              "spread": 0
+            }
+          },
+          "messageText": {
+            "fontFamily": "Georgia",
+            "fontSize": 22,
+            "fontWeight": 500,
+            "italic": false,
+            "letterSpacing": 0,
+            "uppercase": false,
+            "lineHeight": 1.4,
+            "inheritTypography": false,
+            "paint": {
+              "mode": "solid",
+              "color": "#F5F2FFFF",
+              "angle": 135,
+              "stops": [
+                {
+                  "color": "#A9CAFFFF",
+                  "position": 0
+                },
+                {
+                  "color": "#E5A9FFFF",
+                  "position": 100
+                }
+              ]
+            },
+            "outline": {
+              "width": 0,
+              "color": "#000000FF"
+            },
+            "shadow": {
+              "enabled": false,
+              "color": "#000000A6",
+              "x": 0,
+              "y": 1,
+              "blur": 3
+            },
+            "glow": {
+              "enabled": false,
+              "color": "#A9CAFF80",
+              "blur": 4,
+              "spread": 0
+            }
+          },
+          "badges": {
+            "fontFamily": "Georgia",
+            "fontSize": 14,
+            "fontWeight": 500,
+            "italic": false,
+            "letterSpacing": 0,
+            "uppercase": false,
+            "lineHeight": 1.4,
+            "inheritTypography": false,
+            "paint": {
+              "mode": "solid",
+              "color": "#F5F2FFFF",
+              "angle": 135,
+              "stops": [
+                {
+                  "color": "#A9CAFFFF",
+                  "position": 0
+                },
+                {
+                  "color": "#E5A9FFFF",
+                  "position": 100
+                }
+              ]
+            },
+            "outline": {
+              "width": 0,
+              "color": "#000000FF"
+            },
+            "shadow": {
+              "enabled": false,
+              "color": "#000000A6",
+              "x": 0,
+              "y": 1,
+              "blur": 3
+            },
+            "glow": {
+              "enabled": false,
+              "color": "#A9CAFF80",
+              "blur": 4,
+              "spread": 0
+            }
+          },
+          "system": {
+            "fontFamily": "Georgia",
+            "fontSize": 22,
+            "fontWeight": 500,
+            "italic": false,
+            "letterSpacing": 0,
+            "uppercase": false,
+            "lineHeight": 1.4,
+            "inheritTypography": false,
+            "paint": {
+              "mode": "solid",
+              "color": "#F5F2FFFF",
+              "angle": 135,
+              "stops": [
+                {
+                  "color": "#A9CAFFFF",
+                  "position": 0
+                },
+                {
+                  "color": "#E5A9FFFF",
+                  "position": 100
+                }
+              ]
+            },
+            "outline": {
+              "width": 0,
+              "color": "#000000FF"
+            },
+            "shadow": {
+              "enabled": false,
+              "color": "#000000A6",
+              "x": 0,
+              "y": 1,
+              "blur": 3
+            },
+            "glow": {
+              "enabled": false,
+              "color": "#A9CAFF80",
+              "blur": 4,
+              "spread": 0
+            }
+          }
+        },
+        "frame": {
+          "target": "message",
+          "style": "solid",
+          "width": 2,
+          "paint": {
+            "mode": "solid",
+            "color": "#DDD3FFFF",
+            "angle": 135,
+            "stops": [
+              {
+                "color": "#A9CAFFFF",
+                "position": 0
+              },
+              {
+                "color": "#E5A9FFFF",
+                "position": 100
+              }
+            ]
+          },
+          "radius": {
+            "topLeft": 6,
+            "topRight": 6,
+            "bottomRight": 6,
+            "bottomLeft": 6
+          },
+          "padding": {
+            "top": 12,
+            "right": 16,
+            "bottom": 12,
+            "left": 16
+          },
+          "doubleGap": 2,
+          "pixelStep": 4,
+          "outer": {
+            "enabled": false,
+            "width": 1,
+            "color": "#7487A1FF",
+            "offset": 2
+          },
+          "ornament": {
+            "style": "none",
+            "color": "#7487A1FF",
+            "size": 12,
+            "width": 1,
+            "inset": 2
+          },
+          "legacyDetail": "none"
+        },
+        "backgrounds": {
+          "message": {
+            "mode": "solid",
+            "color": "#191B39FF",
+            "stops": [
+              {
+                "color": "#111C2EFF",
+                "position": 0
+              },
+              {
+                "color": "#273B59FF",
+                "position": 100
+              }
+            ],
+            "angle": 135,
+            "radialCenterX": 50,
+            "radialCenterY": 50,
+            "imageUrl": "",
+            "imageFit": "cover",
+            "imageOpacity": 1,
+            "opacity": 1,
+            "backdropBlur": 0,
+            "recipe": "none"
+          },
+          "panel": {
+            "mode": "solid",
+            "color": "#111C2EFF",
+            "stops": [
+              {
+                "color": "#111C2EFF",
+                "position": 0
+              },
+              {
+                "color": "#273B59FF",
+                "position": 100
+              }
+            ],
+            "angle": 135,
+            "radialCenterX": 50,
+            "radialCenterY": 50,
+            "imageUrl": "",
+            "imageFit": "cover",
+            "imageOpacity": 1,
+            "opacity": 0,
+            "backdropBlur": 0,
+            "recipe": "none"
+          }
+        },
+        "nameTemplate": "{badges} {name}: ",
+        "animationOut": "fade",
+        "animationOutDuration": 160,
+        "customCSS": {
+          "enabled": false,
+          "source": ""
+        },
+        "effectColors": {
+          "broadcaster": "#FFB7A5FF",
+          "moderator": "#97E8B2FF",
+          "vip": "#E6B0FFFF",
+          "subscriber": "#FFE095FF",
+          "mention": "#F4D38DFF",
+          "borderSecondary": "#E5A9FFFF"
+        },
+        "transparentBackground": true,
+        "hideFrames": false,
+        "presentation": {
+          "layout": "inline",
+          "shape": "rect",
+          "nameTreatment": "plain",
+          "accent": "none",
+          "chipColor": "#7487A1FF",
+          "columnWidth": 120,
+          "initialSize": 40,
+          "tailSize": 10,
+          "cutSize": 12
+        },
+        "nameStyle": {
+          "readableColors": true,
+          "minContrast": 4.5
+        },
+        "grouping": {
+          "enabled": false,
+          "windowSeconds": 20
+        },
+        "messageLimits": {
+          "maxLineCh": 38,
+          "maxLines": 0
+        },
+        "lifecycle": {
+          "fadeMaskPx": 0
+        },
+        "emphasis": {
+          "firstMessage": false,
+          "color": "#FFE095FF"
+        },
+        "emotes": {
+          "sevenTV": true,
+          "bttv": true,
+          "ffz": true,
+          "emoteOnlyScale": 2,
+          "inlineSize": 28
+        },
+        "channels": {
+          "enabled": false,
+          "rules": []
+        }
+      },
+      "category": "Animated",
+      "featured": false,
+      "galleryOrder": 49,
+      "stats": {
+        "readability": 4,
+        "flair": 5,
+        "motion": 5,
+        "retro": 4
+      },
+      "tagline": "Make a wish between messages.",
+      "alertRecipe": {
+        "version": 1,
+        "title": "Starfall update",
+        "frameNote": "Observatory pennant with a shallow central lower point",
+        "tokenBindings": "alertDesign.tokenBindings",
+        "iconSet": "alertDesign.icons",
+        "iconTreatment": "outline",
+        "motion": "fade",
+        "soundWave": "sine",
+        "typeDefaults": "alertDesign.types",
+        "surfaceOpacityFloor": 0.94,
+        "titleSizePx": 16,
+        "bodySizePx": "clamp(20, resolved messageText fontSize, 32)",
+        "iconSizePx": 36,
+        "paddingPx": 20,
+        "columnGapPx": 16,
+        "followMessage": "{name} joined the adventure!"
+      },
+      "round10Recipe": {
+        "version": 10,
+        "status": "design-only; authoritative over earlier visual recipes; settings retained as v3 fallback",
+        "silhouette": "Observatory pennant with a shallow central lower point",
+        "layout": "Small serif sender above generous astronomical reading field",
+        "typography": {
+          "nameFamily": "Georgia",
+          "bodyFamily": "Georgia",
+          "nameSizePx": 20,
+          "bodySizePx": 22,
+          "lineHeight": 1.45,
+          "fallback": "serif"
+        },
+        "palette": {
+          "ink": "#F5F2FF",
+          "surface": "#191B39",
+          "accent": "#DDD3FF"
+        },
+        "motion": {
+          "keyframes": [
+            "starfall-travel"
+          ],
+          "cycleSeconds": 6,
+          "maximumAnimatedLayersPerMessage": 1,
+          "trigger": "ambient + entry",
+          "reduced": "No animation; full text and final silhouette immediately; static accent and texture. No burst, bolts, travel or typing."
+        },
+        "geometryReference": "round10.css .skin-starfall",
+        "content": "Reserve ornaments outside content; wrap names and long words; no text clipping; preserve badges, emotes and moderation."
+      }
+    },
+    {
+      "id": "fire-frame",
+      "name": "Fire Frame",
+      "settings": {
+        "schemaVersion": 3,
+        "channel": "",
+        "fontFamily": "Rockwell",
+        "fontSize": 22,
+        "fontWeight": 500,
+        "lineHeight": 1.4,
+        "textColor": "#FFF4DD",
+        "nameColorMode": "fixed",
+        "nameColor": "#FFC276",
+        "systemColor": "#F6F8FC",
+        "nameFormat": "{name}:",
+        "showBadges": true,
+        "outlineWidth": 0,
+        "outlineColor": "#000000",
+        "shadowEnabled": false,
+        "shadowColor": "#000000",
+        "shadowOpacity": 0.651,
+        "shadowBlur": 3,
+        "borderStyle": "line",
+        "borderColor": "#FFC276",
+        "borderWidth": 2,
+        "backgroundColor": "#301A16",
+        "backgroundOpacity": 1,
+        "backgroundScope": "message",
+        "cornerRadius": 6,
+        "paddingX": 16,
+        "paddingY": 12,
+        "messageSpacing": 10,
+        "maxMessages": 8,
+        "messageLifetime": 30,
+        "direction": "bottom",
+        "alignment": "left",
+        "overlayWidth": 480,
+        "edgeInset": 20,
+        "animationIn": "none",
+        "animationDuration": 180,
+        "hideCommands": true,
+        "hideBots": true,
+        "botNames": [
+          "nightbot",
+          "streamelements"
+        ],
+        "hideLinks": false,
+        "borderEffect": "none",
+        "borderEffectSpeed": 6,
+        "borderEffectColor": "#E5A9FF",
+        "nameEffect": "none",
+        "nameGradientColor1": "#A9CAFF",
+        "nameGradientColor2": "#E5A9FF",
+        "textEffect": "none",
+        "typewriterDuration": 700,
+        "backgroundEffect": "none",
+        "backgroundSecondaryColor": "#273B59",
+        "backgroundTreatment": "solid",
+        "ambientEffect": "none",
+        "roleColorsEnabled": false,
+        "broadcasterNameColor": "#FFB7A5",
+        "modNameColor": "#97E8B2",
+        "vipNameColor": "#E6B0FF",
+        "subNameColor": "#FFE095",
+        "mentionHighlightEnabled": false,
+        "mentionHighlightColor": "#F4D38D",
+        "reduceMotion": false,
+        "parts": {
+          "panel": {
+            "fontFamily": "Rockwell",
+            "fontSize": 22,
+            "fontWeight": 500,
+            "italic": false,
+            "letterSpacing": 0,
+            "uppercase": false,
+            "lineHeight": 1.4,
+            "inheritTypography": false,
+            "paint": {
+              "mode": "solid",
+              "color": "#FFF4DDFF",
+              "angle": 135,
+              "stops": [
+                {
+                  "color": "#A9CAFFFF",
+                  "position": 0
+                },
+                {
+                  "color": "#E5A9FFFF",
+                  "position": 100
+                }
+              ]
+            },
+            "outline": {
+              "width": 0,
+              "color": "#000000FF"
+            },
+            "shadow": {
+              "enabled": false,
+              "color": "#000000A6",
+              "x": 0,
+              "y": 1,
+              "blur": 3
+            },
+            "glow": {
+              "enabled": false,
+              "color": "#A9CAFF80",
+              "blur": 4,
+              "spread": 0
+            }
+          },
+          "messageBox": {
+            "fontFamily": "Rockwell",
+            "fontSize": 22,
+            "fontWeight": 500,
+            "italic": false,
+            "letterSpacing": 0,
+            "uppercase": false,
+            "lineHeight": 1.4,
+            "inheritTypography": false,
+            "paint": {
+              "mode": "solid",
+              "color": "#FFF4DDFF",
+              "angle": 135,
+              "stops": [
+                {
+                  "color": "#A9CAFFFF",
+                  "position": 0
+                },
+                {
+                  "color": "#E5A9FFFF",
+                  "position": 100
+                }
+              ]
+            },
+            "outline": {
+              "width": 0,
+              "color": "#000000FF"
+            },
+            "shadow": {
+              "enabled": false,
+              "color": "#000000A6",
+              "x": 0,
+              "y": 1,
+              "blur": 3
+            },
+            "glow": {
+              "enabled": false,
+              "color": "#A9CAFF80",
+              "blur": 4,
+              "spread": 0
+            }
+          },
+          "name": {
+            "fontFamily": "Rockwell",
+            "fontSize": 22,
+            "fontWeight": 700,
+            "italic": false,
+            "letterSpacing": 0,
+            "uppercase": false,
+            "lineHeight": 1.4,
+            "inheritTypography": false,
+            "paint": {
+              "mode": "solid",
+              "color": "#FFC276FF",
+              "angle": 135,
+              "stops": [
+                {
+                  "color": "#A9CAFFFF",
+                  "position": 0
+                },
+                {
+                  "color": "#E5A9FFFF",
+                  "position": 100
+                }
+              ]
+            },
+            "outline": {
+              "width": 0,
+              "color": "#000000FF"
+            },
+            "shadow": {
+              "enabled": false,
+              "color": "#000000A6",
+              "x": 0,
+              "y": 1,
+              "blur": 3
+            },
+            "glow": {
+              "enabled": false,
+              "color": "#A9CAFF80",
+              "blur": 4,
+              "spread": 0
+            }
+          },
+          "messageText": {
+            "fontFamily": "Rockwell",
+            "fontSize": 22,
+            "fontWeight": 500,
+            "italic": false,
+            "letterSpacing": 0,
+            "uppercase": false,
+            "lineHeight": 1.4,
+            "inheritTypography": false,
+            "paint": {
+              "mode": "solid",
+              "color": "#FFF4DDFF",
+              "angle": 135,
+              "stops": [
+                {
+                  "color": "#A9CAFFFF",
+                  "position": 0
+                },
+                {
+                  "color": "#E5A9FFFF",
+                  "position": 100
+                }
+              ]
+            },
+            "outline": {
+              "width": 0,
+              "color": "#000000FF"
+            },
+            "shadow": {
+              "enabled": false,
+              "color": "#000000A6",
+              "x": 0,
+              "y": 1,
+              "blur": 3
+            },
+            "glow": {
+              "enabled": false,
+              "color": "#A9CAFF80",
+              "blur": 4,
+              "spread": 0
+            }
+          },
+          "badges": {
+            "fontFamily": "Rockwell",
+            "fontSize": 14,
+            "fontWeight": 500,
+            "italic": false,
+            "letterSpacing": 0,
+            "uppercase": false,
+            "lineHeight": 1.4,
+            "inheritTypography": false,
+            "paint": {
+              "mode": "solid",
+              "color": "#FFF4DDFF",
+              "angle": 135,
+              "stops": [
+                {
+                  "color": "#A9CAFFFF",
+                  "position": 0
+                },
+                {
+                  "color": "#E5A9FFFF",
+                  "position": 100
+                }
+              ]
+            },
+            "outline": {
+              "width": 0,
+              "color": "#000000FF"
+            },
+            "shadow": {
+              "enabled": false,
+              "color": "#000000A6",
+              "x": 0,
+              "y": 1,
+              "blur": 3
+            },
+            "glow": {
+              "enabled": false,
+              "color": "#A9CAFF80",
+              "blur": 4,
+              "spread": 0
+            }
+          },
+          "system": {
+            "fontFamily": "Rockwell",
+            "fontSize": 22,
+            "fontWeight": 500,
+            "italic": false,
+            "letterSpacing": 0,
+            "uppercase": false,
+            "lineHeight": 1.4,
+            "inheritTypography": false,
+            "paint": {
+              "mode": "solid",
+              "color": "#FFF4DDFF",
+              "angle": 135,
+              "stops": [
+                {
+                  "color": "#A9CAFFFF",
+                  "position": 0
+                },
+                {
+                  "color": "#E5A9FFFF",
+                  "position": 100
+                }
+              ]
+            },
+            "outline": {
+              "width": 0,
+              "color": "#000000FF"
+            },
+            "shadow": {
+              "enabled": false,
+              "color": "#000000A6",
+              "x": 0,
+              "y": 1,
+              "blur": 3
+            },
+            "glow": {
+              "enabled": false,
+              "color": "#A9CAFF80",
+              "blur": 4,
+              "spread": 0
+            }
+          }
+        },
+        "frame": {
+          "target": "message",
+          "style": "solid",
+          "width": 2,
+          "paint": {
+            "mode": "solid",
+            "color": "#FFC276FF",
+            "angle": 135,
+            "stops": [
+              {
+                "color": "#A9CAFFFF",
+                "position": 0
+              },
+              {
+                "color": "#E5A9FFFF",
+                "position": 100
+              }
+            ]
+          },
+          "radius": {
+            "topLeft": 6,
+            "topRight": 6,
+            "bottomRight": 6,
+            "bottomLeft": 6
+          },
+          "padding": {
+            "top": 12,
+            "right": 16,
+            "bottom": 12,
+            "left": 16
+          },
+          "doubleGap": 2,
+          "pixelStep": 4,
+          "outer": {
+            "enabled": false,
+            "width": 1,
+            "color": "#7487A1FF",
+            "offset": 2
+          },
+          "ornament": {
+            "style": "none",
+            "color": "#7487A1FF",
+            "size": 12,
+            "width": 1,
+            "inset": 2
+          },
+          "legacyDetail": "none"
+        },
+        "backgrounds": {
+          "message": {
+            "mode": "solid",
+            "color": "#301A16FF",
+            "stops": [
+              {
+                "color": "#111C2EFF",
+                "position": 0
+              },
+              {
+                "color": "#273B59FF",
+                "position": 100
+              }
+            ],
+            "angle": 135,
+            "radialCenterX": 50,
+            "radialCenterY": 50,
+            "imageUrl": "",
+            "imageFit": "cover",
+            "imageOpacity": 1,
+            "opacity": 1,
+            "backdropBlur": 0,
+            "recipe": "none"
+          },
+          "panel": {
+            "mode": "solid",
+            "color": "#111C2EFF",
+            "stops": [
+              {
+                "color": "#111C2EFF",
+                "position": 0
+              },
+              {
+                "color": "#273B59FF",
+                "position": 100
+              }
+            ],
+            "angle": 135,
+            "radialCenterX": 50,
+            "radialCenterY": 50,
+            "imageUrl": "",
+            "imageFit": "cover",
+            "imageOpacity": 1,
+            "opacity": 0,
+            "backdropBlur": 0,
+            "recipe": "none"
+          }
+        },
+        "nameTemplate": "{badges} {name}: ",
+        "animationOut": "fade",
+        "animationOutDuration": 160,
+        "customCSS": {
+          "enabled": false,
+          "source": ""
+        },
+        "effectColors": {
+          "broadcaster": "#FFB7A5FF",
+          "moderator": "#97E8B2FF",
+          "vip": "#E6B0FFFF",
+          "subscriber": "#FFE095FF",
+          "mention": "#F4D38DFF",
+          "borderSecondary": "#E5A9FFFF"
+        },
+        "transparentBackground": true,
+        "hideFrames": false,
+        "presentation": {
+          "layout": "inline",
+          "shape": "rect",
+          "nameTreatment": "plain",
+          "accent": "none",
+          "chipColor": "#7487A1FF",
+          "columnWidth": 120,
+          "initialSize": 40,
+          "tailSize": 10,
+          "cutSize": 12
+        },
+        "nameStyle": {
+          "readableColors": true,
+          "minContrast": 4.5
+        },
+        "grouping": {
+          "enabled": false,
+          "windowSeconds": 20
+        },
+        "messageLimits": {
+          "maxLineCh": 38,
+          "maxLines": 0
+        },
+        "lifecycle": {
+          "fadeMaskPx": 0
+        },
+        "emphasis": {
+          "firstMessage": false,
+          "color": "#FFE095FF"
+        },
+        "emotes": {
+          "sevenTV": true,
+          "bttv": true,
+          "ffz": true,
+          "emoteOnlyScale": 2,
+          "inlineSize": 28
+        },
+        "channels": {
+          "enabled": false,
+          "rules": []
+        }
+      },
+      "category": "Animated",
+      "featured": false,
+      "galleryOrder": 50,
+      "stats": {
+        "readability": 4,
+        "flair": 5,
+        "motion": 5,
+        "retro": 4
+      },
+      "tagline": "Keep the conversation burning.",
+      "alertRecipe": {
+        "version": 1,
+        "title": "Fire Frame update",
+        "frameNote": "Ember hearth with flame-tooth crown and flat base",
+        "tokenBindings": "alertDesign.tokenBindings",
+        "iconSet": "alertDesign.icons",
+        "iconTreatment": "outline",
+        "motion": "fade",
+        "soundWave": "sine",
+        "typeDefaults": "alertDesign.types",
+        "surfaceOpacityFloor": 0.94,
+        "titleSizePx": 16,
+        "bodySizePx": "clamp(20, resolved messageText fontSize, 32)",
+        "iconSizePx": 36,
+        "paddingPx": 20,
+        "columnGapPx": 16,
+        "followMessage": "{name} joined the adventure!"
+      },
+      "round10Recipe": {
+        "version": 10,
+        "status": "design-only; authoritative over earlier visual recipes; settings retained as v3 fallback",
+        "silhouette": "Ember hearth with flame-tooth crown and flat base",
+        "layout": "Bold slab sender anchored low above the body",
+        "typography": {
+          "nameFamily": "Rockwell",
+          "bodyFamily": "Rockwell",
+          "nameSizePx": 20,
+          "bodySizePx": 22,
+          "lineHeight": 1.45,
+          "fallback": "serif"
+        },
+        "palette": {
+          "ink": "#FFF4DD",
+          "surface": "#301A16",
+          "accent": "#FFC276"
+        },
+        "motion": {
+          "keyframes": [
+            "fire-lick"
+          ],
+          "cycleSeconds": 2.8,
+          "maximumAnimatedLayersPerMessage": 1,
+          "trigger": "ambient + entry",
+          "reduced": "No animation; full text and final silhouette immediately; static accent and texture. No burst, bolts, travel or typing."
+        },
+        "geometryReference": "round10.css .skin-fire-frame",
+        "content": "Reserve ornaments outside content; wrap names and long words; no text clipping; preserve badges, emotes and moderation."
+      }
+    },
+    {
+      "id": "ice-crystal",
+      "name": "Ice Crystal",
+      "settings": {
+        "schemaVersion": 3,
+        "channel": "",
+        "fontFamily": "Georgia",
+        "fontSize": 22,
+        "fontWeight": 500,
+        "lineHeight": 1.4,
+        "textColor": "#F1FCFF",
+        "nameColorMode": "fixed",
+        "nameColor": "#BDEFFF",
+        "systemColor": "#F6F8FC",
+        "nameFormat": "{name}:",
+        "showBadges": true,
+        "outlineWidth": 0,
+        "outlineColor": "#000000",
+        "shadowEnabled": false,
+        "shadowColor": "#000000",
+        "shadowOpacity": 0.651,
+        "shadowBlur": 3,
+        "borderStyle": "line",
+        "borderColor": "#BDEFFF",
+        "borderWidth": 2,
+        "backgroundColor": "#142B3A",
+        "backgroundOpacity": 1,
+        "backgroundScope": "message",
+        "cornerRadius": 6,
+        "paddingX": 16,
+        "paddingY": 12,
+        "messageSpacing": 10,
+        "maxMessages": 8,
+        "messageLifetime": 30,
+        "direction": "bottom",
+        "alignment": "left",
+        "overlayWidth": 480,
+        "edgeInset": 20,
+        "animationIn": "none",
+        "animationDuration": 180,
+        "hideCommands": true,
+        "hideBots": true,
+        "botNames": [
+          "nightbot",
+          "streamelements"
+        ],
+        "hideLinks": false,
+        "borderEffect": "none",
+        "borderEffectSpeed": 6,
+        "borderEffectColor": "#E5A9FF",
+        "nameEffect": "none",
+        "nameGradientColor1": "#A9CAFF",
+        "nameGradientColor2": "#E5A9FF",
+        "textEffect": "none",
+        "typewriterDuration": 700,
+        "backgroundEffect": "none",
+        "backgroundSecondaryColor": "#273B59",
+        "backgroundTreatment": "solid",
+        "ambientEffect": "none",
+        "roleColorsEnabled": false,
+        "broadcasterNameColor": "#FFB7A5",
+        "modNameColor": "#97E8B2",
+        "vipNameColor": "#E6B0FF",
+        "subNameColor": "#FFE095",
+        "mentionHighlightEnabled": false,
+        "mentionHighlightColor": "#F4D38D",
+        "reduceMotion": false,
+        "parts": {
+          "panel": {
+            "fontFamily": "Georgia",
+            "fontSize": 22,
+            "fontWeight": 500,
+            "italic": false,
+            "letterSpacing": 0,
+            "uppercase": false,
+            "lineHeight": 1.4,
+            "inheritTypography": false,
+            "paint": {
+              "mode": "solid",
+              "color": "#F1FCFFFF",
+              "angle": 135,
+              "stops": [
+                {
+                  "color": "#A9CAFFFF",
+                  "position": 0
+                },
+                {
+                  "color": "#E5A9FFFF",
+                  "position": 100
+                }
+              ]
+            },
+            "outline": {
+              "width": 0,
+              "color": "#000000FF"
+            },
+            "shadow": {
+              "enabled": false,
+              "color": "#000000A6",
+              "x": 0,
+              "y": 1,
+              "blur": 3
+            },
+            "glow": {
+              "enabled": false,
+              "color": "#A9CAFF80",
+              "blur": 4,
+              "spread": 0
+            }
+          },
+          "messageBox": {
+            "fontFamily": "Georgia",
+            "fontSize": 22,
+            "fontWeight": 500,
+            "italic": false,
+            "letterSpacing": 0,
+            "uppercase": false,
+            "lineHeight": 1.4,
+            "inheritTypography": false,
+            "paint": {
+              "mode": "solid",
+              "color": "#F1FCFFFF",
+              "angle": 135,
+              "stops": [
+                {
+                  "color": "#A9CAFFFF",
+                  "position": 0
+                },
+                {
+                  "color": "#E5A9FFFF",
+                  "position": 100
+                }
+              ]
+            },
+            "outline": {
+              "width": 0,
+              "color": "#000000FF"
+            },
+            "shadow": {
+              "enabled": false,
+              "color": "#000000A6",
+              "x": 0,
+              "y": 1,
+              "blur": 3
+            },
+            "glow": {
+              "enabled": false,
+              "color": "#A9CAFF80",
+              "blur": 4,
+              "spread": 0
+            }
+          },
+          "name": {
+            "fontFamily": "Georgia",
+            "fontSize": 22,
+            "fontWeight": 700,
+            "italic": false,
+            "letterSpacing": 0,
+            "uppercase": false,
+            "lineHeight": 1.4,
+            "inheritTypography": false,
+            "paint": {
+              "mode": "solid",
+              "color": "#BDEFFFFF",
+              "angle": 135,
+              "stops": [
+                {
+                  "color": "#A9CAFFFF",
+                  "position": 0
+                },
+                {
+                  "color": "#E5A9FFFF",
+                  "position": 100
+                }
+              ]
+            },
+            "outline": {
+              "width": 0,
+              "color": "#000000FF"
+            },
+            "shadow": {
+              "enabled": false,
+              "color": "#000000A6",
+              "x": 0,
+              "y": 1,
+              "blur": 3
+            },
+            "glow": {
+              "enabled": false,
+              "color": "#A9CAFF80",
+              "blur": 4,
+              "spread": 0
+            }
+          },
+          "messageText": {
+            "fontFamily": "Georgia",
+            "fontSize": 22,
+            "fontWeight": 500,
+            "italic": false,
+            "letterSpacing": 0,
+            "uppercase": false,
+            "lineHeight": 1.4,
+            "inheritTypography": false,
+            "paint": {
+              "mode": "solid",
+              "color": "#F1FCFFFF",
+              "angle": 135,
+              "stops": [
+                {
+                  "color": "#A9CAFFFF",
+                  "position": 0
+                },
+                {
+                  "color": "#E5A9FFFF",
+                  "position": 100
+                }
+              ]
+            },
+            "outline": {
+              "width": 0,
+              "color": "#000000FF"
+            },
+            "shadow": {
+              "enabled": false,
+              "color": "#000000A6",
+              "x": 0,
+              "y": 1,
+              "blur": 3
+            },
+            "glow": {
+              "enabled": false,
+              "color": "#A9CAFF80",
+              "blur": 4,
+              "spread": 0
+            }
+          },
+          "badges": {
+            "fontFamily": "Georgia",
+            "fontSize": 14,
+            "fontWeight": 500,
+            "italic": false,
+            "letterSpacing": 0,
+            "uppercase": false,
+            "lineHeight": 1.4,
+            "inheritTypography": false,
+            "paint": {
+              "mode": "solid",
+              "color": "#F1FCFFFF",
+              "angle": 135,
+              "stops": [
+                {
+                  "color": "#A9CAFFFF",
+                  "position": 0
+                },
+                {
+                  "color": "#E5A9FFFF",
+                  "position": 100
+                }
+              ]
+            },
+            "outline": {
+              "width": 0,
+              "color": "#000000FF"
+            },
+            "shadow": {
+              "enabled": false,
+              "color": "#000000A6",
+              "x": 0,
+              "y": 1,
+              "blur": 3
+            },
+            "glow": {
+              "enabled": false,
+              "color": "#A9CAFF80",
+              "blur": 4,
+              "spread": 0
+            }
+          },
+          "system": {
+            "fontFamily": "Georgia",
+            "fontSize": 22,
+            "fontWeight": 500,
+            "italic": false,
+            "letterSpacing": 0,
+            "uppercase": false,
+            "lineHeight": 1.4,
+            "inheritTypography": false,
+            "paint": {
+              "mode": "solid",
+              "color": "#F1FCFFFF",
+              "angle": 135,
+              "stops": [
+                {
+                  "color": "#A9CAFFFF",
+                  "position": 0
+                },
+                {
+                  "color": "#E5A9FFFF",
+                  "position": 100
+                }
+              ]
+            },
+            "outline": {
+              "width": 0,
+              "color": "#000000FF"
+            },
+            "shadow": {
+              "enabled": false,
+              "color": "#000000A6",
+              "x": 0,
+              "y": 1,
+              "blur": 3
+            },
+            "glow": {
+              "enabled": false,
+              "color": "#A9CAFF80",
+              "blur": 4,
+              "spread": 0
+            }
+          }
+        },
+        "frame": {
+          "target": "message",
+          "style": "solid",
+          "width": 2,
+          "paint": {
+            "mode": "solid",
+            "color": "#BDEFFFFF",
+            "angle": 135,
+            "stops": [
+              {
+                "color": "#A9CAFFFF",
+                "position": 0
+              },
+              {
+                "color": "#E5A9FFFF",
+                "position": 100
+              }
+            ]
+          },
+          "radius": {
+            "topLeft": 6,
+            "topRight": 6,
+            "bottomRight": 6,
+            "bottomLeft": 6
+          },
+          "padding": {
+            "top": 12,
+            "right": 16,
+            "bottom": 12,
+            "left": 16
+          },
+          "doubleGap": 2,
+          "pixelStep": 4,
+          "outer": {
+            "enabled": false,
+            "width": 1,
+            "color": "#7487A1FF",
+            "offset": 2
+          },
+          "ornament": {
+            "style": "none",
+            "color": "#7487A1FF",
+            "size": 12,
+            "width": 1,
+            "inset": 2
+          },
+          "legacyDetail": "none"
+        },
+        "backgrounds": {
+          "message": {
+            "mode": "solid",
+            "color": "#142B3AFF",
+            "stops": [
+              {
+                "color": "#111C2EFF",
+                "position": 0
+              },
+              {
+                "color": "#273B59FF",
+                "position": 100
+              }
+            ],
+            "angle": 135,
+            "radialCenterX": 50,
+            "radialCenterY": 50,
+            "imageUrl": "",
+            "imageFit": "cover",
+            "imageOpacity": 1,
+            "opacity": 1,
+            "backdropBlur": 0,
+            "recipe": "none"
+          },
+          "panel": {
+            "mode": "solid",
+            "color": "#111C2EFF",
+            "stops": [
+              {
+                "color": "#111C2EFF",
+                "position": 0
+              },
+              {
+                "color": "#273B59FF",
+                "position": 100
+              }
+            ],
+            "angle": 135,
+            "radialCenterX": 50,
+            "radialCenterY": 50,
+            "imageUrl": "",
+            "imageFit": "cover",
+            "imageOpacity": 1,
+            "opacity": 0,
+            "backdropBlur": 0,
+            "recipe": "none"
+          }
+        },
+        "nameTemplate": "{badges} {name}: ",
+        "animationOut": "fade",
+        "animationOutDuration": 160,
+        "customCSS": {
+          "enabled": false,
+          "source": ""
+        },
+        "effectColors": {
+          "broadcaster": "#FFB7A5FF",
+          "moderator": "#97E8B2FF",
+          "vip": "#E6B0FFFF",
+          "subscriber": "#FFE095FF",
+          "mention": "#F4D38DFF",
+          "borderSecondary": "#E5A9FFFF"
+        },
+        "transparentBackground": true,
+        "hideFrames": false,
+        "presentation": {
+          "layout": "inline",
+          "shape": "rect",
+          "nameTreatment": "plain",
+          "accent": "none",
+          "chipColor": "#7487A1FF",
+          "columnWidth": 120,
+          "initialSize": 40,
+          "tailSize": 10,
+          "cutSize": 12
+        },
+        "nameStyle": {
+          "readableColors": true,
+          "minContrast": 4.5
+        },
+        "grouping": {
+          "enabled": false,
+          "windowSeconds": 20
+        },
+        "messageLimits": {
+          "maxLineCh": 38,
+          "maxLines": 0
+        },
+        "lifecycle": {
+          "fadeMaskPx": 0
+        },
+        "emphasis": {
+          "firstMessage": false,
+          "color": "#FFE095FF"
+        },
+        "emotes": {
+          "sevenTV": true,
+          "bttv": true,
+          "ffz": true,
+          "emoteOnlyScale": 2,
+          "inlineSize": 28
+        },
+        "channels": {
+          "enabled": false,
+          "rules": []
+        }
+      },
+      "category": "Animated",
+      "featured": false,
+      "galleryOrder": 51,
+      "stats": {
+        "readability": 4,
+        "flair": 5,
+        "motion": 5,
+        "retro": 4
+      },
+      "tagline": "A fresh frost on every arrival.",
+      "alertRecipe": {
+        "version": 1,
+        "title": "Ice Crystal update",
+        "frameNote": "Crystal shard with three stepped facets on the right",
+        "tokenBindings": "alertDesign.tokenBindings",
+        "iconSet": "alertDesign.icons",
+        "iconTreatment": "outline",
+        "motion": "fade",
+        "soundWave": "sine",
+        "typeDefaults": "alertDesign.types",
+        "surfaceOpacityFloor": 0.94,
+        "titleSizePx": 16,
+        "bodySizePx": "clamp(20, resolved messageText fontSize, 32)",
+        "iconSizePx": 36,
+        "paddingPx": 20,
+        "columnGapPx": 16,
+        "followMessage": "{name} joined the adventure!"
+      },
+      "round10Recipe": {
+        "version": 10,
+        "status": "design-only; authoritative over earlier visual recipes; settings retained as v3 fallback",
+        "silhouette": "Crystal shard with three stepped facets on the right",
+        "layout": "Fine serif sender, upright sans body inside a frosted ledge",
+        "typography": {
+          "nameFamily": "Georgia",
+          "bodyFamily": "Segoe UI",
+          "nameSizePx": 20,
+          "bodySizePx": 22,
+          "lineHeight": 1.45,
+          "fallback": "serif"
+        },
+        "palette": {
+          "ink": "#F1FCFF",
+          "surface": "#142B3A",
+          "accent": "#BDEFFF"
+        },
+        "motion": {
+          "keyframes": [
+            "frost-sweep",
+            "ice-freeze"
+          ],
+          "cycleSeconds": 8,
+          "maximumAnimatedLayersPerMessage": 2,
+          "trigger": "ambient + entry",
+          "reduced": "No animation; full text and final silhouette immediately; static accent and texture. No burst, bolts, travel or typing."
+        },
+        "geometryReference": "round10.css .skin-ice-crystal",
+        "content": "Reserve ornaments outside content; wrap names and long words; no text clipping; preserve badges, emotes and moderation."
       }
     }
   ],
@@ -27450,7 +33345,7 @@
     },
     "historyScope": "session; settings and library mutations; max 100 transactions"
   },
-  "designRevision": "7a",
+  "designRevision": 10,
   "galleryGroups": [
     "Streamer favorites",
     "Game styles",
@@ -28342,5 +34237,20 @@
       "prime"
     ],
     "primeNotice": "Preview-only Prime variant: EventSub cannot distinguish Prime from Tier 1. Live 1000 badge: Tier 1 / Prime."
+  },
+  "round10Design": {
+    "status": "design-only",
+    "totalSkins": 52,
+    "newAnimated": 10,
+    "reworkedBasics": 18,
+    "recipeAuthority": "round10Recipe overrides earlier appearance prose; settings remain valid static fallbacks, not a full implementation",
+    "preview": "animated-mockup.html",
+    "statsMeaning": "Art-directed 1–5 descriptors, not measured performance or accessibility scores",
+    "motionBudget": "At most 3 animated elements per message including entrance; no per-frame JavaScript; visible previews only",
+    "heroSkinIds": [
+      "aurora",
+      "glitter-bomb",
+      "holo-foil"
+    ]
   }
 }
