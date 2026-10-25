@@ -7,6 +7,10 @@ export const FRAME_ATTRIBUTES = Object.freeze({
   hideFrames: 'data-hide-frames',
 });
 
+export function datasetProperty(attribute) {
+  return attribute.replace(/^data-/, '').replace(/-([a-z])/g, (_, letter) => letter.toUpperCase());
+}
+
 export function frameAttributes(settings) {
   const frame = settings.frame;
   return {
