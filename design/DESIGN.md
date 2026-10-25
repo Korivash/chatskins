@@ -1,3 +1,239 @@
+# Round 6: Website
+
+This is the website design handoff for chatskins.korivash.com, not an application build. Round 6 supersedes earlier website composition, UI tokens, initial preview background and onboarding rules. Round 5 remains authoritative for the 34 skin recipes, Featured order, renderer geometry, schema, emotes and preservation rules; Round 3 still supplies the full per-part editor contract. All earlier rounds remain below. No application files or preset settings are changed by this round.
+
+## Direction and first-minute journey
+
+**A wardrobe for your chat, with the stream as the fitting room.** The existing developer-facing rail becomes a simple guided experience. The distinctive visual is actual chat layered over an original illustrated exploration scene: blue mountains, a path and a distant gateway, all SVG geometry. No game art, game marks or video. Headlines are round and self-assured; controls are quiet and clearly labeled. The accent is soft periwinkle, not Twitch purple. Individual skins keep their own palettes.
+
+Design-plan critique: a dashboard with a promotional banner would still feel like a developer tool. Replace that layout with an editorial hero plus large live specimens. Avoid a feature-card wall: use a flat checklist, a three-step strip and illustrated OBS instructions. Keep UI labels in sentence case; no decorative technical statistics or invented popularity numbers. “Streamer favorites” is the existing collection name, not a measured ranking.
+
+The intended cold-visit path is: understand the product in 5 seconds; choose a look by 15 seconds; adjust or skip customization by 30 seconds; enter a channel and copy by 45 seconds; paste into OBS by 60 seconds. These are usability targets, not measured promises. Test the complete journey with a streamer unfamiliar with the product before claiming “under a minute” in public copy.
+
+```text
+Landing desktop                           Editor desktop
+Wordmark       Skins  OBS guide  CTA       Wordmark                   OBS guide
+Headline       Animated stream specimen   1 Skin → 2 Customize → 3 Get your link
+Pitch / CTAs   Skin name / pause           Step title                Undo / Redo
+Three steps                               Six controls | Stream preview
+Gallery filters + visual skin grid        Advanced     | Backdrop switches
+Features / OBS guide / FAQ                 Back                     Continue
+Final CTA / attribution
+```
+
+The public landing is `/`. Use `/editor.html?skin=bubble-lift` for a selected skin and `/editor.html` for the primary CTA. The latter opens Step 1 with Clean as the unchanged data default and Bubble Lift first in the gallery; no click is required to browse. A skin link opens Step 2 with that skin applied. Unknown IDs open Step 1 with “That skin isn’t available. Pick another starting point.” Keep canonical full settings in overlay hashes; never replace them with a skin-ID lookup. Preserve old editor hash URLs at `/`: detect a valid existing settings hash and route to the editor with the intact hash. Normal `/` with no settings opens the landing. Route transitions preserve session edits and channel; browser Back works. Selection/editing does not require authentication.
+
+## Brand assets and CSS tokens
+
+The original icon is a speech card with two short text strokes, a tail and one folded corner: the conversation has a new skin. `chatskins-mark.svg` is the pure SVG master. Minimum 20 px icon; default 34 px. Place 10 px from the “ChatSkins” wordmark, set in Fredoka 600, 27 px with -0.5 px tracking. Header links to home and has accessible name “ChatSkins home”; hide the adjacent decorative SVG from assistive technology. Use the icon alone only when the accessible product name remains present. No Twitch glyph or borrowed game silhouette. Clear space: at least 8 px around the combined lockup.
+
+Type pair: **Fredoka 500/600** for the wordmark, hero and section headlines; **DM Sans 400/500/600/700** for all UI and body copy. Both are Google Fonts. Load via a stylesheet link with `display=swap` in production, preconnect to fonts.googleapis.com and fonts.gstatic.com; no CSS @import waterfall in the production build. The review stylesheet uses @import for portability. Use sans-serif fallback; content must fit without the web fonts. Preset fonts remain independent and load on demand.
+
+Use these custom properties throughout the website shell. Skin tokens are a separate namespace and must not inherit brand colors into saved user settings. Responsive media queries may adjust `--content` and `--rail` but do not introduce one-off UI colors or spacing.
+
+```css
+:root {
+  --canvas: #101426;
+  --surface: #1B2138;
+  --raised: #252D48;
+  --line: #414B6B;             /* decorative separators only */
+  --control-line: #7F8BAB;     /* input/interactive boundaries */
+  --text: #F5F6FF;
+  --muted: #BBC4DF;
+  --accent: #B7AAFF;
+  --accent-hover: #CEC4FF;
+  --on-accent: #191332;
+  --focus: #E3DDFF;
+  --success: #A9E6CC;
+  --error: #FFB6BF;
+  --warning: #F4D598;
+  --font-body: 'DM Sans', sans-serif;
+  --font-display: 'Fredoka', sans-serif;
+  --text-xs: .8125rem;
+  --text-sm: .875rem;
+  --text-base: 1rem;
+  --text-lg: 1.25rem;
+  --text-xl: 1.5rem;
+  --text-title: clamp(2rem, 4vw, 3rem);
+  --text-hero: clamp(2.8rem, 5.5vw, 4.75rem);
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-24: 96px;
+  --radius-sm: 8px;
+  --radius-control: 12px;
+  --radius-card: 18px;
+  --radius-stage: 24px;
+  --radius-pill: 999px;
+  --shadow-card: 0 8px 24px #05081933;
+  --shadow-stage: 0 24px 64px #05081966;
+  --shadow-float: 0 8px 32px #05081988;
+  --duration-fast: 150ms;
+  --duration-ui: 200ms;
+  --duration-step: 250ms;
+  --ease-out: cubic-bezier(.2,.7,.2,1);
+  --focus-ring: 3px solid var(--focus);
+  --hit: 48px;
+  --content: 1200px;
+  --rail: 400px;
+  --source-width: 1280;
+  --source-height: 720;
+}
+```
+
+Body 16/24 px; small UI 14/21; captions 13/19.5; field labels 18/24 at 600 in Simple mode, 14/20 in Advanced. Hero 76/80 px maximum with -0.025em tracking; section headings 48/51 maximum. At phone sizes hero 50/53, section 32/35, editor title 36/40. Keep body lines under 65ch. Use semantic heading levels rather than heading size as a proxy.
+
+| Component | Visual and behavioral contract |
+| --- | --- |
+| Primary button | 48 px minimum height; 12 px radius; 12/16 px padding; accent fill, on-accent text, 700 weight; hover accent-hover; press translateY(1px). One primary action per current editor step. |
+| Secondary / text button | Surface fill, control-line 1 px border; hover raised. Text links remain underlined outside navigation. Destructive actions use explicit verbs and error-colored text, never an unlabeled icon. |
+| Input / select | 48 px height, surface fill, control-line border, 12 px radius; text and visible associated label. Placeholder is optional help, never the label. Error border plus inline error icon/text; aria-invalid and aria-describedby. Disabled uses muted text and an explanation, not reduced opacity on the entire control. |
+| Switch | 44 × 26 px track inside a 48 px labeled target; 18 px thumb; off raised with control-line edge, on accent with on-accent thumb. 17 px travel in 200 ms. Native checkbox with role=switch; accessible checked state and visible On/Off text synchronized. |
+| Slider | Native keyboard slider, 48 px target row, 4 px track, 20 px thumb; accent active track, control-line remainder. Pair with editable number field and unit; announce committed value, not every animation frame. Home/End and arrow keys work. |
+| Color | 56 px swatch control plus hex input; alpha checker for Advanced. Simple is six-digit RGB, Advanced #RRGGBBAA + opacity. Visible name and numeric value mean swatch color is not the only cue. |
+| Skin card | 18 px radius; surface, line border, 202 px specimen region + metadata; selected accent 2 px ring AND “Selected” check. Hover raises 3 px in 200 ms. No truncation of skin names. Entire card activates selection; do not nest buttons inside links. |
+| Segmented choices | Native labeled radios, 48 px targets, selected border and checked mark, not color alone. Use wrapping controls rather than a horizontal scroll trap. |
+| Toast | Raised surface, success border and check, 12 px radius, float shadow. Copy status uses role=status / polite; shown 4 seconds with permanent selectable URL retained. Mobile places it inline above actions, never over the input or keyboard. |
+| Focus | 3 px focus ring with 4 px offset. Never remove on links, cards, summaries or native color picker. Decorative `--line` must not be used as an input boundary. |
+
+## Landing layout and exact copy
+
+1200 px centered content, 24 px outer gutters (1360 px max at ≥1600 viewport). Header 96 px with wordmark left, “Skins”, “OBS guide”, “Make my overlay” right. Hero grid .85fr / 1.15fr, 40 px gap, 48 px top and 64 px bottom. All text left aligned. At ≤800 px stack copy then demo; phone gutters 16 px and header 80 px. Hide only secondary header links at narrow widths; the primary CTA stays. How-to, gallery and guide remain reachable through the page.
+
+Hero headline: **“Your chat. Your main character.”** Break after “chat.” on desktop. Pitch: **“Turn your Twitch chat into an overlay that feels like you.”** Primary **“Make my overlay”** → Step 1. Secondary **“See all skins”** → #skins. Trust line **“Free. No login needed. One link for OBS.”** Demo label **“Your next stream, reimagined”**, status **“Sample chat”**, footer **“Six featured looks. All yours to change.”**, checkbox **“Pause demo”**.
+
+The hero is a 16:9 SVG stream backdrop with three chat rows on the left and abstract scene interest on the right. HUD decoration is original and aria-hidden. Render complete skin specimens from shared preset values. Cycle exactly **Bubble Lift → Glass Card → Name Tag → Comic Burst → Pastel Pop → Esports Slash**, six seconds per look, a 36-second CSS-only opacity cycle; name label changes with the specimen. Keep opacity changes to a 200 ms crossfade in production, avoiding bright flashes between dark/light skins. Simulate one incoming sample message per interval using opacity/translateY, not chat requests. Always mark it as sample chat. Pause control freezes both rotation and incoming rows. Reduced motion shows one complete static Bubble Lift specimen and exposes manual Previous/Next skin controls in production. Never run a timer to update hero pixels. Specimen captions are actual DOM text, not embedded in an image.
+
+How it works is a quiet bordered strip with original outline icons (two skin cards / sliders / display with check):
+
+1. **Pick a skin** — “Find a look that feels like your channel.”
+2. **Make it yours** — “Change a little. Or change everything.”
+3. **Paste one link in OBS** — “Your chat is ready for its close-up.”
+
+Gallery heading **“Find your chat’s personality.”** Support **“From cozy conversation to the final boss. Start with a skin; make it yours.”** Four filter chips: **Streamer favorites / Game styles / Animated / Colorful**. Favorites selected initially, all 12 favorites shown with six Featured first; other group counts are 16, 2, 4. Use the existing catalog order and names. No duplicated cards across groups. Footer **“34 starting points. Every detail editable.”** A top-level **“Pause previews”** stops all miniature motion. Three columns desktop, two at ≤800, one at ≤480. Cards contain two readable sample rows, name, short catalog description, Featured text where applicable. Show entrance once on visibility, replay on hover/focus; production does not infinitely animate every card. Filter controls use radios and result count is politely announced. Clicking opens selected skin in Step 2.
+
+Feature band uses a two-column heading/checklist composition, not seven identical cards. Heading **“More chat. Less setup.”** Support **“All the essentials for your community to look at home on stream.”** Exact items:
+
+| Heading | Copy |
+| --- | --- |
+| No login needed | Your Twitch name is enough to get started. |
+| Your community’s emotes | 7TV, BTTV and FFZ, alongside Twitch emotes. |
+| A full editor, when you want it | Fine-tune names, frames, motion and more. |
+| Transparent backgrounds | Keep your gameplay in the picture. |
+| Read-only chat | Displays messages. Never posts as you. |
+| Light in OBS | Simple overlays. No video backgrounds. |
+| Free to make. Free to use. | Every skin and every editor control. |
+
+These are intended release claims, contingent on the existing Round 5 features passing builder checks. Do not imply private/sub-only emotes are universally available or that performance is measured. No synthetic testimonials, user counts, rating stars or “official Twitch partner” claims.
+
+OBS heading **“Meet your new Browser Source.”** Support **“A quick setup in OBS. No plugins to install.”** Three drawn HTML UI mockups: Sources with + / Browser selected; properties with URL and dimensions; source list with ChatSkins above game capture. Give each illustration descriptive alt text via role=img/aria-label; the same steps remain real adjacent text. Avoid exact imitation of OBS branding or screenshot assets.
+
+1. **Add a Browser Source** — “In OBS, go to Sources, choose +, then Browser. Name it ‘ChatSkins’.”
+2. **Paste your overlay link** — “Paste the copied URL. Set width to 1280 and height to 720, then choose OK.”
+3. **Put chat on top** — “Keep ChatSkins above your game source. Send a chat message to check your setup.”
+
+FAQ heading **“A few things before you go live.”** Six native details/summary disclosures, initially closed. Exact questions and answers:
+
+| Question | Answer |
+| --- | --- |
+| Does it need my Twitch password? | No. Type your Twitch channel name to use public chat. Connecting with Twitch is optional; you sign in on Twitch, never in ChatSkins. |
+| Will it slow my stream? | ChatSkins uses lightweight chat layers, not video backgrounds. Performance depends on your settings and computer. Start with a simple skin and turn off animation if needed. |
+| Can I use it with Streamlabs or StreamElements? | Use the link in a Browser Source in Streamlabs Desktop or OBS. With a StreamElements setup, add ChatSkins as a separate OBS Browser Source alongside your existing overlay. |
+| Will 7TV, BTTV and FFZ emotes show up? | Public global and channel emotes are supported. If an emote service is unavailable, the emote’s name appears as text so chat stays readable. |
+| Do I need to be live to set this up? | No. Sample chat lets you design offline. To test the real overlay, send a message in your Twitch channel’s chat; your stream can stay offline. |
+| How do I save my changes? | Your overlay link contains your settings. Keep it somewhere handy, or save a skin in this browser from the Advanced editor. After editing, copy the new link into OBS. |
+
+Closing CTA heading **“Give chat a place in the show.”** Support **“Pick a look. Add your channel. You’re on.”** Button **“Make my overlay”**. Footer exactly **“Built with OpenAI Codex for the Codex x TwitchCon Hackathon”**, **GitHub** linked to `https://github.com/Korivash/chatskins`, and **“© Korivash”**. No real names or unsupported prize/winner badges.
+
+## Editor composition and state
+
+Top header: wordmark home, OBS guide. Step navigation is always **1 Skin → 2 Customize → 3 Get your link**; current step has filled accent pill plus `aria-current="step"`. Use real links and browser history; completed steps are freely reachable, no forced gate. Changing steps focuses the new h1 (tabindex=-1) and announces only the step title. Back preserves edits, channel and preview choice. Step 3 can be reached with the default skin; valid channel is required only to copy/open the live overlay.
+
+Desktop Step 1 uses a full-width gallery, four columns, search above filters. Steps 2/3 use 400 px controls + flexible preview with 24 px gap; at ≥1600 px rail becomes 440 px. Unlike the prior full-height app, default Simple mode uses normal page flow with a sticky preview where it fits. At <900 px stack the preview before controls. At 320 px everything fits without horizontal scrolling, cards one column, labels and fields full width. Action row follows the controls; in production a mobile sticky action may be used only when it does not cover content or the on-screen keyboard (reserve its height plus safe-area inset). Advanced keeps a non-overlapping search row and independently scrollable controls on roomy desktop screens. At short viewport heights or mobile use document scroll. Source preview is uniformly scaled, not cropped.
+
+Step 1 title **“Pick your starting point.”**, helper **“Everything can be changed later.”** Search label **“Find a skin”**; search across display names, descriptions and groups, not raw setting keys. Filter and search intersect; no-results has **“No skins found. Try ‘glass’, ‘retro’ or clear your search.”** with **Clear search** action. Use each actual skin renderer for preview and maintain one selection across groups. Native radio cards in production (arrow keys within visible group, Space to select); the review sheet uses links to the Step 2 composition. Selection updates preview; **“Customize this skin”** advances. **“Start with Clean”** applies Clean and advances. Gallery radio/check state is separate from the Featured badge.
+
+Step 2 title **“Make it yours.”** Below: “Bubble Lift · Your starting point”, changing to “Bubble Lift · Modified” on edit. Undo/Redo are present but quiet and disabled with reasons when empty. Exactly six appearance controls appear in Simple mode, followed by the separate **Advanced editor** mode switch. No account prompt here. **“Back to skins”** and primary **“Get my overlay link”** conclude the step.
+
+### Simple mode mapping (builder contract)
+
+Simple mode is a projection of the existing canonical settings, not a second stored schema. Opening or closing it never mutates settings. One user change is one undo transaction. Use Round 5 preservation rules when selecting skins; URLs still contain full normalized settings. Store current step, simple/advanced mode, backdrop and drafts outside overlay settings.
+
+| Friendly label | UI and exact write behavior |
+| --- | --- |
+| Font | Curated searchable font select plus system fonts. On explicit choice set fontFamily for panel, messageBox, name, messageText and system; do not change badge image styling, weight, line height or effects. Keep typography inheritance flags. Show “Multiple fonts” when resolved values differ; entering Simple does not unify them. |
+| Text size | Slider + editable number; 12–48 px quick range. On explicit edit compute ratio new/current resolved messageText size, apply to the five text/container part font sizes and badge fontSize, clamp each to its existing schema bounds. This preserves Announcer/name proportions. Preserve inherited sizes without double-scaling: update each stored leaf once, resolve afterward. Imported values outside quick range display their actual number with “Set any size in Advanced”; no silent clamp on mode entry. |
+| Accent color | Six-digit hex plus color picker. Explicit edit writes name.paint.color, frame.paint.color, frame.outer.color, frame.ornament.color and effectColors.borderSecondary, preserving each alpha; set the name and primary frame paint to solid, nameColorMode=fixed, nameEffect=none, roleColorsEnabled=false so the choice is visible. For pill/tab/initial treatments also update presentation.chipColor and use contrast-corrected name ink. Retain all other colors/gradients for later editing. Helper “Names and frame accents”. If multiple effective colors or priority overrides exist show “Custom accents” until explicitly edited. Undo restores the previous complex look. |
+| Background | Solid / Glass / Transparent segmented radio group. Transparent writes transparentBackground=true only. Solid/Glass set it false, operate on the existing frame.target surface, disable its image/recipe/background ambient effects, choose solid fallback color; solid opacity=1, blur=0; glass opacity=.86, blur=0 for honest cross-source appearance. Preserve the inactive surface and text/frame paint. If inactive surface has nonzero opacity, clear it only on explicit Solid/Glass selection (undoable) so the selected result is predictable. Glass helper “Glass is a translucent tint in OBS.” Existing gradient/image or dual surfaces show “Custom background” summary with no radio selected until edited. |
+| Frame | On/Off switch maps to inverse hideFrames; retains actual border/ornament settings. If turning on a frame with no visible stored frame/accents, create a solid 1 px frame in the current accent, rather than an invisible On state. Turning off suppresses rings, accents, ornaments and their effects as Round 5 defines; does not hide the message backing. |
+| Entrance animation | None / Fade / Slide / Pop; writes animationIn only, uses 200 ms when selecting a new non-none effect. Existing bounce/zoom/glitch display “Custom animation” without normalization. Reduced motion retains selected value with “Motion is off for your device.” |
+
+Accent changes can affect contrast; retain Round 5 automatic readable-name correction. On a fully transparent surface show **“Check readability over your brightest gameplay.”** Never claim arbitrary user colors/transparency are AA compliant. Preview background changes do not change the actual overlay transparency.
+
+### Advanced view
+
+Switch label **“Advanced editor”**, helper **“All the details, still your skin.”** Switching back is always available and does not reset anything. Preserve the complete Round 3/5 controls, schema ranges, conditional rows, library, parser-based CSS safety contract and history. No raw paths or keys in product labels.
+
+Six part sections: **Message box / Name / Message text / Badges / System / Panel**. Each has Font / Color / Effects; advanced typography and gradient stops are nested disclosures. The mockup opens Name to make the visual treatment reviewable. Then **Name layout / Frame / Background / Name format / Layout / Motion & effects / Filters & emphasis / Emotes & badges / My skins / Custom CSS**. Each top-level section has one Reset section action. Preserve the schema-complete labels from `skins.json`; the static specimen illustrates layout, not replacement field-generation logic. Background surface selector switches between both independently stored surfaces. Gradient controls support the existing optional third stop. Frame gradients use the same stop controls as part paint. Keep My skins empty state, import preview and storage errors from Round 3. A sticky footer offers **Get my overlay link**; destructive library actions never occupy that primary slot.
+
+Search **“Find a setting”** sits above, not on top of scrolling fields. Match human labels/synonyms; opening a result reveals its dependencies. Empty **“No settings match. Try font, glow or lifetime.”** No duplicate inputs for legacy aliases. Source pixels are labeled px; durations ms or seconds, never ambiguous units. Keep **Custom CSS active** visible when applicable; Simple mode changes may be overridden by custom CSS, with helper **“Custom CSS may override these controls. Review it in Advanced.”**
+
+### Step 3, preview and recovery
+
+Title **“Let’s get you on stream.”** Helper **“Connect your channel, then take your link to OBS.”** Primary **“Connect with Twitch”** above **“Or type your Twitch name”** (manual path visible by default, never login-gated). Helper **“Optional. Only used to fill in your channel name.”** OAuth must be implemented/verified by the builder before this button ships; use minimum identity permission, never request posting/moderation permissions. A token must never enter the overlay URL, logs, preview labels or shared state. The design does not implement OAuth. If configuration is unavailable, show “Twitch sign-in is unavailable. Type your channel name below.” and keep manual entry fully usable.
+
+Input label **“Your Twitch name”**; helper **“Your channel name, not your display name or a URL.”** Trim whitespace, remove one leading @ or #, normalize lowercase; accept the existing 1–25 ASCII letter/digit/underscore contract. Syntax validation is not proof that an account exists. Show **“Channel name ready: cozy_channel”** after validation; reserve “Connected” for successful chat connection. Do not label a syntactically valid name as verified. After validation the primary emphasis moves to **“Copy overlay URL”** and Twitch sign-in becomes secondary. The mockup intentionally displays both stages of this composition together.
+
+Copy row: read-only selectable **“Your overlay URL”**, full generated hash (visually scrollable, never an abbreviated copied value), primary **“Copy overlay URL”**. Clipboard success toast **“Copied! Paste it into an OBS Browser Source.”**, check icon and polite announcement. Failure **“Copy this URL manually.”** Select the URL and provide selection instructions; do not report success before the promise resolves. Insecure/local environments use the same fallback. **“Open test overlay”** opens the exact current URL in a new tab with noopener and a new-tab accessible label. Until valid, both actions are disabled with **“Add your Twitch name to get your link.”** Preserve the existing >16,000-character notice and JSON-export alternative.
+
+Inline OBS guide heading **“One last step in OBS”** with the same three steps/dimensions as landing and link **“See the illustrated OBS guide”**. Changing a look after copying shows **“Your look changed. Copy the new link into OBS.”** Do not imply old pasted URLs update remotely. Sample messages and the stream scene are never exported; real overlay tests may be blank until someone sends a chat message.
+
+Preview defaults to **Stream**, plus **Dark / Light / Checker** radio choices. Show an original 16:9 1280 × 720 scene, 5% inset dashed safe-area guide (64 px horizontal / 36 px vertical), source-size caption, chat in its actual 480 px source column at configured inset. The guide is informational, not an enforced crop or saved layout change. Preview should render with the shared runtime renderer at source scale then uniformly fit both available width and height. Mockup chat is enlarged slightly for visual review; builder must preserve true source metrics. Add a **100% chat detail** view on mobile to inspect type without widening the document. At <900 px preview comes first, then controls; no tiny two-column rail. Keep fake sample chat initially, with explicit **Sample chat / My channel** choices in production. Never silently change modes after typing a name. Label **“Sample chat”** whenever fake data runs, with **“Pause sample chat”**. Live connection status is separate from whether the streamer is broadcasting.
+
+| Situation | Exact message / recovery |
+| --- | --- |
+| Invalid channel | “Check your Twitch name. Use letters, numbers and underscores only, up to 25 characters. Leave out twitch.tv/.” Inline under input; keep edits and focus. |
+| OAuth cancelled | “Twitch sign-in cancelled. No problem. Type your Twitch name to continue.” Return focus to manual input, retain look. |
+| Connecting | “Connecting to cozy_channel…”; keep editing and sample preview available. |
+| Connected but quiet/offline stream | “No messages yet. Your channel is connected. Send a message in Twitch chat to test it, even while your stream is offline.” Do not infer stream broadcast status from empty chat. |
+| Chat connection failed | “Couldn’t connect to chat. Check your channel name and connection, then try again. Your design is still here.” Actions “Try again” / “Use sample chat”. |
+| Browser offline | “You’re offline. Keep designing with sample chat; reconnect to test your channel.” Keep valid URL copying available; do not pretend to verify chat. |
+| Provider unavailable | “Some emotes are unavailable. Their names will appear as text.” Details list affected providers; no stream-visible warning. |
+| Font unavailable | “That font couldn’t load. Showing a fallback for now.” Preserve chosen font and allow retry/another choice. |
+| No local saved skins | “Your next favorite starts here. Save this look to find it in this browser.” Save skin action. |
+| Copy failed | “Copy this URL manually. Your browser couldn’t copy it. Select the link above and copy it.” |
+
+## Motion, access and load budget
+
+Hover 200 ms, press 150 ms, step opacity/8 px translation 250 ms, ease-out token. No parallax, cursor effects, layout spring, autoplay video or constant glow animation in website chrome. Respect system reduced motion AND user's reduceMotion: remove movement, transitions and automatic hero rotation; show complete text immediately. Pausing the demo/gallery is also possible without changing OS settings. Production pauses offscreen previews and hidden documents, renders only visible gallery samples, and limits hero to six composed specimens; no per-frame JS. Prefer one orchestrated demo to simultaneous animation everywhere.
+
+AA target: body text ≥4.5:1, large text ≥3:1, required control boundaries and focus ≥3:1 against their adjacent surfaces. The brand text/muted/accent combinations are chosen for dark surfaces; do not put white body text on accent buttons. Validate with computed colors, including disabled helpers and composites. Use non-color state cues. Icons get accessible text when meaningful, decorative artwork aria-hidden. Header/nav/main/footer landmarks, skip link, one current page h1, logical heading order, labeled fieldsets and unique IDs. Error/copy states announce politely; samples are not live regions. Details and radio controls remain keyboard operable; focus must stay visible at 200% and reflow at 400%. Minimum targets 44 px (default 48); no hover-only instructions.
+
+Production initial load targets: ≤100 KB gzip first-party HTML/CSS/JS before optional editor/catalog code, ≤150 KB fonts for the two brand families, no raster/video hero assets and no emote-provider requests on the landing. Load preset fonts when a specimen approaches the viewport; use good fallback metrics and reserve specimen height. Defer gallery renderer/data below hero; landing marketing copy, links, FAQ and initial specimen must remain readable before JS. Target LCP <2.5 s and CLS <0.1 on a representative mobile connection; these are budgets for the builder to measure, not achieved metrics from these review files. The static sheets deliberately include all 34 specimens for review and are not the production loading architecture.
+
+## Deliverables, scope and builder acceptance
+
+Open `landing-mockup.html` and `editor-mockup.html` alongside `round6.css`. The landing includes all groups with native CSS-filtered cards, simulated CSS-only featured cycle and pause, the full copy and original scene. The editor is a vertical review sheet showing Step 1, Step 2 Simple, Step 3 and Advanced, plus recovery specimens; production shows only the current step. Native toggles, background radios and disclosures can be inspected, but no control binds settings, no search query filters records, no OAuth runs, no URL is generated/copied and no app code is imported. Skin-query links are route examples; the editor sheet deliberately continues showing Bubble Lift. `round6.py` regenerates only these design HTML/SVG assets; `chatskins-mark.svg` is original reusable artwork. No app build is implied by these mockups.
+
+Builder acceptance before judge handoff:
+
+- Cold visit communicates Twitch chat overlay + free/no-login + primary action above the fold at 1280×720. Each of the six Featured looks appears in the hero with the correct caption; pause and reduced motion leave a complete visible specimen.
+- All 34 cards open the correct editor skin; group/search/keyboard selection work without duplicates. Skin-ID links are editor shortcuts only; old full-setting hashes still work.
+- A newcomer can skip customization, type a channel and copy a usable URL without signing in; copying and actual OBS source render preserve the selected look, emotes and transparency. Test the 60-second target with a real newcomer.
+- Simple edits have the documented field mapping and single-step undo; Advanced retains all schema leaves and Round 3/5 controls. Mode changes never modify settings. Custom/mixed values stay intact until explicitly changed.
+- At 320/390/768/1280/1920 px, all actions/labels are reachable with no page overflow or preview crop; mobile safe area, text detail, keyboard and sticky actions are checked. Keyboard traverses the full journey with visible focus.
+- Test empty/invalid channel, cancelled/unconfigured OAuth, quiet channel, offline browser, provider failure, blocked clipboard, long URLs and font failure. Copy success is real; no sample/demo layer leaks into exported overlay.
+- Measure contrast, mobile loading, hidden-tab/offscreen animation behavior and OBS performance. Verify claim copy against shipped capabilities. Remove review notes from production. Preserve footer attribution and do not add real names.
+
+---
+
 # Round 5 — Streamer favorites and a finished editor
 
 This round is authoritative where it conflicts with earlier rounds. This is a **design handoff**, not an application change. Read `research/TOP-CHAT-UIS.md` first: its popularity claims are qualitative observations, not a measured ranking. We translate its bubble, vertical-tag, minimal-glass, neon, emote-forward and editorial directions into original shapes and palettes. No external theme CSS, art, logos or proprietary fonts are used. Frames are CSS/SVG geometry; all preset fonts are Google Fonts.

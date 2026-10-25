@@ -1,4 +1,4 @@
-﻿# Twitch chat overlays and chat UI: field notes (25 Oct 2026)
+# Twitch chat overlays and chat UI: field notes (25 Oct 2026)
 
 Popularity here means recurring visibility in setup guides and streamer discussions, not a verified user-count ranking. Product features are linked to official docs/project pages; complaints are linked to public user reports and should be read as examples, not prevalence estimates.
 

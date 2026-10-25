@@ -1,3 +1,10 @@
-import test from 'node:test';import assert from 'node:assert/strict';import {parseEmotes} from '../js/emotes.js';
-test('parses multiple emotes and preserves unicode text',()=>{assert.deepEqual(parseEmotes('Hi \u{1F44B} Kappa \u{2728}',{25:['6-10'],99:['12-12']}),[{type:'text',text:'Hi \u{1F44B} '},{type:'emote',id:'25',text:'Kappa'},{type:'text',text:' '},{type:'emote',id:'99',text:'\u{2728}'}]);});
-test('ignores out of range and overlapping emotes',()=>{assert.deepEqual(parseEmotes('abc',{1:['0-1'],2:['1-2'],3:['8-9']}),[{type:'emote',id:'1',text:'ab'},{type:'text',text:'c'}]);});
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFile} from 'node:fs/promises';
+import {parseEmotes,normalizeEmoteResponse,resolveEmotes} from '../js/emotes.js';
+const fixture=async name=>JSON.parse(await readFile(new URL(`./fixtures/${name}`,import.meta.url),'utf8'));
+test('parses native ranges and preserves Unicode text',()=>{assert.deepEqual(parseEmotes('Hi 👋 Kappa ✨',{25:['6-10'],99:['12-12']}),[{type:'text',text:'Hi 👋 '},{type:'emote',id:'25',text:'Kappa'},{type:'text',text:' '},{type:'emote',id:'99',text:'✨'}])});
+test('ignores out of range and overlapping native ranges',()=>assert.deepEqual(parseEmotes('abc',{1:['0-1'],2:['1-2'],3:['8-9']}),[{type:'emote',id:'1',text:'ab'},{type:'text',text:'c'}]));
+test('normalizes provider fixtures into code to HTTPS URL maps',async()=>{const seven=normalizeEmoteResponse('7tv',await fixture('7tv-channel.json'));assert.equal(seven.get('PartyTime').url,'https://cdn.7tv.app/emote/7-id/1x.webp');const bttv=normalizeEmoteResponse('bttv',await fixture('bttv-global.json'),'global');assert.equal(bttv.get('partyBlob').url,'https://cdn.betterttv.net/emote/bt-id/2x');const ffz=normalizeEmoteResponse('ffz',await fixture('ffz-room.json'));assert.equal(ffz.get('NiceShot').url,'https://cdn.frankerfacez.com/emote/91/1')});
+test('community matching is case-sensitive, whole-token and leaves punctuation attached',()=>{const map=new Map([['Kappa',{provider:'7tv',id:'a',url:'https://x.test/a'}],['Nice!',{provider:'ffz',id:'b',url:'https://x.test/b'}]]);assert.deepEqual(resolveEmotes('Kappa Kappas (Kappa) Nice! Nice!,',{ },map).map(x=>x.type==='emote'?x.text:x.text),['Kappa',' ','Kappas',' ','(Kappa)',' ','Nice!',' ','Nice!,'])});
+test('community matching never replaces or crosses Twitch native ranges',()=>{const map=new Map([['Kappa',{provider:'7tv',id:'community',url:'https://x.test/a'}]]);assert.deepEqual(resolveEmotes('Kappa Kappa',{25:['0-4']},map).map(x=>[x.type,x.native||false,x.id||'',x.text]),[['emote',true,'25','Kappa'],['text',false,'',' '],['emote',false,'community','Kappa']])});

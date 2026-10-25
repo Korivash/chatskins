@@ -7,7 +7,10 @@ export function fitPanelMessages(panel, maxHeight) {
   while (panel.scrollHeight > limit) {
     const oldest = messages()[0];
     if (!oldest) break;
+    const wasHeader=!oldest.classList.contains('grouped');
+    const next=oldest.nextElementSibling;
     oldest.remove();
+    if(wasHeader&&next?.classList.contains('grouped')){next.classList.remove('grouped');for(const selector of ['.chat-name','.chat-badges','.chat-initial']){const item=next.querySelector(selector);if(item)item.style.visibility='';}}
     removed++;
   }
   return removed;
