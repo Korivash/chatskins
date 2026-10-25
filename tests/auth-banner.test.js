@@ -41,6 +41,13 @@ test('banner is dismissible, gives errors a retry, and remains scheduled for at 
  const [again,dismiss]=toast.children[1].children;assert.equal(again.textContent,'Try again');again.listeners.click();assert.equal(retried,1);assert.equal(delay,8000);dismiss.listeners.click();assert.equal(toast.removed,true);
 });
 
+test('banner offers a visible turn-on action for disabled matching rewards',()=>{
+ const doc=fakeDocument();let turnedOn=0;
+ const toast=showAuthBanner({document:doc,result:{handled:true,identity:{login:'moss'},action:'create-chat-play-rewards',rewardSetup:{ok:true,created:[],reused:[{title:'ChatSkins: Swap skin'}],disabledExisting:[{title:'ChatSkins: Swap skin'}],requestedEnabled:true}},action:()=>turnedOn++,setTimer:()=>{}});
+ const action=toast.children[1].children.find(button=>button.textContent==='Turn them on');
+ assert.ok(action);action.listeners.click();assert.equal(turnedOn,1);
+});
+
 test('editor return target scrolls into view and receives focus',()=>{
  const doc=fakeDocument();const restored=restoreEditorReturnTarget({document:doc,target:'#alerts-section'});
  assert.equal(restored,doc.target);assert.deepEqual(restored.scrollOptions,{behavior:'smooth',block:'center'});assert.deepEqual(restored.focusOptions,{preventScroll:true});assert.equal(restored.attrs.tabindex,'-1');

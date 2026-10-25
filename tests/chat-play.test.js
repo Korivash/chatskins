@@ -42,7 +42,7 @@ assert.equal(subs.some(s=>s.body.type==='channel.channel_points_custom_reward_re
 const event=parseEventSubMessage(JSON.stringify({metadata:{message_type:'notification'},payload:{subscription:{type:'channel.channel_points_custom_reward_redemption.add'},event:{id:'r',broadcaster_user_id:'42',user_name:'Moss',reward:{title:'Emote shower'},user_input:'Kappa',status:'unfulfilled'}}}),{broadcasterId:'42'});
 assert.equal(event.kind,'notification');assert.equal(event.rewardTitle,'Emote shower');assert.equal(event.redemptionId,'r');
 let requestBody;const rewardResult=await createChatPlayRewards({token:'t',broadcasterId:'42',rewards:[{effect:'rain',title:'Rain',cost:100}],fetchImpl:async(url,options={})=>{if(options.method==='POST')requestBody=JSON.parse(options.body);return{ok:true,status:200,json:async()=>({data:options.method==='POST'?[{id:'new',title:'Rain'}]:[]})}}});
-assert.equal(rewardResult.ok,true);assert.equal(requestBody.is_enabled,false);assert.equal(requestBody.should_redemptions_skip_request_queue,false);
+assert.equal(rewardResult.ok,true);assert.equal(requestBody.is_enabled,true);assert.equal(requestBody.should_redemptions_skip_request_queue,false);
 
 const liveCooldowns=createChatPlayCooldowns({now:()=>1000}),liveAdmission=createChatPlayAdmission({config,skins,cooldowns:liveCooldowns}),previewAdmission=createChatPlayAdmission({config,skins,cooldowns:liveCooldowns,bypassCooldowns:true});
 const command={userId:'preview-viewer',login:'preview_viewer',text:'!skin guild',id:'event-1'};
