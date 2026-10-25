@@ -12,8 +12,10 @@ for(const entry of manifest){
   assert.equal(bytes.toString('ascii',8,12),'WEBP',`${entry.file} is not WebP`);
   assert.ok(entry.w>0&&entry.h>0);
   assert.ok(entry.inner,`missing precomputed inner window: ${entry.id}/${entry.shape}`);
-  assert.ok(entry.inner.w>=.4&&entry.inner.w<=.9&&entry.inner.h>=.4&&entry.inner.h<=.9,`invalid inner window: ${entry.id}/${entry.shape}`);
+  for(const key of ['x','y','w','h'])assert.ok(Number.isFinite(entry.inner[key])&&entry.inner[key]>=0&&entry.inner[key]<=1,`inner ${key} outside [0,1]: ${entry.id}/${entry.shape}`);
+  assert.ok(entry.inner.x+entry.inner.w<=1&&entry.inner.y+entry.inner.h<=1,`inner window extends outside image: ${entry.id}/${entry.shape}`);
   if(entry.kind==='chat'){
+    assert.ok(entry.inner.w*entry.inner.h>=.2,`chat window is too small: ${entry.id}/${entry.shape}`);
     const skin=skins.find(item=>item.frameTemplate===entry.id);
     assert.ok(skin,`no skin maps to ${entry.id}`);
     assert.ok(skin.plaque,`missing title plaque rect for ${entry.id}`);
@@ -22,7 +24,7 @@ for(const entry of manifest){
   }
 }
 const mothlight=manifest.find(entry=>entry.file==='site-media/frames/mothlight-tall.webp');
-assert.ok(mothlight.inner.w>=.7&&mothlight.inner.h>=.7,'Mothlight tall window uses the broad central opening');
+assert.ok(mothlight.inner.x>=.20&&mothlight.inner.w<=.62,'Mothlight tall window stays within the measured artwork opening');
 assert.ok(manifest.filter(entry=>entry.kind==='chat').every(entry=>entry.plaque),'every chat frame has precomputed title plaque metadata');
 const templateSource=fs.readFileSync('js/frame-templates.js','utf8');
 assert.doesNotMatch(templateSource,/getImageData|getAlphaWindow/,'overlay reads precomputed frame windows without scanning pixels');

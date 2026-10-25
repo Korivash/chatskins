@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Frame window measuring tool</title>
+<style>
+  :root{color-scheme:dark;font:15px/1.5 system-ui,sans-serif;background:#10141d;color:#eef2ff}
+  body{max-width:1100px;margin:32px auto;padding:0 20px}h1{font-size:1.6rem}
+  button{border:1px solid #8294bd;border-radius:8px;background:#202b40;color:inherit;padding:10px 15px;cursor:pointer}
+  button:focus-visible{outline:3px solid #9bc5ff;outline-offset:2px}#status{min-height:1.5em;color:#b9c9e8}
+  .table-wrap{overflow:auto}table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}th,td{padding:7px 9px;border-bottom:1px solid #354158;text-align:left;white-space:nowrap}th{position:sticky;top:0;background:#10141d}
+  code{color:#b7d5ff}
+</style>
+<h1>Frame window measuring tool</h1>
+<p>Serve the project folder over HTTP, open this page, and measure the transparent chat windows. Small isolated art details are ignored.</p>
+<button id="measure" type="button">Measure all frame images</button>
+<button id="download" type="button" disabled>Download updated frames.json</button>
+<p id="status" role="status">Ready.</p>
+<div class="table-wrap"><table><thead><tr><th>Frame</th><th>Before (x, y, w, h)</th><th>After (x, y, w, h)</th></tr></thead><tbody id="results"></tbody></table></div>
+<script type="module">
+const $=id=>document.getElementById(id), threshold=.15, margin=.015;
+let updated=null;
+function removeSpecks(mask,w,h){
+  const size=w*h,seen=new Uint8Array(size),queue=new Int32Array(size),limit=Math.ceil(size*threshold),neighbors=[-w-1,-w,-w+1,-1,1,w-1,w,w+1];
+  for(let start=0;start<size;start++){
+    if(!mask[start]||seen[start])continue;
+    let head=0,tail=0;queue[tail++]=start;seen[start]=1;
+    while(head<tail){const p=queue[head++],x=p%w,y=(p/w)|0;for(const d of neighbors){const q=p+d;if(q<0||q>=size||Math.abs((q%w)-x)>1||((q/w)|0)<y-1||((q/w)|0)>y+1||seen[q]||!mask[q])continue;seen[q]=1;queue[tail++]=q}}
+    if(tail<limit)for(let i=0;i<tail;i++)mask[queue[i]]=0;
+  }
+}
+function maximalEmptyRect(mask,w,h){
+  const cx=Math.floor(w/2),cy=Math.floor(h/2);if(mask[cy*w+cx])return null;
+  const heights=new Int32Array(w);let best=null;
+  for(let y=0;y<h;y++){
+    for(let x=0;x<w;x++)heights[x]=mask[y*w+x]?0:heights[x]+1;
+    const stack=[];
+    for(let x=0;x<=w;x++){
+      const current=x===w?0:heights[x];let start=x;
+      while(stack.length&&stack.at(-1).height>current){const item=stack.pop(),left=item.start,right=x,top=y-item.height+1,bottom=y+1;if(left<=cx&&cx<right&&top<=cy&&cy<bottom){const area=(right-left)*(bottom-top);if(!best||area>best.area)best={left,top,right,bottom,area}}start=item.start}
+      if(!stack.length||stack.at(-1).height<current)stack.push({start,height:current});
+    }
+  }
+  if(!best)return null;return{x:best.left/w,y:best.top/h,w:(best.right-best.left)/w,h:(best.bottom-best.top)/h};
+}
+function measurePixels(imageData,w,h){
+  const data=imageData.data,mask=new Uint8Array(w*h);for(let i=0;i<mask.length;i++)mask[i]=data[i*4+3]>=40?1:0;
+  removeSpecks(mask,w,h);let rect=maximalEmptyRect(mask,w,h);if(!rect)return{x:.12,y:.12,w:.76,h:.76};
+  rect={x:rect.x+margin,y:rect.y+margin,w:rect.w-2*margin,h:rect.h-2*margin};
+  return rect;
+}
+function overlap(a,b){return a&&b&&a.x<b.x+b.w&&a.x+a.w>b.x&&a.y<b.y+b.h&&a.y+a.h>b.y}
+function avoidPlaque(rect,plaque){if(!overlap(rect,plaque))return rect;const bottom=plaque.y+plaque.h+margin;if(bottom<rect.y+rect.h){const end=rect.y+rect.h;rect.y=bottom;rect.h=end-bottom}return rect}
+function fmt(r){return r?[r.x,r.y,r.w,r.h].map(v=>Number(v).toFixed(3)).join(', '):'—'}
+async function run(){
+  $('measure').disabled=true;$('download').disabled=true;$('results').replaceChildren();$('status').textContent='Loading frame manifest…';
+  try{
+    const response=await fetch('../site-media/frames/frames.json');if(!response.ok)throw Error('Could not load frames.json; serve the project over HTTP.');const manifest=await response.json();
+    for(const entry of manifest){$('status').textContent=`Measuring ${entry.file}…`;const image=new Image();image.src='../'+entry.file;await image.decode();const canvas=document.createElement('canvas');canvas.width=image.naturalWidth;canvas.height=image.naturalHeight;const context=canvas.getContext('2d',{willReadFrequently:true});context.drawImage(image,0,0);let rect=measurePixels(context.getImageData(0,0,canvas.width,canvas.height),canvas.width,canvas.height);rect=avoidPlaque(rect,entry.plaque);entry.inner=Object.fromEntries(Object.entries(rect).map(([k,v])=>[k,Number(Math.max(0,Math.min(1,v)).toFixed(5))]));
+      const row=document.createElement('tr');for(const value of [entry.file,fmt(JSON.parse($('original').dataset.values||'{}')[entry.file]),fmt(entry.inner)]){const cell=document.createElement('td');cell.textContent=value;row.append(cell)}$('results').append(row);
+    }
+    updated=manifest;$('download').disabled=false;$('status').textContent=`Measured ${manifest.length} images. Download the updated manifest and replace site-media/frames/frames.json.`;
+  }catch(error){$('status').textContent=error.message||'Measurement failed.'}finally{$('measure').disabled=false}
+}
+const original=document.createElement('span');original.id='original';original.hidden=true;original.dataset.values='{}';document.body.append(original);
+$('measure').addEventListener('click',async()=>{try{const r=await fetch('../site-media/frames/frames.json');const old=await r.json();original.dataset.values=JSON.stringify(Object.fromEntries(old.map(e=>[e.file,e.inner])))}catch{}await run()});
+$('download').addEventListener('click',()=>{if(!updated)return;const blob=new Blob([JSON.stringify(updated,null,2)+'\n'],{type:'application/json'}),url=URL.createObjectURL(blob),link=document.createElement('a');link.href=url;link.download='frames.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000)});
+</script>
+</html>
