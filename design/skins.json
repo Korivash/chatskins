@@ -33232,13 +33232,13 @@
       "silhouette": "frame-mothlight",
       "titleStyle": {
         "fontFamily": "Cinzel Decorative",
-        "color": "#2b1d00",
-        "gradient": "linear-gradient(90deg,#2b1d00,#302000)",
+        "color": "#3A2410",
+        "gradient": "linear-gradient(90deg,#3A2410,#50351C)",
         "effect": "emboss",
         "subtitleFontFamily": "Cinzel Decorative",
         "subtitleColor": "#2b1d00",
-        "shadow": "0 1px 0 #fff8,0 2px 3px #130b00",
-        "stroke": "0 transparent",
+        "shadow": "0 1px 0 #fff9,0 2px 3px #130b00",
+        "stroke": ".5px #fff8",
         "tilt": 0
       }
     },
@@ -33795,13 +33795,13 @@
       "silhouette": "frame-royal-court",
       "titleStyle": {
         "fontFamily": "Cinzel Decorative",
-        "color": "#2b1d00",
-        "gradient": "linear-gradient(90deg,#2b1d00,#332300)",
+        "color": "#3A2410",
+        "gradient": "linear-gradient(90deg,#3A2410,#50351C)",
         "effect": "metallic",
         "subtitleFontFamily": "Cinzel Decorative",
         "subtitleColor": "#2b1d00",
-        "shadow": "0 2px 4px #000a",
-        "stroke": "0 transparent",
+        "shadow": "0 1px 0 #fff9,0 2px 3px #130b00",
+        "stroke": ".5px #fff8",
         "tilt": 0
       }
     },
@@ -36072,7 +36072,7 @@
       },
       "galleryOrder": 1062,
       "frameTemplate": "neon-kawaii-goth",
-      "frameShape": "square",
+      "frameShape": "tall",
       "messageStyle": "sugar-static",
       "animated": true,
       "templateFont": "DM Sans",
@@ -37736,13 +37736,13 @@
       "silhouette": "frame-bunny-princess",
       "titleStyle": {
         "fontFamily": "Fredoka",
-        "color": "#5c1638",
-        "gradient": "linear-gradient(90deg,#5c1638,#781944)",
+        "color": "#8A1050",
+        "gradient": "linear-gradient(90deg,#8A1050,#6E103F)",
         "effect": "outline",
         "subtitleFontFamily": "Fredoka",
         "subtitleColor": "#5c1638",
-        "shadow": "2px 2px 0 #fff, -2px -2px 0 #fff, 0 2px 3px #000",
-        "stroke": "1px #fff",
+        "shadow": "0 1px 2px #fff,0 2px 4px #0009",
+        "stroke": "1.25px #fff",
         "tilt": 0
       }
     },
@@ -38299,13 +38299,13 @@
       "silhouette": "frame-crowned-kittens",
       "titleStyle": {
         "fontFamily": "Fredoka",
-        "color": "#5c1638",
-        "gradient": "linear-gradient(90deg,#5c1638,#781944)",
+        "color": "#8A1050",
+        "gradient": "linear-gradient(90deg,#8A1050,#6E103F)",
         "effect": "outline",
         "subtitleFontFamily": "Fredoka",
         "subtitleColor": "#5c1638",
-        "shadow": "2px 2px 0 #fff, -2px -2px 0 #fff, 0 2px 3px #000",
-        "stroke": "1px #fff",
+        "shadow": "0 1px 2px #fff,0 2px 4px #0009",
+        "stroke": "1.25px #fff",
         "tilt": 0
       }
     },
@@ -39425,13 +39425,13 @@
       "silhouette": "frame-tactical-gunmetal",
       "titleStyle": {
         "fontFamily": "Black Ops One",
-        "color": "#fff0d6",
-        "gradient": "linear-gradient(90deg,#fff0d6,#ff9b49)",
+        "color": "#FFF8EA",
+        "gradient": "linear-gradient(90deg,#FFFFFF,#FF9B49)",
         "effect": "stencil",
         "subtitleFontFamily": "Black Ops One",
         "subtitleColor": "#fff0d6",
-        "shadow": "0 2px 4px #000a",
-        "stroke": "0 transparent",
+        "shadow": "0 1px 2px #15100b,0 0 3px #fff8",
+        "stroke": "1px #26170d",
         "tilt": 0
       }
     },

@@ -18,7 +18,7 @@ for(const skin of skins){
   const titleColors=style.gradient&&style.gradient!=='none'?[...(style.gradient.match(/#[\da-f]{6}/ig)||[])]:[style.color];
   for(const entry of entries){
     const plaque={...entry.plaque,...(skin.plaque||{})};
-    const surface=plaque.none?luminance(skin.settings?.middleColor||'#17172a'):plaque.painted?luminance(plaque.fill):plaque.luminance;
+    const surface=plaque.none?luminance(skin.settings?.middleColor||'#17172a'):plaque.painted?luminance(plaque.fill):plaque.medianLuminance;
     for(const color of titleColors)assert.ok(contrast(luminance(color),surface)>=4.5,`${skin.name}/${entry.shape}: ${color} contrast against plaque`);
   }
 }
