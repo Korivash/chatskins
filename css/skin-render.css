@@ -436,3 +436,7 @@ body.overlay{margin:0;min-height:100vh;background:transparent;overflow:hidden}
 .chat.has-frame-template .template-plaque[data-plaque-tone=dark]{color:#f7f5ff}
 
 .chat.has-frame-template .template-plaque,.chat.has-frame-template .template-plaque-title,.chat.has-frame-template .template-plaque-subtitle{-webkit-text-stroke:0!important;background-image:none;background-clip:border-box;-webkit-background-clip:border-box;-webkit-text-fill-color:currentColor}
+
+.template-plaque-title-wrap,.template-plaque-subtitle-wrap{display:block;width:100%;max-width:100%;min-width:0;text-align:center}
+.template-plaque-subtitle-wrap[hidden]{display:none!important}
+.template-plaque-title-wrap .template-plaque-title,.template-plaque-subtitle-wrap .template-plaque-subtitle{display:block;width:100%;max-width:100%;white-space:nowrap;overflow:hidden}
