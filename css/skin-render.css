@@ -423,3 +423,5 @@ body.overlay{margin:0;min-height:100vh;background:transparent;overflow:hidden}
 .chat.has-frame-template{justify-content:flex-end}
 
 .template-plaque[data-ink-mode=dark]{text-shadow:0 1px 2px #fff8,0 0 4px #fff6}
+
+.chat.has-frame-template:not([data-template-message-borders="true"]) .message{border:0!important;outline:0!important;box-shadow:none!important}
