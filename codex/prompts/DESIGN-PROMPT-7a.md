@@ -33,6 +33,21 @@ Design these 8 new skins (generic names are suggestions):
 7. **"Hero Quest"** (an action-RPG party chat): a party-frame style with role icons (shield/sword/heart in CSS/SVG) for mod/VIP/sub.
 8. **"Space Station"** (a social-deduction-style emergency-meeting chat): rounded white bubbles; a crew-color dot per user (hashed from the name); mods get a "📣 meeting" badge.
 
+9. **"ChatSkins Signature": the FLAGSHIP showcase skin** (owner: "build us a good overlay to show off"). This is the hero of the demo video and the first Featured skin, our own brand look, not inspired by any game.
+   - Use the ChatSkins brand (mint #7EEAD6 + violet #B7AAFF on deep navy, the Chakra Petch / Barlow fonts).
+   - A glassy panel with an animated gradient border that slowly flows mint→violet, and subtle scanlines.
+   - Name chips that use each chatter's Twitch color with a soft glow, and role badges (broadcaster crown, mod sword, VIP gem, sub star) in CSS/SVG.
+   - A smooth slide+pop entrance and a gentle fade-out.
+   - Channels:
+     - broadcaster gets a gold "HOST" tag + a gold border flash
+     - mods get "MOD" in mint
+     - first-time chatters get a "NEW" sparkle tag and a one-time shimmer
+     - mentions of the channel get a violet highlight bar
+     - /me renders italic in violet
+     - emote-only messages show big emotes
+   - It must be readable over ANY gameplay: auto contrast outline + backing.
+   - Respect reduced motion. Keep CPU low (CSS keyframes only).
+
 For each skin: the full settings + frame recipe + channels + stat bars + gallery group ("Game styles"), and one line of design notes. Add them to design/skins.json and to the mockup (a samples section for these 8, showing every channel).
 
 Try git add/commit; if it's blocked, say so. Print a short summary.

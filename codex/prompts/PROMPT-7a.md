@@ -1,4 +1,4 @@
-Round 7a build: add the 8 new game-inspired skins from DESIGN.md "Round 7a" (Crystal Realm, Old-School Realm, Frontier MMO, Arena League, Tactical Ops, Block Server, Hero Quest, Space Station) with their chat channels, frames and effects. Read design/skins.json and the round 7a mockup section.
+Round 7a build: add the 9 new skins from DESIGN.md "Round 7a" (Crystal Realm, Old-School Realm, Frontier MMO, Arena League, Tactical Ops, Block Server, Hero Quest, Space Station, and the FLAGSHIP "ChatSkins Signature", which becomes the first Featured skin and the default on the home page demo) with their chat channels, frames and effects. Read design/skins.json and the round 7a mockup section.
 
 - Use the existing channels engine from round 5e. Extend it only if a skin needs something new:
   - per-user crew color hashed from the name
