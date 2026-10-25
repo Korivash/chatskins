@@ -53,7 +53,8 @@ assert.equal(fitRemoved,0,'all Test Chat messages fit after delayed attachment')
 const overlaySource=fs.readFileSync('js/overlay.js','utf8');
 assert.ok(overlaySource.indexOf('await afterFrameTemplateReady')<overlaySource.indexOf('if(testMode){for(const message of buildOverlayTestModel'), 'overlay inserts Test Chat after awaited frame startup');
 const editorSource=fs.readFileSync('js/editor.js','utf8');
-assert.match(editorSource,/attachFrameTemplate\(root,display,\{skin:preset,manifest:window\.__frameEntries,layout:/,'editor lays out its frame before preview rows are added');
+assert.match(editorSource,/await Promise\.all\(\[frameReady,illustrationReady\]\)/,'editor waits for frame attachment before preview rows are added');
 const skinsSource=fs.readFileSync('js/skins-page.js','utf8');
-assert.match(skinsSource,/attachFrameTemplate\(chat,previewSettings,\{skin,shape:skin\.frameShape\|\|'tall',manifest:window\.__frameEntries,layout:/,'skin previews assign fixed frame geometry');
+assert.match(skinsSource,/attachFrameTemplate\(chat,previewSettings,\{skin,shape:skin\.frameShape\|\|'tall',manifest:window\.__frameEntries,layout\}/,'skin previews pass their virtual-stage layout to the frame renderer');
+assert.match(skinsSource,/layoutPanel\(canvas,chat,previewSettings,canvasSize\.height\)/,'skin preview canvas uses overlay panel geometry');
 console.log(`delayed template attach precedes first fit; ${messages.length} frame messages remain`);

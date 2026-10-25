@@ -1,6 +1,8 @@
 import {applyChatStyle, applySkinMetadata, createMessage} from './render.js';
 import {normalizeSettings} from './settings.js';
-import {buildSkinPreviewMessages, createSkinMonitorPreview} from './skin-preview.js';
+import {buildSkinPreviewMessages, createSkinMonitorPreview, previewCanvasSize} from './skin-preview.js';
+import {layoutPanel} from './panel-layout.js';
+import {attachFrameTemplate,mountIllustrated} from './frame-templates.js';
 
 const $ = selector => document.querySelector(selector);
 const reduced = matchMedia('(prefers-reduced-motion: reduce)');
@@ -156,8 +158,8 @@ const previewObserver = new IntersectionObserver(entries => {
 function fitPreview(record) {
   if (!record) return;
   const {host, wrapper} = record;
-  const scale = Math.min((host.clientWidth - 32) / 420, (host.clientHeight - 30) / Math.max(wrapper.offsetHeight, 1), 1.15);
-  wrapper.style.transform = `translate(-50%, -50%) scale(${Math.max(.1, scale)})`;
+  const scale = Math.min((host.clientWidth - 32) / Math.max(wrapper.offsetWidth,1), (host.clientHeight - 30) / Math.max(wrapper.offsetHeight,1));
+  wrapper.style.transform = `translate(-50%, -50%) scale(${Math.max(.05, scale)})`;
 }
 const handles = ['Korivash', 'ModBot', 'CapsLock', 'RaidParty', 'PixelPilot', 'GGcrew'];
 function previewMessages(skin, count) {
@@ -169,13 +171,23 @@ function renderPreview(host, skin, count = 4, history = null) {
   settings.reduceMotion = paused;
   settings.animationIn = 'none';
   for (const part of Object.values(settings.parts || {})) part.fontSize = 23;
-  const wrapper = document.createElement('div'); wrapper.className = 'preview-measure';
+  const wrapper = document.createElement('div'); wrapper.className = 'preview-measure preview-virtual-stage';
+  const canvasSize=previewCanvasSize(skin),canvas = document.createElement('div'); canvas.className = 'source preview-virtual-canvas'; canvas.style.width = `${canvasSize.width}px`; canvas.style.height = `${canvasSize.height}px`; wrapper.style.width=`${canvasSize.width}px`;wrapper.style.height=`${canvasSize.height}px`;
   const chat = document.createElement('div'); chat.className = 'chat chat-panel skin-live-preview';
   applyChatStyle(chat, settings);
   const messages = history || previewMessages(skin, count);
   for (const message of messages) chat.append(createMessage(message, settings));
-  wrapper.append(chat); host.replaceChildren(wrapper); host.dataset.skinId = skin.id;
-  const record = {host, wrapper, chat, settings, messages}; host._preview = record; previewRecords.add(record);
+  canvas.append(chat); wrapper.append(canvas); host.replaceChildren(wrapper); host.dataset.skinId = skin.id;
+  const record = {host, wrapper, canvas, chat, settings, messages}; host._preview = record; previewRecords.add(record);
+  const layout=()=>layoutPanel(canvas,chat,settings,canvasSize.height);
+  layout();
+  const frameReady=attachFrameTemplate(chat,settings,{skin,layout});
+  const illustrationReady=mountIllustrated(chat,settings,skin);
+  host.classList.toggle('preview-loading',!!skin.frameTemplate||!!skin.illustration);
+  Promise.all([frameReady,illustrationReady]).then(()=>{
+    if(host._preview!==record)return;
+    layout();host.classList.remove('preview-loading');fitPreview(record);
+  });
   resizeObserver.observe(host); fitPreview(record);
   return record;
 }

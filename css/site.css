@@ -39,3 +39,11 @@
 .guided-switch input[type="checkbox"]{appearance:none!important;display:inline-block;width:42px!important;height:24px!important;min-width:42px;min-height:24px;max-width:42px;max-height:24px;padding:0!important;border:0!important;border-radius:999px!important;box-shadow:none!important;flex:none;vertical-align:middle}
 .guided-switch input[type="checkbox"]::before{content:"";position:absolute;display:block;width:18px;height:18px;left:3px;top:3px;border-radius:50%;background:#fff;transform:translateX(0);transition:transform .15s}
 .guided-switch input[type="checkbox"]:checked::before{transform:translateX(18px)}
+
+/* Frame previews use the same 1280x720 canvas and panel geometry as the overlay. */
+.game .skin-preview-measure.preview-virtual-stage{width:1280px;height:720px;max-width:none;transform:translate(-50%,-50%);transform-origin:center center;overflow:visible}
+.game .preview-virtual-canvas.source{position:absolute;inset:0;width:1280px;height:720px;overflow:hidden;transform:none}
+.game .preview-virtual-canvas .skin-live-preview{position:absolute!important;inset:auto!important;left:var(--inset,20px)!important;top:auto!important;bottom:var(--inset,20px)!important;width:var(--width,480px)!important;max-width:none!important;min-height:0!important;max-height:none!important;transform:none!important;overflow:visible!important;gap:var(--gap,8px)!important}
+.game .preview-virtual-canvas .skin-live-preview.has-frame-template{padding:0!important}
+
+.game .monitor-preview.preview-loading .skin-preview-measure,.game .portrait-preview.preview-loading .skin-preview-measure{visibility:hidden}

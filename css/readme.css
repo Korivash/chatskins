@@ -33,3 +33,14 @@ dialog{width:min(1200px,94vw);max-height:94svh;padding:20px;border:1px solid #36
 .hero{overflow:clip}
 #skin-wall{width:100%;max-width:100%;min-width:0;overflow:hidden}
 .wall-category{max-width:100%;min-width:0}
+
+/* Live samples share the overlay canvas and panel layout before scaling into preview cards. */
+.preview-measure.preview-virtual-stage{width:1280px;height:720px;max-width:none;transform:translate(-50%,-50%);transform-origin:center center;overflow:visible}
+.preview-virtual-canvas.source{position:absolute;inset:0;width:1280px;height:720px;overflow:hidden;transform:none;container-type:size}
+.preview-virtual-stage .preview-virtual-canvas .skin-live-preview{position:absolute!important;inset:auto!important;left:var(--inset,20px)!important;top:auto!important;bottom:var(--inset,20px)!important;width:var(--width,480px)!important;max-width:none!important;min-height:0!important;max-height:none!important;transform:none!important;overflow:visible!important;gap:var(--gap,8px)!important}
+.preview-virtual-stage .skin-live-preview.has-frame-template{padding:0!important}
+.preview-virtual-canvas.source[data-direction=top] .chat{top:var(--inset,20px)!important;bottom:auto!important;flex-direction:column-reverse}
+.preview-virtual-canvas.source[data-alignment=center] .chat{left:50%!important;right:auto!important;transform:translateX(-50%)!important}
+.preview-virtual-canvas.source[data-alignment=right] .chat{left:auto!important;right:var(--inset,20px)!important}
+.preview-virtual-canvas.source[data-alignment=left] .chat{left:var(--inset,20px)!important;right:auto!important}
+.preview-host.preview-loading .preview-virtual-stage{visibility:hidden}

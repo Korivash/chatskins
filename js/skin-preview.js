@@ -1,3 +1,4 @@
+import {panelMaxHeight} from './fit.js';
 import {resolveChannelRules,fillChannelTemplate} from './channels.js';
 
 const fixtures=[
@@ -40,6 +41,13 @@ export function createSkinMonitorPreview(initialSkinId,render,{timers=globalThis
  const select=id=>{selectedId=id;timers.clearTimeout(demoTimer);demoTimer=null;render(selectedId);return selectedId};
  const previewChatPlay=demoId=>{if(!demoId||demoId===selectedId)return false;timers.clearTimeout(demoTimer);render(demoId);demoTimer=timers.setTimeout(()=>{demoTimer=null;render(selectedId)},demoDuration);return true};
  return{select,previewChatPlay,get selectedId(){return selectedId},stop(){timers.clearTimeout(demoTimer);demoTimer=null}};
+}
+
+export function previewCanvasSize(skin,width=1280,height=720){
+ if(!skin?.frameTemplate)return{width,height};
+ const shape=skin.frameShape||'tall',aspect={tall:2/3,wide:1.5,square:1,webcam:16/9}[shape]||2/3,settings=skin.settings||{},frame=settings.frame||{},outer=frame.outer?.enabled?frame.outer.offset:0,frameWidth=frame.outer?.enabled?frame.outer.width:0,ornaments=frame.target==='panel'&&frame.ornament?.style!=='none'?Math.max(0,(frame.ornament?.size||0)-(frame.ornament?.inset||0)):0;
+ const panelHeight=Math.min(height*.92,panelMaxHeight(height,settings.edgeInset??20,outer,frameWidth,ornaments)),panelWidth=Math.min(panelHeight*aspect,width*.92);
+ return{width:panelWidth/.92,height};
 }
 
 export function fitSkinPreview(frame,wrapper){
