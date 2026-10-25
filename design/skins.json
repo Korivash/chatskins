@@ -570,7 +570,8 @@
         "paddingPx": 20,
         "columnGapPx": 16,
         "followMessage": "{name} joined the adventure!"
-      }
+      },
+      "silhouette": "legacy-chatskins-signature"
     },
     {
       "id": "bubble-lift",
@@ -1105,7 +1106,8 @@
         },
         "geometryReference": "round10.css .skin-bubble-lift",
         "content": "Reserve ornaments outside content; wrap names and long words; no text clipping; preserve badges, emotes and moderation."
-      }
+      },
+      "silhouette": "bubble-lift"
     },
     {
       "id": "glass-card",
@@ -1640,7 +1642,8 @@
         },
         "geometryReference": "round10.css .skin-glass-card",
         "content": "Reserve ornaments outside content; wrap names and long words; no text clipping; preserve badges, emotes and moderation."
-      }
+      },
+      "silhouette": "glass-card"
     },
     {
       "id": "name-tag",
@@ -2175,7 +2178,8 @@
         },
         "geometryReference": "round10.css .skin-name-tag",
         "content": "Reserve ornaments outside content; wrap names and long words; no text clipping; preserve badges, emotes and moderation."
-      }
+      },
+      "silhouette": "name-tag"
     },
     {
       "id": "comic-burst",
@@ -2710,7 +2714,8 @@
         },
         "geometryReference": "round10.css .skin-comic-burst",
         "content": "Reserve ornaments outside content; wrap names and long words; no text clipping; preserve badges, emotes and moderation."
-      }
+      },
+      "silhouette": "comic-burst"
     },
     {
       "id": "pastel-pop",
@@ -3245,7 +3250,8 @@
         },
         "geometryReference": "round10.css .skin-pastel-pop",
         "content": "Reserve ornaments outside content; wrap names and long words; no text clipping; preserve badges, emotes and moderation."
-      }
+      },
+      "silhouette": "pastel-pop"
     },
     {
       "id": "esports-slash",
@@ -3780,7 +3786,8 @@
         },
         "geometryReference": "round10.css .skin-esports-slash",
         "content": "Reserve ornaments outside content; wrap names and long words; no text clipping; preserve badges, emotes and moderation."
-      }
+      },
+      "silhouette": "esports-slash"
     },
     {
       "id": "quiet-line",
@@ -4315,7 +4322,8 @@
         },
         "geometryReference": "round10.css .skin-quiet-line",
         "content": "Reserve ornaments outside content; wrap names and long words; no text clipping; preserve badges, emotes and moderation."
-      }
+      },
+      "silhouette": "quiet-line"
     },
     {
       "id": "neon-edge",
@@ -4850,7 +4858,8 @@
         },
         "geometryReference": "round10.css .skin-neon-edge",
         "content": "Reserve ornaments outside content; wrap names and long words; no text clipping; preserve badges, emotes and moderation."
-      }
+      },
+      "silhouette": "neon-edge"
     },
     {
       "id": "sticker-stack",
@@ -5385,7 +5394,8 @@
         },
         "geometryReference": "round10.css .skin-sticker-stack",
         "content": "Reserve ornaments outside content; wrap names and long words; no text clipping; preserve badges, emotes and moderation."
-      }
+      },
+      "silhouette": "sticker-stack"
     },
     {
       "id": "initial-card",
@@ -5920,7 +5930,8 @@
         },
         "geometryReference": "round10.css .skin-initial-card",
         "content": "Reserve ornaments outside content; wrap names and long words; no text clipping; preserve badges, emotes and moderation."
-      }
+      },
+      "silhouette": "initial-card"
     },
     {
       "id": "signal-console",
@@ -6455,7 +6466,8 @@
         },
         "geometryReference": "round10.css .skin-signal-console",
         "content": "Reserve ornaments outside content; wrap names and long words; no text clipping; preserve badges, emotes and moderation."
-      }
+      },
+      "silhouette": "signal-console"
     },
     {
       "id": "announcer",
@@ -6990,7 +7002,8 @@
         },
         "geometryReference": "round10.css .skin-announcer",
         "content": "Reserve ornaments outside content; wrap names and long words; no text clipping; preserve badges, emotes and moderation."
-      }
+      },
+      "silhouette": "announcer"
     },
     {
       "id": "guild-chat",
@@ -7568,7 +7581,8 @@
         "paddingPx": 20,
         "columnGapPx": 16,
         "followMessage": "{name} joined the adventure!"
-      }
+      },
+      "silhouette": "legacy-guild-chat"
     },
     {
       "id": "fantasy-mmo",
@@ -8130,7 +8144,8 @@
         "paddingPx": 20,
         "columnGapPx": 16,
         "followMessage": "{name} joined the adventure!"
-      }
+      },
+      "silhouette": "legacy-fantasy-mmo"
     },
     {
       "id": "block-craft",
@@ -8635,7 +8650,8 @@
         "paddingPx": 20,
         "columnGapPx": 16,
         "followMessage": "{name} joined the adventure!"
-      }
+      },
+      "silhouette": "legacy-block-craft"
     },
     {
       "id": "battle-arena",
@@ -9140,7 +9156,8 @@
         "paddingPx": 20,
         "columnGapPx": 16,
         "followMessage": "{name} joined the adventure!"
-      }
+      },
+      "silhouette": "legacy-battle-arena"
     },
     {
       "id": "battle-royale",
@@ -9645,7 +9662,8 @@
         "paddingPx": 20,
         "columnGapPx": 16,
         "followMessage": "{name} joined the adventure!"
-      }
+      },
+      "silhouette": "legacy-battle-royale"
     },
     {
       "id": "retro-rpg",
@@ -10223,7 +10241,8 @@
         "paddingPx": 20,
         "columnGapPx": 16,
         "followMessage": "A wild follower appears! {name} joined the party."
-      }
+      },
+      "silhouette": "legacy-retro-rpg"
     },
     {
       "id": "cyber-city",
@@ -10728,7 +10747,8 @@
         "paddingPx": 20,
         "columnGapPx": 16,
         "followMessage": "{name} joined the adventure!"
-      }
+      },
+      "silhouette": "legacy-cyber-city"
     },
     {
       "id": "arcade-cabinet",
@@ -11233,7 +11253,8 @@
         "paddingPx": 20,
         "columnGapPx": 16,
         "followMessage": "{name} joined the adventure!"
-      }
+      },
+      "silhouette": "legacy-arcade-cabinet"
     },
     {
       "id": "space-command",
@@ -11738,7 +11759,8 @@
         "paddingPx": 20,
         "columnGapPx": 16,
         "followMessage": "{name} joined the adventure!"
-      }
+      },
+      "silhouette": "legacy-space-command"
     },
     {
       "id": "monster-trainer",
@@ -12243,7 +12265,8 @@
         "paddingPx": 20,
         "columnGapPx": 16,
         "followMessage": "{name} joined the adventure!"
-      }
+      },
+      "silhouette": "legacy-monster-trainer"
     },
     {
       "id": "dungeon-crawler",
@@ -12748,7 +12771,8 @@
         "paddingPx": 20,
         "columnGapPx": 16,
         "followMessage": "{name} joined the adventure!"
-      }
+      },
+      "silhouette": "legacy-dungeon-crawler"
     },
     {
       "id": "cozy-farm",
@@ -13253,7 +13277,8 @@
         "paddingPx": 20,
         "columnGapPx": 16,
         "followMessage": "{name} joined the adventure!"
-      }
+      },
+      "silhouette": "legacy-cozy-farm"
     },
     {
       "id": "horror-survival",
@@ -13758,7 +13783,8 @@
         "paddingPx": 20,
         "columnGapPx": 16,
         "followMessage": "{name} joined the adventure!"
-      }
+      },
+      "silhouette": "legacy-horror-survival"
     },
     {
       "id": "hero-shooter",
@@ -14263,7 +14289,8 @@
         "paddingPx": 20,
         "columnGapPx": 16,
         "followMessage": "{name} joined the adventure!"
-      }
+      },
+      "silhouette": "legacy-hero-shooter"
     },
     {
       "id": "kart-racer",
@@ -14768,7 +14795,8 @@
         "paddingPx": 20,
         "columnGapPx": 16,
         "followMessage": "{name} joined the adventure!"
-      }
+      },
+      "silhouette": "legacy-kart-racer"
     },
     {
       "id": "bubble-chat",
@@ -15303,7 +15331,8 @@
         },
         "geometryReference": "round10.css .skin-bubble-chat",
         "content": "Reserve ornaments outside content; wrap names and long words; no text clipping; preserve badges, emotes and moderation."
-      }
+      },
+      "silhouette": "bubble-chat"
     },
     {
       "id": "clean",
@@ -15838,7 +15867,8 @@
         },
         "geometryReference": "round10.css .skin-clean",
         "content": "Reserve ornaments outside content; wrap names and long words; no text clipping; preserve badges, emotes and moderation."
-      }
+      },
+      "silhouette": "clean"
     },
     {
       "id": "candy-pop",
@@ -16373,7 +16403,8 @@
         },
         "geometryReference": "round10.css .skin-candy-pop",
         "content": "Reserve ornaments outside content; wrap names and long words; no text clipping; preserve badges, emotes and moderation."
-      }
+      },
+      "silhouette": "candy-pop"
     },
     {
       "id": "rainbow-border",
@@ -16912,7 +16943,8 @@
         },
         "geometryReference": "round10.css .skin-rainbow-border",
         "content": "Reserve ornaments outside content; wrap names and long words; no text clipping; preserve badges, emotes and moderation."
-      }
+      },
+      "silhouette": "rainbow-border"
     },
     {
       "id": "terminal",
@@ -17447,7 +17479,8 @@
         },
         "geometryReference": "round10.css .skin-terminal",
         "content": "Reserve ornaments outside content; wrap names and long words; no text clipping; preserve badges, emotes and moderation."
-      }
+      },
+      "silhouette": "terminal"
     },
     {
       "id": "vaporwave",
@@ -17982,7 +18015,8 @@
         },
         "geometryReference": "round10.css .skin-vaporwave",
         "content": "Reserve ornaments outside content; wrap names and long words; no text clipping; preserve badges, emotes and moderation."
-      }
+      },
+      "silhouette": "vaporwave"
     },
     {
       "id": "crystal-realm",
@@ -18552,7 +18586,8 @@
         "paddingPx": 20,
         "columnGapPx": 16,
         "followMessage": "{name} joined the adventure!"
-      }
+      },
+      "silhouette": "legacy-crystal-realm"
     },
     {
       "id": "old-school-mmo",
@@ -19090,7 +19125,8 @@
         "paddingPx": 20,
         "columnGapPx": 16,
         "followMessage": "{name} joined the adventure!"
-      }
+      },
+      "silhouette": "legacy-old-school-mmo"
     },
     {
       "id": "frontier-mmo",
@@ -19644,7 +19680,8 @@
         "paddingPx": 20,
         "columnGapPx": 16,
         "followMessage": "{name} joined the adventure!"
-      }
+      },
+      "silhouette": "legacy-frontier-mmo"
     },
     {
       "id": "arena-league",
@@ -20190,7 +20227,8 @@
         "paddingPx": 20,
         "columnGapPx": 16,
         "followMessage": "{name} joined the adventure!"
-      }
+      },
+      "silhouette": "legacy-arena-league"
     },
     {
       "id": "tactical-ops",
@@ -20728,7 +20766,8 @@
         "paddingPx": 20,
         "columnGapPx": 16,
         "followMessage": "{name} joined the adventure!"
-      }
+      },
+      "silhouette": "legacy-tactical-ops"
     },
     {
       "id": "block-server",
@@ -21274,7 +21313,8 @@
         "paddingPx": 20,
         "columnGapPx": 16,
         "followMessage": "{name} joined the adventure!"
-      }
+      },
+      "silhouette": "legacy-block-server"
     },
     {
       "id": "hero-quest",
@@ -21820,7 +21860,8 @@
         "paddingPx": 20,
         "columnGapPx": 16,
         "followMessage": "{name} joined the adventure!"
-      }
+      },
+      "silhouette": "legacy-hero-quest"
     },
     {
       "id": "space-station",
@@ -22342,7 +22383,8 @@
         "paddingPx": 20,
         "columnGapPx": 16,
         "followMessage": "{name} joined the adventure!"
-      }
+      },
+      "silhouette": "legacy-space-station"
     },
     {
       "id": "aurora",
@@ -22877,7 +22919,8 @@
         },
         "geometryReference": "round10.css .skin-aurora",
         "content": "Reserve ornaments outside content; wrap names and long words; no text clipping; preserve badges, emotes and moderation."
-      }
+      },
+      "silhouette": "aurora"
     },
     {
       "id": "glitter-bomb",
@@ -23413,7 +23456,8 @@
         },
         "geometryReference": "round10.css .skin-glitter-bomb",
         "content": "Reserve ornaments outside content; wrap names and long words; no text clipping; preserve badges, emotes and moderation."
-      }
+      },
+      "silhouette": "glitter-bomb"
     },
     {
       "id": "neon-pulse",
@@ -23949,7 +23993,8 @@
         },
         "geometryReference": "round10.css .skin-neon-pulse",
         "content": "Reserve ornaments outside content; wrap names and long words; no text clipping; preserve badges, emotes and moderation."
-      }
+      },
+      "silhouette": "neon-pulse"
     },
     {
       "id": "prism-shift",
@@ -24484,7 +24529,8 @@
         },
         "geometryReference": "round10.css .skin-prism-shift",
         "content": "Reserve ornaments outside content; wrap names and long words; no text clipping; preserve badges, emotes and moderation."
-      }
+      },
+      "silhouette": "prism-shift"
     },
     {
       "id": "holo-foil",
@@ -25019,7 +25065,8 @@
         },
         "geometryReference": "round10.css .skin-holo-foil",
         "content": "Reserve ornaments outside content; wrap names and long words; no text clipping; preserve badges, emotes and moderation."
-      }
+      },
+      "silhouette": "holo-foil"
     },
     {
       "id": "lava-lamp",
@@ -25555,7 +25602,8 @@
         },
         "geometryReference": "round10.css .skin-lava-lamp",
         "content": "Reserve ornaments outside content; wrap names and long words; no text clipping; preserve badges, emotes and moderation."
-      }
+      },
+      "silhouette": "lava-lamp"
     },
     {
       "id": "electric-storm",
@@ -26091,7 +26139,8 @@
         },
         "geometryReference": "round10.css .skin-electric-storm",
         "content": "Reserve ornaments outside content; wrap names and long words; no text clipping; preserve badges, emotes and moderation."
-      }
+      },
+      "silhouette": "electric-storm"
     },
     {
       "id": "starfall",
@@ -26626,7 +26675,8 @@
         },
         "geometryReference": "round10.css .skin-starfall",
         "content": "Reserve ornaments outside content; wrap names and long words; no text clipping; preserve badges, emotes and moderation."
-      }
+      },
+      "silhouette": "starfall"
     },
     {
       "id": "fire-frame",
@@ -27161,7 +27211,8 @@
         },
         "geometryReference": "round10.css .skin-fire-frame",
         "content": "Reserve ornaments outside content; wrap names and long words; no text clipping; preserve badges, emotes and moderation."
-      }
+      },
+      "silhouette": "fire-frame"
     },
     {
       "id": "ice-crystal",
@@ -27697,7 +27748,8 @@
         },
         "geometryReference": "round10.css .skin-ice-crystal",
         "content": "Reserve ornaments outside content; wrap names and long words; no text clipping; preserve badges, emotes and moderation."
-      }
+      },
+      "silhouette": "ice-crystal"
     }
   ],
   "settingsSchema": {
