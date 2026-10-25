@@ -14,6 +14,8 @@ ChatSkins is a browser-based editor for Twitch chat overlays. It's built for the
 
 The full-quality video is [docs/media/demo.mp4](docs/media/demo.mp4) (41 s, 1280×720).
 
+**How we built it** (52 s): [docs/media/making-of.mp4](docs/media/making-of.mp4). It covers the brief, the Codex design agent, the Codex build agent, browser testing and the bug-fix rounds.
+
 ### The editor
 ![ChatSkins editor: skin gallery and settings on the left, live preview on the right](docs/media/editor.png)
 
