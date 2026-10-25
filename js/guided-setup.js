@@ -36,3 +36,8 @@ export function prepareGuidedSetup({chatPlay,alerts,channel,createRewards=true}=
 export function guidedReturnResult({rewardResult,login,alertsReady=true}={}){
  return{login:String(login||''),chatCommands:'Ready',alerts:alertsReady?'Ready':'Needs Twitch login',points:rewardResult?.ok?'Ready':'Problem',rewardResult};
 }
+
+export function guidedSetupReturnModel({credentials,chatPlay}={}){
+ const connected=!!credentials?.token;
+ return{copyEnabled:connected,linkHint:connected?'Your one OBS link is ready. Paste it as a Browser Source.':'Connect to create your one private OBS link.',chatPlayStatus:chatPlay?.enabled?'Chat play is on.':'Chat play is off. Try it in the preview.'};
+}
