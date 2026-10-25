@@ -1,0 +1,217 @@
+@import url("https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@400;500;600;700&family=Bree+Serif&family=Chakra+Petch:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&family=Lato:wght@400;500;600;700&family=Lora:wght@400;500;600;700&family=Noto+Sans:wght@400;500;600;700&family=Nunito+Sans:wght@400;500;600;700&family=Pixelify+Sans:wght@400;500;600;700&family=Roboto+Slab:wght@400;500;600;700&family=VT323&display=swap");
+
+/* Skin renderer shared by OBS overlay, editor, gallery, and home preview. */
+*{box-sizing:border-box}
+body.overlay{margin:0;min-height:100vh;background:transparent;overflow:hidden}
+.overlay-root{position:fixed;inset:0;--inset:20px;--width:480px}
+.role-icon{display:inline-block;width:1em;height:1em;min-width:1em;min-height:1em;vertical-align:-.14em;fill:currentColor;color:inherit;flex:none}
+.chat[data-signature-skin=true]{filter:drop-shadow(0 0 8px #7eead688)}
+.chat[data-signature-skin=true]>.chat-surface::after{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,transparent 0 3px,#0002 3px 4px);opacity:.35}
+.chat[data-border-effect=animatedGradient]::after{content:"";position:absolute;z-index:4;inset:-2px;padding:2px;border-radius:inherit;pointer-events:none;background:linear-gradient(120deg,#7EEAD6,#B7AAFF,#7EEAD6) 0 0/220% 100%;-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:signature-flow var(--border-effect-speed,12s) linear infinite}
+@keyframes signature-flow{to{background-position:220% 0}}
+.message-body.text-flash{animation:classic-flash 2.4s ease-in-out 1}
+.message-body.text-wave{animation:classic-wave 1.2s ease-in-out 1}
+@keyframes classic-flash{0%,100%{filter:hue-rotate(0deg)}50%{filter:hue-rotate(180deg)}}
+@keyframes classic-wave{0%,100%{transform:translateY(0)}50%{transform:translateY(-2px)}}
+.chat[data-signature-skin=true] .channel-first-time{background-image:linear-gradient(100deg,transparent 25%,#ffe99255 50%,transparent 75%);background-size:220% 100%;animation:first-time-shimmer 2.2s ease-in-out infinite}
+@keyframes first-time-shimmer{to{background-position:-220% 0}}
+.chat[data-reduce-motion=true]::after,.chat[data-reduce-motion=true] .message-body.text-flash,.chat[data-reduce-motion=true] .message-body.text-wave,.chat[data-reduce-motion=true][data-signature-skin=true] .channel-first-time{animation:none!important}
+.chat[data-reduce-motion=true][data-signature-skin=true] .channel-first-time{background-image:none}
+@media(prefers-reduced-motion:reduce){.chat[data-border-effect=animatedGradient]::after,.message-body.text-flash,.message-body.text-wave,.chat[data-signature-skin=true] .channel-first-time{animation:none!important}}
+.chat{font-family:var(--font);font-size:var(--size);font-weight:var(--weight);line-height:var(--lh);color:var(--text);text-shadow:var(--shadow);-webkit-text-stroke:var(--outline);paint-order:stroke fill;display:flex;flex-direction:column;gap:var(--gap);width:min(var(--width,480px),calc(100% - 2 * var(--inset,20px)));position:absolute;padding:0}
+.source .chat{--inset:20px;--width:480px;left:var(--inset);bottom:var(--inset);max-height:calc(100% - 40px)}
+.source[data-direction=top] .chat{top:var(--inset);bottom:auto;flex-direction:column-reverse}
+.source[data-alignment=center] .chat{left:50%;transform:translateX(-50%)}
+.source[data-alignment=right] .chat{left:auto;right:var(--inset)}
+.chat[data-scope=panel]{padding:var(--py) var(--px);background:var(--bg);border:var(--b) solid var(--bc);border-radius:var(--radius);isolation:isolate}
+.chat[data-scope=message] .message{padding:var(--py) var(--px);background:var(--bg);border:var(--b) solid var(--bc);border-radius:var(--radius);position:relative;isolation:isolate}
+.message{min-width:0;overflow-wrap:anywhere;box-sizing:border-box;text-align:var(--text-align,left)}
+.source[data-alignment=center] .message,.chat[data-align=center] .message{text-align:center}
+.source[data-alignment=right] .message,.chat[data-align=right] .message{text-align:right}
+.name{color:var(--name)}
+.system{color:var(--system)}
+.badge{display:inline-flex;width:.85em;height:.85em;align-items:center;justify-content:center;vertical-align:.05em;border:1px solid currentColor;clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);font-size:.65em;text-shadow:none;-webkit-text-stroke:0;color:#D4DCE8}
+.emote{height:1.25em;width:1.25em;object-fit:contain;vertical-align:middle;-webkit-text-stroke:0}
+.chat[data-frame=double]:is([data-scope=panel])::after,.chat[data-scope=message] .message[data-frame=double]::after{content:"";position:absolute;inset:calc(var(--b) + 2px);border:var(--b) solid var(--bc);pointer-events:none}
+.chat[data-frame=corners]:is([data-scope=panel])::after{content:"";position:absolute;inset:2px;pointer-events:none;background:linear-gradient(var(--bc),var(--bc)) left top/12px var(--b),linear-gradient(var(--bc),var(--bc)) left top/var(--b) 12px,linear-gradient(var(--bc),var(--bc)) right top/12px var(--b),linear-gradient(var(--bc),var(--bc)) right top/var(--b) 12px,linear-gradient(var(--bc),var(--bc)) left bottom/12px var(--b),linear-gradient(var(--bc),var(--bc)) left bottom/var(--b) 12px,linear-gradient(var(--bc),var(--bc)) right bottom/12px var(--b),linear-gradient(var(--bc),var(--bc)) right bottom/var(--b) 12px;background-repeat:no-repeat}
+.chat[data-frame=bevel]{border-style:outset}
+.chat[data-frame=pixel]{box-shadow:inset var(--b) var(--b) 0 #ffffff33,inset calc(-1 * var(--b)) calc(-1 * var(--b)) 0 #00000066}
+.message[data-enter=fade]{animation:fade var(--duration) cubic-bezier(.2,.7,.2,1)}
+.message[data-enter=slide]{animation:slide var(--duration) cubic-bezier(.2,.7,.2,1)}
+.message[data-enter=pop]{animation:pop var(--duration) cubic-bezier(.2,.7,.2,1)}
+.overlay-root{position:fixed;inset:0;--inset:20px;--width:480px}
+.overlay-root>.chat{left:var(--inset);bottom:var(--inset);max-height:calc(100% - 2 * var(--inset));overflow:hidden}
+.overlay-root[data-direction=top]>.chat{top:var(--inset);bottom:auto;flex-direction:column-reverse}
+.overlay-root[data-alignment=center]>.chat{left:50%;transform:translateX(-50%)}
+.overlay-root[data-alignment=right]>.chat{left:auto;right:var(--inset)}
+.chat[data-treatment=gradient],.message[data-treatment=gradient]{background:linear-gradient(135deg,var(--bg),var(--bg2))}
+.chat[data-treatment=rainbow] .message,.chat[data-treatment=rainbow]{background:linear-gradient(135deg,#FFD2E6,#FFF1BA,var(--bg2),#DCCBFF)}
+.chat[data-treatment=boards]{background-color:var(--bg);background-image:repeating-linear-gradient(0deg,transparent 0 31px,#0003 31px 32px),linear-gradient(145deg,#ffffff18,#0003)}
+.chat[data-treatment=confetti] .message:nth-child(3n){background:linear-gradient(135deg,var(--bg),var(--bg2))}
+.chat[data-background=scanlines]::before,.chat[data-background=scanlines] .message::before{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,#0000 0 3px,#0002 3px 4px)}
+.chat[data-background=gradientDrift] .message{background:linear-gradient(135deg,var(--bg),var(--bg2));background-size:200% 200%;animation:gradientDrift 16s ease-in-out infinite alternate}
+.chat[data-background=sparkles] .message::after{content:"?  ·  ?";position:absolute;right:8px;top:2px;color:#fff9;font-size:.65em;pointer-events:none;animation:sparkle 600ms ease-out both}
+.chat[data-ambient=torch]{box-shadow:inset 0 0 8px #d88d4240;animation:torch 3.8s ease-in-out infinite}
+.chat[data-ambient=flicker]{box-shadow:inset 0 0 4px #a33b3b77;animation:flicker 5s ease-in-out infinite}
+.chat[data-ambient=scan]::after{content:"";position:absolute;left:0;top:2px;width:100%;height:1px;background:#69e7ff88;animation:scan 6s linear infinite;pointer-events:none}
+.chat[data-border-effect=glow]{box-shadow:inset 0 0 8px var(--bc)}
+.chat[data-border-effect=pulse]{animation:pulse 4s ease-in-out infinite}
+.chat[data-border-effect=animatedGradient],.chat[data-border-effect=rainbowCycle]{background-image:linear-gradient(135deg,var(--bc),var(--bc2));background-origin:border-box;background-clip:padding-box,border-box}
+.chat[data-frame=hud],.message[data-frame=hud]{border-style:solid;background-image:linear-gradient(var(--bc),var(--bc))}
+.chat[data-frame=slab] .message,.message[data-frame=slab]{border-inline-start:4px solid #ff9d47;box-shadow:inset -8px 0 #fff2}
+.name-gradient{background:linear-gradient(90deg,var(--gradient1),var(--gradient2));background-clip:text;-webkit-background-clip:text;color:transparent!important}
+.name-rainbow{animation:nameRainbow 8s linear infinite}
+.name-glow{text-shadow:0 0 4px currentColor}
+.message.mentioned{border-inline-start:3px solid var(--mention)!important;background-image:linear-gradient(90deg,color-mix(in srgb,var(--mention) 12%,transparent),transparent)}
+.message-body.text-wave{display:inline-block;animation:wave 350ms ease-out}
+.message[data-enter=bounce]{animation:bounce var(--duration) cubic-bezier(.2,.7,.2,1)}
+.message[data-enter=zoom]{animation:zoom var(--duration) ease-out}
+.message[data-enter=glitch]{animation:glitch var(--duration) steps(4,end)}
+.message-body.text-typewriter{animation:typewriterReveal var(--tw) steps(14,end) both}
+.message-body.text-typewriter{clip-path:inset(0 0 0 0);animation-name:typewriterReveal}
+@media(prefers-reduced-motion:reduce){.chat[data-reduce-motion=true] *,body:has(.chat[data-reduce-motion=true]) .chat *,.chat[data-reduce-motion=true]::before,.chat[data-reduce-motion=true]::after{animation:none!important;transition:none!important}
+.chat[data-reduce-motion=true] .text-typewriter{clip-path:none!important}}
+.chat[data-reduce-motion=true] *,.chat[data-reduce-motion=true]::before,.chat[data-reduce-motion=true]::after{animation:none!important;transition:none!important}
+.chat[data-reduce-motion=true] .text-typewriter{clip-path:none!important}
+.chat[data-frame=corners]::after,.message[data-frame=corners]::after{content:'';position:absolute;inset:2px;pointer-events:none;background:linear-gradient(var(--bc),var(--bc)) left top/12px var(--b),linear-gradient(var(--bc),var(--bc)) left top/var(--b) 12px,linear-gradient(var(--bc),var(--bc)) right top/12px var(--b),linear-gradient(var(--bc),var(--bc)) right top/var(--b) 12px,linear-gradient(var(--bc),var(--bc)) left bottom/12px var(--b),linear-gradient(var(--bc),var(--bc)) left bottom/var(--b) 12px,linear-gradient(var(--bc),var(--bc)) right bottom/12px var(--b),linear-gradient(var(--bc),var(--bc)) right bottom/var(--b) 12px;background-repeat:no-repeat}
+.chat[data-frame=bevel]{border-style:outset;border-color:var(--bc)}
+.chat[data-frame=pixel]{box-shadow:inset var(--b) var(--b) 0 #ffffff33,inset calc(-1 * var(--b)) calc(-1 * var(--b)) 0 #00000066}
+.chat.chat-panel{position:relative;width:var(--width,480px);padding:var(--pad,8px 12px);gap:var(--gap,8px);border:0;background:color-mix(in srgb,var(--frame-bg-panel,#111C2E) 0%,transparent);isolation:isolate;overflow:visible;box-sizing:border-box}
+.chat.chat-panel[data-target=panel]{background:color-mix(in srgb,var(--frame-bg-panel,#111C2E) calc(var(--panel-opacity,0)*100%),transparent)}
+.chat.chat-panel[data-target=panel]::before,.chat.chat-panel[data-target=panel]::after,.chat-message[data-frame]:before,.chat-message[data-frame]:after{content:"";position:absolute;pointer-events:none;z-index:0;border-radius:var(--radii,0);inset:0}
+.chat.chat-panel::before,.chat-message[data-frame]:before{border:var(--frame-width,0) solid var(--frame-color,transparent)}
+.chat.chat-panel[data-outer=true]::after,.chat-message[data-outer=true]:after{inset:calc(-1 * (var(--outer-offset,2px) + var(--outer-width,1px)));border:var(--outer-width,1px) solid var(--outer-color);border-radius:calc(var(--outer-offset,2px) + var(--outer-width,1px) + 4px)}
+.chat[data-frame=double]::before,.chat-message[data-frame=double]::before{border-style:double;border-width:var(--frame-width,1px);box-shadow:inset 0 0 0 var(--double-gap,2px) transparent}
+.chat[data-frame=dashed]::before,.chat-message[data-frame=dashed]::before{border-style:dashed}
+.chat[data-frame=dotted]::before,.chat-message[data-frame=dotted]::before{border-style:dotted}
+.chat[data-frame=pixel]::before,.chat-message[data-frame=pixel]::before{clip-path:polygon(var(--pixel-step) 0,calc(100% - var(--pixel-step)) 0,calc(100% - var(--pixel-step)) var(--pixel-step),100% var(--pixel-step),100% calc(100% - var(--pixel-step)),calc(100% - var(--pixel-step)) calc(100% - var(--pixel-step)),calc(100% - var(--pixel-step)) 100%,var(--pixel-step) 100%,var(--pixel-step) calc(100% - var(--pixel-step)),0 calc(100% - var(--pixel-step)),0 var(--pixel-step),var(--pixel-step) var(--pixel-step));border:var(--frame-width,1px) solid var(--frame-color)}
+.chat[data-frame=beveled]::before{border-style:outset}
+.chat-message{position:relative;z-index:0;padding:var(--pad,0);border:0;background-color:color-mix(in srgb,var(--message-bg,#111C2E) calc(var(--surface-opacity,.55)*100%),transparent);background-clip:padding-box}
+.chat-message>*{position:relative;z-index:1}
+.chat-system{font-style:italic}
+.chat-panel[data-target=message]{background:transparent;padding:0}
+.chat-panel[data-target=message]>.chat-message{padding:var(--pad,8px 12px)}
+.chat-panel[data-target=panel]>.chat-message{padding:0;background:transparent}
+.chat-panel[data-target=panel]>.chat-message::before{display:none}
+.chat-message .badge{font-size:inherit}
+.message-body img{vertical-align:middle}
+.chat-message[data-frame=double]::before{border-style:double}
+.chat-panel[data-ornament=brackets] .ornament{display:none}
+.chat-panel[data-outer=true]{margin:3px}
+.chat[data-target=panel]{--panel-opacity:.8}
+.chat-panel{max-height:calc(100% - 2 * var(--inset,20px) - 2 * (var(--outer-offset,0px) + var(--outer-width,0px)))}
+.source .chat.chat-panel{position:absolute;top:auto;bottom:var(--inset,20px);left:var(--inset,20px)}
+.source[data-direction=top] .chat.chat-panel{top:var(--inset,20px);bottom:auto;flex-direction:column-reverse}
+.chat-surface{position:absolute;z-index:0;inset:0;border-radius:inherit;pointer-events:none;background-clip:padding-box}
+.chat-message>.chat-surface{z-index:0}
+.chat-panel[data-target=panel]>.chat-message{position:relative}
+.chat-panel[data-target=panel]>.chat-message>*:not(.chat-surface){z-index:1}
+.chat-panel[data-ornament=brackets]::before,.chat-message[data-ornament=brackets]::after{content:'';position:absolute;z-index:2;inset:calc(var(--ornament-inset,2px) + var(--frame-width,0px));pointer-events:none;background:linear-gradient(var(--ornament-color)) left top/var(--ornament-size) var(--ornament-width),linear-gradient(var(--ornament-color)) left top/var(--ornament-width) var(--ornament-size),linear-gradient(var(--ornament-color)) right top/var(--ornament-size) var(--ornament-width),linear-gradient(var(--ornament-color)) right top/var(--ornament-width) var(--ornament-size),linear-gradient(var(--ornament-color)) left bottom/var(--ornament-size) var(--ornament-width),linear-gradient(var(--ornament-color)) left bottom/var(--ornament-width) var(--ornament-size),linear-gradient(var(--ornament-color)) right bottom/var(--ornament-size) var(--ornament-width),linear-gradient(var(--ornament-color)) right bottom/var(--ornament-width) var(--ornament-size);background-repeat:no-repeat}
+.chat-panel[data-ornament=dots]::before,.chat-message[data-ornament=dots]::after{content:'';position:absolute;z-index:2;inset:calc(var(--ornament-inset,2px) + var(--frame-width,0px));pointer-events:none;background:radial-gradient(circle,var(--ornament-color) 0 98%,transparent 100%) left top/var(--ornament-size) var(--ornament-size),radial-gradient(circle,var(--ornament-color) 0 98%,transparent 100%) right top/var(--ornament-size) var(--ornament-size),radial-gradient(circle,var(--ornament-color) 0 98%,transparent 100%) left bottom/var(--ornament-size) var(--ornament-size),radial-gradient(circle,var(--ornament-color) 0 98%,transparent 100%) right bottom/var(--ornament-size) var(--ornament-size);background-repeat:no-repeat}
+.chat-panel[data-ornament=diamonds]::before,.chat-message[data-ornament=diamonds]::after{content:'';position:absolute;z-index:2;inset:calc(var(--ornament-inset,2px) + var(--frame-width,0px));pointer-events:none;background:conic-gradient(from 45deg,var(--ornament-color) 0 25%,transparent 0 100%) left top/var(--ornament-size) var(--ornament-size),conic-gradient(from 135deg,var(--ornament-color) 0 25%,transparent 0 100%) right top/var(--ornament-size) var(--ornament-size),conic-gradient(from -45deg,var(--ornament-color) 0 25%,transparent 0 100%) left bottom/var(--ornament-size) var(--ornament-size),conic-gradient(from 225deg,var(--ornament-color) 0 25%,transparent 0 100%) right bottom/var(--ornament-size) var(--ornament-size);background-repeat:no-repeat}
+.chat-panel[data-ornament=notches]::before,.chat-message[data-ornament=notches]::after{content:'';position:absolute;z-index:2;inset:calc(var(--ornament-inset,2px) + var(--frame-width,0px));pointer-events:none;background:linear-gradient(135deg,transparent 48%,var(--ornament-color) 49% 55%,transparent 56%) left top/var(--ornament-size) calc(var(--ornament-size)/2),linear-gradient(225deg,transparent 48%,var(--ornament-color) 49% 55%,transparent 56%) right top/var(--ornament-size) calc(var(--ornament-size)/2),linear-gradient(45deg,transparent 48%,var(--ornament-color) 49% 55%,transparent 56%) left bottom/var(--ornament-size) calc(var(--ornament-size)/2),linear-gradient(-45deg,transparent 48%,var(--ornament-color) 49% 55%,transparent 56%) right bottom/var(--ornament-size) calc(var(--ornament-size)/2);background-repeat:no-repeat}
+.chat-panel[data-ornament]::before{border-radius:inherit}
+.chat-panel[data-ornament=brackets]::before{border:0}
+.chat-panel[data-outer=true]::after{border-radius:calc(var(--outer-offset) + var(--outer-width) + 2px)}
+.chat-ornament{position:absolute;z-index:2;inset:calc(var(--ornament-inset,2px) + var(--frame-width,0px));pointer-events:none;border-radius:inherit;background-repeat:no-repeat}
+.chat-ornament[data-style=brackets]{background-image:linear-gradient(var(--ornament-color)) left top/var(--ornament-size) var(--ornament-width),linear-gradient(var(--ornament-color)) left top/var(--ornament-width) var(--ornament-size),linear-gradient(var(--ornament-color)) right top/var(--ornament-size) var(--ornament-width),linear-gradient(var(--ornament-color)) right top/var(--ornament-width) var(--ornament-size),linear-gradient(var(--ornament-color)) left bottom/var(--ornament-size) var(--ornament-width),linear-gradient(var(--ornament-color)) left bottom/var(--ornament-width) var(--ornament-size),linear-gradient(var(--ornament-color)) right bottom/var(--ornament-size) var(--ornament-width),linear-gradient(var(--ornament-color)) right bottom/var(--ornament-width) var(--ornament-size)}
+.chat-ornament[data-style=dots]{background-image:radial-gradient(circle,var(--ornament-color) 0 98%,transparent 100%) left top/var(--ornament-size) var(--ornament-size),radial-gradient(circle,var(--ornament-color) 0 98%,transparent 100%) right top/var(--ornament-size) var(--ornament-size),radial-gradient(circle,var(--ornament-color) 0 98%,transparent 100%) left bottom/var(--ornament-size) var(--ornament-size),radial-gradient(circle,var(--ornament-color) 0 98%,transparent 100%) right bottom/var(--ornament-size) var(--ornament-size)}
+.chat-ornament[data-style=diamonds]{background-image:conic-gradient(from 45deg,var(--ornament-color) 0 25%,transparent 0) left top/var(--ornament-size) var(--ornament-size),conic-gradient(from 135deg,var(--ornament-color) 0 25%,transparent 0) right top/var(--ornament-size) var(--ornament-size),conic-gradient(from -45deg,var(--ornament-color) 0 25%,transparent 0) left bottom/var(--ornament-size) var(--ornament-size),conic-gradient(from 225deg,var(--ornament-color) 0 25%,transparent 0) right bottom/var(--ornament-size) var(--ornament-size)}
+.chat-ornament[data-style=notches]{background-image:linear-gradient(135deg,transparent 48%,var(--ornament-color) 49% 55%,transparent 56%) left top/var(--ornament-size) calc(var(--ornament-size)/2),linear-gradient(225deg,transparent 48%,var(--ornament-color) 49% 55%,transparent 56%) right top/var(--ornament-size) calc(var(--ornament-size)/2),linear-gradient(45deg,transparent 48%,var(--ornament-color) 49% 55%,transparent 56%) left bottom/var(--ornament-size) calc(var(--ornament-size)/2),linear-gradient(-45deg,transparent 48%,var(--ornament-color) 49% 55%,transparent 56%) right bottom/var(--ornament-size) calc(var(--ornament-size)/2)}
+.chat-panel[data-ornament]::before,.chat-message[data-ornament]::after{content:none!important}
+.overlay-root>.chat.chat-panel,.source .chat.chat-panel{max-height:calc(100% - 2 * var(--inset,20px) - 2 * (var(--outer-offset,0px) + var(--outer-width,0px)));overflow:visible}
+.overlay-root{position:fixed;inset:0;overflow:hidden}
+.overlay-root>.chat.chat-panel{height:calc(100% - 2 * var(--inset,20px));max-height:none;overflow:visible}
+.source .chat.chat-panel{height:calc(720px - 2 * var(--inset,20px));max-height:none;overflow:visible;box-sizing:border-box}
+.chat[data-transparent=true]{background:transparent!important}
+.chat[data-transparent=true]>.chat-surface,.chat-message[data-transparent=true]>.chat-surface{display:none}
+.chat[data-hide-frames=true]::before,.chat[data-hide-frames=true]::after,.chat-message[data-hide-frames=true]::before,.chat-message[data-hide-frames=true]::after{display:none!important}
+.chat-message{min-width:0;overflow-wrap:anywhere}
+.message-body{min-width:0;overflow-wrap:anywhere}
+.chat[data-layout=stacked] .chat-message,.chat[data-layout=announcer] .chat-message{display:flex;flex-direction:column;align-items:flex-start;gap:4px}
+.chat[data-layout=columns] .chat-message{display:grid;grid-template-columns:minmax(64px,min(var(--column-width,120px),35%)) minmax(0,1fr);column-gap:12px;align-items:start}
+.chat[data-layout=initials] .chat-message{display:grid;grid-template-columns:var(--initial-size,40px) minmax(0,1fr);column-gap:12px}
+.chat[data-layout=initials] .chat-message .name{grid-column:2}
+.chat[data-layout=initials] .chat-message .message-body{grid-column:2}
+.chat[data-treatment=pill] .chat-name{display:inline-block;border:1px solid #ffffffaa;border-radius:20px;padding:4px 9px;box-shadow:2px 2px #00000070;margin-bottom:8px;background:var(--chip-color,#A9CAFF)}
+.chat[data-treatment=tab] .chat-name{display:inline-block;border:1px solid #ffffffaa;border-radius:2px;padding:4px 9px;background:var(--chip-color,#A9CAFF)}
+.chat[data-shape=speech] .chat-message{position:relative;margin-bottom:var(--tail-size,10px)}
+.chat[data-shape=speech] .chat-message>.chat-tail{content:'';position:absolute;left:24px;bottom:calc(-1 * var(--tail-size,10px));border:var(--tail-size,10px) solid transparent;border-top-color:var(--frame-color,#34465E);border-bottom:0}
+.chat-shape{content:'';position:absolute;inset:0;z-index:-1;pointer-events:none;background:var(--frame-color,#34465E);clip-path:polygon(var(--cut-size,12px) 0,100% 0,calc(100% - var(--cut-size,12px)) 100%,0 100%)}
+.chat-shape[data-shape=ticket]{clip-path:polygon(var(--cut-size,12px) 0,calc(100% - var(--cut-size,12px)) 0,100% var(--cut-size,12px),100% calc(100% - var(--cut-size,12px)),calc(100% - var(--cut-size,12px)) 100%,var(--cut-size,12px) 100%,0 calc(100% - var(--cut-size,12px)),0 var(--cut-size,12px))}
+.chat[data-accent=rail] .chat-message{border-left:5px solid var(--frame-color)}
+.chat[data-accent=topbar] .chat-message{border-top:5px solid var(--frame-color)}
+.chat[data-accent=underline] .chat-name{text-decoration:underline;text-decoration-color:var(--frame-color);text-decoration-thickness:2px}
+.chat[data-layout=announcer] .chat-name{font-size:32px!important}
+.chat[data-transparent=true] .chat-message{background:transparent!important}
+.chat-message[data-first-message=true]{border-left:3px solid var(--emphasis-color,#FFE095FF);padding-left:8px}
+.first-message{font-size:.65em;color:var(--emphasis-color,#FFE095FF);display:block}
+.message-body[data-emote-only=true] .emote{vertical-align:middle}
+.chat-message .emote{width:auto;object-fit:contain;max-width:100%;-webkit-text-stroke:0;text-shadow:none}
+.chat-panel{isolation:isolate}
+.chat-panel>.chat-surface{z-index:0}
+.chat-panel::before,.chat-panel::after{z-index:1}
+.chat-panel>.chat-message{position:relative;z-index:2}
+.chat-message{isolation:isolate}
+.chat-message>.chat-surface{z-index:0}
+.chat-message::before,.chat-message::after{z-index:1}
+.chat-message>*:not(.chat-surface){position:relative;z-index:2}
+.chat-panel[data-target=panel]::before,.chat-message[data-frame]:not([data-frame=none])::before{content:""!important;position:absolute;inset:0;z-index:1;pointer-events:none;border:var(--frame-width,1px) solid var(--frame-color,transparent);border-radius:var(--radii,0);box-sizing:border-box}
+.chat-panel[data-frame=none][data-target=panel]::before,.chat-message[data-frame=none]::before{content:none!important}
+.chat-panel[data-frame=solid][data-target=panel]::before,.chat-message[data-frame=solid]::before{border-style:solid}
+.chat-panel[data-frame=double][data-target=panel]::before,.chat-message[data-frame=double]::before{border-style:double}
+.chat-panel[data-frame=dashed][data-target=panel]::before,.chat-message[data-frame=dashed]::before{border-style:dashed}
+.chat-panel[data-frame=dotted][data-target=panel]::before,.chat-message[data-frame=dotted]::before{border-style:dotted}
+.chat-panel[data-frame=groove][data-target=panel]::before,.chat-message[data-frame=groove]::before{border-style:groove}
+.chat-panel[data-frame=ridge][data-target=panel]::before,.chat-message[data-frame=ridge]::before{border-style:ridge}
+.chat-panel[data-frame=inset][data-target=panel]::before,.chat-message[data-frame=inset]::before{border-style:inset}
+.chat-panel[data-frame=outset][data-target=panel]::before,.chat-message[data-frame=outset]::before{border-style:outset}
+.chat-panel[data-frame=beveled][data-target=panel]::before,.chat-message[data-frame=beveled]::before{border-style:outset}
+.chat-panel[data-frame=pixel][data-target=panel]::before,.chat-message[data-frame=pixel]::before{border-style:solid;clip-path:polygon(var(--pixel-step) 0,calc(100% - var(--pixel-step)) 0,calc(100% - var(--pixel-step)) var(--pixel-step),100% var(--pixel-step),100% calc(100% - var(--pixel-step)),calc(100% - var(--pixel-step)) calc(100% - var(--pixel-step)),calc(100% - var(--pixel-step)) 100%,var(--pixel-step) 100%,var(--pixel-step) calc(100% - var(--pixel-step)),0 calc(100% - var(--pixel-step)),0 var(--pixel-step),var(--pixel-step) var(--pixel-step))}
+.chat-panel[data-hide-frames=true]::before,.chat-panel[data-hide-frames=true]::after,.chat-message[data-hide-frames=true]::before,.chat-message[data-hide-frames=true]::after{display:none!important}
+.overlay-root>.chat.chat-panel,.source .chat.chat-panel{position:absolute;height:auto;max-height:var(--panel-max-height,calc(100% - 40px));overflow:hidden;box-sizing:border-box;}
+.overlay-root>.chat.chat-panel,.source[data-direction=bottom] .chat.chat-panel{top:auto;bottom:var(--inset,20px)}
+.overlay-root[data-direction=top]>.chat.chat-panel,.source[data-direction=top] .chat.chat-panel{top:var(--inset,20px);bottom:auto;flex-direction:column-reverse}
+.overlay-root[data-alignment=left]>.chat.chat-panel,.source[data-alignment=left] .chat.chat-panel{left:var(--inset,20px);right:auto;transform:none}
+.overlay-root[data-alignment=center]>.chat.chat-panel,.source[data-alignment=center] .chat.chat-panel{left:50%;right:auto;transform:translateX(-50%)}
+.overlay-root[data-alignment=right]>.chat.chat-panel,.source[data-alignment=right] .chat.chat-panel{left:auto;right:var(--inset,20px);transform:none}
+.chat-message{position:relative}
+.chat-tail{position:absolute;left:24px;bottom:calc(-1 * var(--tail-size,10px));width:0;height:0;border:var(--tail-size,10px) solid transparent;border-top-color:var(--frame-color,#34465E);border-bottom:0;z-index:1}
+.chat-shape{position:absolute;inset:0;z-index:0;pointer-events:none;border:var(--frame-width,1px) solid var(--frame-color,#34465E);background:transparent}
+.chat-shape[data-shape=slash]{clip-path:polygon(var(--cut-size,12px) 0,100% 0,calc(100% - var(--cut-size,12px)) 100%,0 100%)}
+.chat-shape[data-shape=ticket]{clip-path:polygon(var(--cut-size,12px) 0,calc(100% - var(--cut-size,12px)) 0,100% var(--cut-size,12px),100% calc(100% - var(--cut-size,12px)),calc(100% - var(--cut-size,12px)) 100%,var(--cut-size,12px) 100%,0 calc(100% - var(--cut-size,12px)),0 var(--cut-size,12px))}
+.chat[data-layout=initials] .chat-message{display:block}
+.chat[data-layout=initials] .chat-initial{float:left;width:var(--initial-size,40px);height:var(--initial-size,40px);display:grid;place-items:center;border-radius:50%;background:var(--chip-color,#A9CAFF);margin:0 12px 4px 0;font-weight:700}
+.channel-first-time{display:block;font-size:.82em;line-height:1.25;margin-bottom:2px}
+.channel-name{color:inherit}
+.channel-first-time{display:block;font-size:.82em;line-height:1.25;margin-bottom:2px}
+.channel-name{color:inherit}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+@keyframes slide{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes pop{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:none}}
+@keyframes bounce{0%{opacity:0;transform:translateY(8px)}60%{opacity:1;transform:translateY(-3px)}100%{transform:translateY(0)}}
+@keyframes zoom{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}
+@keyframes glitch{0%{opacity:0;transform:translateX(-2px)}35%{opacity:1;transform:translateX(2px)}70%{transform:translateX(-1px)}100%{transform:none}}
+@keyframes nameRainbow{0%{color:#FFB4D9}25%{color:#FFE49A}50%{color:#A0F1BE}75%{color:#9DE8FF}100%{color:#D7BEFF}}
+@keyframes gradientDrift{to{background-position:100% 100%}}
+@keyframes sparkle{0%{opacity:0;transform:scale(.5)}40%{opacity:.8}100%{opacity:0;transform:scale(1)}}
+@keyframes torch{0%,100%{box-shadow:inset 0 0 5px #d88d4240}50%{box-shadow:inset 0 0 8px #d88d4261}}
+@keyframes flicker{0%,100%{opacity:1}45%{box-shadow:inset 0 0 4px #a33b3b99}70%{box-shadow:inset 0 0 5px #a33b3b77}}
+@keyframes scan{from{transform:translateY(0)}to{transform:translateY(80px)}}
+@keyframes pulse{0%,100%{box-shadow:inset 0 0 3px var(--bc)}50%{box-shadow:inset 0 0 8px var(--bc)}}
+@keyframes wave{50%{transform:translateY(-3px)}}
+@keyframes typewriterReveal{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+.role-icon{display:inline-block;width:1em;height:1em;vertical-align:-.14em;fill:currentColor;margin-right:.22em;flex:none}
+.crew-color-dot{display:inline-block;width:.62em;height:.62em;border-radius:50%;background:var(--crew-color);border:1px solid #ffffff99;vertical-align:.05em;margin-right:.35em;box-shadow:0 0 0 1px #0008}
+.chat[data-border-effect=animatedGradient]::after{content:"";position:absolute;z-index:4;inset:-2px;padding:2px;border-radius:inherit;pointer-events:none;background:linear-gradient(120deg,#7EEAD6,#B7AAFF,#7EEAD6) 0 0/220% 100%;-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:signature-flow var(--border-effect-speed,12s) linear infinite}
+.message-body.text-flash{animation:classic-flash 2.4s ease-in-out 1}
+.message-body.text-wave{animation:classic-wave 1.2s ease-in-out 1}
+@media(prefers-reduced-motion:reduce){.chat[data-border-effect=animatedGradient]::after,.message-body.text-flash,.message-body.text-wave{animation:none!important}}
+.chat[data-reduce-motion=true]::after,.chat[data-reduce-motion=true] .message-body.text-flash,.chat[data-reduce-motion=true] .message-body.text-wave{animation:none!important}
+.chat[data-signature-skin=true] .channel-first-time{background-image:linear-gradient(100deg,transparent 25%,#ffe99255 50%,transparent 75%);background-size:220% 100%;animation:first-time-shimmer 2.2s ease-in-out infinite}
+@media(prefers-reduced-motion:reduce){.chat[data-signature-skin=true] .channel-first-time{animation:none;background-image:none}}
+.chat[data-reduce-motion=true][data-signature-skin=true] .channel-first-time{animation:none;background-image:none}
+
+/* Keep the animated Signature ring above its panel surface and message rows. */
+.chat.chat-panel[data-border-effect=animatedGradient]::after{content:"";position:absolute;inset:-2px;z-index:4;padding:2px;border:0;border-radius:inherit;pointer-events:none;background:linear-gradient(120deg,#7EEAD6,#B7AAFF,#7EEAD6) 0 0/220% 100%;-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:signature-flow var(--border-effect-speed,12s) linear infinite}
+@media(prefers-reduced-motion:reduce){.chat.chat-panel[data-border-effect=animatedGradient]::after{animation:none!important}}.chat[data-reduce-motion=true].chat-panel[data-border-effect=animatedGradient]::after{animation:none!important}
