@@ -1,0 +1,51 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@600;700&family=Barlow:wght@500;600&family=Lato:wght@400;700&family=VT323&family=Silkscreen&family=Fredoka:wght@500;600&display=block" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; }
+  html, body { width: 1920px; height: 1080px; overflow: hidden; }
+  body { background: #0b0e1c; color: #F5F6FF; font-family: Barlow, sans-serif; position: relative; }
+  /* attract-mode floor grid in perspective */
+  .floor { position: absolute; left: -50%; right: -50%; bottom: -10%; height: 62%; transform: perspective(700px) rotateX(62deg); transform-origin: bottom;
+    background-image: linear-gradient(rgba(183,170,255,.45) 2px, transparent 2px), linear-gradient(90deg, rgba(126,234,214,.38) 2px, transparent 2px); background-size: 90px 90px;
+    mask-image: linear-gradient(to top, #000 35%, transparent 98%); }
+  .glow { position: absolute; inset: 0; background: radial-gradient(ellipse at 68% 30%, rgba(183,170,255,.30), transparent 45%), radial-gradient(ellipse at 20% 90%, rgba(126,234,214,.18), transparent 45%), radial-gradient(ellipse at 95% 95%, rgba(255,128,255,.14), transparent 40%); }
+  .stars { position: absolute; inset: 0; }
+  .horizon { position: absolute; left: 0; right: 0; top: 56%; height: 2px; background: linear-gradient(90deg, transparent, #B7AAFF, #7EEAD6, transparent); box-shadow: 0 0 30px 6px rgba(183,170,255,.45); }
+  .logo { position: absolute; right: 140px; top: 170px; display: flex; align-items: center; gap: 34px; }
+  .logo svg { width: 170px; height: 170px; filter: drop-shadow(0 0 28px rgba(183,170,255,.7)); }
+  .logo h1 { font-family: "Chakra Petch", sans-serif; font-weight: 700; font-size: 168px; letter-spacing: -3px; color: #7EEAD6; text-shadow: 0 0 24px rgba(126,234,214,.55), 6px 8px 0 #3b2f7a; }
+  .tag { position: absolute; right: 150px; top: 380px; text-align: right; }
+  .tag p { font-size: 40px; font-weight: 600; color: #DDD6FE; }
+  .tag .start { margin-top: 26px; font-family: "Chakra Petch"; font-weight: 700; font-size: 34px; letter-spacing: 10px; color: #F4D598; text-shadow: 0 0 16px rgba(244,213,152,.6); }
+  .url { position: absolute; right: 150px; bottom: 36px; font-family: "Chakra Petch"; font-weight: 600; font-size: 30px; color: #BBC4DF; letter-spacing: 2px; }
+  .card { position: absolute; padding: 14px 20px; font-size: 22px; box-shadow: 0 18px 40px rgba(0,0,0,.55); }
+  .card div { margin: 4px 0; }
+  .guild { left: 960px; top: 560px; background: rgba(8,10,12,.85); border: 2px solid #c9a24a; outline: 1px solid #6a5226; outline-offset: 4px; font-family: Lato; transform: rotate(-2deg); }
+  .guild .g { color: #40FF40 } .guild .o { color: #40C040 } .guild .s { color: #fff } .guild b { color: #FFD100; font-weight: 700 } .guild .y { color: #FF4040 }
+  .rpg { left: 1420px; top: 690px; background: linear-gradient(#2a3ec9,#101e7a); border: 5px solid #fff; border-radius: 10px; outline: 4px solid #0b0b3a; font-family: VT323; font-size: 34px; line-height: 1; transform: rotate(2deg); }
+  .rpg b { color: #ffe066; font-weight: 400 }
+  .block { left: 1010px; top: 830px; background: rgba(0,0,0,.6); font-family: Silkscreen; font-size: 21px; text-shadow: 3px 3px 0 #3f3f3f; transform: rotate(-1deg); }
+  .block b { color: #55ff55; font-weight: 400 }
+  .bubble { left: 1500px; top: 850px; background: #10343a; border: 3px solid #7EEAD6; border-radius: 26px; font-family: Fredoka; font-size: 24px; transform: rotate(1deg); }
+  .bubble b { display: block; color: #7EEAD6; font-size: 19px }
+</style></head>
+<body>
+  <div class="glow"></div><canvas class="stars" width="1920" height="1080"></canvas><div class="floor"></div><div class="horizon"></div>
+  <div class="logo">
+    <svg viewBox="0 0 36 36" fill="none" color="#B7AAFF"><path d="M7 5h22a3 3 0 0 1 3 3v16a3 3 0 0 1-3 3H17l-8 6v-6H7a3 3 0 0 1-3-3V8a3 3 0 0 1 3-3Z" stroke="currentColor" stroke-width="2.5"/><path d="m12 12 12 0M12 18h8" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><path d="m26 5 6 6" stroke="currentColor" stroke-width="2.5"/></svg>
+    <h1>ChatSkins</h1>
+  </div>
+  <div class="tag"><p>Your stream chat, ready to play.</p><div class="start">PRESS START</div></div>
+  <div class="card guild"><div class="g"><b>[Guild Master]</b> [Korivash]: raid night, who's in?</div><div class="o">[Officer] [Kittyvenom]: invites going out now</div><div class="s">[Moss] says: one more run?</div><div class="y">[Pebble] yells: LET'S GOOO</div></div>
+  <div class="card rpg"><div><b>MOD:</b> A wild chatter appears!</div><div>▶ Say hi &nbsp; Run</div></div>
+  <div class="card block"><div>&lt;<b>pixelpaws</b>&gt; build a castle next</div></div>
+  <div class="card bubble"><b>luna</b>this overlay is so good</div>
+  <div class="url">chatskins.korivash.com</div>
+<script>
+  // deterministic starfield (same image every render)
+  const c = document.querySelector('.stars'), x = c.getContext('2d'); let s = 7;
+  const r = () => (s = (s * 16807) % 2147483647) / 2147483647;
+  for (let i = 0; i < 420; i++) { const y = r() * 640, a = .25 + r() * .75, z = r() < .08 ? 2.2 : 1.1; x.fillStyle = `rgba(${r() < .5 ? '183,170,255' : '245,246,255'},${a})`; x.beginPath(); x.arc(r() * 1920, y, z, 0, 7); x.fill(); }
+</script>
+</body></html>
