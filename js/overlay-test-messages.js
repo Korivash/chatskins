@@ -10,3 +10,5 @@ export const overlayTestMessages=Object.freeze([
  {id:'test-emote-only',username:'EmoteFan',text:'Kappa',emotes:{'25':[[0,4]]},badges:{},color:'#F0C36A'},
  {id:'test-long',username:'StoryTeller',text:'This longer sample checks wrapping, spacing, and the full frame at the edge of the overlay preview.',badges:{},color:'#80D8D0'}
 ].map(message=>Object.freeze({...message,fake:true,login:message.username.toLowerCase()})));
+
+export function buildOverlayTestModel(settings={},fixtures=overlayTestMessages){const configured=Number(settings.maxMessages),limit=Number.isFinite(configured)&&configured>0?Math.floor(configured):fixtures.length;return fixtures.slice(-Math.max(1,Math.min(fixtures.length,limit)));}

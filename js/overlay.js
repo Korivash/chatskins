@@ -5,7 +5,7 @@ import {connectChat} from './chat.js';
 import {layoutPanel} from './panel-layout.js';
 import {fitPanelMessages} from './message-fit.js';
 import {createCommunityChat} from './community-chat.js';
-import {overlayTestMessages} from './overlay-test-messages.js';
+import {buildOverlayTestModel} from './overlay-test-messages.js';
 import {parseAlertsFragment} from './alerts-config.js';
 import {startAlertsOverlay} from './alerts-overlay.js';
 import {decodePlaySource,parseChatPlayFragment,defaultChatPlay,normalizeChatPlay} from './chat-play.js';
@@ -37,11 +37,11 @@ else{
  function add(message,countReceived=true){if(countReceived&&!message.deleteMessageId&&!message.clearAll&&!message.clearUsername)received++;
   if(message.deleteMessageId){chatPlay?.removeMessage(message.deleteMessageId);const row=rows.find(x=>x.dataset.messageId===message.deleteMessageId);removeChatMessage(root,row);rows=rows.filter(x=>x!==row);return}
   if(message.clearAll||message.clearUsername){chatPlay?.clearMessages();for(const row of rows)if(message.clearAll||row.dataset.username?.toLowerCase()===message.clearUsername.toLowerCase())removeChatMessage(root,row);rows=rows.filter(x=>!message.clearAll&&x.dataset.username?.toLowerCase()!==message.clearUsername.toLowerCase());return}
-  const commandEligible=!isFiltered(message,{...s,hideCommands:false});if(commandEligible)chatPlay?.handleMessage(message);
-  if(isFiltered(message,s)){filtered++;return}
+  const commandEligible=countReceived&&!isFiltered(message,{...s,hideCommands:false});if(commandEligible)chatPlay?.handleMessage(message);
+  if(countReceived&&isFiltered(message,s)){filtered++;return}
   chatPlay?.registerMessage(message);const row=communityChat.add(root,message);row.dataset.messageId=message.id||'';row.dataset.username=message.username||'';rows.push(row);queueFit();while(rows.length>s.maxMessages){const old=rows.shift();removeChatMessage(root,old)}queueFit();if(s.messageLifetime>0)setTimeout(()=>{row.classList.add('expired');setTimeout(()=>{removeChatMessage(root,row);chatPlay?.removeMessage(message.id);rows=rows.filter(x=>x!==row);queueFit()},(s.reduceMotion||s.animationOut==='none')?0:s.animationOutDuration)},s.messageLifetime*1000)
  }
- if(testMode){for(const message of overlayTestMessages)add(message,false)}else if(s.channel)connectChat(s.channel,add,undefined,{onRoomState:room=>{communityChat.onRoomState(room);chatPlay?.setRoomId(room.roomId)}});
- if(testMode&&chatPlay&&!requestedSkin){chatPlay.simulate('!skin guild','everyone','Moss');setTimeout(()=>{chatPlay.resume();chatPlay.testEffect('rain',{username:'Moss',text:'Kappa',emotes:{'25':[[0,4]]}})},700)}
+ if(testMode){for(const message of buildOverlayTestModel(s))add(message,false)}else if(s.channel)connectChat(s.channel,add,undefined,{onRoomState:room=>{communityChat.onRoomState(room);chatPlay?.setRoomId(room.roomId)}});
+ if(testMode&&chatPlay){chatPlay.simulate('!skin guild','everyone','Moss');setTimeout(()=>{chatPlay.resume();chatPlay.testEffect('rain',{username:'Moss',text:'Kappa',emotes:{'25':[[0,4]]}})},700)}
  window.addEventListener('pagehide',()=>{communityChat.stop();chatPlay?.stop()});
 }
