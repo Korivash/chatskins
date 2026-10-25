@@ -184,6 +184,13 @@ body.overlay{margin:0;min-height:100vh;background:transparent;overflow:hidden}
 .chat[data-layout=initials] .chat-initial{float:left;width:var(--initial-size,40px);height:var(--initial-size,40px);display:grid;place-items:center;border-radius:50%;background:var(--chip-color,#A9CAFF);margin:0 12px 4px 0;font-weight:700}
 .channel-first-time{display:block;font-size:.82em;line-height:1.25;margin-bottom:2px}
 .channel-name{color:inherit}
+.skin-live-preview .expired{animation:preview-exit-fade var(--exit-duration,160ms) ease forwards}
+.skin-live-preview .expired[data-exit=shrink]{animation:preview-exit-shrink var(--exit-duration,160ms) ease forwards;transform-origin:center}
+.skin-live-preview .expired[data-exit=slide]{animation:preview-exit-slide var(--exit-duration,160ms) ease forwards}
+.skin-live-preview .expired[data-exit=none]{animation:none}
+@keyframes preview-exit-fade{to{opacity:0}}
+@keyframes preview-exit-shrink{to{opacity:0;transform:scale(.85)}}
+@keyframes preview-exit-slide{to{opacity:0;transform:translateY(16px)}}
 .channel-first-time{display:block;font-size:.82em;line-height:1.25;margin-bottom:2px}
 .channel-name{color:inherit}
 @keyframes fade{from{opacity:0}to{opacity:1}}
