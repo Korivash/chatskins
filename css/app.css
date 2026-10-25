@@ -32,3 +32,10 @@
 .expired{animation:exit-fade var(--exit-duration,160ms) ease forwards}.expired[data-exit=shrink]{animation:exit-shrink var(--exit-duration,160ms) ease forwards;transform-origin:center}.expired[data-exit=slide]{animation:exit-slide var(--exit-duration,160ms) ease forwards}.expired[data-exit=none]{animation:none}@keyframes exit-fade{to{opacity:0}}@keyframes exit-shrink{to{opacity:0;transform:scale(.85)}}@keyframes exit-slide{to{opacity:0;transform:translateY(16px)}}
 
 .overlay-root>.chat.chat-panel,.source .chat.chat-panel{max-height:calc(100% - 2 * var(--inset,20px) - 2 * (var(--outer-offset,0px) + var(--outer-width,0px)));overflow:visible}
+
+/* Contain framed panels and scale samples within their cards. */
+.overlay-root{position:fixed;inset:0;overflow:hidden}.overlay-root>.chat.chat-panel{height:calc(100% - 2 * var(--inset,20px));max-height:none;overflow:visible}.source .chat.chat-panel{height:calc(720px - 2 * var(--inset,20px));max-height:none;overflow:visible;box-sizing:border-box}.skin-card{min-width:0}.skin-sample.chat{position:relative;transform-origin:top left;transform:scale(.58);width:172%;height:42px;min-height:42px;overflow:visible}.skin-sample.chat .message{max-width:290px;overflow:hidden!important;text-overflow:ellipsis!important;white-space:nowrap!important}
+.chat[data-transparent=true]{background:transparent!important}.chat[data-transparent=true]>.chat-surface,.chat-message[data-transparent=true]>.chat-surface{display:none}
+.chat[data-hide-frames=true]::before,.chat[data-hide-frames=true]::after,.chat-message[data-hide-frames=true]::before,.chat-message[data-hide-frames=true]::after{display:none!important}
+
+.skin-sample[data-transparent-sample=true]{background-color:#344254;background-image:linear-gradient(45deg,#526174 25%,transparent 25%),linear-gradient(-45deg,#526174 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#526174 75%),linear-gradient(-45deg,transparent 75%,#526174 75%);background-size:12px 12px;background-position:0 0,0 6px,6px -6px,-6px 0}.skin-sample.chat{width:172%;transform:scale(.58)}.toolbar #transparent-toggle{white-space:nowrap}
