@@ -115,7 +115,7 @@ These cover settings encode/decode and defaults, emote parsing, filters, and the
 ChatSkins was built with **OpenAI Codex**:
 - A design agent wrote the design spec, skin recipes and settings schema, plus a static mockup (`design/`).
 - A build agent built the app from that design.
-- Each round's prompts are in this repo: `DESIGN-PROMPT*.md` and `PROMPT*.md`.
+- Each round's prompts are in this repo: `codex/prompts/` (`BRIEF.md`, `DESIGN-PROMPT*.md` for Astra, `PROMPT*.md` for Luna).
 - **Every Codex session ID** is logged in [docs/CODEX-SESSIONS.md](docs/CODEX-SESSIONS.md), along with why we use several agents (Astra designs, Luna builds) and one session per task.
 - We reviewed, tested each round in a real browser and on live Twitch chat, and fed the bugs we found into the next round.
 

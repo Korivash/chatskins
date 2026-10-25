@@ -19,6 +19,19 @@ Build everything in the round 5 design:
    - "reset section"
 5. **Fix:** js/editor.js shows `Ã‚Â· Modified` (double-encoded UTF-8) again. Make it `· Modified`, and check every file for `Ã`/`Â` garbage. Save all files as UTF-8 without BOM.
 
+6. **The "Fake chat" button must really run a fake chat** (owner request). Right now it only shows a few static lines. Make it a toggle:
+   - **When on:** the editor preview gets a live stream of simulated messages, one every 0.5-2 s at a random pace with occasional bursts. Vary the content:
+     - names and colors
+     - broadcaster/mod/VIP/sub badges
+     - Twitch emotes and 7TV-style emote words
+     - short and long lines, a mention of the channel, an emote-only message
+     - a first-time chatter
+     - a deleted message (shows the removal animation)
+   - **Pause button:** the user can stop it.
+   - **Stays in the editor:** fake chat is preview-only. It's never written into the overlay URL, never shown in overlay.html, and never sent anywhere. We only ever READ Twitch chat; nothing is ever posted to Twitch.
+   - **"Live channel" mode:** shows only real chat (fake messages stop).
+   - **Test:** the encoded overlay URL settings contain no fake-chat flag.
+
 Keep these working (the lead tests them with Playwright):
 - `window.__chatskinsFitOk()`, `__chatskinsFrameOk()` and `__chatskinsStats()`
 - Connect with Twitch
