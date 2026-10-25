@@ -1,0 +1,4 @@
+import {decodeSettings} from './settings.js';import {applyChatStyle,createMessage} from './render.js';import {isFiltered} from './filters.js';import {connectChat} from './chat.js';
+const s=decodeSettings(location.hash),root=document.querySelector('#chat'),host=document.querySelector('#overlay-root');applyChatStyle(root,s);host.style.setProperty('--inset',`${s.edgeInset}px`);host.style.setProperty('--width',`${s.overlayWidth}px`);host.dataset.direction=s.direction;host.dataset.alignment=s.alignment;
+let rows=[];function add(m){if(isFiltered(m,s))return;const row=createMessage(m,s);row.dataset.enter=s.animationIn;row.style.setProperty('--duration',`${s.animationDuration}ms`);root.append(row);rows.push(row);while(rows.length>s.maxMessages)rows.shift().remove();if(s.messageLifetime>0)setTimeout(()=>{row.classList.add('expired');setTimeout(()=>{row.remove();rows=rows.filter(x=>x!==row);},160);},s.messageLifetime*1000);}
+if(s.channel)connectChat(s.channel,add);

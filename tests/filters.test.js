@@ -1,0 +1,3 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {isFiltered} from '../js/filters.js';const settings={hideCommands:true,hideBots:true,botNames:['nightbot'],hideLinks:true};
+test('hides commands, listed bots and links',()=>{assert.equal(isFiltered({text:'  !hello',username:'person'},settings),true);assert.equal(isFiltered({text:'hello',username:'NightBot'},settings),true);assert.equal(isFiltered({text:'visit https://example.com',username:'person'},settings),true);});
+test('keeps ordinary messages and ignores URL-like substrings without prefixes',()=>{assert.equal(isFiltered({text:'hello example.com',username:'person'},settings),false);});

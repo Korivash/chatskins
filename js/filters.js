@@ -1,0 +1,1 @@
+export function isFiltered(message,settings){const text=String(message.text||"");if(settings.hideCommands&&/^\s*!/.test(text))return true;if(settings.hideBots&&(settings.botNames||[]).some(n=>String(n).toLowerCase()===String(message.username||"").toLowerCase()))return true;if(settings.hideLinks&&/(https?:\/\/|www\.)/i.test(text))return true;return false;}
