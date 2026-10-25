@@ -10,5 +10,6 @@ export function layoutPanel(host, panel, settings) {
   panel.style.setProperty('--inset', `${settings.edgeInset}px`);
   panel.style.setProperty('--width', `${settings.overlayWidth}px`);
   panel.style.setProperty('--panel-max-height', `${available}px`);
+  panel.style.maxHeight = `${available}px`;
   return available;
 }
