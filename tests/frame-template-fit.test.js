@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {buildOverlayTestModel} from '../js/overlay-test-messages.js';
 import {fitPanelMessages} from '../js/message-fit.js';
+import {frameWindowForLayout} from '../js/frame-templates.js';
 
 const skins=JSON.parse(fs.readFileSync('design/skins.json','utf8')).skins;
 const skin=skins.find(item=>item.id==='frame-mothlight');
@@ -9,6 +10,21 @@ assert.ok(skin);
 assert.equal(skin.settings.parts.messageText.fontSize,16);
 const sample=buildOverlayTestModel(skin.settings);
 assert.ok(sample.length>=6);
+// Reproduce the browser's bad first measurement (content-dependent) followed by
+// the final layout measurement. The frame inset must use layoutPanel's assigned
+// dimensions and must never consult either bounding-box value.
+const entry={w:760,h:1140},inner={x:.12,y:.10,w:.76,h:.80};
+let boxReads=0;
+const fakeRoot={getBoundingClientRect(){boxReads++;return boxReads===1?{width:90,height:90}:{width:442,height:662}}};
+const transient=fakeRoot.getBoundingClientRect();
+assert.deepEqual(transient,{width:90,height:90});
+const assigned=frameWindowForLayout(442,662,entry,inner);
+assert.ok(assigned.width>280&&assigned.height>450,'window comes from final assigned panel geometry');
+const finalBox=fakeRoot.getBoundingClientRect();
+assert.deepEqual(finalBox,{width:442,height:662});
+const afterFinal=frameWindowForLayout(442,662,entry,inner);
+assert.equal(boxReads,2,'the simulated wrong and corrected DOM measurements both occurred');
+assert.deepEqual(afterFinal,assigned,'the first bad measurement cannot poison the frame inset');
 const rows=sample.map(message=>{
   const lineCount=Math.max(1,Math.ceil(message.text.length/38));
   const height=Math.max(38,lineCount*19.2+8);
