@@ -26,6 +26,8 @@ export async function decodeUnifiedOverlayFragment(hash,catalog=[],design){
  return play&&alerts&&token?{play,alerts,token}:null;
 }
 
+export function guidedCommandStatus({enabled=true,channel='',allowedSkinCount=1,error=false}={}){return !enabled?'Off':error?'Problem':!String(channel||'').trim()?'Needs your channel':allowedSkinCount?'Ready':'Choose looks'};
+
 export function guidedFeatureStatus({enabled,configured=true,problem=false}={}){
  return !enabled?'Off':problem?'Problem':configured?'Ready':'Needs Twitch login';
 }

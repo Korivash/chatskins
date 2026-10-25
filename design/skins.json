@@ -30985,7 +30985,18 @@
           "rules": []
         }
       },
-      "silhouette": "frame-cozy-cafe"
+      "silhouette": "frame-cozy-cafe",
+      "titleStyle": {
+        "fontFamily": "Pacifico",
+        "color": "#fff3dc",
+        "gradient": "linear-gradient(90deg,#fff3dc,#f7e8c9)",
+        "effect": "chalk",
+        "subtitleFontFamily": "Pacifico",
+        "subtitleColor": "#fff3dc",
+        "shadow": "0 2px 4px #000a",
+        "stroke": "0 transparent",
+        "tilt": 0
+      }
     },
     {
       "id": "frame-demon-throne",
@@ -31545,7 +31556,18 @@
           "rules": []
         }
       },
-      "silhouette": "frame-demon-throne"
+      "silhouette": "frame-demon-throne",
+      "titleStyle": {
+        "fontFamily": "Pirata One",
+        "color": "#fff0e8",
+        "gradient": "linear-gradient(90deg,#fff0e8,#ffe0d2)",
+        "effect": "ember",
+        "subtitleFontFamily": "Pirata One",
+        "subtitleColor": "#fff0e8",
+        "shadow": "0 2px 4px #000a",
+        "stroke": "0 transparent",
+        "tilt": 0
+      }
     },
     {
       "id": "frame-haunted-manor",
@@ -32105,7 +32127,18 @@
           "rules": []
         }
       },
-      "silhouette": "frame-haunted-manor"
+      "silhouette": "frame-haunted-manor",
+      "titleStyle": {
+        "fontFamily": "Creepster",
+        "color": "#eee4ff",
+        "gradient": "linear-gradient(90deg,#fff5ff,#e6dcff)",
+        "effect": "ghost",
+        "subtitleFontFamily": "Creepster",
+        "subtitleColor": "#eee4ff",
+        "shadow": "0 2px 4px #000a",
+        "stroke": "0 transparent",
+        "tilt": 0
+      }
     },
     {
       "id": "frame-lava-forge",
@@ -32665,7 +32698,18 @@
           "rules": []
         }
       },
-      "silhouette": "frame-lava-forge"
+      "silhouette": "frame-lava-forge",
+      "titleStyle": {
+        "fontFamily": "Metal Mania",
+        "color": "#fff3dc",
+        "gradient": "linear-gradient(90deg,#fff2c2,#ffd88e)",
+        "effect": "ember",
+        "subtitleFontFamily": "Metal Mania",
+        "subtitleColor": "#fff3dc",
+        "shadow": "0 2px 4px #000a",
+        "stroke": "0 transparent",
+        "tilt": 0
+      }
     },
     {
       "id": "frame-mothlight",
@@ -33225,7 +33269,18 @@
           "rules": []
         }
       },
-      "silhouette": "frame-mothlight"
+      "silhouette": "frame-mothlight",
+      "titleStyle": {
+        "fontFamily": "Cinzel Decorative",
+        "color": "#2b1d00",
+        "gradient": "linear-gradient(90deg,#2b1d00,#302000)",
+        "effect": "emboss",
+        "subtitleFontFamily": "Cinzel Decorative",
+        "subtitleColor": "#2b1d00",
+        "shadow": "0 1px 0 #fff8,0 2px 3px #130b00",
+        "stroke": "0 transparent",
+        "tilt": 0
+      }
     },
     {
       "id": "frame-royal-court",
@@ -33785,7 +33840,18 @@
           "rules": []
         }
       },
-      "silhouette": "frame-royal-court"
+      "silhouette": "frame-royal-court",
+      "titleStyle": {
+        "fontFamily": "Cinzel Decorative",
+        "color": "#2b1d00",
+        "gradient": "linear-gradient(90deg,#2b1d00,#332300)",
+        "effect": "metallic",
+        "subtitleFontFamily": "Cinzel Decorative",
+        "subtitleColor": "#2b1d00",
+        "shadow": "0 2px 4px #000a",
+        "stroke": "0 transparent",
+        "tilt": 0
+      }
     },
     {
       "id": "frame-solar-oracle",
@@ -34345,7 +34411,18 @@
           "rules": []
         }
       },
-      "silhouette": "frame-solar-oracle"
+      "silhouette": "frame-solar-oracle",
+      "titleStyle": {
+        "fontFamily": "Marcellus SC",
+        "color": "#100905",
+        "gradient": "linear-gradient(90deg,#100905,#3b2a12)",
+        "effect": "glow",
+        "subtitleFontFamily": "Marcellus SC",
+        "subtitleColor": "#100905",
+        "shadow": "0 0 7px #ffd77a",
+        "stroke": "0 transparent",
+        "tilt": 0
+      }
     },
     {
       "id": "frame-star-oracle",
@@ -34905,7 +34982,18 @@
           "rules": []
         }
       },
-      "silhouette": "frame-star-oracle"
+      "silhouette": "frame-star-oracle",
+      "titleStyle": {
+        "fontFamily": "Cinzel",
+        "color": "#fffef8",
+        "gradient": "linear-gradient(90deg,#fffef8,#fff8dc)",
+        "effect": "glow",
+        "subtitleFontFamily": "Cinzel",
+        "subtitleColor": "#f7e6a1",
+        "shadow": "0 0 7px #ffd77a",
+        "stroke": "0 transparent",
+        "tilt": 0
+      }
     },
     {
       "id": "frame-sticker-bomb",
@@ -35465,7 +35553,18 @@
           "rules": []
         }
       },
-      "silhouette": "frame-sticker-bomb"
+      "silhouette": "frame-sticker-bomb",
+      "titleStyle": {
+        "fontFamily": "Bangers",
+        "color": "#100905",
+        "gradient": "none",
+        "effect": "outline",
+        "subtitleFontFamily": "Bangers",
+        "subtitleColor": "#100905",
+        "shadow": "2px 2px 0 #fff, -2px -2px 0 #fff, 0 2px 3px #000",
+        "stroke": "1px #fff",
+        "tilt": -2
+      }
     },
     {
       "id": "frame-sugar-static",
@@ -36025,7 +36124,18 @@
           "rules": []
         }
       },
-      "silhouette": "frame-sugar-static"
+      "silhouette": "frame-sugar-static",
+      "titleStyle": {
+        "fontFamily": "Bungee",
+        "color": "#16091f",
+        "gradient": "linear-gradient(90deg,#16091f,#251236)",
+        "effect": "glossy",
+        "subtitleFontFamily": "Bungee",
+        "subtitleColor": "#16091f",
+        "shadow": "0 2px 4px #000a",
+        "stroke": "0 transparent",
+        "tilt": 0
+      }
     },
     {
       "id": "frame-neon-kawaii-goth",
@@ -36587,7 +36697,18 @@
           "rules": []
         }
       },
-      "silhouette": "frame-neon-kawaii-goth"
+      "silhouette": "frame-neon-kawaii-goth",
+      "titleStyle": {
+        "fontFamily": "Permanent Marker",
+        "color": "#f9e9ff",
+        "gradient": "linear-gradient(90deg,#ffd4ff,#f9e9ff)",
+        "effect": "neon",
+        "subtitleFontFamily": "Permanent Marker",
+        "subtitleColor": "#f9e9ff",
+        "shadow": "0 0 4px #ff4acb,0 0 9px #31d9ff",
+        "stroke": "0 transparent",
+        "tilt": 0
+      }
     },
     {
       "id": "frame-neon-kawaii-goth-minimal",
@@ -37149,7 +37270,18 @@
           "rules": []
         }
       },
-      "silhouette": "frame-neon-kawaii-goth-minimal"
+      "silhouette": "frame-neon-kawaii-goth-minimal",
+      "titleStyle": {
+        "fontFamily": "Permanent Marker",
+        "color": "#f9e9ff",
+        "gradient": "linear-gradient(90deg,#ffd4ff,#f9e9ff)",
+        "effect": "neon",
+        "subtitleFontFamily": "Permanent Marker",
+        "subtitleColor": "#f9e9ff",
+        "shadow": "0 0 4px #ff4acb,0 0 9px #31d9ff",
+        "stroke": "0 transparent",
+        "tilt": 0
+      }
     },
     {
       "id": "frame-bunny-princess",
@@ -37711,7 +37843,18 @@
           "rules": []
         }
       },
-      "silhouette": "frame-bunny-princess"
+      "silhouette": "frame-bunny-princess",
+      "titleStyle": {
+        "fontFamily": "Fredoka",
+        "color": "#5c1638",
+        "gradient": "linear-gradient(90deg,#5c1638,#781944)",
+        "effect": "outline",
+        "subtitleFontFamily": "Fredoka",
+        "subtitleColor": "#5c1638",
+        "shadow": "2px 2px 0 #fff, -2px -2px 0 #fff, 0 2px 3px #000",
+        "stroke": "1px #fff",
+        "tilt": 0
+      }
     },
     {
       "id": "frame-crowned-kittens",
@@ -38273,7 +38416,18 @@
           "rules": []
         }
       },
-      "silhouette": "frame-crowned-kittens"
+      "silhouette": "frame-crowned-kittens",
+      "titleStyle": {
+        "fontFamily": "Fredoka",
+        "color": "#5c1638",
+        "gradient": "linear-gradient(90deg,#5c1638,#781944)",
+        "effect": "outline",
+        "subtitleFontFamily": "Fredoka",
+        "subtitleColor": "#5c1638",
+        "shadow": "2px 2px 0 #fff, -2px -2px 0 #fff, 0 2px 3px #000",
+        "stroke": "1px #fff",
+        "tilt": 0
+      }
     },
     {
       "id": "frame-sword-and-shield",
@@ -38835,7 +38989,18 @@
           "rules": []
         }
       },
-      "silhouette": "frame-sword-and-shield"
+      "silhouette": "frame-sword-and-shield",
+      "titleStyle": {
+        "fontFamily": "Cinzel",
+        "color": "#f2e5c6",
+        "gradient": "linear-gradient(90deg,#fff3d2,#b8c8df)",
+        "effect": "metallic",
+        "subtitleFontFamily": "Cinzel",
+        "subtitleColor": "#f2e5c6",
+        "shadow": "0 2px 4px #000a",
+        "stroke": "0 transparent",
+        "tilt": 0
+      }
     },
     {
       "id": "frame-tactical-gunmetal",
@@ -39397,7 +39562,18 @@
           "rules": []
         }
       },
-      "silhouette": "frame-tactical-gunmetal"
+      "silhouette": "frame-tactical-gunmetal",
+      "titleStyle": {
+        "fontFamily": "Black Ops One",
+        "color": "#fff0d6",
+        "gradient": "linear-gradient(90deg,#fff0d6,#ff9b49)",
+        "effect": "stencil",
+        "subtitleFontFamily": "Black Ops One",
+        "subtitleColor": "#fff0d6",
+        "shadow": "0 2px 4px #000a",
+        "stroke": "0 transparent",
+        "tilt": 0
+      }
     },
     {
       "id": "frame-crescent-moon",
@@ -39957,7 +40133,19 @@
           "rules": []
         }
       },
-      "silhouette": "frame-crescent-moon"
+      "silhouette": "frame-crescent-moon",
+      "titleStyle": {
+        "fontFamily": "Cormorant Garamond",
+        "color": "#100905",
+        "gradient": "none",
+        "effect": "glow",
+        "subtitleFontFamily": "Cormorant Garamond",
+        "subtitleColor": "#100905",
+        "shadow": "0 0 7px #ffd77a",
+        "stroke": "1px #100905",
+        "tilt": 0,
+        "followFrameColor": true
+      }
     },
     {
       "id": "frame-neon-hex",
@@ -40517,7 +40705,18 @@
           "rules": []
         }
       },
-      "silhouette": "frame-neon-hex"
+      "silhouette": "frame-neon-hex",
+      "titleStyle": {
+        "fontFamily": "Rubik Glitch",
+        "color": "#fffaff",
+        "gradient": "linear-gradient(90deg,#fffaff,#f6edff)",
+        "effect": "neon",
+        "subtitleFontFamily": "Rubik Glitch",
+        "subtitleColor": "#f5d4ff",
+        "shadow": "0 0 4px #ff4acb,0 0 9px #31d9ff",
+        "stroke": "0 transparent",
+        "tilt": 0
+      }
     },
     {
       "id": "illustrated-neon-kawaii-goth",

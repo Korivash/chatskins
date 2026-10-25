@@ -22,7 +22,7 @@ export function initOptionsMenu({document:doc=globalThis.document,storage=global
     tabs.forEach((tab,i)=>{const active=i===index;tab.setAttribute('aria-selected',String(active));tab.tabIndex=active?0:-1;panels[i].hidden=!active});
     try{storage?.setItem('chat-studio.options-menu.v1',OPTION_TABS[index])}catch{}
     onChange(OPTION_TABS[index]);
-    if(focusTab)tabs[index].focus();
+    if(focusTab)tabs[index].focus();tabs[index].scrollIntoView?.({block:'nearest',inline:'nearest'});
     if(focusPanel&&!restore)panels[index].querySelector('h2')?.focus?.({preventScroll:true});
   };
   tabs.forEach((tab,index)=>{

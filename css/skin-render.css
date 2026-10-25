@@ -423,5 +423,18 @@ body.overlay{margin:0;min-height:100vh;background:transparent;overflow:hidden}
 .chat.has-frame-template{justify-content:flex-end}
 
 .template-plaque[data-ink-mode=dark]{text-shadow:0 1px 2px #fff8,0 0 4px #fff6}
+:root{--plaque-title-color:#F2F0EE;--plaque-title-shadow:0 1px 3px #000b;--plaque-title-gradient:none;--plaque-title-stroke:0 transparent}
+.chat.has-frame-template .template-plaque{color:var(--plaque-title-color,var(--plaque-ink,#F2F0EE));text-shadow:var(--plaque-title-shadow,0 1px 3px #000b)}
+.chat.has-frame-template .template-plaque-title,.chat.has-frame-template .template-plaque-subtitle{color:var(--plaque-title-color,var(--plaque-ink,#F2F0EE));-webkit-text-stroke:var(--plaque-title-stroke,0 transparent);text-shadow:var(--plaque-title-shadow,0 1px 3px #000b)}
+.chat.has-frame-template .template-plaque[data-title-gradient=true] .template-plaque-title,.chat.has-frame-template .template-plaque[data-title-gradient=true] .template-plaque-subtitle{background-image:var(--plaque-title-gradient);background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.chat.has-frame-template .template-plaque[data-title-effect=emboss] .template-plaque-title{text-shadow:0 1px 0 #fff8,0 2px 3px #130b00}
+.chat.has-frame-template .template-plaque[data-title-effect=metallic] .template-plaque-title{text-shadow:0 1px 0 #fff9,0 2px 2px #201408}
+.chat.has-frame-template .template-plaque[data-title-effect=glow] .template-plaque-title{text-shadow:0 0 3px currentColor,0 0 8px var(--template-glow-color,#ffd77a)}
+.chat.has-frame-template .template-plaque[data-title-effect=ember] .template-plaque-title{text-shadow:0 0 4px #ff7a22,0 0 9px #8d1d14}
+.chat.has-frame-template .template-plaque[data-title-effect=ghost] .template-plaque-title{text-shadow:0 0 4px #eee4ff,0 0 10px #a78bfa}
+.chat.has-frame-template .template-plaque[data-title-effect=chalk] .template-plaque-title{text-shadow:0 1px 2px #24180d,0 0 2px #fff7}
+.chat.has-frame-template .template-plaque[data-title-effect=neon] .template-plaque-title{text-shadow:0 0 4px #ff4acb,0 0 9px #31d9ff}
+.chat.has-frame-template .template-plaque[data-title-effect=stencil] .template-plaque-title{letter-spacing:.1em;text-shadow:1px 1px 0 #1b1b1b,-1px -1px 0 #1b1b1b}
+@media(prefers-reduced-motion:reduce){.chat.has-frame-template .template-plaque-title,.chat.has-frame-template .template-plaque-subtitle{animation:none!important;transition:none!important}}
 
 .chat.has-frame-template:not([data-template-message-borders="true"]) .message{border:0!important;outline:0!important;box-shadow:none!important}

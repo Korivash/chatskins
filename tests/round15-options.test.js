@@ -4,6 +4,7 @@ import {readFile} from 'node:fs/promises';
 import {CLEAN} from '../js/settings.js';
 import {CONTROL_MAP} from '../js/controls.js';
 import {OPTION_TABS,nextOptionTab,isDockVisible,hasFrameCard,frameBrandColorPatch} from '../js/options-menu.js';
+import {guidedCommandStatus} from '../js/guided-setup.js';
 
 const [html,editor,css,menu]=await Promise.all([
   readFile(new URL('../editor.html',import.meta.url),'utf8'),
@@ -35,6 +36,23 @@ test('six semantic tabs activate with arrows, Home and End',()=>{
   assert.match(menu,/tab\.addEventListener\('keydown'/);
   assert.match(menu,/activate\(next,\{focusPanel:false,focusTab:true\}\)/);
   assert.match(html,/role="tablist"/);
+  assert.match(css,/grid-template-rows:repeat\(2,minmax\(42px,auto\)\)/);
+  assert.match(menu,/scrollIntoView/);
+});
+
+test('viewer chat command status is neutral while the channel is missing',()=>{
+  assert.equal(guidedCommandStatus({enabled:true,channel:''}),'Needs your channel');
+  assert.equal(guidedCommandStatus({enabled:true,channel:'korivash',allowedSkinCount:2}),'Ready');
+  assert.equal(guidedCommandStatus({enabled:false,channel:''}),'Off');
+  assert.equal(guidedCommandStatus({enabled:true,channel:'korivash',error:true}),'Problem');
+  assert.match(css,/#guided-disable-reward-creation\{appearance:none/);
+  assert.match(html,/class="guided-disable-reward-row"/);
+});
+
+test('Style color value appears once and the editor preview centers the real stage panel',()=>{
+  assert.match(css,/#simple-accent-value\{display:none\}/);
+  assert.match(css,/\.options-editor \.source>#chat\.chat-panel\{position:absolute;left:50%;top:50%;bottom:auto;transform:translate\(-50%,-50%\)\}/);
+  assert.match(html,/id="simple-accent-hex"/);
 });
 
 test('the history and link dock is fixed and stays inside the viewport',()=>{

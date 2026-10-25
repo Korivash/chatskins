@@ -20,6 +20,20 @@
 @media(max-height:500px){.options-editor #stage{max-height:72px!important;aspect-ratio:16/5}.preview-secondary{display:none}.preview-heading{margin-bottom:2px}}
 @media(prefers-reduced-motion:reduce){.options-editor *, .options-editor *::before,.options-editor *::after{scroll-behavior:auto!important;transition:none!important;animation:none!important}}
 
+/* Round 15b fixes from the built-site review. */
+#simple-accent-value{display:none}
+#guided-disable-reward-creation{appearance:none;width:38px;height:22px;min-width:38px;min-height:22px;margin:0 8px 0 0;border:1px solid #60728e;border-radius:99px;background:#35445a;position:relative;vertical-align:middle;cursor:pointer}
+#guided-disable-reward-creation::before{content:"";position:absolute;left:3px;top:3px;width:14px;height:14px;border-radius:50%;background:#eff4fc;transition:transform .14s}
+#guided-disable-reward-creation:checked{background:#367cc8;border-color:#7eb9ff}
+#guided-disable-reward-creation:checked::before{transform:translateX(16px)}
+.guided-disable-reward-row{display:flex;flex-direction:row;align-items:center;gap:10px;min-height:44px}
+.status-chip[data-state=neutral]{background:#16243a;border-color:#526984;color:#c9dcf5}
+.status-chip[data-state=ready]{background:#102d28;border-color:#3b806d;color:#a7ead4}
+.status-chip[data-state=problem]{background:#3a2027;border-color:#995a66;color:#ffd4da}
+.options-editor .source{position:relative}
+.options-editor .source>#chat.chat-panel{position:absolute;left:50%;top:50%;bottom:auto;transform:translate(-50%,-50%)}
+@media(max-width:1059px){.options-tabs{height:auto!important;min-height:94px;grid-template-columns:repeat(3,minmax(0,1fr))!important;grid-template-rows:repeat(2,minmax(42px,auto));grid-auto-flow:row;overflow:visible!important;scrollbar-width:none}.options-tabs [role=tab]{width:100%;min-width:0!important;flex:none;padding-inline:5px}.options-tabs [role=tab]:nth-child(n+4){display:flex}}
+
 /* Round 15 gallery: two substantial, readable character cards. */
 .options-gallery .gallery{display:grid;grid-template-columns:repeat(2,minmax(140px,1fr));gap:10px;min-width:0}
 .options-gallery .skin-group{display:contents}
