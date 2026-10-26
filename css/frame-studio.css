@@ -28,4 +28,6 @@
 .studio-workbench{grid-template-columns:minmax(235px,300px) minmax(0,1fr)}
 .studio-tools{position:sticky;top:1rem;z-index:9}
 
-#stage:has(.studio-board:not([hidden])) .studio-composition{visibility:hidden!important}
+#stage:has(.studio-board:not([hidden])) .studio-composition{visibility:visible!important}.studio-board[data-live-stage=true] .studio-part:not(.studio-chat-window) .studio-svg{visibility:hidden}.studio-board[data-live-stage=true] .studio-part:not(.studio-chat-window){filter:none}
+
+.studio-svg{position:absolute;inset:0;pointer-events:none}.studio-svg svg{display:block}.studio-svg[data-studio-border=vertical] svg{position:absolute;left:50%;top:50%;width:2000%;height:5%;transform:translate(-50%,-50%) rotate(90deg);transform-origin:center}
