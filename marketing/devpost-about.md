@@ -28,7 +28,7 @@ We also wanted it to be truly easy. A lot of streamers aren't technical. So the 
 | **Luna** (researcher) | `gpt-6-luna` + web search | Surveyed the most popular Twitch chat overlays before the big redesign |
 | **Claude** (lead agent) | Claude | Turns Korivash's feedback into prompts, tests every build in a real browser, measures what's wrong, commits and deploys |
 
-The loop was always the same: **design → build → test → measure → fix.** Every task is one prompt file in the repo (55 of them), and every Codex session ID is logged next to its prompt and its commit. Over **31 Codex sessions and 120+ commits**, Luna wrote **36 test files**. After each round the lead rendered every skin through the real OBS overlay in headless Chromium and checked the screenshots by eye.
+The loop was always the same: **design → build → test → measure → fix.** Every task is one prompt file in the repo (117 of them), and every Codex session ID is logged next to its prompt and its commit. Over **40 Codex sessions and 264 commits**, Luna wrote **36 test files**. After each round the lead rendered every skin through the real OBS overlay in headless Chromium and checked the screenshots by eye.
 
 **The stack is deliberately simple:**
 - Plain HTML, CSS and JavaScript modules: no framework, no build step, no dependencies. It's a static site.
