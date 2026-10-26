@@ -137,6 +137,20 @@ export function keyboardMove(rect,key,{shift=false,step=.01}={}){const d=step*(s
   if(key==='ArrowDown')return{...rect,y:clamp(rect.y+d,0,1-rect.h)};
   return rect}
 
+/** Convert a screen-space pointer delta into normalized stage coordinates.
+ * @param {number} dx Horizontal pointer movement in screen pixels.
+ * @param {number} dy Vertical pointer movement in screen pixels.
+ * @param {number} width Stage width in its unscaled coordinate space.
+ * @param {number} height Stage height in its unscaled coordinate space.
+ * @param {number} previewScale CSS scale applied to the preview stage.
+ * @param {number} zoom Additional zoom applied to the preview content.
+ * @returns {{dx:number,dy:number}} Normalized movement for the placement model.
+ */
+export function pointerDeltaToNormalized(dx,dy,width,height,previewScale=1,zoom=1){
+  const scale=Math.max(.01,(Number(previewScale)||1)*(Number(zoom)||1));
+  return{dx:dx/(Math.max(1,width)*scale),dy:dy/(Math.max(1,height)*scale)}
+}
+
 /** create place mode.
  * @param {unknown} parameter1 Function input.
  * @param {unknown} layer Function input.
@@ -149,7 +163,7 @@ export function keyboardMove(rect,key,{shift=false,step=.01}={}){const d=step*(s
 export function createPlaceMode({stage,layer,getSettings,onStart,onUpdate,getZoom=()=>1}){
  const panelNode=layer.querySelector('#place-panel'),innerNode=layer.querySelector('#place-inner'),plaqueNode=layer.querySelector('#place-plaque'),tools=layer.querySelector('#place-tools'),guideV=layer.querySelector('#place-guide-v'),guideH=layer.querySelector('#place-guide-h'),toggle=document.querySelector('#place-toggle'),fit=document.querySelector('#place-fit');
   
- let enabled=false,root=null,host=null,entry=null,selection='panel',drag=null;
+ let enabled=false,root=null,host=null,entry=null,selection='panel',drag=null,previewScale=1;
   
  const buttons=(container,items)=>{container.replaceChildren();
     for(const [key,label]of items){const button=document.createElement('button');
@@ -206,7 +220,7 @@ export function createPlaceMode({stage,layer,getSettings,onStart,onUpdate,getZoo
     event.currentTarget?.setPointerCapture?.(event.pointerId);
     draw()}
  function move(event){if(!drag)return;
-    const bounds=stage.getBoundingClientRect(),zoom=Math.max(.01,Number(getZoom())||1),dx=(event.clientX-drag.x)/(bounds.width*zoom),dy=(event.clientY-drag.y)/(bounds.height*zoom),p=structuredClone(drag.placement);
+    const bounds=stage.getBoundingClientRect(),movement=pointerDeltaToNormalized(event.clientX-drag.x,event.clientY-drag.y,bounds.width,bounds.height,previewScale,getZoom()),dx=movement.dx,dy=movement.dy,p=structuredClone(drag.placement);
     let guides=[];
     
   if(drag.type==='panel'){const result=movePanelRect(drag.rect,dx,dy);
@@ -251,6 +265,6 @@ export function createPlaceMode({stage,layer,getSettings,onStart,onUpdate,getZoo
  plaqueNode.tabIndex=0;
   return{bind,draw,get enabled(){return enabled},setEnabled(value){enabled=!!value;
       toggle.setAttribute('aria-pressed',String(enabled));
-      draw()}};
+      draw()},setZoom(scale){previewScale=Math.max(.01,Number(scale)||1)}};
   
 }
