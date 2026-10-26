@@ -9,7 +9,7 @@ import {fileURLToPath} from 'node:url';
 import {spawn} from 'node:child_process';
 import {clientIp, originAllowed} from './describe.mjs';
 import {createAiUsageStore} from './ai-usage.mjs';
-import {measurePaintedFrame} from './dream-image.mjs';
+import {measurePaintedFrame,measurePaintedRgba,pngDimensions} from './dream-image.mjs';
 import {blankStudio, makeStudioKit, normalizeStudio, STUDIO_LIMIT} from '../js/frame-studio.js';
 
 const here=dirname(fileURLToPath(import.meta.url));
@@ -293,9 +293,10 @@ async function paintImage(saved,{fetchImpl,key,ip,time,privateDir,reserveImageQu
   if(!await reserveImageQuota(ip,time)){saved.imageStatus='unavailable';await writeFile(resolve(privateDir,`${saved.id}.json`),JSON.stringify(saved,null,2),'utf8');return}
   const cleaned=cleanImageDescription(saved.description),basePrompt=`Decorative frame for a live-stream chat overlay. ${cleaned}. A BLANK name plaque at the top center. The CENTER is completely EMPTY and transparent (at least 70% of width and height). Transparent background outside the frame. Rich, polished illustration. No text, no letters, no logos, no real people, no existing characters.`;
   let png=await generateImagePng(fetchImpl,key,imageModel,basePrompt);
-  let measured=measurePaintedFrame(png);
-  if(measured.centerTransparency<.95){const stronger=`${basePrompt} Make the entire central 40% × 40% box fully transparent with absolutely no texture, particles or decoration inside it. Put all decoration in a narrow outer border only.`;png=await generateImagePng(fetchImpl,key,imageModel,stronger);measured=measurePaintedFrame(png)}
+  let measured=await measureImageFrame(png,webpEncoder?.binary||process.env.DREAM_WEBP_ENCODER||'ffmpeg');
+  if(measured.centerTransparency<.95){const stronger=`${basePrompt} Make the entire central 40% × 40% box fully transparent with absolutely no texture, particles or decoration inside it. Put all decoration in a narrow outer border only.`;png=await generateImagePng(fetchImpl,key,imageModel,stronger);measured=await measureImageFrame(png,webpEncoder?.binary||process.env.DREAM_WEBP_ENCODER||'ffmpeg')}
   if(measured.centerTransparency<.95)throw Error('center transparency check failed');
+  if(measured.measureFallback)logger('dream measure fallback');
   const webp=await webpEncoder(png);if(!isWebp(webp)||webp.length>400*1024)throw Error('WebP conversion exceeded storage limit');
   const file=`${saved.id}.webp`;await writeFile(resolve(privateDir,file),webp);saved.imageStatus='ready';saved.paintFile=file;saved.frame={width:measured.width,height:measured.height,shape:'tall',inner:measured.inner,plaque:measured.plaque};await writeFile(resolve(privateDir,`${saved.id}.json`),JSON.stringify(saved,null,2),'utf8');
  }catch{saved.imageStatus='unavailable';try{await writeFile(resolve(privateDir,`${saved.id}.json`),JSON.stringify(saved,null,2),'utf8')}catch{}logger('Dream painting unavailable.')}
@@ -317,6 +318,13 @@ export async function encodeWebpWithFfmpeg(png,{binary=process.env.DREAM_WEBP_EN
  throw last||new Error('WebP conversion failed');
 }
 function runEncoder(binary,args,input){return new Promise((resolvePromise,reject)=>{const child=spawn(binary,args,{stdio:['pipe','pipe','ignore']});const chunks=[];child.stdout.on('data',chunk=>chunks.push(chunk));child.once('error',reject);child.once('close',code=>code===0?resolvePromise(Buffer.concat(chunks)):reject(new Error('WebP encoder failed')));child.stdin.end(input)})}
+
+/** Retry frame measurement through ffmpeg before using a compact safe inset. */
+async function measureImageFrame(png,binary){
+ let primary=null;try{primary=measurePaintedFrame(png);if(!primary.measureFallback)return primary}catch{/* The ffmpeg decoder retries PNG variants the small parser cannot read. */}
+ try{const {width,height}=pngDimensions(png),rgba=await runEncoder(binary,['-hide_banner','-loglevel','error','-i','pipe:0','-frames:v','1','-f','rawvideo','-pix_fmt','rgba','pipe:1'],png);if(rgba.length!==width*height*4)throw new Error('Raw frame length mismatch');const retry=measurePaintedRgba(rgba,width,height);if(!retry.measureFallback)return retry;primary=retry}catch{/* A missing encoder should still yield a safe, usable fallback frame. */}
+ const {width=1024,height=1536}=primary||{};return{width,height,centerTransparency:primary?.centerTransparency??1,inner:{x:.15,y:.18,w:.70,h:.60},measureFallback:true,plaque:primary?.plaque||{none:true},shape:'tall'};
+}
 
 /** Review a pending submission without exposing its identifying network data. */
 export async function approveDream(id,{dataDir=defaultDataDir,skinsFile=resolve(here,'../design/skins.json'),reject=false}={}){

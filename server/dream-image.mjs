@@ -37,19 +37,39 @@ function removeSmallSpecks(mask,width,height){
  }
 }
 
-/** Maximal transparent axis-aligned rectangle containing the exact image center. */
-export function largestCenterEmptyRect(rgba,width,height,{alphaThreshold=40,margin=.015}={}){
+/** Maximal mostly-transparent rectangle containing the exact image center. */
+export function largestCenterEmptyRect(rgba,width,height,{alphaThreshold=24,margin=.015,opaqueTolerance=.015}={}){
  const mask=new Uint8Array(width*height);for(let i=0;i<mask.length;i++)mask[i]=rgba[i*4+3]>=alphaThreshold?1:0;removeSmallSpecks(mask,width,height);
  const heights=new Int32Array(width),cx=Math.floor(width/2),cy=Math.floor(height/2);let best={area:0,left:0,right:width-1,top:0,bottom:height-1};
  for(let y=0;y<height;y++){for(let x=0;x<width;x++)heights[x]=mask[y*width+x]?0:heights[x]+1;const stack=[];
-  for(let x=0;x<=width;x++){const current=x===width?0:heights[x];let start=x;while(stack.length&&stack.at(-1).height>current){const item=stack.pop(),left=item.start,right=x-1,top=y-heights[left]+1,bottom=y;if(left<=cx&&right>=cx&&top<=cy&&bottom>=cy){const area=(right-left+1)*(bottom-top+1);if(area>best.area)best={area,left,right,top,bottom}}start=item.start}if(!stack.length||stack.at(-1).height<current)stack.push({start,height:current})}
+  for(let x=0;x<=width;x++){
+   const current=x===width?0:heights[x];let start=x;
+   while(stack.length&&stack.at(-1).height>current){
+    const item=stack.pop(),left=item.start,right=x-1,top=y-item.height+1,bottom=y;
+    if(left<=cx&&right>=cx&&top<=cy&&bottom>=cy){const area=(right-left+1)*(bottom-top+1);if(area>best.area)best={area,left,right,top,bottom}}
+    start=item.start;
+   }
+   if(current>0&&(!stack.length||stack.at(-1).height<current))stack.push({start,height:current});
+  }
  }
- if(!best.area)return{x:.12,y:.12,w:.76,h:.76};
+ if(!best.area)return{rect:{x:.15,y:.18,w:.70,h:.60},fallback:true};
+ // Allow sparse alpha noise and thin decorative threads around the clear
+ // opening. This is equivalent to requiring at least 98.5% empty pixels.
+ const integral=new Uint32Array((width+1)*(height+1)),stride=width+1;
+ for(let y=1;y<=height;y++){let row=0;for(let x=1;x<=width;x++){row+=mask[(y-1)*width+x-1];integral[y*stride+x]=integral[(y-1)*stride+x]+row}}
+ const ink=(left,top,right,bottom)=>integral[(bottom+1)*stride+right+1]-integral[top*stride+right+1]-integral[(bottom+1)*stride+left]+integral[top*stride+left];
+ for(let pass=0;pass<width+height;pass++){
+  const options=[];for(const [side,rect] of [
+   ['left',{...best,left:Math.max(0,best.left-1)}],['right',{...best,right:Math.min(width-1,best.right+1)}],
+   ['top',{...best,top:Math.max(0,best.top-1)}],['bottom',{...best,bottom:Math.min(height-1,best.bottom+1)}]
+  ]){if(rect.left===best.left&&rect.right===best.right&&rect.top===best.top&&rect.bottom===best.bottom)continue;const area=(rect.right-rect.left+1)*(rect.bottom-rect.top+1),occupied=ink(rect.left,rect.top,rect.right,rect.bottom);if(occupied/area<=opaqueTolerance)options.push({side,rect,area})}
+  if(!options.length)break;options.sort((a,b)=>b.area-a.area);best=options[0].rect;
+ }
  const mx=Math.round(width*margin),my=Math.round(height*margin),left=Math.min(width-1,best.left+mx),right=Math.max(left,best.right-mx),top=Math.min(height-1,best.top+my),bottom=Math.max(top,best.bottom-my);
  let x=left/width,y=top/height,w=(right-left+1)/width,h=(bottom-top+1)/height;
- if(w<.4||h<.4)return{x:.12,y:.12,w:.76,h:.76};
+ if(w<.4||h<.4)return{rect:{x:.15,y:.18,w:.70,h:.60},fallback:true};
  if(w>.9){const shrink=(w-.9)/2;x+=shrink;w=.9}if(h>.9){const shrink=(h-.9)/2;y+=shrink;h=.9}
- return{x,y,w,h};
+ return{rect:{x,y,w,h},fallback:false};
 }
 
 /** Find a solid, centered plaque band near the top and record its sampled color. */
@@ -62,5 +82,11 @@ export function measureTopPlaque(rgba,width,height){
  if(!best)return{none:true};let rs=0,gs=0,bs=0,count=0,lums=[];for(let y=best.y;y<best.y+best.h;y++)for(let x=best.x;x<best.x+best.w;x++){const p=(y*width+x)*4;if(rgba[p+3]<200)continue;const r=rgba[p],g=rgba[p+1],b=rgba[p+2];rs+=r;gs+=g;bs+=b;count++;lums.push(.2126*r+.7152*g+.0722*b)}lums.sort((a,b)=>a-b);const fill=count?`#${[rs,gs,bs].map(v=>Math.round(v/count).toString(16).padStart(2,'0')).join('')}`:'#222222';return{x:best.x/width,y:best.y/height,w:best.w/width,h:best.h/height,none:false,painted:false,fill,tone:lums[Math.floor(lums.length/2)]>135?'light':'dark',medianLuminance:lums.length?lums[Math.floor(lums.length/2)]/255:.5};
 }
 
-/** Measure the reusable geometry stored beside a generated WebP. */
-export function measurePaintedFrame(png){const decoded=decodePngRgba(png);return{width:decoded.width,height:decoded.height,centerTransparency:centerTransparency(decoded.data,decoded.width,decoded.height),inner:largestCenterEmptyRect(decoded.data,decoded.width,decoded.height),plaque:measureTopPlaque(decoded.data,decoded.width,decoded.height),shape:'tall'};}
+/** Measure the reusable geometry directly from decoded RGBA pixels. */
+export function measurePaintedRgba(data,width,height){const measured=largestCenterEmptyRect(data,width,height);return{width,height,centerTransparency:centerTransparency(data,width,height),inner:measured.rect,measureFallback:measured.fallback,plaque:measureTopPlaque(data,width,height),shape:'tall'};}
+
+/** Measure generated PNG bytes without converting or resampling the source. */
+export function measurePaintedFrame(png){const decoded=decodePngRgba(png);return measurePaintedRgba(decoded.data,decoded.width,decoded.height);}
+
+/** Read dimensions from the PNG header for the optional ffmpeg retry path. */
+export function pngDimensions(buffer){const bytes=Buffer.from(buffer);if(bytes.length<24||bytes.subarray(0,8).toString('hex')!=='89504e470d0a1a0a'||bytes.toString('ascii',12,16)!=='IHDR')throw new Error('Invalid PNG header.');return{width:bytes.readUInt32BE(16),height:bytes.readUInt32BE(20)}}
