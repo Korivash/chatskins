@@ -37,12 +37,54 @@ test('tool calls receive a useful follow-up answer and never use generic fallbac
  const fx=await fixture(t,{fetchImpl});const response=await fx.handler({headers:{origin:'https://getchatskins.com'},body:message('Make my chat pink and bigger. How do I add it to OBS?')});
  const requests=calls.filter(call=>call.url.endsWith('/responses')).map(call=>JSON.parse(call.options.body)),request=requests[0];
  assert.equal(request.tool_choice,'auto');assert.equal(request.store,true);assert.ok(request.tools.length>=5);assert.ok(request.tools.every(tool=>tool.strict===true));
+ assert.equal(request.max_output_tokens,1500);
  assert.match(request.input[0].content[0].text,/When the user wants a change, call apply_style/);
- assert.equal(requests.length,2);assert.equal(requests[1].previous_response_id,'resp-tools');assert.equal(requests[1].tool_choice,'none');assert.equal(requests[1].input.length,4);assert.ok(requests[1].input.every(item=>item.type==='function_call_output'));
+ assert.equal(requests.length,2);assert.equal(requests[1].max_output_tokens,1500);assert.equal(requests[1].previous_response_id,'resp-tools');assert.equal(requests[1].tool_choice,'none');assert.equal(requests[1].input.length,4);assert.ok(requests[1].input.every(item=>item.type==='function_call_output'));
  assert.equal(response.status,200);assert.match(response.body.reply,/1\. Choose a skin.*3\. Add a Browser Source/s);assert.doesNotMatch(response.body.reply,/I can do that\. Here is the change/);
  assert.equal(response.body.actions[0].type,'apply_style');assert.equal(response.body.actions[0].settings.textColor,'#ABCDEF');assert.equal('unknown'in response.body.actions[0].settings,false);
  assert.deepEqual(response.body.actions.slice(1),[{type:'open_tab',tab:'getlink'},{type:'highlight',control:'Get my OBS link'},{type:'start_walkthrough',id:'obs-setup'}]);
  const usage=JSON.parse(await readFile(fx.usageFile,'utf8'));assert.equal(usage.days['2026-10-25'].tokens,42,'moderation and both Responses calls count toward the shared daily budget');
+});
+
+test('an incomplete first Assistant response is rejected without parsing partial text',async t=>{
+ const calls=[];
+ const fetchImpl=async(url,options)=>{
+  calls.push({url,options});
+  if(url.endsWith('/moderations'))return{ok:true,json:async()=>({results:[{flagged:false}],usage:{total_tokens:2}})};
+  return{ok:true,json:async()=>({status:'incomplete',incomplete_details:{reason:'max_output_tokens'},output_text:'partial answer',usage:{total_tokens:33}})};
+ };
+ const fx=await fixture(t,{fetchImpl});
+ const result=await fx.handler({headers:{origin:'https://getchatskins.com'},body:message()});
+ assert.equal(result.status,502);
+ assert.equal(result.body.error,'incomplete_reply');
+ assert.match(result.body.message,/did not finish/);
+ const request=JSON.parse(calls.find(call=>call.url.endsWith('/responses')).options.body);
+ assert.equal(request.max_output_tokens,1500);
+ const usage=JSON.parse(await readFile(fx.usageFile,'utf8'));
+ assert.equal(usage.days['2026-10-25'].tokens,35);
+});
+
+test('an incomplete Assistant tool follow-up is rejected and both calls count',async t=>{
+ const calls=[];
+ const firstOutput=[{type:'reasoning',id:'rs_tools',summary:[]},{type:'function_call',call_id:'tab-1',name:'open_tab',arguments:'{"tab":"getlink"}'}];
+ const fetchImpl=async(url,options)=>{
+  calls.push({url,options});
+  if(url.endsWith('/moderations'))return{ok:true,json:async()=>({results:[{flagged:false}],usage:{total_tokens:2}})};
+  const responseCount=calls.filter(call=>call.url.endsWith('/responses')).length;
+  if(responseCount===1)return{ok:true,json:async()=>({id:'resp-tools',output:firstOutput,usage:{total_tokens:10}})};
+  return{ok:true,json:async()=>({status:'incomplete',incomplete_details:{reason:'max_output_tokens'},output_text:'partial',usage:{total_tokens:20}})};
+ };
+ const fx=await fixture(t,{fetchImpl});
+ const result=await fx.handler({headers:{origin:'https://getchatskins.com'},body:message()});
+ assert.equal(result.status,502);
+ assert.equal(result.body.error,'incomplete_reply');
+ const requests=calls.filter(call=>call.url.endsWith('/responses')).map(call=>JSON.parse(call.options.body));
+ assert.equal(requests.length,2);
+ assert.equal(requests[0].max_output_tokens,1500);
+ assert.equal(requests[1].max_output_tokens,1500);
+ assert.equal(requests[1].previous_response_id,'resp-tools');
+ const usage=JSON.parse(await readFile(fx.usageFile,'utf8'));
+ assert.equal(usage.days['2026-10-25'].tokens,32);
 });
 test('moderation, origin, off-topic refusal and key secrecy are enforced',async t=>{
  const mock=fakeOpenAI({output:[{type:'message',content:[{type:'output_text',text:'Use the Docs to add a Browser Source.'}]}]});const {handler}=await fixture(t,{fetchImpl:mock.fetchImpl});

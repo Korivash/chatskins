@@ -24,8 +24,24 @@ test('schema validator drops unknown fields, clamps values and rejects an unknow
 
 test('API moderates input, uses strict catalog schema, returns only a validated result, and keeps the key private',async t=>{
  const f=await fixture(t);const log=[];const old=console.log;console.log=(...args)=>log.push(args.join(' '));try{const result=await request(f.handler);assert.equal(result.status,200);assert.deepEqual(result.body,{ok:true,...output});assert.equal(JSON.stringify(result.body).includes('secret-key-never-return'),false);assert.equal(log.join('\n').includes('secret-key-never-return'),false)}finally{console.log=old}
- assert.equal(f.calls.length,2);assert.equal(f.calls[0].url,'https://api.openai.com/v1/moderations');assert.equal(f.calls[1].url,'https://api.openai.com/v1/responses');assert.equal(f.calls[1].options.headers.authorization,'Bearer secret-key-never-return');const payload=JSON.parse(f.calls[1].options.body);assert.equal(payload.model,'gpt-5-mini');assert.equal(payload.max_output_tokens,700);assert.equal(payload.reasoning.effort,'low');assert.equal(payload.text.format.strict,true);assert.equal(payload.text.format.schema.additionalProperties,false);assert.deepEqual(payload.text.format.schema.properties.skinId.enum,['clean','spooky']);assert.match(payload.input[0].content[0].text,/Clean/);
+ assert.equal(f.calls.length,2);assert.equal(f.calls[0].url,'https://api.openai.com/v1/moderations');assert.equal(f.calls[1].url,'https://api.openai.com/v1/responses');assert.equal(f.calls[1].options.headers.authorization,'Bearer secret-key-never-return');const payload=JSON.parse(f.calls[1].options.body);assert.equal(payload.model,'gpt-5-mini');assert.equal(payload.max_output_tokens,2000);assert.equal(payload.reasoning.effort,'low');assert.equal(payload.text.format.strict,true);assert.equal(payload.text.format.schema.additionalProperties,false);assert.deepEqual(payload.text.format.schema.properties.skinId.enum,['clean','spooky']);assert.match(payload.input[0].content[0].text,/Clean/);
  const saved=JSON.parse(await fs.readFile(f.usageFile,'utf8'));assert.equal(saved.days['2026-10-25'].tokens,122);
+});
+
+test('an incomplete Describe response is rejected and its usage is counted',async t=>{
+ const calls=[];
+ const f=await fixture(t,{fetchOverride:async(url,options)=>{
+  calls.push({url,options});
+  if(url.endsWith('/moderations'))return{ok:true,json:async()=>({results:[{flagged:false}],usage:{total_tokens:2}})};
+  return{ok:true,json:async()=>({status:'incomplete',incomplete_details:{reason:'max_output_tokens'},output_text:'{"skinId":',usage:{total_tokens:99}})};
+ }});
+ const result=await request(f.handler);
+ assert.equal(result.status,502);
+ assert.equal(result.body.error,'incomplete_reply');
+ assert.match(result.body.message,/could not finish/);
+ assert.equal(JSON.parse(calls[1].options.body).max_output_tokens,2000);
+ const saved=JSON.parse(await fs.readFile(f.usageFile,'utf8'));
+ assert.equal(saved.days['2026-10-25'].tokens,101);
 });
 
 test('origin guard mirrors the request endpoint and rejects untrusted origins before OpenAI calls',async t=>{

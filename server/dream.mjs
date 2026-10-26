@@ -17,9 +17,14 @@ const dayMs=86400000, tokenReserve=7000;
 const fontFamilies=['DM Sans','Barlow','Nunito Sans','IBM Plex Mono','Chakra Petch','Atkinson Hyperlegible','Bree Serif','Lato','Cinzel Decorative','Fredoka','Black Ops One','Bungee'];
 const json=(status,body)=>({status,headers:{'content-type':'application/json; charset=utf-8','cache-control':'no-store'},body});
 const sha=value=>createHash('sha256').update(String(value)).digest('hex');
+const responseText=data=>typeof data?.output_text==='string'?data.output_text:data?.output?.find(item=>item.type==='message')?.content?.find(item=>item.type==='output_text')?.text||'';
+/** GPT-5 and GPT-6 support the lower minimal reasoning budget. */
+export function reasoningEffort(model){return /^gpt-(?:5|6)(?:-|$)/i.test(String(model))?'minimal':'low'}
 const color={type:'string',pattern:'^#[0-9A-Fa-f]{6}$'};
-const partSchema={type:'object',additionalProperties:false,required:['part','x','y','w','h','angle','flipX','flipY','colors'],properties:{part:{type:'integer',minimum:0,maximum:60},x:{type:'number',minimum:0,maximum:99},y:{type:'number',minimum:0,maximum:99},w:{type:'number',minimum:1,maximum:100},h:{type:'number',minimum:1,maximum:100},angle:{type:'integer',minimum:-180,maximum:180},flipX:{type:'boolean'},flipY:{type:'boolean'},colors:{type:'array',items:{type:'integer',minimum:0,maximum:31},minItems:3,maxItems:3}}};
-export const studioSchema={type:'object',additionalProperties:false,required:['version','catalog','board','name','motion','palette','instances'],properties:{version:{type:'integer',enum:[1]},catalog:{type:'integer',enum:[19]},board:{type:'array',items:{type:'integer'},minItems:2,maxItems:2},name:{type:'string',maxLength:40},motion:{type:'boolean'},palette:{type:'array',items:color,minItems:1,maxItems:32},instances:{type:'array',items:partSchema,minItems:1,maxItems:25}}};
+const compactPartSchema={type:'object',additionalProperties:false,required:['i','x','y','w','h','r','fx','fy','c'],properties:{i:{type:'integer',minimum:0,maximum:60},x:{type:'integer',minimum:0,maximum:1000},y:{type:'integer',minimum:0,maximum:1000},w:{type:'integer',minimum:1,maximum:1000},h:{type:'integer',minimum:1,maximum:1000},r:{type:'integer',minimum:-180,maximum:180},fx:{type:'boolean'},fy:{type:'boolean'},c:{type:'array',items:{type:'integer',minimum:0,maximum:31},minItems:3,maxItems:3}}};
+// Compact model-facing keys keep generated compositions within the output
+// budget. They are expanded into the editor's regular Studio model below.
+export const studioSchema={type:'object',additionalProperties:false,required:['v','cat','b','n','m','p','a'],properties:{v:{type:'integer',enum:[1]},cat:{type:'integer',enum:[19]},b:{type:'array',items:{type:'integer'},minItems:2,maxItems:2},n:{type:'string',maxLength:40},m:{type:'boolean'},p:{type:'array',items:color,minItems:1,maxItems:32},a:{type:'array',items:compactPartSchema,minItems:1,maxItems:25}}};
 
 /** Read the parts manifest, used to constrain generated art to shipped SVGs. */
 export async function readDreamParts(file=resolve(here,'../site-media/parts/parts.json')){
@@ -53,7 +58,7 @@ export function completeDreamDesign(design,{text='',parts=[]}={}){
 export function validateDreamReply(value,{partIds=[],name='',fontOptions=fontFamilies}={}){
  if(!value||typeof value!=='object'||typeof value.description!=='string'||!value.description.trim()||value.description.length>180||!Array.isArray(value.moodTags)||value.moodTags.length>6)return null;
  let design;
- try{design=normalizeStudio(value.design,{strict:true})}catch{return null}
+ try{design=normalizeStudio(expandCompactDesign(value.design),{strict:true})}catch{return null}
  if(design.instances.some(part=>!partIds.includes(part.part)))return null;
  if(!design.instances.some(part=>part.part===19))return null;
  const allowedSettings=new Set(['fontFamily','fontSize','fontWeight','textColor','nameColor','nameColorMode','backgroundColor','backgroundOpacity','backgroundScope','backgroundType','frameColor','glowColor','glowStrength','glowMode','middleBackground','middleColor','middleOpacity','middleImage','titleText','entranceAnimation','messageBorders','maxMessages','messageLifetime']);
@@ -82,11 +87,39 @@ export function validateDreamReply(value,{partIds=[],name='',fontOptions=fontFam
  return{design,settings,name:String(value.name||'My custom frame').trim().slice(0,40)||'My custom frame',description:value.description.trim().slice(0,180),moodTags:value.moodTags.map(tag=>String(tag).slice(0,24))};
 }
 
-/** Build the strict Responses schema using only supported Studio part IDs. */
-export function buildDreamSchema(partIds,fontOptions){
+/** Expand short permille transforms into the editor's percentage model. */
+export function expandCompactDesign(input){
+ if(input&&Object.hasOwn(input,'version'))return input;
+ if(!input||!Array.isArray(input.a))return input;
+ return{
+  version:input.v,
+  catalog:input.cat,
+  board:input.b,
+  name:input.n,
+  motion:input.m,
+  palette:input.p,
+  instances:input.a.map(part=>({
+   part:part.i,
+   x:part.x/10,
+   y:part.y/10,
+   w:part.w/10,
+   h:part.h/10,
+   angle:part.r,
+   flipX:part.fx,
+   flipY:part.fy,
+   colors:part.c
+  }))
+ };
+}
+
+/** Build the strict Responses schema with a caller-selected part-count cap. */
+export function buildDreamSchema(partIds,fontOptions,maxParts=16){
  const nullableColor={...color,type:['string','null']};
  const settings={fontFamily:{type:['string','null'],enum:[...fontOptions,null]},fontSize:{type:['number','null'],minimum:14,maximum:48},fontWeight:{type:['number','null'],minimum:300,maximum:900},textColor:nullableColor,nameColor:nullableColor,nameColorMode:{type:['string','null'],enum:['fixed','twitch','role',null]},backgroundColor:nullableColor,backgroundOpacity:{type:['number','null'],minimum:0,maximum:1},backgroundScope:{type:['string','null'],enum:['message','panel',null]},backgroundType:{type:['string','null'],enum:['none','color','image',null]},middleImage:{type:['string','null'],maxLength:1500},frameColor:nullableColor,glowColor:nullableColor,glowStrength:{type:['number','null'],minimum:0,maximum:1},glowMode:{type:['string','null'],enum:['off','pulse','shimmer',null]},middleBackground:{type:['string','null'],enum:['none','color','image',null]},middleColor:nullableColor,middleOpacity:{type:['number','null'],minimum:0,maximum:1},titleText:{type:['string','null'],maxLength:40},entranceAnimation:{type:['string','null'],enum:['none','fade','pop','slide',null]},messageBorders:{type:['boolean','null']},maxMessages:{type:['number','null'],minimum:1,maximum:30},messageLifetime:{type:['number','null'],minimum:0,maximum:300}};
- return{type:'object',additionalProperties:false,required:['design','settings','name','description','moodTags'],properties:{design:{...studioSchema,properties:{...studioSchema.properties,instances:{type:'array',minItems:1,maxItems:25,items:{...partSchema,properties:{...partSchema.properties,part:{type:'integer',enum:partIds}}}}}},settings:{type:'object',additionalProperties:false,required:Object.keys(settings),properties:settings},name:{type:'string',minLength:1,maxLength:40},description:{type:'string',minLength:1,maxLength:180},moodTags:{type:'array',maxItems:6,items:{type:'string',maxLength:24}}}};
+ const design=structuredClone(studioSchema);
+ design.properties.a.maxItems=Math.max(1,Math.min(25,maxParts));
+ design.properties.a.items.properties.i={type:'integer',enum:partIds};
+ return{type:'object',additionalProperties:false,required:['design','settings','name','description','moodTags'],properties:{design,settings:{type:'object',additionalProperties:false,required:Object.keys(settings),properties:settings},name:{type:'string',minLength:1,maxLength:40},description:{type:'string',minLength:1,maxLength:180},moodTags:{type:'array',maxItems:6,items:{type:'string',maxLength:24}}}};
 }
 
 /** Create /api/dream and /api/dream/submit handlers with injectable services. */
@@ -155,20 +188,40 @@ export function createDreamHandler({fetchImpl=globalThis.fetch,now=Date.now,orig
   try{const response=await fetchImpl('https://api.openai.com/v1/moderations',{method:'POST',headers:apiHeaders,body:JSON.stringify({model:'omni-moderation-latest',input:input.text})});if(!response.ok)throw Error();mod=await response.json()}catch{await finish(Number(mod?.usage?.total_tokens)||0);return json(503,{ok:false,error:'unavailable',message:'I could not check that idea. Try a different description.'})}
   if(mod?.results?.[0]?.flagged){await finish(Number(mod?.usage?.total_tokens)||0);return json(400,{ok:false,error:'moderation_refused',message:'Please describe a design without hateful, sexual or self-harm content.'})}
   const seed=makeStudioKit(/spooky|ghost|haunt/i.test(input.text)?'Spooky':'Cozy');seed.name=String(input.name||'').trim();
-  const prompt=`Create an original Frame Studio chat design from the user's style request. Use only listed part ids. Include exactly one chat-window part (id 19), a title plaque when suitable, and decorative parts that match the request. For ghost requests include a ghost sticker if available. Keep decorative parts around the chat window, never over its opening. Return complete settings with null for unchanged values. Parts: ${JSON.stringify(partList)}.`;
-  const schema=buildDreamSchema(partList.map(p=>p.id),fontFamilies);let response;
-  const requestBody={model,input:[{role:'system',content:[{type:'input_text',text:prompt}]},{role:'user',content:[{type:'input_text',text:JSON.stringify({request:input.text,name:input.name||'',seed})}]}],store:false,max_output_tokens:1200,reasoning:{effort:'low'},text:{format:{type:'json_schema',name:'chatskins_dream',strict:true,schema}}};
-  try{response=await fetchImpl('https://api.openai.com/v1/responses',{method:'POST',headers:apiHeaders,body:JSON.stringify(requestBody)})}catch{await finish(Number(mod?.usage?.total_tokens)||0);return json(503,{ok:false,error:'unavailable',message:'I could not finish that design. Please try again.'})}
-  if(!response.ok){await finish(Number(mod?.usage?.total_tokens)||0);return json(response.status===429?429:503,{ok:false,error:response.status===429?'rate_limited':'unavailable',message:'Design generation is unavailable right now. Your ideas are safe to try again.'})}
-  let data,parsed;try{data=await response.json();parsed=JSON.parse(data.output_text||data.output?.find(x=>x.type==='message')?.content?.find(x=>x.type==='output_text')?.text||'')}catch{await finish(Number(mod?.usage?.total_tokens)||0);return json(502,{ok:false,error:'invalid_reply',message:'That design needs another try.'})}
-  const valid=validateDreamReply(parsed,{partIds:partList.map(p=>p.id),name:input.name,fontOptions:fontFamilies});if(!valid){await finish((Number(mod?.usage?.total_tokens)||0)+(Number(data.usage?.total_tokens)||0));return json(502,{ok:false,error:'invalid_reply',message:'That design needs another try.'})}
-  try{valid.design=completeDreamDesign(valid.design,{text:input.text,parts:partList})}catch{await finish((Number(mod?.usage?.total_tokens)||0)+(Number(data.usage?.total_tokens)||0));return json(502,{ok:false,error:'invalid_reply',message:'That design needs another try.'})}
+  const prompt=`Create a compact original Frame Studio chat design from the user's request. Use only listed part ids. Return at most 16 parts by default (hard limit 25). Use compact keys: design keys v,cat,b,n,m,p,a; part keys i,x,y,w,h,r,fx,fy,c. x,y,w,h are integer permille values from 0 to 1000, where 1000 means 100% of the board. i is the part id, r is rotation degrees, fx/fy are flip booleans, c contains three palette indexes. Include exactly one chat-window part id 19, a plaque, and decorations matching the request. For ghost requests use a ghost sticker if listed. Keep decorations outside the chat window. Use null for unchanged settings. Parts: ${JSON.stringify(partList.map(({id,name,category,tags,defaultSize})=>({i:id,n:name,g:category,t:tags,s:defaultSize})))}.`;
+  const retryPrompt=`${prompt}\nRetry with a simpler composition of no more than 10 parts. Keep the same compact schema and never return partial JSON.`;
+  const baseInput=[{role:'system',content:[{type:'input_text',text:prompt}]},{role:'user',content:[{type:'input_text',text:JSON.stringify({request:input.text,name:input.name||'',seed})}]}];
+  const responseTokens=[];
+  let data=null;
+  for(let attempt=0;attempt<2;attempt++){
+   const maxParts=attempt===0?16:10;
+   const schema=buildDreamSchema(partList.map(part=>part.id),fontFamilies,maxParts);
+   const inputItems=attempt===0?baseInput:[{role:'system',content:[{type:'input_text',text:retryPrompt}]},baseInput[1]];
+   const requestBody={model,input:inputItems,store:false,max_output_tokens:6000,reasoning:{effort:reasoningEffort(model)},text:{format:{type:'json_schema',name:'chatskins_dream',strict:true,schema}}};
+   let response;
+   try{response=await fetchImpl('https://api.openai.com/v1/responses',{method:'POST',headers:apiHeaders,body:JSON.stringify(requestBody)})}
+   catch{await finish((Number(mod?.usage?.total_tokens)||0)+responseTokens.reduce((sum,value)=>sum+value,0));return json(503,{ok:false,error:'unavailable',message:'I could not finish that design. Please try again.'})}
+   if(!response.ok){await finish((Number(mod?.usage?.total_tokens)||0)+responseTokens.reduce((sum,value)=>sum+value,0));return json(response.status===429?429:503,{ok:false,error:response.status===429?'rate_limited':'unavailable',message:'Design generation is unavailable right now. Your ideas are safe to try again.'})}
+   try{data=await response.json()}
+   catch{await finish((Number(mod?.usage?.total_tokens)||0)+responseTokens.reduce((sum,value)=>sum+value,0));return json(502,{ok:false,error:'invalid_reply',message:'That design needs another try.'})}
+   responseTokens.push(Number(data.usage?.total_tokens)||0);
+   if(data.status==='incomplete'){
+    if(attempt===0)continue;
+    await finish((Number(mod?.usage?.total_tokens)||0)+responseTokens.reduce((sum,value)=>sum+value,0));
+    return json(502,{ok:false,error:'incomplete_reply',message:'That design was too detailed to finish. Try a simpler description.'});
+   }
+   break;
+  }
+  const usedResponseTokens=responseTokens.reduce((sum,value)=>sum+value,0);
+  let parsed;try{parsed=JSON.parse(responseText(data))}catch{await finish((Number(mod?.usage?.total_tokens)||0)+usedResponseTokens);return json(502,{ok:false,error:'invalid_reply',message:'That design needs another try.'})}
+  const valid=validateDreamReply(parsed,{partIds:partList.map(part=>part.id),name:input.name,fontOptions:fontFamilies});if(!valid){await finish((Number(mod?.usage?.total_tokens)||0)+usedResponseTokens);return json(502,{ok:false,error:'invalid_reply',message:'That design needs another try.'})}
+  try{valid.design=completeDreamDesign(valid.design,{text:input.text,parts:partList})}catch{await finish((Number(mod?.usage?.total_tokens)||0)+usedResponseTokens);return json(502,{ok:false,error:'invalid_reply',message:'That design needs another try.'})}
   let generatedModeration;
-  try{const checked=await fetchImpl('https://api.openai.com/v1/moderations',{method:'POST',headers:apiHeaders,body:JSON.stringify({model:'omni-moderation-latest',input:`${valid.name}\n${valid.description}`})});if(!checked.ok)throw Error();generatedModeration=await checked.json()}catch{await finish((Number(mod?.usage?.total_tokens)||0)+(Number(data.usage?.total_tokens)||0));return json(503,{ok:false,error:'unavailable',message:'I could not check the generated design text. Please try again.'})}
-  if(generatedModeration?.results?.[0]?.flagged){await finish((Number(mod?.usage?.total_tokens)||0)+(Number(data.usage?.total_tokens)||0)+(Number(generatedModeration.usage?.total_tokens)||0));return json(502,{ok:false,error:'invalid_reply',message:'The generated design text could not be used. Please try another idea.'})}
+  try{const checked=await fetchImpl('https://api.openai.com/v1/moderations',{method:'POST',headers:apiHeaders,body:JSON.stringify({model:'omni-moderation-latest',input:`${valid.name}\n${valid.description}`})});if(!checked.ok)throw Error();generatedModeration=await checked.json()}catch{await finish((Number(mod?.usage?.total_tokens)||0)+usedResponseTokens);return json(503,{ok:false,error:'unavailable',message:'I could not check the generated design text. Please try again.'})}
+  if(generatedModeration?.results?.[0]?.flagged){await finish((Number(mod?.usage?.total_tokens)||0)+usedResponseTokens+(Number(generatedModeration.usage?.total_tokens)||0));return json(502,{ok:false,error:'invalid_reply',message:'The generated design text could not be used. Please try another idea.'})}
   // Never accept a painted or non-library asset from the model. The SVG
   // composition is immediately usable; an optional image job is tracked next.
-  const id=randomBytes(12).toString('hex'),ownerKey=randomBytes(24).toString('base64url');const saved={id,...valid,credit:String(input.credit||'').trim(),createdAt:new Date(time).toISOString(),status:'private',ownerKeyHash:sha(ownerKey),ipHash:ip,imageStatus:imagesEnabled?'painting':'off',paintFile:''};await writeSubmission(saved);await finish((Number(mod?.usage?.total_tokens)||0)+(Number(data.usage?.total_tokens)||0)+(Number(generatedModeration.usage?.total_tokens)||0));
+  const id=randomBytes(12).toString('hex'),ownerKey=randomBytes(24).toString('base64url');const saved={id,...valid,credit:String(input.credit||'').trim(),createdAt:new Date(time).toISOString(),status:'private',ownerKeyHash:sha(ownerKey),ipHash:ip,imageStatus:imagesEnabled?'painting':'off',paintFile:''};await writeSubmission(saved);await finish((Number(mod?.usage?.total_tokens)||0)+usedResponseTokens+(Number(generatedModeration.usage?.total_tokens)||0));
   if(imagesEnabled)void paintImage(saved,{fetchImpl,key,ip,time,privateDir,reserveImageQuota,logger});
   return json(200,{ok:true,id,key:ownerKey,design:valid.design,settings:valid.settings,name:valid.name,description:valid.description,moodTags:valid.moodTags,imageStatus:saved.imageStatus,paintMessage:imagesEnabled?'Painting a hand-drawn version...':''});
  };
