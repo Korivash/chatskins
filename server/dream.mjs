@@ -22,6 +22,8 @@ const sha=value=>createHash('sha256').update(String(value)).digest('hex');
 const responseText=data=>typeof data?.output_text==='string'?data.output_text:data?.output?.find(item=>item.type==='message')?.content?.find(item=>item.type==='output_text')?.text||'';
 /** GPT-5 and GPT-6 support the lower minimal reasoning budget. */
 export function reasoningEffort(model){return /^gpt-(?:5|6)(?:-|$)/i.test(String(model))?'minimal':'low'}
+/** Parse positive environment quota values without accepting NaN or fractions. */
+function quotaFromEnv(value,fallback){const parsed=Number(value);return Number.isSafeInteger(parsed)&&parsed>0?parsed:fallback}
 const color={type:'string',pattern:'^#[0-9A-Fa-f]{6}$'};
 const compactPartSchema={type:'object',additionalProperties:false,required:['i','x','y','w','h','r','fx','fy','c'],properties:{i:{type:'integer',minimum:0,maximum:60},x:{type:'integer',minimum:0,maximum:1000},y:{type:'integer',minimum:0,maximum:1000},w:{type:'integer',minimum:1,maximum:1000},h:{type:'integer',minimum:1,maximum:1000},r:{type:'integer',minimum:-180,maximum:180},fx:{type:'boolean'},fy:{type:'boolean'},c:{type:'array',items:{type:'integer',minimum:0,maximum:31},minItems:3,maxItems:3}}};
 // Compact model-facing keys keep generated compositions within the output
@@ -177,7 +179,7 @@ export function buildDreamSchema(partIds,fontOptions,maxParts=16){
 }
 
 /** Create /api/dream and /api/dream/submit handlers with injectable services. */
-export function createDreamHandler({fetchImpl=globalThis.fetch,now=Date.now,originHost=process.env.SKIN_REQUEST_ORIGIN_HOST??'getchatskins.com',keyFile=process.env.OPENAI_KEY_FILE||defaultKeyFile,model=process.env.DREAM_MODEL||'gpt-5-mini',imageModel=process.env.DREAM_IMAGE_MODEL||'gpt-image-2.5-flare',webpEncoder=encodeWebpWithFfmpeg,partsFile=resolve(here,'../site-media/parts/parts.json'),usageFile=resolve(here,'describe-usage.json'),dataDir=defaultDataDir,webhookUrl=process.env.SKIN_REQUEST_WEBHOOK,imagesEnabled=process.env.DREAM_IMAGES!=='false',logger=line=>console.warn(line)}={}){
+export function createDreamHandler({fetchImpl=globalThis.fetch,now=Date.now,originHost=process.env.SKIN_REQUEST_ORIGIN_HOST??'getchatskins.com',keyFile=process.env.OPENAI_KEY_FILE||defaultKeyFile,model=process.env.DREAM_MODEL||'gpt-5-mini',imageModel=process.env.DREAM_IMAGE_MODEL||'gpt-image-2.5-flare',webpEncoder=encodeWebpWithFfmpeg,partsFile=resolve(here,'../site-media/parts/parts.json'),usageFile=resolve(here,'describe-usage.json'),dataDir=defaultDataDir,webhookUrl=process.env.SKIN_REQUEST_WEBHOOK,imagesEnabled=process.env.DREAM_IMAGES!=='false',imagesPerIp=quotaFromEnv(process.env.DREAM_IMAGES_PER_IP,4),imagesPerDay=quotaFromEnv(process.env.DREAM_IMAGES_PER_DAY,20),logger=line=>console.warn(line)}={}){
  const usageStore=createAiUsageStore(usageFile);let partsPromise;
  const parts=()=>partsPromise||=(typeof partsFile==='string'?readDreamParts(partsFile):Promise.resolve(partsFile.parts||partsFile));
  const privateDir=resolve(dataDir,'dream-submissions'),imageUsageFile=resolve(dataDir,'dream-images.json');let imageUsageQueue=Promise.resolve(),cleanupPromise=null;
@@ -193,7 +195,7 @@ export function createDreamHandler({fetchImpl=globalThis.fetch,now=Date.now,orig
    const today=new Date(time).toISOString().slice(0,10);let usage={day:today,total:0,ips:{}};
    try{usage=JSON.parse(await readFile(imageUsageFile,'utf8'))}catch{}
    if(usage.day!==today)usage={day:today,total:0,ips:{}};
-   const perIp=usage.ips[ip]||0;if(usage.total>=20||perIp>=2)return false;
+   const perIp=usage.ips[ip]||0;if(usage.total>=imagesPerDay||perIp>=imagesPerIp)return false;
    usage.total++;usage.ips[ip]=perIp+1;await mkdir(dirname(imageUsageFile),{recursive:true});await writeFile(imageUsageFile,JSON.stringify(usage),'utf8');return true;
   });
   imageUsageQueue=work.then(()=>undefined,()=>undefined);return work;
@@ -238,7 +240,8 @@ export function createDreamHandler({fetchImpl=globalThis.fetch,now=Date.now,orig
   let partList;try{partList=await parts()}catch{return json(503,{ok:false,error:'unavailable',message:'Frame Studio is resting. Try again in a little while.'})}
   const time=now(),day=new Date(time).toISOString().slice(0,10),ip=sha(clientIp({remoteAddress,headers})),usage=await usageStore.load();usage.days[day]||={total:0,tokens:0,reservedTokens:0,ips:{}};const daily=usage.days[day],counters=daily.dream||{total:0,ips:{}},user=counters.ips[ip]||{count:0,last:0};
   for(const old of Object.keys(usage.days))if(old!==day)delete usage.days[old];
-  if(user.count>=5||counters.total>=150||(daily.tokens||0)+(daily.reservedTokens||0)+tokenReserve>1500000)return json(429,{ok:false,error:'rate_limited',message:'Design generation is taking a break for today. Your existing designs are safe.'});
+  // Keep the text-design allowance at least as high as the painted-image cap.
+  if(user.count>=Math.max(5,imagesPerIp)||counters.total>=150||(daily.tokens||0)+(daily.reservedTokens||0)+tokenReserve>1500000)return json(429,{ok:false,error:'rate_limited',message:'Design generation is taking a break for today. Your existing designs are safe.'});
   daily.dream=counters;daily.reservedTokens=(daily.reservedTokens||0)+tokenReserve;user.count++;user.last=time;counters.ips[ip]=user;counters.total++;await usageStore.persist(usage);
   const finish=async tokens=>{daily.reservedTokens=Math.max(0,(daily.reservedTokens||0)-tokenReserve);daily.tokens=(daily.tokens||0)+Math.max(0,Number(tokens)||0);await usageStore.persist(usage)};
   let key;try{key=(await readFile(keyFile,'utf8')).trim()}catch{await finish(0);return json(503,{ok:false,error:'unavailable',message:'Frame Studio is unavailable right now.'})}if(!key){await finish(0);return json(503,{ok:false,error:'unavailable',message:'Frame Studio is unavailable right now.'})}
