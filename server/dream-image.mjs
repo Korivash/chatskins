@@ -28,6 +28,12 @@ export function centerTransparency(rgba,width,height,{threshold=24,boxFraction=.
  for(let y=y0;y<y1;y++)for(let x=x0;x<x1;x++){total++;if(rgba[(y*width+x)*4+3]<threshold)clear++}return total?clear/total:0;
 }
 
+/** Fail closed when pixel inspection cannot prove the center is transparent. */
+export function needsTransparentCenterRetry(measurement){
+ const fraction=measurement?.centerTransparency;
+ return !Number.isFinite(fraction)||fraction<.95;
+}
+
 /** Remove tiny connected opaque specks from an alpha-derived art mask. */
 function removeSmallSpecks(mask,width,height){
  const total=width*height,limit=Math.max(1,Math.floor(total*.0015)),seen=new Uint8Array(total),stack=[],component=[];

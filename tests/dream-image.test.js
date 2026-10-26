@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
 import {resolve} from 'node:path';
-import {centerTransparency,decodePngRgba,largestCenterEmptyRect,measurePaintedFrame,measureTopPlaque} from '../server/dream-image.mjs';
+import {centerTransparency,decodePngRgba,largestCenterEmptyRect,measurePaintedFrame,measureTopPlaque,needsTransparentCenterRetry} from '../server/dream-image.mjs';
 
 const fixture=resolve('tests/fixtures/painted-frame.png');
 
@@ -24,4 +24,11 @@ test('the painted autumn PNG measures the large transparent chat window',async()
  assert.ok(measured.inner.y>=.12&&measured.inner.y<=.2,`y=${measured.inner.y}`);
  assert.ok(measured.inner.w>=.68&&measured.inner.w<=.84,`w=${measured.inner.w}`);
  assert.ok(measured.inner.h>=.55&&measured.inner.h<=.75,`h=${measured.inner.h}`);
+});
+
+test('an unmeasured or opaque center requires one stronger-prompt retry',()=>{
+ assert.equal(needsTransparentCenterRetry({centerTransparency:1}),false);
+ assert.equal(needsTransparentCenterRetry({centerTransparency:.949}),true);
+ assert.equal(needsTransparentCenterRetry({}),true);
+ assert.equal(needsTransparentCenterRetry(null),true);
 });

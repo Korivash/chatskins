@@ -9,7 +9,7 @@ import {fileURLToPath} from 'node:url';
 import {spawn} from 'node:child_process';
 import {clientIp, originAllowed} from './describe.mjs';
 import {createAiUsageStore} from './ai-usage.mjs';
-import {measurePaintedFrame,measurePaintedRgba,pngDimensions} from './dream-image.mjs';
+import {measurePaintedFrame,measurePaintedRgba,needsTransparentCenterRetry,pngDimensions} from './dream-image.mjs';
 import {blankStudio, makeStudioKit, normalizeStudio, STUDIO_LIMIT} from '../js/frame-studio.js';
 
 const here=dirname(fileURLToPath(import.meta.url));
@@ -294,8 +294,14 @@ async function paintImage(saved,{fetchImpl,key,ip,time,privateDir,reserveImageQu
   const cleaned=cleanImageDescription(saved.description),basePrompt=`Decorative frame for a live-stream chat overlay. ${cleaned}. A BLANK name plaque at the top center. The CENTER is completely EMPTY and transparent (at least 70% of width and height). Transparent background outside the frame. Rich, polished illustration. No text, no letters, no logos, no real people, no existing characters.`;
   let png=await generateImagePng(fetchImpl,key,imageModel,basePrompt);
   let measured=await measureImageFrame(png,webpEncoder?.binary||process.env.DREAM_WEBP_ENCODER||'ffmpeg');
-  if(measured.centerTransparency<.95){const stronger=`${basePrompt} Make the entire central 40% × 40% box fully transparent with absolutely no texture, particles or decoration inside it. Put all decoration in a narrow outer border only.`;png=await generateImagePng(fetchImpl,key,imageModel,stronger);measured=await measureImageFrame(png,webpEncoder?.binary||process.env.DREAM_WEBP_ENCODER||'ffmpeg')}
-  if(measured.centerTransparency<.95)throw Error('center transparency check failed');
+  // An unreadable or incomplete measurement is not proof of transparency.
+  // Give the image model one stronger prompt, then reject if it still fails.
+  if(needsTransparentCenterRetry(measured)){
+   const stronger=`${basePrompt} Make the entire central 40% by 40% box fully transparent with absolutely no texture, particles or decoration inside it. Put all decoration in a narrow outer border only.`;
+   png=await generateImagePng(fetchImpl,key,imageModel,stronger);
+   measured=await measureImageFrame(png,webpEncoder?.binary||process.env.DREAM_WEBP_ENCODER||'ffmpeg');
+  }
+  if(needsTransparentCenterRetry(measured))throw Error('center transparency check failed');
   if(measured.measureFallback)logger('dream measure fallback');
   const webp=await webpEncoder(png);if(!isWebp(webp)||webp.length>400*1024)throw Error('WebP conversion exceeded storage limit');
   const file=`${saved.id}.webp`;await writeFile(resolve(privateDir,file),webp);saved.imageStatus='ready';saved.paintFile=file;saved.frame={width:measured.width,height:measured.height,shape:'tall',inner:measured.inner,plaque:measured.plaque};await writeFile(resolve(privateDir,`${saved.id}.json`),JSON.stringify(saved,null,2),'utf8');
@@ -323,7 +329,7 @@ function runEncoder(binary,args,input){return new Promise((resolvePromise,reject
 async function measureImageFrame(png,binary){
  let primary=null;try{primary=measurePaintedFrame(png);if(!primary.measureFallback)return primary}catch{/* The ffmpeg decoder retries PNG variants the small parser cannot read. */}
  try{const {width,height}=pngDimensions(png),rgba=await runEncoder(binary,['-hide_banner','-loglevel','error','-i','pipe:0','-frames:v','1','-f','rawvideo','-pix_fmt','rgba','pipe:1'],png);if(rgba.length!==width*height*4)throw new Error('Raw frame length mismatch');const retry=measurePaintedRgba(rgba,width,height);if(!retry.measureFallback)return retry;primary=retry}catch{/* A missing encoder should still yield a safe, usable fallback frame. */}
- const {width=1024,height=1536}=primary||{};return{width,height,centerTransparency:primary?.centerTransparency??1,inner:{x:.15,y:.18,w:.70,h:.60},measureFallback:true,plaque:primary?.plaque||{none:true},shape:'tall'};
+ const {width=1024,height=1536}=primary||{};return{width,height,centerTransparency:primary?.centerTransparency??0,inner:{x:.15,y:.18,w:.70,h:.60},measureFallback:true,plaque:primary?.plaque||{none:true},shape:'tall'};
 }
 
 /** Review a pending submission without exposing its identifying network data. */
