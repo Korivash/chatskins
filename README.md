@@ -2,7 +2,7 @@
 
 **Game-style Twitch chat overlays. Pick a skin, tweak every font, color and border, then paste one link into OBS.**
 
-![ChatSkins](marketing/thumbnail.png)
+[![Watch the ChatSkins video on YouTube](marketing/thumbnail.png)](https://youtu.be/QlA6KcXjcl8)
 
 ChatSkins is a browser-based editor for Twitch chat overlays. It's built for the **Codex x TwitchCon Hackathon (2026)**. Streamers pick a one-click look inspired by popular game chats, like MMO guild chat, retro RPG dialog boxes or pixel sandbox chat, then change anything about it. No account and no install needed. Twitch login is optional and only unlocks alerts and channel points. The overlay link *is* the whole configuration.
 
@@ -14,6 +14,8 @@ ChatSkins is a browser-based editor for Twitch chat overlays. It's built for the
 ## Demo
 
 ![Animated skins and a ChatSkins overlay over a stream](docs/media/demo.gif)
+
+**▶ Watch on YouTube:** https://youtu.be/QlA6KcXjcl8
 
 **Full demo** (2:17, narrated, original music): [docs/media/demo.mp4](docs/media/demo.mp4). Recorded on the live site: hand-painted frames, a **real Twitch chat** test with `!skin` switching live, an AI-painted frame made from one sentence, the Ask ChatSkins guide, Frame Studio, Place it, styling, viewer features (and the one switch that turns chat commands off), and how the Codex agent team built it.
 
