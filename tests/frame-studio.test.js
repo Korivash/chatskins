@@ -4,6 +4,7 @@ import {readFile} from 'node:fs/promises';
 import {blankStudio,makeStudioKit,randomizeStudio,normalizeStudio,encodeStudio,decodeStudio,studioWindowRect,studioPartRect,studioRenderModel,createStudioHistory,createStudioController,STUDIO_LIMIT} from '../js/frame-studio.js';
 import {CLEAN,buildCompactSettingsUrl} from '../js/settings.js';
 import {decompressJson} from '../js/compact-link.js';
+import {mountStudioComposition} from '../js/studio-render.js';
 
 const root=new URL('../',import.meta.url);
 test('parts index has 60 unique trusted entries and every SVG exists',async()=>{
@@ -59,9 +60,24 @@ test('six kits and twenty Randomize seeds keep decoration outside the window at 
 test('Studio board edits on the large preview stage and Get link can enable from a channel',async()=>{
  const html=await readFile(new URL('editor.html',root),'utf8'),editor=await readFile(new URL('js/editor.js',root),'utf8');
  assert.match(html,/<div class="studio-board"[^>]*hidden/);assert.doesNotMatch(html,/studio-canvas-wrap/);
- assert.match(editor,/__studioLiveBoard=board/);assert.match(editor,/\$\('\.source'\)\.append\(board\)/);assert.match(editor,/linkReady=!!state\.channel/);assert.match(editor,/buildCompactSettingsUrl\(location\.href/);assert.match(await readFile(new URL('js/frame-studio.js',root),'utf8'),/chat\.offsetLeft/);
+ assert.match(editor,/__studioLiveBoard=board/);assert.match(editor,/\$\('\.source'\)\.append\(board\)/);assert.match(editor,/linkReady=!!state\.channel/);assert.match(editor,/buildCompactSettingsUrl\(location\.href/);assert.match(await readFile(new URL('js/frame-studio.js',root),'utf8'),/chatElement\.offsetLeft/);
  const kit=makeStudioKit('Spooky'),settings={...CLEAN,channel:'channelpal',studioDesign:kit},url=await buildCompactSettingsUrl('https://getchatskins.com/editor.html',{settings,baseSkinId:'clean',baseSettings:CLEAN}),payload=await decompressJson(new URLSearchParams(new URL(url).hash.slice(1)).get('data'));
  assert.equal(payload.c.studioDesign,encodeStudio(kit));assert.equal(decodeStudio(payload.c.studioDesign).instances.length,kit.instances.length);
+});
+test('editor preview and overlay use the same studio DOM geometry at scaled stage sizes',async()=>{
+ class El{
+  constructor(tag){this.tagName=tag;this.children=[];this.dataset={};this.attrs={};this.style={setProperty(k,v){this[k]=v},removeProperty(k){delete this[k]}};this.className='';this.classList={add:(...names)=>{this.className=[...new Set(`${this.className} ${names.join(' ')}`.trim().split(/\s+/))].join(' ')},contains:name=>this.className.split(/\s+/).includes(name)};this.offsetWidth=0;this.offsetHeight=0;this.offsetLeft=0;this.offsetTop=0}
+  append(child){child.parentElement=this;this.children.push(child)} replaceChildren(...children){this.children=[];for(const c of children)this.append(c)} remove(){this.parentElement?.children.splice(this.parentElement.children.indexOf(this),1)} removeAttribute(name){delete this.attrs[name]} setAttribute(name,value){this.attrs[name]=String(value)} querySelector(selector){return selector===':scope > .studio-composition'?this.children.find(c=>c.classList.contains('studio-composition'))||null:null} querySelectorAll(selector){const found=[];const visit=e=>{for(const child of e.children){if(selector==='.studio-art'&&child.classList.contains('studio-art'))found.push(child);visit(child)}};visit(this);return found}
+  getBoundingClientRect(){const parent=this.parentElement?.getBoundingClientRect?.()||{left:0,top:0,scale:1},scale=this.scale||parent.scale||1,left=parent.left+(parseFloat(this.style.left)||0)*scale,top=parent.top+(parseFloat(this.style.top)||0)*scale,width=(parseFloat(this.style.width)||this.offsetWidth||0)*scale,height=(parseFloat(this.style.height)||this.offsetHeight||0)*scale;return{left,top,right:left+width,bottom:top+height,width,height,scale}}
+ }
+ class Doc{createElement(tag){return new El(tag)}}
+ const old={document:globalThis.document,window:globalThis.window,ResizeObserver:globalThis.ResizeObserver,requestAnimationFrame:globalThis.requestAnimationFrame};
+ globalThis.document=new Doc();globalThis.window={__studioParts:[]};globalThis.ResizeObserver=class{observe(){}};globalThis.requestAnimationFrame=fn=>fn();
+ const mount=async scale=>{const host=new El('div');host.scale=scale;const chat=new El('div');chat.offsetWidth=480;chat.offsetHeight=660;chat.offsetLeft=128;chat.offsetTop=28;chat.parentElement=host;const kit=makeStudioKit('Royal');await mountStudioComposition({root:chat,draft:kit,channel:'ChannelPal',document:globalThis.document,fetcher:async()=>{throw Error('No parts needed for geometry')}});return{host,layer:host.querySelector(':scope > .studio-composition'),scale}};
+ try{
+  for(const size of [1,.4]){const rendered=await mount(size);assert.ok(rendered.layer);const rects=rendered.layer.querySelectorAll('.studio-art').map(node=>node.getBoundingClientRect()).map(r=>({x:r.left/rendered.scale,y:r.top/rendered.scale,w:r.width/rendered.scale,h:r.height/rendered.scale}));if(size===1)globalThis.__overlayPartRects=rects;else{assert.equal(rects.length,globalThis.__overlayPartRects.length);for(let i=0;i<rects.length;i++)for(const key of ['x','y','w','h']){const expected=globalThis.__overlayPartRects[i][key],actual=rects[i][key];assert.ok(Math.abs(actual-expected)<=Math.max(1,Math.abs(expected)*.01),`part ${i} ${key}: editor ${actual}, overlay ${expected}`)}}}
+  const editor=await readFile(new URL('js/editor.js',root),'utf8');assert.match(editor,/mountStudioComposition/);assert.match(await readFile(new URL('js/frame-studio.js',root),'utf8'),/studioRenderModel\(draft,panel\)/);
+ }finally{delete globalThis.__overlayPartRects;for(const [key,value]of Object.entries(old)){if(value===undefined)delete globalThis[key];else globalThis[key]=value}}
 });
 test('the editor only calls methods exposed by its imported Studio controller API',async()=>{
  const editor=await readFile(new URL('js/editor.js',root),'utf8');assert.match(editor,/import\s*\{[^}]*createStudioController[^}]*\}\s*from ['"]\.\/frame-studio\.js/);
