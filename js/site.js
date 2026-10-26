@@ -1,2 +1,21 @@
+/**
+ * Browser module site.js implements one ChatSkins page or overlay feature.
+ * Used by the site, editor, or OBS overlay module graph.
+ * Main exports: initSite.
+ * Invariant: preserve existing settings links and render chat content as text.
+ */
 const motionKey='chatskinsPauseMotion';
-export function initSite(){const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;let pause=localStorage.getItem(motionKey)==='on'||reduced;for(const b of document.querySelectorAll('[data-motion]')){b.setAttribute('aria-pressed',String(pause));b.textContent=reduced?'Motion limited by device':pause?'Resume motion':'Pause motion';b.onclick=()=>{if(reduced)return;pause=!pause;localStorage.setItem(motionKey,pause?'on':'off');document.documentElement.classList.toggle('motion-paused',pause);b.setAttribute('aria-pressed',String(pause));b.textContent=pause?'Resume motion':'Pause motion'}}document.documentElement.classList.toggle('motion-paused',pause)}
+
+/** Handle site.
+ * @returns {unknown} The function result.
+ */
+export function initSite(){const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let pause=localStorage.getItem(motionKey)==='on'||reduced;
+  for(const b of document.querySelectorAll('[data-motion]')){b.setAttribute('aria-pressed',String(pause));
+    b.textContent=reduced?'Motion limited by device':pause?'Resume motion':'Pause motion';
+    b.onclick=()=>{if(reduced)return;
+      pause=!pause;
+      localStorage.setItem(motionKey,pause?'on':'off');
+      document.documentElement.classList.toggle('motion-paused',pause);
+      b.setAttribute('aria-pressed',String(pause));
+      b.textContent=pause?'Resume motion':'Pause motion'}}document.documentElement.classList.toggle('motion-paused',pause)}

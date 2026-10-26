@@ -1,3 +1,8 @@
+/*
+ * Styles for frame studio components.
+ * Used by the site pages that load this stylesheet.
+ * Keep selector scope and cascade order stable for previews and overlays.
+ */
 .options-tabs{scrollbar-width:thin}.frame-studio-panel{--tile-a:#B7AAFF;--tile-b:#A8D9EE}
 .frame-studio-panel{--studio-ink:#edf3fc;--studio-muted:#a8d9ee;--studio-line:#72849c;--studio-raised:#304761;--studio-drawer:#223751;color:var(--studio-ink)}
 .studio-context,.studio-footer>div{display:flex;align-items:center;gap:.55rem;flex-wrap:wrap;margin:1rem 0}

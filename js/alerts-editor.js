@@ -1,88 +1,404 @@
+/**
+ * Browser module alerts-editor.js implements one ChatSkins page or overlay feature.
+ * Used by the site, editor, or OBS overlay module graph.
+ * Main exports: initAlertsEditor.
+ * Invariant: preserve existing settings links and render chat content as text.
+ */
 import {ALERT_TYPE_ORDER,alertDefaults,normalizeAlerts,alertScopesFor,buildAlertsUrl,AlertQueue} from './alerts-config.js';
+
 import {beginAlertsAuth,revokeAlertsToken,validateAlertsToken} from './alerts-auth.js';
+
 import {createEventSubClient} from './eventsub.js';
+
 import {createAlertCard,createAlertLayer,createAlertSoundPlayer} from './alerts-render.js';
+
 import {TWITCH_CLIENT_ID} from './twitch-auth.js';
+
 import {CHAT_PLAY_POINT_SCOPE,CHAT_PLAY_READ_SCOPE,CHAT_PLAY_POINT_SCOPES,CHAT_PLAY_REWARD_DRAFTS,createChatPlayRewards,enableExistingChatPlayRewards,runInitialRewardSetup} from './chat-play-points.js';
+
 import {matchRewardTitle} from './chat-play.js';
+
 import {buildChatPlayUrl} from './chat-play.js';
+
 import {buildUnifiedOverlayUrl} from './guided-setup.js';
 
-const labels={follow:'Follow',sub:'Subscription',resub:'Resubscription',giftSub:'Gift subscriptions',raid:'Raid',cheer:'Cheer',redemption:'Channel points'};const subscriptionLabels={'channel.follow':labels.follow,'channel.subscribe':labels.sub,'channel.subscription.message':labels.resub,'channel.subscription.gift':labels.giftSub,'channel.raid':labels.raid,'channel.cheer':labels.cheer,'channel.channel_points_custom_reward_redemption.add':labels.redemption};const formatUnavailable=items=>items.map(type=>subscriptionLabels[type]||'Event unavailable').join(', ');
+
+const labels={follow:'Follow',sub:'Subscription',resub:'Resubscription',giftSub:'Gift subscriptions',raid:'Raid',cheer:'Cheer',redemption:'Channel points'};
+const subscriptionLabels={'channel.follow':labels.follow,'channel.subscribe':labels.sub,'channel.subscription.message':labels.resub,'channel.subscription.gift':labels.giftSub,'channel.raid':labels.raid,'channel.cheer':labels.cheer,'channel.channel_points_custom_reward_redemption.add':labels.redemption};
+const formatUnavailable=items=>items.map(type=>subscriptionLabels[type]||'Event unavailable').join(', ');
+
 const variants=['tier1','tier2','tier3','prime'];
+
 function sample(type,variant='tier1'){
  const common={type,name:'Moss',userId:'sample-follower'};
+  
  if(type==='sub')return{...common,name:'Nova',tier:({tier1:'Tier 1 / Prime',tier2:'Tier 2',tier3:'Tier 3',prime:'Prime · preview only'})[variant]||'Tier 1 / Prime'};
+  
  if(type==='resub')return{...common,name:'Moss',months:12,viewerMessage:'A year of late-night adventures. Glad to be here!'};
- if(type==='giftSub')return{...common,name:'Juniper',count:5};if(type==='raid')return{...common,name:'NightCrew',viewers:128,incoming:true};if(type==='cheer')return{...common,name:'PixelPilot',bits:'1,000'};if(type==='redemption')return{...common,name:'Fern',rewardTitle:'Hydrate the party'};return common;
+  
+ if(type==='giftSub')return{...common,name:'Juniper',count:5};
+  if(type==='raid')return{...common,name:'NightCrew',viewers:128,incoming:true};
+  if(type==='cheer')return{...common,name:'PixelPilot',bits:'1,000'};
+  if(type==='redemption')return{...common,name:'Fern',rewardTitle:'Hydrate the party'};
+  return common;
+  
 }
 function loadConfig(design,storage){try{return normalizeAlerts(JSON.parse(storage.getItem('chat-studio.alerts.v1')||'null'),design)}catch{return normalizeAlerts(null,design)}}
-function make(doc,tag,text,className){const node=doc.createElement(tag);if(text!==undefined)node.textContent=text;if(className)node.className=className;return node}
+function make(doc,tag,text,className){const node=doc.createElement(tag);
+  if(text!==undefined)node.textContent=text;
+  if(className)node.className=className;
+  return node}
+/** Handle alerts editor.
+ * @param {unknown} parameter1 Function input.
+ * @param {unknown} initialAuth Function input.
+ * @param {unknown} getChatSettings Function input.
+ * @param {unknown} getSkin Function input.
+ * @param {unknown} getChannel Function input.
+ * @returns {unknown} The function result.
+ */
 export function initAlertsEditor({design,initialAuth,getChatSettings,getSkin,getChannel=()=>'',getChatPlayConfig=()=>null,getRewardCreationEnabled=()=>true,onRewardsCreated=()=>{},onPlayReward=()=>false,saveRestore=()=>{},document:doc=globalThis.document,window:win=globalThis,storage=globalThis.localStorage,sessionStorage=globalThis.sessionStorage,fetchImpl=globalThis.fetch,WebSocketImpl=globalThis.WebSocket,AudioContextImpl=globalThis.AudioContext||globalThis.webkitAudioContext,clipboard=globalThis.navigator?.clipboard}={}){
- const root=doc.querySelector('#alerts-section');if(!root)return{stop(){}};
- let config=loadConfig(design,storage),credentials=null,client=null,readyCount=0,unavailable=[],closed=false,sequence=0,testTimer=null,liveTimer=null,authExpiryTimer=null,authValidateTimer=null,queue=new AlertQueue(config.queue),testQueue=[],soundPlayer=createAlertSoundPlayer({AudioContextImpl});if(!storage.getItem('chat-studio.alerts.v1')){for(const type of ALERT_TYPE_ORDER)config.types[type].enabled=['follow','raid'].includes(type);if(typeof getSkin()?.alertRecipe?.followMessage==='string')config.types.follow.message=getSkin().alertRecipe.followMessage}
+ const root=doc.querySelector('#alerts-section');
+  if(!root)return{stop(){}};
+  
+ let config=loadConfig(design,storage),credentials=null,client=null,readyCount=0,unavailable=[],closed=false,sequence=0,testTimer=null,liveTimer=null,authExpiryTimer=null,authValidateTimer=null,queue=new AlertQueue(config.queue),testQueue=[],soundPlayer=createAlertSoundPlayer({AudioContextImpl});
+  if(!storage.getItem('chat-studio.alerts.v1')){for(const type of ALERT_TYPE_ORDER)config.types[type].enabled=['follow','raid'].includes(type);
+    if(typeof getSkin()?.alertRecipe?.followMessage==='string')config.types.follow.message=getSkin().alertRecipe.followMessage}
  const $=selector=>root.querySelector(selector),persist=()=>storage.setItem('chat-studio.alerts.v1',JSON.stringify(config)),getRecipe=()=>getSkin()?.alertRecipe||{version:1,title:'Community update',iconTreatment:'outline',motion:'fade',soundWave:'sine'},setStatus=text=>{$('#alerts-status').textContent=String(text).replace(/channel:[a-z:]+/gi,'the requested access').replace(/\b(?:scope|EventSub|OAuth|token)\b/gi,'Twitch access')};
+  
  let layer=null,rewardSetupPromise=Promise.resolve(null);
- function stopClient(){client?.stop();client=null;readyCount=0;clearTimeout(liveTimer);liveTimer=null;queue.clear();soundPlayer.stop()}
- function show(event,asTest=false){const current=getChatSettings(),card=createAlertCard({document:doc,event,config:{...config,chatSettings:current},recipe:getRecipe(),design,preview:true});if(!card)return;const id=++sequence;card.dataset.queueId=String(id);card.classList.add('alert-editor-card');let targetLayer=layer;
+  
+ function stopClient(){client?.stop();
+    client=null;
+    readyCount=0;
+    clearTimeout(liveTimer);
+    liveTimer=null;
+    queue.clear();
+    soundPlayer.stop()}
+ function show(event,asTest=false){const current=getChatSettings(),card=createAlertCard({document:doc,event,config:{...config,chatSettings:current},recipe:getRecipe(),design,preview:true});
+    if(!card)return;
+    const id=++sequence;
+    card.dataset.queueId=String(id);
+    card.classList.add('alert-editor-card');
+    let targetLayer=layer;
+    
  if(!stage.getClientRects().length){
   const liveStage=doc.querySelector('#stage');
+      
   if(liveStage){
    targetLayer=liveStage.querySelector('.alerts-layer');
-   if(!targetLayer){targetLayer=createAlertLayer({document:doc,config});liveStage.append(targetLayer)}
+        
+   if(!targetLayer){targetLayer=createAlertLayer({document:doc,config});
+          liveStage.append(targetLayer)}
    targetLayer.dataset.position=config.position;
+        
   }
  }
  targetLayer.append(card);
- if(asTest && stage.getClientRects().length)stage.scrollIntoView({block:'nearest',behavior:'auto'});if(config.sound.enabled&&!soundPlayer.play({event,recipe:getRecipe(),design,volume:config.sound.volume}))$('#alerts-sound-note').textContent='Sound is unavailable. Allow audio in OBS, then test again.';const reduced=win.matchMedia?.('(prefers-reduced-motion: reduce)').matches||current.reduceMotion;card.dataset.reducedMotion=String(reduced);const enter=reduced?0:(design.motion?.[getRecipe().motion]?.enterMs||220),exit=reduced?0:(design.motion?.[getRecipe().motion]?.exitMs||180),hold=config.types[event.type].holdSeconds*1000;setTimeout(()=>{if(closed)return;card.classList.add('is-exiting');setTimeout(()=>card.remove(),exit)},enter+hold);if(asTest)$('#alerts-status').textContent='Local preview only · never sent to Twitch.'}
- function pumpTests(){if(testTimer||closed)return;const event=testQueue.shift();if(!event)return;show(event,true);testTimer=setTimeout(()=>{testTimer=null;pumpTests()},config.types[event.type].holdSeconds*1000+350)}
- function pumpLive(){if(liveTimer||closed)return;const event=queue.take();if(!event)return;show(event,false);liveTimer=setTimeout(()=>{liveTimer=null;pumpLive()},config.types[event.type].holdSeconds*1000+config.queue.gapMs)}
- function build(){root.replaceChildren();const heading=make(doc,'h2','Alerts (optional)');heading.id='alerts-heading';root.append(heading,make(doc,'p','Add live channel events to a private OBS source. The private link contains account access. Keep it private.'));
-  const actions=make(doc,'div',undefined,'alerts-actions'),connect=make(doc,'button','Connect alerts'),disconnect=make(doc,'button','Disconnect'),copy=make(doc,'button','Copy private alerts link');connect.type=disconnect.type=copy.type='button';connect.id='alerts-connect';disconnect.id='alerts-disconnect';copy.id='alerts-copy';actions.append(connect,disconnect,copy);root.append(actions);
-  const status=make(doc,'p','Test alerts work without connecting.','alerts-status');status.id='alerts-status';status.setAttribute('role','status');root.append(status);
-  const master=make(doc,'label','Enable live alerts'),masterInput=make(doc,'input');masterInput.type='checkbox';masterInput.id='alerts-enabled';masterInput.checked=config.enabled;master.prepend(masterInput);root.append(master);
-  const layout=make(doc,'div',undefined,'alerts-options');const posLabel=make(doc,'label','Placement'),pos=make(doc,'select');pos.id='alerts-position';for(const value of ['top-left','top-center','top-right','center','bottom-left','bottom-right']){const opt=make(doc,'option',value.replaceAll('-',' '));opt.value=value;pos.append(opt)}pos.value=config.position;posLabel.append(pos);layout.append(posLabel);
-  const widthLabel=make(doc,'label','Card width'),width=make(doc,'input');width.id='alerts-width';width.type='range';width.min='280';width.max='800';width.step='10';width.value=config.widthPx;widthLabel.append(width,make(doc,'output',`${config.widthPx} px`));layout.append(widthLabel);
-  const insetLabel=make(doc,'label','Edge inset'),inset=make(doc,'input');inset.id='alerts-inset';inset.type='range';inset.min='0';inset.max='120';inset.step='2';inset.value=config.insetPx;insetLabel.append(inset,make(doc,'output',`${config.insetPx} px`));layout.append(insetLabel);
-  const soundLabel=make(doc,'label','Play alert sound'),sound=make(doc,'input');sound.type='checkbox';sound.id='alerts-sound';sound.checked=config.sound.enabled;soundLabel.prepend(sound);layout.append(soundLabel);
-  const volLabel=make(doc,'label','Volume'),vol=make(doc,'input');vol.id='alerts-volume';vol.type='range';vol.min='0';vol.max='100';vol.step='1';vol.value=Math.round(config.sound.volume*100);volLabel.append(vol,make(doc,'output',`${vol.value}%`));layout.append(volLabel);root.append(layout);const advanced=make(doc,'details',undefined,'alerts-advanced'),advancedTitle=make(doc,'summary','Advanced queue and detail options');advanced.append(advancedTitle);for(const[key,label,min,max,unit]of [['maxPending','Maximum queued alerts',1,50,''],['maxAgeSeconds','Discard alerts older than',15,300,' seconds'],['followDedupeSeconds','Repeat-follow window',5,120,' seconds']]){const field=make(doc,'label',label),input=make(doc,'input');input.type='number';input.min=String(min);input.max=String(max);input.value=config.queue[key];input.setAttribute('aria-label',label);field.append(input,make(doc,'span',unit));input.onchange=()=>{config.queue[key]=Math.max(min,Math.min(max,+input.value||min));persist();if(credentials&&config.enabled)startClient()};advanced.append(field)}for(const[key,label]of [['showViewerMessage','Show resubscription message'],['showRewardTitle','Show reward title']]){const field=make(doc,'label',label),input=make(doc,'input');input.type='checkbox';input.checked=config[key];input.onchange=()=>{config[key]=input.checked;persist()};field.prepend(input);advanced.append(field)}root.append(advanced);
-  const cards=make(doc,'div',undefined,'alerts-type-list');for(const type of ALERT_TYPE_ORDER){const item=config.types[type],details=make(doc,'details',undefined,'alerts-type');details.open=type==='follow';const summary=make(doc,'summary',labels[type]),enabled=make(doc,'input');enabled.type='checkbox';enabled.checked=item.enabled;enabled.setAttribute('aria-label',`Enable ${labels[type]} alerts`);summary.prepend(enabled);details.append(summary);const template=make(doc,'label',`Message format · use ${(design.templateTokens[type]||[]).map(x=>`{${x}}`).join(', ')}`),text=make(doc,'input');text.type='text';text.maxLength=160;text.value=item.message;text.setAttribute('aria-label',`${labels[type]} message template`);template.append(text);details.append(template);
-   if(type==='sub'){const variantLabel=make(doc,'label','Test subscription tier'),select=make(doc,'select');select.className='alerts-tier';for(const value of variants){const opt=make(doc,'option',value==='prime'?'Prime · preview only':value==='tier1'?'Tier 1 / Prime':value.replace('tier','Tier '));opt.value=value;select.append(opt)}variantLabel.append(select);details.append(variantLabel)}
-   const hold=make(doc,'label','On screen for'),duration=make(doc,'input');duration.type='number';duration.min='3';duration.max='20';duration.value=item.holdSeconds;duration.setAttribute('aria-label',`${labels[type]} duration in seconds`);hold.append(duration,make(doc,'span','seconds'));details.append(hold);const test=make(doc,'button','Send test alert');test.type='button';test.dataset.alertTest=type;details.append(test);const inline=make(doc,'small','Unrecognized fields keep the last saved message.');inline.dataset.templateError='';inline.hidden=true;details.append(inline);cards.append(details)}root.append(cards);
-  const subnote=make(doc,'p','Prime is a preview-only label. Live Tier 1 events are shown as “Tier 1 / Prime”.');subnote.className='alerts-note';root.append(subnote);
- const stage=make(doc,'div',undefined,'alert-preview-stage');stage.id='alerts-preview';stage.setAttribute('aria-label','Alert preview stage');layer=createAlertLayer({document:doc,config});layer.classList.add('alerts-editor-layer');stage.append(layer);root.append(stage);const soundNote=make(doc,'small');soundNote.id='alerts-sound-note';root.append(soundNote);const queueStatus=make(doc,'p','No live alerts queued.');queueStatus.id='alerts-queue';root.append(queueStatus);
-  const help=make(doc,'p','Alerts match your saved skin controls; custom CSS and image backgrounds are not included. Check alert readability over your brightest gameplay. Use Interact in OBS to enable sound if needed, then test your monitoring/output settings.');help.className='alerts-note';root.append(help);
-  const wire=()=>{connect.onclick=()=>{const channel=getChannel().trim().toLowerCase();if(!channel){setStatus('Enter the channel name before connecting alerts.');return}saveRestore();config.enabled=true;persist();beginAlertsAuth({channel,alerts:config,design,sessionStorage,location:win.location});};disconnect.onclick=async()=>{if(!credentials?.token){setStatus('Alerts are not connected. Remove old links from OBS and review your Twitch connections.');return}stopClient();const result=await revokeAlertsToken(credentials.token,{fetchImpl});credentials=null;readyCount=0;config.enabled=false;persist();setStatus(result.ok?'Alerts disconnected and Twitch access revoked.':'Alerts stopped, but revocation failed. Remove the old link and revoke access in Twitch connections.');updateButtons()};copy.onclick=async()=>{if(!credentials||!readyCount||!config.enabled){setStatus('Connect enabled alert types before copying this private link.');return}try{const url=await buildAlertsUrl(win.location.href,{token:credentials.token,chatSettings:getChatSettings(),alerts:config,recipe:getRecipe(),baseSkinId:getSkin()?.id||'',baseSettings:getSkin()?.settings},design);await clipboard.writeText(url);setStatus('Private alerts link copied. Keep it secret; it includes private account access.')}catch(error){setStatus(error?.message||'Could not copy the private link. Check clipboard access and try again.')}};
-   masterInput.onchange=()=>{config.enabled=masterInput.checked;persist();if(!config.enabled)stopClient();else if(credentials)startClient()};pos.onchange=()=>{config.position=pos.value;layer.dataset.position=pos.value;layer.style.setProperty('--alert-inset',`${config.insetPx}px`);persist()};for(const[input,key]of [[width,'widthPx'],[inset,'insetPx']])input.oninput=()=>{config[key]=Number(input.value);input.parentElement.querySelector('output').textContent=`${input.value} px`;if(key==='insetPx')layer.style.setProperty('--alert-inset',`${input.value}px`);persist()};sound.onchange=()=>{config.sound.enabled=sound.checked;persist()};vol.oninput=()=>{config.sound.volume=Number(vol.value)/100;vol.parentElement.querySelector('output').textContent=`${vol.value}%`;persist()};
+    
+ if(asTest && stage.getClientRects().length)stage.scrollIntoView({block:'nearest',behavior:'auto'});
+    if(config.sound.enabled&&!soundPlayer.play({event,recipe:getRecipe(),design,volume:config.sound.volume}))$('#alerts-sound-note').textContent='Sound is unavailable. Allow audio in OBS, then test again.';
+    const reduced=win.matchMedia?.('(prefers-reduced-motion: reduce)').matches||current.reduceMotion;
+    card.dataset.reducedMotion=String(reduced);
+    const enter=reduced?0:(design.motion?.[getRecipe().motion]?.enterMs||220),exit=reduced?0:(design.motion?.[getRecipe().motion]?.exitMs||180),hold=config.types[event.type].holdSeconds*1000;
+    setTimeout(()=>{if(closed)return;card.classList.add('is-exiting');setTimeout(()=>card.remove(),exit)},enter+hold);
+    if(asTest)$('#alerts-status').textContent='Local preview only · never sent to Twitch.'}
+ function pumpTests(){if(testTimer||closed)return;
+    const event=testQueue.shift();
+    if(!event)return;
+    show(event,true);
+    testTimer=setTimeout(()=>{testTimer=null;pumpTests()},config.types[event.type].holdSeconds*1000+350)}
+ function pumpLive(){if(liveTimer||closed)return;
+    const event=queue.take();
+    if(!event)return;
+    show(event,false);
+    liveTimer=setTimeout(()=>{liveTimer=null;pumpLive()},config.types[event.type].holdSeconds*1000+config.queue.gapMs)}
+ function build(){root.replaceChildren();
+    const heading=make(doc,'h2','Alerts (optional)');
+    heading.id='alerts-heading';
+    root.append(heading,make(doc,'p','Add live channel events to a private OBS source. The private link contains account access. Keep it private.'));
+    
+  const actions=make(doc,'div',undefined,'alerts-actions'),connect=make(doc,'button','Connect alerts'),disconnect=make(doc,'button','Disconnect'),copy=make(doc,'button','Copy private alerts link');
+    connect.type=disconnect.type=copy.type='button';
+    connect.id='alerts-connect';
+    disconnect.id='alerts-disconnect';
+    copy.id='alerts-copy';
+    actions.append(connect,disconnect,copy);
+    root.append(actions);
+    
+  const status=make(doc,'p','Test alerts work without connecting.','alerts-status');
+    status.id='alerts-status';
+    status.setAttribute('role','status');
+    root.append(status);
+    
+  const master=make(doc,'label','Enable live alerts'),masterInput=make(doc,'input');
+    masterInput.type='checkbox';
+    masterInput.id='alerts-enabled';
+    masterInput.checked=config.enabled;
+    master.prepend(masterInput);
+    root.append(master);
+    
+  const layout=make(doc,'div',undefined,'alerts-options');
+    const posLabel=make(doc,'label','Placement'),pos=make(doc,'select');
+    pos.id='alerts-position';
+    for(const value of ['top-left','top-center','top-right','center','bottom-left','bottom-right']){const opt=make(doc,'option',value.replaceAll('-',' '));
+      opt.value=value;
+      pos.append(opt)}pos.value=config.position;
+    posLabel.append(pos);
+    layout.append(posLabel);
+    
+  const widthLabel=make(doc,'label','Card width'),width=make(doc,'input');
+    width.id='alerts-width';
+    width.type='range';
+    width.min='280';
+    width.max='800';
+    width.step='10';
+    width.value=config.widthPx;
+    widthLabel.append(width,make(doc,'output',`${config.widthPx} px`));
+    layout.append(widthLabel);
+    
+  const insetLabel=make(doc,'label','Edge inset'),inset=make(doc,'input');
+    inset.id='alerts-inset';
+    inset.type='range';
+    inset.min='0';
+    inset.max='120';
+    inset.step='2';
+    inset.value=config.insetPx;
+    insetLabel.append(inset,make(doc,'output',`${config.insetPx} px`));
+    layout.append(insetLabel);
+    
+  const soundLabel=make(doc,'label','Play alert sound'),sound=make(doc,'input');
+    sound.type='checkbox';
+    sound.id='alerts-sound';
+    sound.checked=config.sound.enabled;
+    soundLabel.prepend(sound);
+    layout.append(soundLabel);
+    
+  const volLabel=make(doc,'label','Volume'),vol=make(doc,'input');
+    vol.id='alerts-volume';
+    vol.type='range';
+    vol.min='0';
+    vol.max='100';
+    vol.step='1';
+    vol.value=Math.round(config.sound.volume*100);
+    volLabel.append(vol,make(doc,'output',`${vol.value}%`));
+    layout.append(volLabel);
+    root.append(layout);
+    const advanced=make(doc,'details',undefined,'alerts-advanced'),advancedTitle=make(doc,'summary','Advanced queue and detail options');
+    advanced.append(advancedTitle);
+    for(const[key,label,min,max,unit]of [['maxPending','Maximum queued alerts',1,50,''],['maxAgeSeconds','Discard alerts older than',15,300,' seconds'],['followDedupeSeconds','Repeat-follow window',5,120,' seconds']]){const field=make(doc,'label',label),input=make(doc,'input');
+      input.type='number';
+      input.min=String(min);
+      input.max=String(max);
+      input.value=config.queue[key];
+      input.setAttribute('aria-label',label);
+      field.append(input,make(doc,'span',unit));
+      input.onchange=()=>{config.queue[key]=Math.max(min,Math.min(max,+input.value||min));
+        persist();
+        if(credentials&&config.enabled)startClient()};
+      advanced.append(field)}for(const[key,label]of [['showViewerMessage','Show resubscription message'],['showRewardTitle','Show reward title']]){const field=make(doc,'label',label),input=make(doc,'input');
+      input.type='checkbox';
+      input.checked=config[key];
+      input.onchange=()=>{config[key]=input.checked;
+        persist()};
+      field.prepend(input);
+      advanced.append(field)}root.append(advanced);
+    
+  const cards=make(doc,'div',undefined,'alerts-type-list');
+    for(const type of ALERT_TYPE_ORDER){const item=config.types[type],details=make(doc,'details',undefined,'alerts-type');
+      details.open=type==='follow';
+      const summary=make(doc,'summary',labels[type]),enabled=make(doc,'input');
+      enabled.type='checkbox';
+      enabled.checked=item.enabled;
+      enabled.setAttribute('aria-label',`Enable ${labels[type]} alerts`);
+      summary.prepend(enabled);
+      details.append(summary);
+      const template=make(doc,'label',`Message format · use ${(design.templateTokens[type]||[]).map(x=>`{${x}}`).join(', ')}`),text=make(doc,'input');
+      text.type='text';
+      text.maxLength=160;
+      text.value=item.message;
+      text.setAttribute('aria-label',`${labels[type]} message template`);
+      template.append(text);
+      details.append(template);
+      
+   if(type==='sub'){const variantLabel=make(doc,'label','Test subscription tier'),select=make(doc,'select');
+        select.className='alerts-tier';
+        for(const value of variants){const opt=make(doc,'option',value==='prime'?'Prime · preview only':value==='tier1'?'Tier 1 / Prime':value.replace('tier','Tier '));
+          opt.value=value;
+          select.append(opt)}variantLabel.append(select);
+        details.append(variantLabel)}
+   const hold=make(doc,'label','On screen for'),duration=make(doc,'input');
+      duration.type='number';
+      duration.min='3';
+      duration.max='20';
+      duration.value=item.holdSeconds;
+      duration.setAttribute('aria-label',`${labels[type]} duration in seconds`);
+      hold.append(duration,make(doc,'span','seconds'));
+      details.append(hold);
+      const test=make(doc,'button','Send test alert');
+      test.type='button';
+      test.dataset.alertTest=type;
+      details.append(test);
+      const inline=make(doc,'small','Unrecognized fields keep the last saved message.');
+      inline.dataset.templateError='';
+      inline.hidden=true;
+      details.append(inline);
+      cards.append(details)}root.append(cards);
+    
+  const subnote=make(doc,'p','Prime is a preview-only label. Live Tier 1 events are shown as “Tier 1 / Prime”.');
+    subnote.className='alerts-note';
+    root.append(subnote);
+    
+ const stage=make(doc,'div',undefined,'alert-preview-stage');
+    stage.id='alerts-preview';
+    stage.setAttribute('aria-label','Alert preview stage');
+    layer=createAlertLayer({document:doc,config});
+    layer.classList.add('alerts-editor-layer');
+    stage.append(layer);
+    root.append(stage);
+    const soundNote=make(doc,'small');
+    soundNote.id='alerts-sound-note';
+    root.append(soundNote);
+    const queueStatus=make(doc,'p','No live alerts queued.');
+    queueStatus.id='alerts-queue';
+    root.append(queueStatus);
+    
+  const help=make(doc,'p','Alerts match your saved skin controls; custom CSS and image backgrounds are not included. Check alert readability over your brightest gameplay. Use Interact in OBS to enable sound if needed, then test your monitoring/output settings.');
+    help.className='alerts-note';
+    root.append(help);
+    
+  const wire=()=>{connect.onclick=()=>{const channel=getChannel().trim().toLowerCase();
+        if(!channel){setStatus('Enter the channel name before connecting alerts.');
+          return}saveRestore();
+        config.enabled=true;
+        persist();
+        beginAlertsAuth({channel,alerts:config,design,sessionStorage,location:win.location});
+        };
+      disconnect.onclick=async()=>{if(!credentials?.token){setStatus('Alerts are not connected. Remove old links from OBS and review your Twitch connections.');
+          return}stopClient();
+        const result=await revokeAlertsToken(credentials.token,{fetchImpl});
+        credentials=null;
+        readyCount=0;
+        config.enabled=false;
+        persist();
+        setStatus(result.ok?'Alerts disconnected and Twitch access revoked.':'Alerts stopped, but revocation failed. Remove the old link and revoke access in Twitch connections.');
+        updateButtons()};
+      copy.onclick=async()=>{if(!credentials||!readyCount||!config.enabled){setStatus('Connect enabled alert types before copying this private link.');
+          return}try{const url=await buildAlertsUrl(win.location.href,{token:credentials.token,chatSettings:getChatSettings(),alerts:config,recipe:getRecipe(),baseSkinId:getSkin()?.id||'',baseSettings:getSkin()?.settings},design);
+          await clipboard.writeText(url);
+          setStatus('Private alerts link copied. Keep it secret; it includes private account access.')}catch(error){setStatus(error?.message||'Could not copy the private link. Check clipboard access and try again.')}};
+      
+   masterInput.onchange=()=>{config.enabled=masterInput.checked;
+        persist();
+        if(!config.enabled)stopClient();
+        else if(credentials)startClient()};
+      pos.onchange=()=>{config.position=pos.value;
+        layer.dataset.position=pos.value;
+        layer.style.setProperty('--alert-inset',`${config.insetPx}px`);
+        persist()};
+      for(const[input,key]of [[width,'widthPx'],[inset,'insetPx']])input.oninput=()=>{config[key]=Number(input.value);
+        input.parentElement.querySelector('output').textContent=`${input.value} px`;
+        if(key==='insetPx')layer.style.setProperty('--alert-inset',`${input.value}px`);
+        persist()};
+      sound.onchange=()=>{config.sound.enabled=sound.checked;
+        persist()};
+      vol.oninput=()=>{config.sound.volume=Number(vol.value)/100;
+        vol.parentElement.querySelector('output').textContent=`${vol.value}%`;
+        persist()};
+      
    cards.querySelectorAll('.alerts-type').forEach((details,index)=>{const type=ALERT_TYPE_ORDER[index],template=details.querySelector('input[type=text]'),enable=details.querySelector('summary input'),hold=details.querySelector('input[type=number]'),error=details.querySelector('[data-template-error]');template.onchange=()=>{const next=normalizeAlerts(config,design);next.types[type].message=template.value;const valid=normalizeAlerts({...config,types:{...config.types,[type]:{...config.types[type],message:template.value}}},design).types[type].message;if(valid!==template.value){error.hidden=false;template.setAttribute('aria-invalid','true')}else{config.types[type].message=template.value;error.hidden=true;template.removeAttribute('aria-invalid');persist()}};enable.onchange=()=>{config.types[type].enabled=enable.checked;persist();if(credentials){if(alertScopesFor(config).every(scope=>credentials.scopes.includes(scope)))startClient();else setStatus(`Reconnect to enable ${labels[type]}.`)}};hold.onchange=()=>{config.types[type].holdSeconds=Math.max(3,Math.min(20,+hold.value||7));persist()};details.querySelector('[data-alert-test]').onclick=()=>{const variant=details.querySelector('.alerts-tier')?.value||'tier1';testQueue.push(sample(type,variant));pumpTests()}});
-  };wire();updateButtons();return stage;
+      
+  };
+    wire();
+    updateButtons();
+    return stage;
+    
  }
- function updateButtons(){const active=!!credentials;$('#alerts-disconnect').disabled=!active;$('#alerts-copy').disabled=!active||!readyCount||!config.enabled;$('#alerts-connect').disabled=false;$('#alerts-enabled').checked=config.enabled}
- function startClient(){stopClient();const playConfig=getChatPlayConfig(),needsClient=config.enabled||playConfig?.enabled&&playConfig?.points?.enabled;if(!credentials||!needsClient)return;queue=new AlertQueue(config.queue);client=createEventSubClient({token:credentials.token,clientId:TWITCH_CLIENT_ID,broadcasterId:credentials.identity.userId,alerts:config.enabled?config:{...config,types:{}},chatPlay:playConfig,fetchImpl,WebSocketImpl,onStatus:info=>{if(info.state==='ready'){readyCount=info.ready;unavailable=info.unavailable||[];setStatus(`Connected · ${readyCount} alert types ready${unavailable.length?`; ${formatUnavailable(unavailable)} unavailable`:''}`)}else if(info.state==='unavailable'){readyCount=0;unavailable=info.unavailable||[];setStatus(`No alert types ready${unavailable.length?`; ${unavailable.join(', ')} unavailable`:''}`)}else if(info.state==='retrying')setStatus('Alerts reconnecting…');updateButtons()},onAuthEnded:()=>{credentials=null;stopClient();setStatus('Twitch access ended. Connect alerts again.');updateButtons()},onEvent:event=>{if(event.type==='redemption'&&onPlayReward(event))return;const result=queue.enqueue(event);if(result.accepted){$('#alerts-queue').textContent=`${queue.length} live alerts queued.`;pumpLive()}if(queue.skipped)$('#alerts-queue').textContent=`Busy stream: ${queue.skipped} queued alerts skipped.`}});client.start();updateButtons()}
- const stop=()=>{closed=true;stopClient();clearTimeout(testTimer);clearTimeout(authExpiryTimer);clearInterval(authValidateTimer);layer.replaceChildren()};
+ function updateButtons(){const active=!!credentials;
+    $('#alerts-disconnect').disabled=!active;
+    $('#alerts-copy').disabled=!active||!readyCount||!config.enabled;
+    $('#alerts-connect').disabled=false;
+    $('#alerts-enabled').checked=config.enabled}
+ function startClient(){stopClient();
+    const playConfig=getChatPlayConfig(),needsClient=config.enabled||playConfig?.enabled&&playConfig?.points?.enabled;
+    if(!credentials||!needsClient)return;
+    queue=new AlertQueue(config.queue);
+    client=createEventSubClient({token:credentials.token,clientId:TWITCH_CLIENT_ID,broadcasterId:credentials.identity.userId,alerts:config.enabled?config:{...config,types:{}},chatPlay:playConfig,fetchImpl,WebSocketImpl,onStatus:info=>{if(info.state==='ready'){readyCount=info.ready;unavailable=info.unavailable||[];setStatus(`Connected · ${readyCount} alert types ready${unavailable.length?`; ${formatUnavailable(unavailable)} unavailable`:''}`)}else if(info.state==='unavailable'){readyCount=0;unavailable=info.unavailable||[];setStatus(`No alert types ready${unavailable.length?`; ${unavailable.join(', ')} unavailable`:''}`)}else if(info.state==='retrying')setStatus('Alerts reconnecting…');updateButtons()},onAuthEnded:()=>{credentials=null;stopClient();setStatus('Twitch access ended. Connect alerts again.');updateButtons()},onEvent:event=>{if(event.type==='redemption'&&onPlayReward(event))return;const result=queue.enqueue(event);if(result.accepted){$('#alerts-queue').textContent=`${queue.length} live alerts queued.`;pumpLive()}if(queue.skipped)$('#alerts-queue').textContent=`Busy stream: ${queue.skipped} queued alerts skipped.`}});
+    client.start();
+    updateButtons()}
+ const stop=()=>{closed=true;
+    stopClient();
+    clearTimeout(testTimer);
+    clearTimeout(authExpiryTimer);
+    clearInterval(authValidateTimer);
+    layer.replaceChildren()};
+  
  build();
- if(initialAuth?.handled){if(initialAuth.token){credentials={token:initialAuth.token,identity:initialAuth.identity,scopes:initialAuth.scopes,expiresIn:initialAuth.expiresIn};setStatus(`Connected as ${initialAuth.identity.login}.`);if(!initialAuth.action?.startsWith('connect-chat-play')&&initialAuth.action!=='create-chat-play-rewards'&&initialAuth.action!=='round11-setup')config.enabled=true;persist();updateButtons();authExpiryTimer=setTimeout(()=>{stopClient();credentials=null;setStatus('Twitch access expired. Connect alerts again.');updateButtons()},Math.max(0,initialAuth.expiresIn*1000));authValidateTimer=setInterval(async()=>{const result=await validateAlertsToken(credentials?.token,{fetchImpl});if(!result.valid||result.userId!==credentials?.identity.userId){stopClient();credentials=null;setStatus('Twitch access ended. Connect alerts again.');updateButtons()}},60*60*1000);if(config.enabled||getChatPlayConfig()?.enabled&&getChatPlayConfig()?.points?.enabled)startClient();if(initialAuth.action==='create-chat-play-rewards'||initialAuth.action==='round11-setup'&&initialAuth.createRewards)rewardSetupPromise=runInitialRewardSetup(initialAuth,createRewards)}else if(initialAuth.error)setStatus(initialAuth.error)}
+  
+ if(initialAuth?.handled){if(initialAuth.token){credentials={token:initialAuth.token,identity:initialAuth.identity,scopes:initialAuth.scopes,expiresIn:initialAuth.expiresIn};
+      setStatus(`Connected as ${initialAuth.identity.login}.`);
+      if(!initialAuth.action?.startsWith('connect-chat-play')&&initialAuth.action!=='create-chat-play-rewards'&&initialAuth.action!=='round11-setup')config.enabled=true;
+      persist();
+      updateButtons();
+      authExpiryTimer=setTimeout(()=>{stopClient();credentials=null;setStatus('Twitch access expired. Connect alerts again.');updateButtons()},Math.max(0,initialAuth.expiresIn*1000));
+      authValidateTimer=setInterval(async()=>{const result=await validateAlertsToken(credentials?.token,{fetchImpl});if(!result.valid||result.userId!==credentials?.identity.userId){stopClient();credentials=null;setStatus('Twitch access ended. Connect alerts again.');updateButtons()}},60*60*1000);
+      if(config.enabled||getChatPlayConfig()?.enabled&&getChatPlayConfig()?.points?.enabled)startClient();
+      if(initialAuth.action==='create-chat-play-rewards'||initialAuth.action==='round11-setup'&&initialAuth.createRewards)rewardSetupPromise=runInitialRewardSetup(initialAuth,createRewards)}else if(initialAuth.error)setStatus(initialAuth.error)}
  if(!initialAuth?.handled){void 0}
  win.addEventListener('chat:channel-change',()=>{if(credentials&&getChannel().trim().toLowerCase()!==credentials.identity.login){stopClient();credentials=null;config.enabled=false;persist();setStatus('Channel changed. Connect alerts again for this channel.');updateButtons()}});
- win.addEventListener('pagehide',stop,{once:true});async function createRewards(){
+  
+ win.addEventListener('pagehide',stop,{once:true});
+  async function createRewards(){
   const play=getChatPlayConfig(),mappings=play?.points?.rewards||[],rewards=CHAT_PLAY_REWARD_DRAFTS.filter(draft=>mappings.find(x=>x.effect===draft.effect)?.enabled).map(draft=>({...draft,title:mappings.find(x=>x.effect===draft.effect)?.title||draft.title}));
-  if(!rewards.length){const result={ok:false,error:'Choose at least one channel-point reward to create.'};setStatus(result.error);return result}
-  if(!credentials?.scopes?.includes(CHAT_PLAY_POINT_SCOPE)){const result={ok:false,error:'Reconnect and approve reward setup before creating rewards.'};setStatus(result.error);return result}
+    
+  if(!rewards.length){const result={ok:false,error:'Choose at least one channel-point reward to create.'};
+      setStatus(result.error);
+      return result}
+  if(!credentials?.scopes?.includes(CHAT_PLAY_POINT_SCOPE)){const result={ok:false,error:'Reconnect and approve reward setup before creating rewards.'};
+      setStatus(result.error);
+      return result}
   setStatus('Checking existing Twitch rewards…');
+    
   const result=await createChatPlayRewards({token:credentials.token,broadcasterId:credentials.identity.userId,rewards,enabled:getRewardCreationEnabled()!==false,fetchImpl});
+    
   if(result.ok)onRewardsCreated(result);
+    
   setStatus(result.ok?`${result.created.length} created; ${result.reused.length} reused. Review the setup message above.`:result.error);
+    
   return result;
+    
  }
  async function turnOnRewards(rewards){
   const result=await enableExistingChatPlayRewards({token:credentials?.token,broadcasterId:credentials?.identity.userId,rewards,fetchImpl});
+    
   setStatus(result.ok?`${result.enabled.length} existing rewards turned on.`:result.error);
+    
   return result;
+    
  }
  function connectChannelPoints(create=true){
   const extraScopes=create?CHAT_PLAY_POINT_SCOPES:[CHAT_PLAY_READ_SCOPE];
-  if(credentials&&extraScopes.every(scope=>credentials.scopes.includes(scope))){if(create)return createRewards();startClient();setStatus('Channel points connected. Checking reward titles…');return Promise.resolve({ok:true})}
-  saveRestore();beginAlertsAuth({channel:getChannel(),alerts:config,design,extraScopes,onlyExtraScopes:true,action:create?'create-chat-play-rewards':'connect-chat-play',sessionStorage,location:win.location});
+    
+  if(credentials&&extraScopes.every(scope=>credentials.scopes.includes(scope))){if(create)return createRewards();
+      startClient();
+      setStatus('Channel points connected. Checking reward titles…');
+      return Promise.resolve({ok:true})}
+  saveRestore();
+    beginAlertsAuth({channel:getChannel(),alerts:config,design,extraScopes,onlyExtraScopes:true,action:create?'create-chat-play-rewards':'connect-chat-play',sessionStorage,location:win.location});
+    
   return Promise.resolve({ok:false,redirecting:true});
- }function buildPrivatePlayLink(playConfig,allowedSkins){if(!credentials?.token||!credentials.scopes.includes('channel:read:redemptions'))throw new Error('Connect channel points before copying the private link.');return buildChatPlayUrl(win.location.href,{token:credentials.token,chatSettings:getChatSettings(),chatPlay:playConfig,allowedSkins,baseSkinId:getSkin()?.id||'',baseSettings:getSkin()?.settings})}function buildUnifiedLink(playConfig,allowedSkins){if(!credentials?.token)throw new Error('Connect Twitch first.');return buildUnifiedOverlayUrl(win.location.href,{token:credentials.token,chatSettings:getChatSettings(),chatPlay:playConfig,allowedSkins,baseSkinId:getSkin()?.id||'',baseSettings:getSkin()?.settings,alerts:config,recipe:getRecipe(),design})}function acceptGuidedCredentials(auth){if(!auth?.token)return false;credentials={token:auth.token,identity:auth.identity,scopes:auth.scopes||[],expiresIn:auth.expiresIn,expiresAt:auth.expiresAt};updateButtons();return true}function setGuidedState({enabled,followRaidDefaults=false}={}){config.enabled=!!enabled;if(followRaidDefaults){for(const type of ALERT_TYPE_ORDER)config.types[type].enabled=['follow','raid'].includes(type)}persist();updateButtons();if(credentials&&config.enabled)startClient();else if(!config.enabled)stopClient()}function setAlertType(type,enabled){if(config.types[type]){config.types[type].enabled=!!enabled;persist();if(credentials&&config.enabled)startClient()}}return{connectChannelPoints,buildPrivatePlayLink,buildUnifiedLink,acceptGuidedCredentials,setGuidedState,setAlertType,turnOnRewards,get rewardSetup(){return rewardSetupPromise},get config(){return config},get queue(){return queue},test(type,variant){testQueue.push(sample(type,variant));pumpTests()},update(){layer.dataset.position=config.position},get credentials(){return credentials}};
+    
+ }function buildPrivatePlayLink(playConfig,allowedSkins){if(!credentials?.token||!credentials.scopes.includes('channel:read:redemptions'))throw new Error('Connect channel points before copying the private link.');
+    return buildChatPlayUrl(win.location.href,{token:credentials.token,chatSettings:getChatSettings(),chatPlay:playConfig,allowedSkins,baseSkinId:getSkin()?.id||'',baseSettings:getSkin()?.settings})}function buildUnifiedLink(playConfig,allowedSkins){if(!credentials?.token)throw new Error('Connect Twitch first.');
+    return buildUnifiedOverlayUrl(win.location.href,{token:credentials.token,chatSettings:getChatSettings(),chatPlay:playConfig,allowedSkins,baseSkinId:getSkin()?.id||'',baseSettings:getSkin()?.settings,alerts:config,recipe:getRecipe(),design})}function acceptGuidedCredentials(auth){if(!auth?.token)return false;
+    credentials={token:auth.token,identity:auth.identity,scopes:auth.scopes||[],expiresIn:auth.expiresIn,expiresAt:auth.expiresAt};
+    updateButtons();
+    return true}function setGuidedState({enabled,followRaidDefaults=false}={}){config.enabled=!!enabled;
+    if(followRaidDefaults){for(const type of ALERT_TYPE_ORDER)config.types[type].enabled=['follow','raid'].includes(type)}persist();
+    updateButtons();
+    if(credentials&&config.enabled)startClient();
+    else if(!config.enabled)stopClient()}function setAlertType(type,enabled){if(config.types[type]){config.types[type].enabled=!!enabled;
+      persist();
+      if(credentials&&config.enabled)startClient()}}return{connectChannelPoints,buildPrivatePlayLink,buildUnifiedLink,acceptGuidedCredentials,setGuidedState,setAlertType,turnOnRewards,get rewardSetup(){return rewardSetupPromise},get config(){return config},get queue(){return queue},test(type,variant){testQueue.push(sample(type,variant));
+      pumpTests()},update(){layer.dataset.position=config.position},get credentials(){return credentials}};
+  
 }

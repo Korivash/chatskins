@@ -1,41 +1,198 @@
+/**
+ * Browser module alerts-render.js implements one ChatSkins page or overlay feature.
+ * Used by the site, editor, or OBS overlay module graph.
+ * Main exports: createAlertCard, createAlertLayer, createAlertSoundPlayer, playAlertSound.
+ * Invariant: preserve existing settings links and render chat content as text.
+ */
 import {validateAlertTemplate,cleanAlertText} from './alerts-config.js';
 
-function hexRgba(value,alphaFloor=0){const m=/^#([\da-f]{6})([\da-f]{2})?$/i.exec(String(value||''));if(!m)return`rgba(16,21,40,${alphaFloor||1})`;const n=m[1],alpha=m[2]?parseInt(m[2],16)/255:1;return`rgba(${parseInt(n.slice(0,2),16)},${parseInt(n.slice(2,4),16)},${parseInt(n.slice(4,6),16)},${Math.max(alpha,alphaFloor)})`}
-function paintColor(p,fallback='#FFFFFF'){if(!p)return fallback;if(p.mode==='solid')return p.color||fallback;if(p.stops?.length)return p.stops[0].color||fallback;return fallback}
-function paintGradient(p,fallback){if(!p||p.mode==='solid'||!p.stops?.length)return null;const stops=p.stops.map(stop=>`${stop.color} ${Math.max(0,Math.min(100,Number(stop.position)||0))}%`).join(',');return`linear-gradient(${Number(p.angle)||135}deg,${stops||fallback})`}
-function surfaceGradient(surface){if(surface?.mode!=='linear'||!surface.stops?.length)return null;const stops=surface.stops.map(stop=>`${rgbaText(stop.color,.94)} ${Math.max(0,Math.min(100,Number(stop.position)||0))}%`).join(',');return`linear-gradient(${Number(surface.angle)||135}deg,${stops})`}
-function contrastInk(hex){const m=/^#([\da-f]{6})/i.exec(String(hex||''));if(!m)return'#101528';const v=m[1].match(/.{2}/g).map(x=>parseInt(x,16)/255).map(c=>c<=.04045?c/12.92:((c+.055)/1.055)**2.4),l=.2126*v[0]+.7152*v[1]+.0722*v[2];return l>.179?'#101528':'#FFFFFF'}
-function luminance(hex){const m=/^#([\da-f]{6})/i.exec(String(hex||''));if(!m)return .04;const v=m[1].match(/.{2}/g).map(x=>parseInt(x,16)/255).map(c=>c<=.04045?c/12.92:((c+.055)/1.055)**2.4);return .2126*v[0]+.7152*v[1]+.0722*v[2]}
-function readableColor(foreground,background,min=4.5){const a=luminance(foreground),b=luminance(background),ratio=(Math.max(a,b)+.05)/(Math.min(a,b)+.05);return ratio>=min?foreground:contrastInk(background)}
-function resolvedPart(settings,key){const part=settings.parts?.[key]||{},parent=settings.parts?.panel||{};if(!part.inheritTypography)return part;return{...part,fontFamily:parent.fontFamily||part.fontFamily,fontSize:parent.fontSize||part.fontSize,fontWeight:parent.fontWeight||part.fontWeight,italic:parent.italic??part.italic,letterSpacing:parent.letterSpacing??part.letterSpacing,uppercase:parent.uppercase??part.uppercase,lineHeight:parent.lineHeight||part.lineHeight}}
+
+function hexRgba(value,alphaFloor=0){const m=/^#([\da-f]{6})([\da-f]{2})?$/i.exec(String(value||''));
+  if(!m)return`rgba(16,21,40,${alphaFloor||1})`;
+  const n=m[1],alpha=m[2]?parseInt(m[2],16)/255:1;
+  return`rgba(${parseInt(n.slice(0,2),16)},${parseInt(n.slice(2,4),16)},${parseInt(n.slice(4,6),16)},${Math.max(alpha,alphaFloor)})`}
+function paintColor(p,fallback='#FFFFFF'){if(!p)return fallback;
+  if(p.mode==='solid')return p.color||fallback;
+  if(p.stops?.length)return p.stops[0].color||fallback;
+  return fallback}
+function paintGradient(p,fallback){if(!p||p.mode==='solid'||!p.stops?.length)return null;
+  const stops=p.stops.map(stop=>`${stop.color} ${Math.max(0,Math.min(100,Number(stop.position)||0))}%`).join(',');
+  return`linear-gradient(${Number(p.angle)||135}deg,${stops||fallback})`}
+function surfaceGradient(surface){if(surface?.mode!=='linear'||!surface.stops?.length)return null;
+  const stops=surface.stops.map(stop=>`${rgbaText(stop.color,.94)} ${Math.max(0,Math.min(100,Number(stop.position)||0))}%`).join(',');
+  return`linear-gradient(${Number(surface.angle)||135}deg,${stops})`}
+function contrastInk(hex){const m=/^#([\da-f]{6})/i.exec(String(hex||''));
+  if(!m)return'#101528';
+  const v=m[1].match(/.{2}/g).map(x=>parseInt(x,16)/255).map(c=>c<=.04045?c/12.92:((c+.055)/1.055)**2.4),l=.2126*v[0]+.7152*v[1]+.0722*v[2];
+  return l>.179?'#101528':'#FFFFFF'}
+function luminance(hex){const m=/^#([\da-f]{6})/i.exec(String(hex||''));
+  if(!m)return .04;
+  const v=m[1].match(/.{2}/g).map(x=>parseInt(x,16)/255).map(c=>c<=.04045?c/12.92:((c+.055)/1.055)**2.4);
+  return .2126*v[0]+.7152*v[1]+.0722*v[2]}
+function readableColor(foreground,background,min=4.5){const a=luminance(foreground),b=luminance(background),ratio=(Math.max(a,b)+.05)/(Math.min(a,b)+.05);
+  return ratio>=min?foreground:contrastInk(background)}
+function resolvedPart(settings,key){const part=settings.parts?.[key]||{},parent=settings.parts?.panel||{};
+  if(!part.inheritTypography)return part;
+  return{...part,fontFamily:parent.fontFamily||part.fontFamily,fontSize:parent.fontSize||part.fontSize,fontWeight:parent.fontWeight||part.fontWeight,italic:parent.italic??part.italic,letterSpacing:parent.letterSpacing??part.letterSpacing,uppercase:parent.uppercase??part.uppercase,lineHeight:parent.lineHeight||part.lineHeight}}
 function rgbaText(hex,alpha=.94){return hexRgba(hex,alpha)}
-function element(doc,tag,text,className){const node=doc.createElement(tag);if(className)node.className=className;if(text!==undefined)node.textContent=text;return node}
+function element(doc,tag,text,className){const node=doc.createElement(tag);
+  if(className)node.className=className;
+  if(text!==undefined)node.textContent=text;
+  return node}
 function safeNumber(value){return Number.isFinite(Number(value))?Number(value):null}
-function buildLabel(type,event){if(type==='sub')return`Subscription · ${event.tier||'Tier 1 / Prime'}`;if(type==='resub')return`Resubscription · ${event.months} months`;if(type==='giftSub')return`Gift · ${event.count} subs`;if(type==='raid')return`Raid · ${event.viewers} viewers`;if(type==='cheer')return`Cheer · ${event.bits} bits`;if(type==='redemption')return'Channel points';return'Follow'}
+function buildLabel(type,event){if(type==='sub')return`Subscription · ${event.tier||'Tier 1 / Prime'}`;
+  if(type==='resub')return`Resubscription · ${event.months} months`;
+  if(type==='giftSub')return`Gift · ${event.count} subs`;
+  if(type==='raid')return`Raid · ${event.viewers} viewers`;
+  if(type==='cheer')return`Cheer · ${event.bits} bits`;
+  if(type==='redemption')return'Channel points';
+  return'Follow'}
 
+/** create alert card.
+ * @param {unknown} parameter1 Function input.
+ * @param {unknown} event Function input.
+ * @param {unknown} config Function input.
+ * @param {unknown} recipe Function input.
+ * @param {unknown} design Function input.
+ * @param {unknown} preview Function input.
+ * @returns {unknown} The function result.
+ */
 export function createAlertCard({document:doc=globalThis.document,event,config,recipe={},design,preview=false}={}){
- if(!event||!config?.types?.[event.type])return null;const type=event.type,record=design?.types?.[type]||{},template=String(config.types[type].message||''),check=validateAlertTemplate(type,template,design);if(!check.valid)return null;const name=cleanAlertText(event.name||'Anonymous supporter',50),values={...event,name};let message='';for(const match of template.matchAll(/\{([^{}]+)\}/g))message+=match[0];
+ if(!event||!config?.types?.[event.type])return null;
+  const type=event.type,record=design?.types?.[type]||{},template=String(config.types[type].message||''),check=validateAlertTemplate(type,template,design);
+  if(!check.valid)return null;
+  const name=cleanAlertText(event.name||'Anonymous supporter',50),values={...event,name};
+  let message='';
+  for(const match of template.matchAll(/\{([^{}]+)\}/g))message+=match[0];
+  
  const settings=config.chatSettings||{},messagePart=resolvedPart(settings,'messageText'),namePart=resolvedPart(settings,'name'),frame=settings.frame||{},presentation=settings.presentation||{},backgrounds=settings.backgrounds||{},surface=backgrounds[frame.target==='message'?'message':'panel']||backgrounds.message||{},paint=surface.mode==='image'?'#101528FF':surface.color||surface.stops?.[0]?.color||'#101528FF',transparent=!!settings.transparentBackground,fill=transparent?'transparent':rgbaText(paint,.94),frameColor=paintColor(frame.paint,'#8CECE0FF'),borderStyle=settings.hideFrames?'none':String(frame.style||'none'),borderWidth=settings.hideFrames||borderStyle==='none'?0:Math.max(0,Number(frame.width)||0),radii=frame.radius||{},radius=`${Math.max(0,Number(radii.topLeft)||0)}px ${Math.max(0,Number(radii.topRight)||0)}px ${Math.max(0,Number(radii.bottomRight)||0)}px ${Math.max(0,Number(radii.bottomLeft)||0)}px`,surfaceInk=contrastInk(paint),bodyInk=readableColor(paintColor(messagePart.paint,'#F3F5FFFF'),paint),iconInk=readableColor(frameColor,paint,3),borderCss=borderStyle==='beveled'?'outset':borderStyle==='pixel'||borderStyle==='none'?'solid':borderStyle;
- const card=element(doc,'article',undefined,'alert-card'),viewportWidth=globalThis.innerWidth||1280,requestedInset=Math.max(0,Math.min(120,Number(config.insetPx)||36)),effectiveInset=Math.min(requestedInset,Math.max(0,(viewportWidth-240)/2)),backdropGradient=transparent?null:surfaceGradient(surface);card.setAttribute('role','status');card.dataset.motion=recipe.motion||'fade';card.dataset.iconTreatment=recipe.iconTreatment||'outline';card.style.width=`min(${Math.max(280,Math.min(800,Number(config.widthPx)||480))}px, calc(100vw - ${effectiveInset*2+16}px))`;card.style.padding=`${Math.max(20,Number(frame.padding?.top)||20)}px ${Math.max(20,Number(frame.padding?.right)||20)}px ${Math.max(20,Number(frame.padding?.bottom)||20)}px ${Math.max(20,Number(frame.padding?.left)||20)}px`;card.style.columnGap=`${Number(recipe.columnGapPx)||16}px`;card.style.backgroundColor=fill;card.style.color=surfaceInk;card.style.fontFamily=`"${messagePart.fontFamily||'Barlow'}",system-ui,sans-serif`;card.style.fontWeight=String(messagePart.fontWeight||500);card.style.border=`${borderWidth}px ${borderCss} ${frameColor}`;card.style.borderRadius=radius;card.style.setProperty('--alert-accent',frameColor);card.style.setProperty('--alert-surface',fill);if(backdropGradient){card.dataset.gradientSurface='true';card.style.background=backdropGradient+' padding-box'}
- const gradient=paintGradient(frame.paint,frameColor);if(gradient&&borderWidth){card.dataset.gradientFrame='true';card.style.borderColor='transparent';card.style.background=`${backdropGradient||`linear-gradient(${fill},${fill})`} padding-box,${gradient} border-box`}
- if(borderStyle==='double'&&borderWidth>0&&!settings.hideFrames){card.style.boxShadow=`0 0 0 2px ${fill==='transparent'?'rgba(16,21,40,.94)':fill}, 0 0 0 3px ${frameColor}`;card.style.borderRadius=`${radius}px`}
- if(frame.outer?.enabled&&borderWidth>0&&!settings.hideFrames){const gap=Math.max(1,Number(frame.doubleGap)||2),outerWidth=Math.max(1,Number(frame.outer.width)||1),outer=frame.outer.color||frameColor;card.style.boxShadow=`0 0 0 ${borderWidth+gap}px ${fill==='transparent'?'rgba(16,21,40,.94)':fill},0 0 0 ${borderWidth+gap+outerWidth}px ${outer}`}
+  
+ const card=element(doc,'article',undefined,'alert-card'),viewportWidth=globalThis.innerWidth||1280,requestedInset=Math.max(0,Math.min(120,Number(config.insetPx)||36)),effectiveInset=Math.min(requestedInset,Math.max(0,(viewportWidth-240)/2)),backdropGradient=transparent?null:surfaceGradient(surface);
+  card.setAttribute('role','status');
+  card.dataset.motion=recipe.motion||'fade';
+  card.dataset.iconTreatment=recipe.iconTreatment||'outline';
+  card.style.width=`min(${Math.max(280,Math.min(800,Number(config.widthPx)||480))}px, calc(100vw - ${effectiveInset*2+16}px))`;
+  card.style.padding=`${Math.max(20,Number(frame.padding?.top)||20)}px ${Math.max(20,Number(frame.padding?.right)||20)}px ${Math.max(20,Number(frame.padding?.bottom)||20)}px ${Math.max(20,Number(frame.padding?.left)||20)}px`;
+  card.style.columnGap=`${Number(recipe.columnGapPx)||16}px`;
+  card.style.backgroundColor=fill;
+  card.style.color=surfaceInk;
+  card.style.fontFamily=`"${messagePart.fontFamily||'Barlow'}",system-ui,sans-serif`;
+  card.style.fontWeight=String(messagePart.fontWeight||500);
+  card.style.border=`${borderWidth}px ${borderCss} ${frameColor}`;
+  card.style.borderRadius=radius;
+  card.style.setProperty('--alert-accent',frameColor);
+  card.style.setProperty('--alert-surface',fill);
+  if(backdropGradient){card.dataset.gradientSurface='true';
+    card.style.background=backdropGradient+' padding-box'}
+ const gradient=paintGradient(frame.paint,frameColor);
+  if(gradient&&borderWidth){card.dataset.gradientFrame='true';
+    card.style.borderColor='transparent';
+    card.style.background=`${backdropGradient||`linear-gradient(${fill},${fill})`} padding-box,${gradient} border-box`}
+ if(borderStyle==='double'&&borderWidth>0&&!settings.hideFrames){card.style.boxShadow=`0 0 0 2px ${fill==='transparent'?'rgba(16,21,40,.94)':fill}, 0 0 0 3px ${frameColor}`;
+    card.style.borderRadius=`${radius}px`}
+ if(frame.outer?.enabled&&borderWidth>0&&!settings.hideFrames){const gap=Math.max(1,Number(frame.doubleGap)||2),outerWidth=Math.max(1,Number(frame.outer.width)||1),outer=frame.outer.color||frameColor;
+    card.style.boxShadow=`0 0 0 ${borderWidth+gap}px ${fill==='transparent'?'rgba(16,21,40,.94)':fill},0 0 0 ${borderWidth+gap+outerWidth}px ${outer}`}
  if(borderStyle==='pixel'&&borderWidth>0)card.style.clipPath='polygon(8px 0,calc(100% - 8px) 0,calc(100% - 8px) 4px,100% 4px,100% calc(100% - 4px),calc(100% - 8px) calc(100% - 4px),calc(100% - 8px) 100%,8px 100%,8px calc(100% - 4px),0 calc(100% - 4px),0 4px,8px 4px)';
- if(presentation.shape==='speech')card.dataset.shape='speech';if(presentation.shape==='slash')card.dataset.shape='slash';if(presentation.shape==='ticket')card.dataset.shape='ticket';if(!borderWidth)card.dataset.noFrame='true';
- const iconSpec=design?.icons?.[record.icon],svg=doc.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('viewBox',iconSpec?.viewBox||'0 0 24 24');svg.setAttribute('width','36');svg.setAttribute('height','36');svg.setAttribute('aria-hidden','true');svg.classList.add('alert-icon');svg.style.color=iconInk;const path=doc.createElementNS('http://www.w3.org/2000/svg','path');path.setAttribute('d',iconSpec?.path||design?.icons?.spark?.path||'M12 2 15 9 22 12 15 15 12 22 9 15 2 12 9 9Z');svg.append(path);
- const content=element(doc,'div',undefined,'alert-content'),title=element(doc,'div',recipe.title||'Community update','alert-title'),label=element(doc,'div',buildLabel(type,event),'alert-event-label'),body=element(doc,'p',undefined,'alert-message');const namePaint=paintColor(namePart.paint,'#8CECE0FF');title.style.color=readableColor(namePaint,paint);title.style.fontFamily=`"${namePart.fontFamily||'Chakra Petch'}",system-ui,sans-serif`;title.style.fontWeight=String(namePart.fontWeight||600);title.style.fontStyle=namePart.italic?'italic':'normal';label.style.color=surfaceInk;body.style.color=bodyInk;body.style.fontFamily=`"${messagePart.fontFamily||'Barlow'}",system-ui,sans-serif`;body.style.fontSize=`clamp(20px, ${Math.max(20,Number(messagePart.fontSize)||22)}px, 32px)`;body.style.fontWeight=String(messagePart.fontWeight||500);body.style.fontStyle=messagePart.italic?'italic':'normal';body.style.letterSpacing=`${Number(messagePart.letterSpacing)||0}px`;body.style.textTransform=messagePart.uppercase?'uppercase':'none';body.style.lineHeight=String(Math.max(1.35,Number(messagePart.lineHeight)||1.45));body.setAttribute('aria-label',template.replace(/\{([^{}]+)\}/g,(_,key)=>cleanAlertText(values[key]??'',key==='name'?50:32)));
- let cursor=0;const tokenPattern=/\{([^{}]+)\}/g;for(const match of template.matchAll(tokenPattern)){if(match.index>cursor)body.append(doc.createTextNode(template.slice(cursor,match.index)));const token=match[1],value=cleanAlertText(values[token]??'',token==='name'?50:32);if(token==='name'){const chip=element(doc,'span',value,'alert-name-chip');chip.style.backgroundColor=presentation.chipColor||frameColor;chip.style.color=contrastInk(presentation.chipColor||frameColor);body.append(chip)}else body.append(doc.createTextNode(value));cursor=match.index+match[0].length}if(cursor<template.length)body.append(doc.createTextNode(template.slice(cursor)));content.append(title,label,body);
- if(transparent){for(const node of [title,label,body]){node.style.textShadow='0 1px 2px #101528';node.style.backgroundColor='rgba(16,21,40,.94)';node.style.padding='2px 4px'} }
- if(type==='resub'&&config.showViewerMessage&&event.viewerMessage){const detail=element(doc,'blockquote',cleanAlertText(event.viewerMessage,240),'alert-detail');content.append(detail)}if(type==='redemption'&&config.showRewardTitle&&event.rewardTitle){content.append(element(doc,'div',cleanAlertText(event.rewardTitle,240),'alert-detail'))}
- card.append(svg,content);card.dataset.eventType=type;if(preview)card.dataset.preview='true';return card;
+  
+ if(presentation.shape==='speech')card.dataset.shape='speech';
+  if(presentation.shape==='slash')card.dataset.shape='slash';
+  if(presentation.shape==='ticket')card.dataset.shape='ticket';
+  if(!borderWidth)card.dataset.noFrame='true';
+  
+ const iconSpec=design?.icons?.[record.icon],svg=doc.createElementNS('http://www.w3.org/2000/svg','svg');
+  svg.setAttribute('viewBox',iconSpec?.viewBox||'0 0 24 24');
+  svg.setAttribute('width','36');
+  svg.setAttribute('height','36');
+  svg.setAttribute('aria-hidden','true');
+  svg.classList.add('alert-icon');
+  svg.style.color=iconInk;
+  const path=doc.createElementNS('http://www.w3.org/2000/svg','path');
+  path.setAttribute('d',iconSpec?.path||design?.icons?.spark?.path||'M12 2 15 9 22 12 15 15 12 22 9 15 2 12 9 9Z');
+  svg.append(path);
+  
+ const content=element(doc,'div',undefined,'alert-content'),title=element(doc,'div',recipe.title||'Community update','alert-title'),label=element(doc,'div',buildLabel(type,event),'alert-event-label'),body=element(doc,'p',undefined,'alert-message');
+  const namePaint=paintColor(namePart.paint,'#8CECE0FF');
+  title.style.color=readableColor(namePaint,paint);
+  title.style.fontFamily=`"${namePart.fontFamily||'Chakra Petch'}",system-ui,sans-serif`;
+  title.style.fontWeight=String(namePart.fontWeight||600);
+  title.style.fontStyle=namePart.italic?'italic':'normal';
+  label.style.color=surfaceInk;
+  body.style.color=bodyInk;
+  body.style.fontFamily=`"${messagePart.fontFamily||'Barlow'}",system-ui,sans-serif`;
+  body.style.fontSize=`clamp(20px, ${Math.max(20,Number(messagePart.fontSize)||22)}px, 32px)`;
+  body.style.fontWeight=String(messagePart.fontWeight||500);
+  body.style.fontStyle=messagePart.italic?'italic':'normal';
+  body.style.letterSpacing=`${Number(messagePart.letterSpacing)||0}px`;
+  body.style.textTransform=messagePart.uppercase?'uppercase':'none';
+  body.style.lineHeight=String(Math.max(1.35,Number(messagePart.lineHeight)||1.45));
+  body.setAttribute('aria-label',template.replace(/\{([^{}]+)\}/g,(_,key)=>cleanAlertText(values[key]??'',key==='name'?50:32)));
+  
+ let cursor=0;
+  const tokenPattern=/\{([^{}]+)\}/g;
+  for(const match of template.matchAll(tokenPattern)){if(match.index>cursor)body.append(doc.createTextNode(template.slice(cursor,match.index)));
+    const token=match[1],value=cleanAlertText(values[token]??'',token==='name'?50:32);
+    if(token==='name'){const chip=element(doc,'span',value,'alert-name-chip');
+      chip.style.backgroundColor=presentation.chipColor||frameColor;
+      chip.style.color=contrastInk(presentation.chipColor||frameColor);
+      body.append(chip)}else body.append(doc.createTextNode(value));
+    cursor=match.index+match[0].length}if(cursor<template.length)body.append(doc.createTextNode(template.slice(cursor)));
+  content.append(title,label,body);
+  
+ if(transparent){for(const node of [title,label,body]){node.style.textShadow='0 1px 2px #101528';
+      node.style.backgroundColor='rgba(16,21,40,.94)';
+      node.style.padding='2px 4px'} }
+ if(type==='resub'&&config.showViewerMessage&&event.viewerMessage){const detail=element(doc,'blockquote',cleanAlertText(event.viewerMessage,240),'alert-detail');
+    content.append(detail)}if(type==='redemption'&&config.showRewardTitle&&event.rewardTitle){content.append(element(doc,'div',cleanAlertText(event.rewardTitle,240),'alert-detail'))}
+ card.append(svg,content);
+  card.dataset.eventType=type;
+  if(preview)card.dataset.preview='true';
+  return card;
+  
 }
 
-export function createAlertLayer({document:doc=globalThis.document,config}={}){const layer=element(doc,'div',undefined,'alerts-layer');layer.setAttribute('aria-live','polite');layer.setAttribute('aria-atomic','true');layer.setAttribute('aria-label','Live channel alerts');layer.dataset.position=config?.position||'top-center';const requested=Math.max(0,Math.min(120,Number(config?.insetPx)||36)),effective=Math.min(requested,Math.max(0,((globalThis.innerWidth||1280)-240)/2));layer.style.setProperty('--alert-inset',`${effective}px`);return layer}
+/** create alert layer.
+ * @param {unknown} parameter1 Function input.
+ * @param {unknown} parameter2 Function input.
+ * @returns {unknown} The function result.
+ */
+export function createAlertLayer({document:doc=globalThis.document,config}={}){const layer=element(doc,'div',undefined,'alerts-layer');
+  layer.setAttribute('aria-live','polite');
+  layer.setAttribute('aria-atomic','true');
+  layer.setAttribute('aria-label','Live channel alerts');
+  layer.dataset.position=config?.position||'top-center';
+  const requested=Math.max(0,Math.min(120,Number(config?.insetPx)||36)),effective=Math.min(requested,Math.max(0,((globalThis.innerWidth||1280)-240)/2));
+  layer.style.setProperty('--alert-inset',`${effective}px`);
+  return layer}
 
+/** create alert sound player.
+ * @param {unknown} parameter1 Function input.
+ * @returns {unknown} The function result.
+ */
 export function createAlertSoundPlayer({AudioContextImpl=globalThis.AudioContext||globalThis.webkitAudioContext}={}){
- let context=null;const voices=new Set();
- const stop=()=>{for(const voice of voices)try{voice.stop()}catch{}voices.clear();if(context){context.close().catch(()=>{});context=null}};
- const play=({event,recipe,design,volume=.2}={})=>{if(!AudioContextImpl)return false;try{if(!context)context=new AudioContextImpl();for(const voice of voices)try{voice.stop()}catch{}voices.clear();const notes=design?.types?.[event?.type]?.notesHz||[];if(context.state==='suspended')context.resume().catch(()=>{});const start=context.currentTime,wave=['sine','triangle','square'].includes(recipe?.soundWave)?recipe.soundWave:'sine';notes.slice(0,3).forEach((hz,index)=>{if(!Number.isFinite(hz))return;const oscillator=context.createOscillator(),gain=context.createGain(),at=start+index*.145,peak=.08*Math.max(0,Math.min(1,volume));voices.add(oscillator);oscillator.type=wave;oscillator.frequency.value=hz;gain.gain.setValueAtTime(0,at);gain.gain.linearRampToValueAtTime(peak,at+.008);gain.gain.setValueAtTime(peak,at+.035);gain.gain.linearRampToValueAtTime(0,at+.11);oscillator.connect(gain);gain.connect(context.destination);oscillator.start(at);oscillator.stop(at+.12);oscillator.onended=()=>{voices.delete(oscillator);oscillator.disconnect();gain.disconnect()}});return true}catch{return false}};
+ let context=null;
+  const voices=new Set();
+  
+ const stop=()=>{for(const voice of voices)try{voice.stop()}catch{}voices.clear();
+    if(context){context.close().catch(()=>{});
+      context=null}};
+  
+ const play=({event,recipe,design,volume=.2}={})=>{if(!AudioContextImpl)return false;
+    try{if(!context)context=new AudioContextImpl();
+      for(const voice of voices)try{voice.stop()}catch{}voices.clear();
+      const notes=design?.types?.[event?.type]?.notesHz||[];
+      if(context.state==='suspended')context.resume().catch(()=>{});
+      const start=context.currentTime,wave=['sine','triangle','square'].includes(recipe?.soundWave)?recipe.soundWave:'sine';
+      notes.slice(0,3).forEach((hz,index)=>{if(!Number.isFinite(hz))return;const oscillator=context.createOscillator(),gain=context.createGain(),at=start+index*.145,peak=.08*Math.max(0,Math.min(1,volume));voices.add(oscillator);oscillator.type=wave;oscillator.frequency.value=hz;gain.gain.setValueAtTime(0,at);gain.gain.linearRampToValueAtTime(peak,at+.008);gain.gain.setValueAtTime(peak,at+.035);gain.gain.linearRampToValueAtTime(0,at+.11);oscillator.connect(gain);gain.connect(context.destination);oscillator.start(at);oscillator.stop(at+.12);oscillator.onended=()=>{voices.delete(oscillator);oscillator.disconnect();gain.disconnect()}});
+      return true}catch{return false}};
+  
  return{play,stop};
+  
 }
-export function playAlertSound(options={}){const player=createAlertSoundPlayer({AudioContextImpl:options.AudioContextImpl});const played=player.play(options);if(played)setTimeout(player.stop,500);return played}
+/** play alert sound.
+ * @param {unknown} options Function input.
+ * @returns {unknown} The function result.
+ */
+export function playAlertSound(options={}){const player=createAlertSoundPlayer({AudioContextImpl:options.AudioContextImpl});
+  const played=player.play(options);
+  if(played)setTimeout(player.stop,500);
+  return played}

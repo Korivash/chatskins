@@ -1,63 +1,161 @@
+/**
+ * Browser module frame-studio.js implements one ChatSkins page or overlay feature.
+ * Used by the site, editor, or OBS overlay module graph.
+ * Main exports: syncStudioLayer, hasStudioDesign, blankStudio, normalizeStudio, encodeStudio.
+ * Invariant: preserve existing settings links and render chat content as text.
+ */
 // Studio art and interaction layers share the panel host's coordinate system.
 /** Undo host scaling after measuring the panel's final viewport position. */
 export function syncStudioLayer(panel,layer){
  const host=panel.parentElement;
+  
  if(!host)return;
+  
  if(layer.parentElement!==host)host.append(layer);
+  
  const rect=panel.getBoundingClientRect?.();
+  
  const hostRect=host.getBoundingClientRect?.();
+  
  let left,top;
+  
  if(rect && hostRect?.width && host.offsetWidth){
   const scaleX=hostRect.width/host.offsetWidth;
+    
   const scaleY=hostRect.height/host.offsetHeight||scaleX;
+    
   left=(rect.left-hostRect.left)/scaleX-(host.clientLeft||0)+(host.scrollLeft||0);
+    
   top=(rect.top-hostRect.top)/scaleY-(host.clientTop||0)+(host.scrollTop||0);
+    
  }else{
   // Unmeasured hosts (including detached previews) have no useful viewport scale.
   const transform=typeof getComputedStyle==='function'?getComputedStyle(panel).transform:'none';
+    
   const translation=transform&&transform!=='none'?new DOMMatrixReadOnly(transform):{e:0,f:0};
+    
   left=panel.offsetLeft+translation.e;
+    
   top=panel.offsetTop+translation.f;
+    
  }
  Object.assign(layer.style,{
   position:'absolute',left:left+'px',top:top+'px',
   width:panel.offsetWidth+'px',height:panel.offsetHeight+'px'
  });
+  
 }
 /** Empty Studio drafts must not override a skin's layout. */
 export function hasStudioDesign(draft){
  return !!draft && (!!draft.base || draft.instances?.some(part=>part.part!==19));
+  
 }
 export const STUDIO_BOARD=Object.freeze([600,680]);
+
 export const STUDIO_LIMIT=25;
+
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,Number.isFinite(+v)?+v:a));
+
 const uid=()=>`part-${Math.random().toString(36).slice(2,9)}`;
+
 const makePart=(part,x,y,w,h,colors=[0,1,2])=>({uid:uid(),part,x,y,w,h,angle:0,flipX:false,flipY:false,colors});
+
+/** Handle studio.
+ * @returns {unknown} The function result.
+ */
 export function blankStudio(){return{version:1,catalog:19,board:[600,680],name:'',motion:true,palette:['#B7AAFF','#EDF3FC','#A8D9EE'],instances:[makePart(19,16,12,68,76)]}}
+/** normalize studio.
+ * @param {unknown} input Function input.
+ * @param {unknown} parameter2 Function input.
+ * @returns {unknown} The function result.
+ */
 export function normalizeStudio(input,{strict=false}={}){
  if(!input||input.version!==1||input.catalog!==19||!Array.isArray(input.instances)||input.instances.length<1||input.instances.length>STUDIO_LIMIT||!Array.isArray(input.palette)||input.palette.length>32)throw new TypeError('This frame is invalid or needs a newer editor.');
- const palette=input.palette.map(c=>String(c).toUpperCase());if(palette.some(c=>!/^#[\da-f]{6}$/i.test(c)))throw new TypeError('This frame has an invalid color.');
+  
+ const palette=input.palette.map(c=>String(c).toUpperCase());
+  if(palette.some(c=>!/^#[\da-f]{6}$/i.test(c)))throw new TypeError('This frame has an invalid color.');
+  
  const instances=input.instances.map(p=>{if(!Number.isInteger(p.part)||p.part<0||p.part>60||![p.x,p.y,p.w,p.h,p.angle].every(Number.isFinite)||p.w<=0||p.h<=0||!Array.isArray(p.colors)||p.colors.length!==3||p.colors.some(i=>!Number.isInteger(i)||i<0||i>=palette.length))throw new TypeError('This frame has an invalid part.');if(strict&&(p.x<0||p.y<0||p.x+p.w>100||p.y+p.h>100||p.angle< -180||p.angle>180))throw new TypeError('A part must stay inside the frame canvas.');const part={part:p.part,x:Math.round(clamp(p.x,0,100)*10)/10,y:Math.round(clamp(p.y,0,100)*10)/10,w:Math.round(clamp(p.w,1,100)*10)/10,h:Math.round(clamp(p.h,1,100)*10)/10,angle:Math.round(clamp(p.angle,-180,180)),flipX:!!p.flipX,flipY:!!p.flipY,colors:[...p.colors]};if(!strict)part.uid=String(p.uid||uid());return part});
+  
  if(instances.filter(p=>p.part===19).length!==1)throw new TypeError('A frame needs exactly one chat window.');
- const chatWindow=instances.find(p=>p.part===19);if(chatWindow.w<32||chatWindow.h<25)throw new TypeError('The chat window is too small to read.');
+  
+ const chatWindow=instances.find(p=>p.part===19);
+  if(chatWindow.w<32||chatWindow.h<25)throw new TypeError('The chat window is too small to read.');
+  
  if(chatWindow.angle!==0||chatWindow.flipX||chatWindow.flipY)throw new TypeError('The chat window cannot be rotated or flipped.');
+  
  if(instances.filter(p=>p.part===60).length>1)throw new TypeError('A frame can include only one starting frame.');
- const effectParts=instances.filter(p=>p.part>=20&&p.part<=28);if(effectParts.length>3)throw new TypeError('A frame can use up to three effects.');if(effectParts.filter(p=>[23,26].includes(p.part)).length>2)throw new TypeError('A frame can use up to two glow effects.');
- const title=String(input.name||'');if([...title].length>40||new TextEncoder().encode(title).length>160)throw new TypeError('The title is too long.');
- const unique=[...new Set(palette)],remap=palette.map(color=>unique.indexOf(color));for(const p of instances)p.colors=p.colors.map(index=>remap[index]);
+  
+ const effectParts=instances.filter(p=>p.part>=20&&p.part<=28);
+  if(effectParts.length>3)throw new TypeError('A frame can use up to three effects.');
+  if(effectParts.filter(p=>[23,26].includes(p.part)).length>2)throw new TypeError('A frame can use up to two glow effects.');
+  
+ const title=String(input.name||'');
+  if([...title].length>40||new TextEncoder().encode(title).length>160)throw new TypeError('The title is too long.');
+  
+ const unique=[...new Set(palette)],remap=palette.map(color=>unique.indexOf(color));
+  for(const p of instances)p.colors=p.colors.map(index=>remap[index]);
+  
  const base=input.base&&['illustration','template'].includes(input.base.registry)&&Number.isInteger(input.base.id)&&input.base.id>=0&&input.base.id<=65535?{registry:input.base.registry,id:input.base.id}:undefined;
+  
  if(base&&instances.filter(p=>p.part===60).length!==1)throw new TypeError('A legacy frame needs one base part.');
+  
  if(!base&&instances.some(p=>p.part===60))throw new TypeError('The starting frame reference is missing.');
+  
  return{version:1,catalog:19,board:[600,680],name:title,motion:input.motion!==false,palette:unique,instances,...(base?{base}:{})};
+  
 }
-export function encodeStudio(draft){const d=normalizeStudio(draft,{strict:true}),tuple=d.instances.map(p=>[p.part,Math.round(p.x*10),Math.round(p.y*10),Math.round(p.w*10),Math.round(p.h*10),p.angle+180,(p.flipX?1:0)|(p.flipY?2:0),...p.colors]);const payload=[19,d.motion?1:0,d.name,d.palette,tuple,d.base?[d.base.registry==='template'?1:0,d.base.id]:null];return btoa(unescape(encodeURIComponent(JSON.stringify(payload)))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/g,'')}
+/** encode studio.
+ * @param {unknown} draft Function input.
+ * @returns {unknown} The function result.
+ */
+export function encodeStudio(draft){const d=normalizeStudio(draft,{strict:true}),tuple=d.instances.map(p=>[p.part,Math.round(p.x*10),Math.round(p.y*10),Math.round(p.w*10),Math.round(p.h*10),p.angle+180,(p.flipX?1:0)|(p.flipY?2:0),...p.colors]);
+  const payload=[19,d.motion?1:0,d.name,d.palette,tuple,d.base?[d.base.registry==='template'?1:0,d.base.id]:null];
+  return btoa(unescape(encodeURIComponent(JSON.stringify(payload)))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/g,'')}
+/** decode studio.
+ * @param {unknown} value Function input.
+ * @returns {unknown} The function result.
+ */
 export function decodeStudio(value){try{const raw=String(value).replace(/-/g,'+').replace(/_/g,'/').padEnd(Math.ceil(String(value).length/4)*4,'='),data=JSON.parse(decodeURIComponent(escape(atob(raw))));if(!Array.isArray(data)||data[0]!==19||!Array.isArray(data[4]))return null;const draft={version:1,catalog:19,board:[600,680],name:data[2],motion:!!data[1],palette:data[3],instances:data[4].map(a=>({part:a[0],x:a[1]/10,y:a[2]/10,w:a[3]/10,h:a[4]/10,angle:a[5]-180,flipX:!!(a[6]&1),flipY:!!(a[6]&2),colors:a.slice(7,10)}))};if(data[5])draft.base={registry:data[5][0]?'template':'illustration',id:data[5][1]};return normalizeStudio(draft,{strict:true})}catch{return null}}
+/** Handle fits chat.
+ * @param {unknown} part Function input.
+ * @param {unknown} rect Function input.
+ * @returns {unknown} The function result.
+ */
 export function studioFitsChat(part,rect){const r={x:part.x/100*600,y:part.y/100*680,w:part.w/100*600,h:part.h/100*680};return r.x>=rect.x-1&&r.y>=rect.y-1&&r.x+r.w<=rect.x+rect.w+1&&r.y+r.h<=rect.y+rect.h+1}
+/** Handle window rect.
+ * @param {unknown} part Function input.
+ * @param {unknown} panel Function input.
+ * @returns {unknown} The function result.
+ */
 export function studioWindowRect(part,panel){return{x:panel.x+panel.w*part.x/100,y:panel.y+panel.h*part.y/100,width:panel.w*part.w/100,height:panel.h*part.h/100}}
+/** Handle part rect.
+ * @param {unknown} part Function input.
+ * @param {unknown} windowPart Function input.
+ * @returns {unknown} The function result.
+ */
 export function studioPartRect(part,windowPart){const rect={x:part.x,y:part.y,w:part.w,h:part.h};if(!windowPart||!((part.part>=11&&part.part<=18)||(part.part>=20&&part.part<=28)||(part.part>=37&&part.part<=59)))return rect;const wx=windowPart.x,wy=windowPart.y,ww=windowPart.w,wh=windowPart.h,overlap=rect.x<wx+ww&&rect.x+rect.w>wx&&rect.y<wy+wh&&rect.y+rect.h>wy;if(!overlap)return rect;if(part.part>=11&&part.part<=18){const right=rect.x+rect.w/2>wx+ww/2,bottom=rect.y+rect.h/2>wy+wh/2;rect.x=right?wx+ww:wx-rect.w;rect.y=bottom?wy+wh:wy-rect.h}else{const cx=rect.x+rect.w/2,cy=rect.y+rect.h/2,dist=[Math.abs(cx-wx),Math.abs(wx+ww-cx),Math.abs(cy-wy),Math.abs(wy+wh-cy)],edge=dist.indexOf(Math.min(...dist));if(edge===0){rect.x=wx-rect.w;rect.y=clamp(rect.y,wy,wy+wh-rect.h)}else if(edge===1){rect.x=wx+ww;rect.y=clamp(rect.y,wy,wy+wh-rect.h)}else if(edge===2){rect.y=wy-rect.h;rect.x=clamp(rect.x,wx,wx+ww-rect.w)}else{rect.y=wy+wh;rect.x=clamp(rect.x,wx,wx+ww-rect.w)}}rect.x=clamp(rect.x,0,100-rect.w);rect.y=clamp(rect.y,0,100-rect.h);return rect}
+/** Handle render model.
+ * @param {unknown} draft Function input.
+ * @param {unknown} panel Function input.
+ * @param {unknown} messages Function input.
+ * @returns {unknown} The function result.
+ */
 export function studioRenderModel(draft,panel,messages=[]){const chat=draft?.instances?.find(p=>p.part===19);if(!chat)return null;const window=studioWindowRect(chat,panel);return{panel:{...panel},window,parts:draft.instances.filter(p=>p.part!==19).map(p=>({id:p.part,rect:studioWindowRect(studioPartRect(p,chat),panel),rotation:p.angle,flipX:p.flipX,flipY:p.flipY})),messages:messages.map(message=>({message,clip:{...window}})),title:draft.name||''}}
+/** create studio history.
+ * @param {unknown} limit Function input.
+ * @returns {unknown} The function result.
+ */
 export function createStudioHistory(limit=100){const past=[],future=[];return{record(snapshot){past.push(structuredClone(snapshot));if(past.length>limit)past.shift();future.length=0},undo(current){if(!past.length)return null;future.push(structuredClone(current));return past.pop()},redo(current){if(!future.length)return null;past.push(structuredClone(current));return future.pop()},get canUndo(){return past.length>0},get canRedo(){return future.length>0}}}
+/** Handle studio chat.
+ * @param {unknown} draft Function input.
+ * @returns {unknown} The function result.
+ */
 export function centerStudioChat(draft){const next=structuredClone(draft),p=next.instances.find(x=>x.part===19);if(p){const center=p.x+p.w/2;p.x=Math.max(0,Math.min(100-p.w,center-p.w/2));}return next}
+/** make studio kit.
+ * @param {unknown} vibe Function input.
+ * @returns {unknown} The function result.
+ */
 export function makeStudioKit(vibe='Cozy'){
  // Recipes are intentional art direction: border, corner, plaque, effect,
  // stickers, and a distinct three-color palette for each complete kit.
@@ -75,7 +173,19 @@ export function makeStudioKit(vibe='Cozy'){
  place(recipe.plaque,33,0,34,8);const positions=[[0,28],[92,64],[0,72]];for(let i=0;i<recipe.stickers.length;i++){const [x,y]=positions[i];place(recipe.stickers[i],x,y,8,8)}if(recipe.effect!==undefined)place(recipe.effect,12,95,76,5);
  return normalizeStudio(d);
 }
+/** Handle studio.
+ * @param {unknown} vibe Function input.
+ * @param {unknown} rng Function input.
+ * @returns {unknown} The function result.
+ */
 export function randomizeStudio(vibe='Cozy',rng=Math.random){const order=['Cozy','Spooky','Cute','Neon','Royal','Gamer'],index=order.indexOf(vibe),next=order[(Math.max(0,index)+Math.floor(rng()*order.length))%order.length];return makeStudioKit(next)}
+/** create studio controller.
+ * @param {unknown} parameter1 Function input.
+ * @param {unknown} getDraft Function input.
+ * @param {unknown} setDraft Function input.
+ * @param {unknown} getBase Function input.
+ * @returns {unknown} The function result.
+ */
 export function createStudioController({root, getDraft, setDraft, getBase=()=>null, onCommit=()=>{}, onPreview=()=>{}, storage=globalThis.localStorage, fetcher=globalThis.fetch}={}){
  let catalog=[],selected='',history=createStudioHistory(),draft=getDraft()||blankStudio(),drag=null,scale=1,scaleY=1,ready=false,dirty=false,snapGuides=[];
  const $=s=>root.querySelector(s),commit=(next)=>{history.record(draft);draft=normalizeStudio(next);if(!draft.instances.some(p=>p.uid===selected))selected=draft.instances[0]?.uid||'';dirty=true;setDraft(draft);render();onCommit(draft)};

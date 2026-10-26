@@ -1,2 +1,7 @@
+/*
+ * Styles for home preview components.
+ * Used by the site pages that load this stylesheet.
+ * Keep selector scope and cascade order stable for previews and overlays.
+ */
 .hud .chat{position:relative;left:auto;top:auto;transform:none;width:100%;height:auto;min-height:150px;max-width:100%;overflow:visible}.hud .chat-message{margin:8px 0}.hud .message{max-width:100%}
 .hud .skin-preview-measure{position:absolute;left:50%;top:50%;width:max-content;max-width:min(420px,88%);transform:translate(-50%,-50%);transform-origin:center;overflow:visible}.hud .skin-preview-measure .skin-live-preview{width:max-content!important;max-width:420px!important;min-height:0!important;max-height:none!important;gap:3px}.hud .skin-preview-measure .chat-message{width:max-content;max-width:420px;min-width:0;overflow:hidden;overflow-wrap:anywhere;white-space:normal}

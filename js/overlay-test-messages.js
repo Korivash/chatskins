@@ -1,3 +1,9 @@
+/**
+ * Browser module overlay-test-messages.js implements one ChatSkins page or overlay feature.
+ * Used by the site, editor, or OBS overlay module graph.
+ * Main exports: buildOverlayTestModel.
+ * Invariant: preserve existing settings links and render chat content as text.
+ */
 export const overlayTestMessages=Object.freeze([
  {id:'test-broadcaster',username:'ChannelHost',text:'Welcome everyone!',badges:{broadcaster:'1'},color:'#FFD166'},
  {id:'test-mod',username:'ModMira',text:'Keeping chat moving.',badges:{moderator:'1'},color:'#78D69B'},
@@ -11,4 +17,12 @@ export const overlayTestMessages=Object.freeze([
  {id:'test-long',username:'StoryTeller',text:'This longer sample checks wrapping, spacing, and the full frame at the edge of the overlay preview.',badges:{},color:'#80D8D0'}
 ].map(message=>Object.freeze({...message,fake:true,login:message.username.toLowerCase()})));
 
-export function buildOverlayTestModel(settings={},fixtures=overlayTestMessages){const configured=Number(settings.maxMessages),limit=Number.isFinite(configured)&&configured>0?Math.floor(configured):fixtures.length;return fixtures.slice(-Math.max(1,Math.min(fixtures.length,limit)));}
+
+/** build overlay test model.
+ * @param {unknown} settings Function input.
+ * @param {unknown} fixtures Function input.
+ * @returns {unknown} The function result.
+ */
+export function buildOverlayTestModel(settings={},fixtures=overlayTestMessages){const configured=Number(settings.maxMessages),limit=Number.isFinite(configured)&&configured>0?Math.floor(configured):fixtures.length;
+  return fixtures.slice(-Math.max(1,Math.min(fixtures.length,limit)));
+  }

@@ -1,34 +1,71 @@
+/**
+ * Browser module editor.js implements one ChatSkins page or overlay feature.
+ * Used by the site, editor, or OBS overlay module graph.
+ * Main exports: module declarations.
+ * Invariant: preserve existing settings links and render chat content as text.
+ */
 import {layoutPanel} from './panel-layout.js';
+
 import {CLEAN,normalizeSettings,decodeSettings,encodeSettings,sanitizeCSS,buildCompactSettingsUrl} from './settings.js';
+
 import {buildCompactPlayUrl} from './chat-play.js';
+
 import {CONTROL_MAP,CONTROL_LABELS} from './controls.js';
+
 import {applyChatStyle,appendChatMessage,removeChatMessage,createMessage,applySkinMetadata} from './render.js';
+
 import {attachFrameTemplate,mountIllustrated,resizeFrameTemplate,buildWebcamFrameUrl} from './frame-templates.js';
+
 import {samples,nextFakeMessage,nextFakeDelay} from './fakechat.js';
+
 import {buildSkinPreviewMessages,fitPreviewPanel} from './skin-preview.js';
+
 import {connectChat} from './chat.js';
+
 import {isFiltered} from './filters.js';
+
 import {fitPanelMessages} from './message-fit.js';
+
 import {finishTwitchAuth,beginTwitchAuth,saveEditorRestore,takeEditorRestore} from './twitch-auth.js';
+
 import {createCommunityChat} from './community-chat.js';
+
 import {finishAlertsAuth} from './alerts-auth.js';
+
 import {initAlertsEditor} from './alerts-editor.js';
+
 import {defaultChatPlay,encodePlaySource,normalizeChatPlay} from './chat-play.js';
+
 import {createChatPlayRuntime} from './chat-play-runtime.js';
+
 import {initChatPlayEditor} from './chat-play-editor.js';
+
 import {showAuthBanner,restoreEditorReturnTarget,friendlyAuthError} from './auth-banner.js';
+
 import {beginAlertsAuth} from './alerts-auth.js';
+
 import {alertDefaults} from './alerts-config.js';
+
 import {combinedSetupScopes,prepareGuidedSetup,guidedFeatureStatus,guidedCommandStatus,guidedSetupReturnModel} from './guided-setup.js';
+
 import {vibePatch,palettePatch,sizePatch,customColorPatch} from './guided-editor.js';
+
 import {initOptionsMenu,isDockVisible,hasFrameCard,frameBrandColorPatch} from './options-menu.js';
+
 import {createPlaceMode} from './place-mode.js';
+
 import {createStudioController,blankStudio,syncStudioLayer} from './frame-studio.js';
+
 import {mountStudioComposition} from './studio-render.js';
+
 import {describeCurrentSettings,applyDescribeReply,describeFailureMessage,describeSettingsPatch} from './describe-helper.js';
+
 import {isDreamArtRequest,requestDream,watchDreamPaint} from './dream-client.js';
+
 import {loadDreamReview} from './dream-review.js';
+
 const $=s=>document.querySelector(s), clone=x=>structuredClone(x);
+
 function cleanChannel(v){return String(v||'').trim().replace(/^https?:\/\//i,'').replace(/^(www\.)?twitch\.tv\//i,'').replace(/^[@#]+/,'').split(/[/?#\s]/)[0].toLowerCase()}
 function deepMerge(a,b){if(!a||!b||typeof a!=='object'||typeof b!=='object'||Array.isArray(a)||Array.isArray(b))return b===undefined?clone(a):b;const out={...a};for(const[k,v]of Object.entries(b))out[k]=k in a?deepMerge(a[k],v):v;return out}
 const editorPreviewObserver=new IntersectionObserver(entries=>entries.forEach(({target,isIntersecting})=>{target.querySelectorAll('.message').forEach(row=>row.dataset.motionPaused=String(!isIntersecting||state.reduceMotion||matchMedia('(prefers-reduced-motion: reduce)').matches));if(isIntersecting)target._mountSkin?.()}));

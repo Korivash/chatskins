@@ -1,3 +1,8 @@
+/*
+ * Styles for readme components.
+ * Used by the site pages that load this stylesheet.
+ * Keep selector scope and cascade order stable for previews and overlays.
+ */
 @import url('https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap');
 
 /* Shared site palette; the stream window is the centerpiece. */

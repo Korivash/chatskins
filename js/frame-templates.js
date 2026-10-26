@@ -1,103 +1,446 @@
+/**
+ * Browser module frame-templates.js implements one ChatSkins page or overlay feature.
+ * Used by the site, editor, or OBS overlay module graph.
+ * Main exports: alphaWindowFromData, selectFrameEntry, frameShapeAspect, chooseFrameEntry, fitFrameBox.
+ * Invariant: preserve existing settings links and render chat content as text.
+ */
 const ALLOWED_SVG=new Set('svg g path rect circle ellipse line polyline polygon defs clipPath use text tspan title style'.split(' '));
+
 import {innerWindowWithOffsets} from './place-mode.js';
+
 const svgCache=new Map();
 
+
+/** Handle window from data.
+ * @param {unknown} data Function input.
+ * @param {unknown} width Function input.
+ * @param {unknown} height Function input.
+ * @param {unknown} threshold Function input.
+ * @returns {unknown} The function result.
+ */
 export function alphaWindowFromData(data,width,height,threshold=24){
   const alpha=data?.data||data,fallback={x:.12,y:.12,w:.76,h:.76};
+  
   if(!alpha||width<1||height<1||alpha.length<width*height*4)return fallback;
-  const cx=Math.floor(width/2),cy=Math.floor(height/2),rowBounds=new Array(height),clearAt=(x,y)=>{let count=0,total=0;for(let yy=Math.max(0,y-1);yy<=Math.min(height-1,y+1);yy++)for(let xx=Math.max(0,x-1);xx<=Math.min(width-1,x+1);xx++){total++;if(alpha[(yy*width+xx)*4+3]<threshold)count++}return count>=Math.ceil(total*.62)};
+  
+  const cx=Math.floor(width/2),cy=Math.floor(height/2),rowBounds=new Array(height),clearAt=(x,y)=>{let count=0,total=0;
+    for(let yy=Math.max(0,y-1);yy<=Math.min(height-1,y+1);yy++)for(let xx=Math.max(0,x-1);xx<=Math.min(width-1,x+1);xx++){total++;
+      if(alpha[(yy*width+xx)*4+3]<threshold)count++}return count>=Math.ceil(total*.62)};
+  
   for(let y=0;y<height;y++){
-    const alphaAt=x=>clearAt(x,y);let left=cx,right=cx,gaps=0;
-    if(!alphaAt(cx)){rowBounds[y]=null;continue}
-    for(let x=cx-1;x>=0;x--){if(alphaAt(x)){left=x;gaps=0}else if(++gaps>2)break}
-    gaps=0;for(let x=cx+1;x<width;x++){if(alphaAt(x)){right=x;gaps=0}else if(++gaps>2)break}
+    const alphaAt=x=>clearAt(x,y);
+    let left=cx,right=cx,gaps=0;
+    
+    if(!alphaAt(cx)){rowBounds[y]=null;
+      continue}
+    for(let x=cx-1;x>=0;x--){if(alphaAt(x)){left=x;
+        gaps=0}else if(++gaps>2)break}
+    gaps=0;
+    for(let x=cx+1;x<width;x++){if(alphaAt(x)){right=x;
+        gaps=0}else if(++gaps>2)break}
     rowBounds[y]=[left,right];
+    
   }
   if(!rowBounds[cy])return fallback;
+  
   let best={area:0,left:cx,right:cx,top:cy,bottom:cy};
+  
   let topLeft=0,topRight=width-1;
-  for(let top=cy;top>=0&&rowBounds[top];top--){topLeft=Math.max(topLeft,rowBounds[top][0]);topRight=Math.min(topRight,rowBounds[top][1]);let left=topLeft,right=topRight;
-    for(let bottom=cy;bottom<height&&rowBounds[bottom];bottom++){left=Math.max(left,rowBounds[bottom][0]);right=Math.min(right,rowBounds[bottom][1]);const w=right-left+1,h=bottom-top+1;if(w*h>best.area)best={area:w*h,left,right,top,bottom};if(right<left)break}
+  
+  for(let top=cy;top>=0&&rowBounds[top];top--){topLeft=Math.max(topLeft,rowBounds[top][0]);
+    topRight=Math.min(topRight,rowBounds[top][1]);
+    let left=topLeft,right=topRight;
+    
+    for(let bottom=cy;bottom<height&&rowBounds[bottom];bottom++){left=Math.max(left,rowBounds[bottom][0]);
+      right=Math.min(right,rowBounds[bottom][1]);
+      const w=right-left+1,h=bottom-top+1;
+      if(w*h>best.area)best={area:w*h,left,right,top,bottom};
+      if(right<left)break}
   }
-  let xw=best.right-best.left+1,hh=best.bottom-best.top+1,w=xw/width,h=hh/height;if(w<.4||h<.4)return fallback;
-  w=Math.min(.9,Math.max(.4,w));h=Math.min(.9,Math.max(.4,h));
+  let xw=best.right-best.left+1,hh=best.bottom-best.top+1,w=xw/width,h=hh/height;
+  if(w<.4||h<.4)return fallback;
+  
+  w=Math.min(.9,Math.max(.4,w));
+  h=Math.min(.9,Math.max(.4,h));
+  
   return{x:Math.max(0,Math.min(1-w,cx/width-w/2)),y:Math.max(0,Math.min(1-h,cy/height-h/2)),w,h};
+  
 }
 
+/** select frame entry.
+ * @param {unknown} entries Function input.
+ * @param {unknown} id Function input.
+ * @param {unknown} aspect Function input.
+ * @param {unknown} kind Function input.
+ * @returns {unknown} The function result.
+ */
 export function selectFrameEntry(entries,id,aspect=0.66,kind='chat'){
-  const list=entries.filter(x=>x.id===id&&x.kind===kind);if(!list.length)return null;
+  const list=entries.filter(x=>x.id===id&&x.kind===kind);
+  if(!list.length)return null;
+  
   return list.reduce((best,item)=>Math.abs(item.w/item.h-aspect)<Math.abs(best.w/best.h-aspect)?item:best,list[0]);
+  
 }
+/** Handle shape aspect.
+ * @param {unknown} shape Function input.
+ * @returns {unknown} The function result.
+ */
 export function frameShapeAspect(shape){return{tall:2/3,wide:1.5,square:1,webcam:16/9}[shape]||2/3}
+/** Handle frame entry.
+ * @param {unknown} entries Function input.
+ * @param {unknown} id Function input.
+ * @param {unknown} parameter3 Function input.
+ * @param {unknown} targetAspect Function input.
+ * @param {unknown} kind Function input.
+ * @returns {unknown} The function result.
+ */
 export function chooseFrameEntry(entries,id,{shape='tall',targetAspect=null,kind='chat'}={}){
  const aspect=Number.isFinite(Number(targetAspect))&&Number(targetAspect)>0?Number(targetAspect):frameShapeAspect(shape);
+  
  return selectFrameEntry(entries,id,aspect,kind);
+  
 }
-export function fitFrameBox(width,height,entry){const scale=Math.min(width/entry.w,height/entry.h),w=entry.w*scale,h=entry.h*scale;return{x:(width-w)/2,y:(height-h)/2,width:w,height:h,scale}}
-export function frameContentRect(width,height,entry,windowRect,padding=8){const box=fitFrameBox(width,height,entry),x=box.x+windowRect.x*box.width,y=box.y+windowRect.y*box.height,w=windowRect.w*box.width,h=windowRect.h*box.height;return{x:x+padding,y:y+padding,width:Math.max(0,w-2*padding),height:Math.max(0,h-2*padding)}}
+/** fit frame box.
+ * @param {unknown} width Function input.
+ * @param {unknown} height Function input.
+ * @param {unknown} entry Function input.
+ * @returns {unknown} The function result.
+ */
+export function fitFrameBox(width,height,entry){const scale=Math.min(width/entry.w,height/entry.h),w=entry.w*scale,h=entry.h*scale;
+  return{x:(width-w)/2,y:(height-h)/2,width:w,height:h,scale}}
+/** Handle content rect.
+ * @param {unknown} width Function input.
+ * @param {unknown} height Function input.
+ * @param {unknown} entry Function input.
+ * @param {unknown} windowRect Function input.
+ * @param {unknown} padding Function input.
+ * @returns {unknown} The function result.
+ */
+export function frameContentRect(width,height,entry,windowRect,padding=8){const box=fitFrameBox(width,height,entry),x=box.x+windowRect.x*box.width,y=box.y+windowRect.y*box.height,w=windowRect.w*box.width,h=windowRect.h*box.height;
+  return{x:x+padding,y:y+padding,width:Math.max(0,w-2*padding),height:Math.max(0,h-2*padding)}}
+/** Handle title model.
+ * @param {unknown} settings Function input.
+ * @returns {unknown} The function result.
+ */
 export function templateTitleModel(settings){return{title:String(settings.templateTitle||settings.channel||'Your Channel'),subtitle:String(settings.templateSubtitle??'LIVE CHAT')}}
+/** Handle settings round trip.
+ * @param {unknown} settings Function input.
+ * @returns {unknown} The function result.
+ */
 export function frameSettingsRoundTrip(settings){return{channel:settings.channel,frameColor:settings.frameColor,frameTint:settings.frameTint,frameSaturation:settings.frameSaturation,glowColor:settings.glowColor,glowStrength:settings.glowStrength,glowAnimation:settings.glowAnimation,middleBackground:settings.middleBackground,middleColor:settings.middleColor,middleImage:settings.middleImage,middleOpacity:settings.middleOpacity,templateTitle:settings.templateTitle,templateSubtitle:settings.templateSubtitle,templateFont:settings.templateFont,templateTextColor:settings.templateTextColor,templateNameMode:settings.templateNameMode}}
 
+/** Handle layout.
+ * @param {unknown} plaque Function input.
+ * @param {unknown} inner Function input.
+ * @param {unknown} parameter3 Function input.
+ * @param {unknown} parameter4 Function input.
+ * @param {unknown} parameter5 Function input.
+ * @returns {unknown} The function result.
+ */
 export function plaqueLayout(plaque,inner={x:.12,y:.12,w:.76,h:.76}){
  const nudge=plaque?.nudge||{},h=plaque?.h||.06;
+  
  const none=plaque?.none===true,narrow=!none&&(plaque?.w||0)<.22;
+  
  const width=none ? .44 : narrow ? .30 : (plaque?.w||.6);
+  
  const centerX=none?inner.x+inner.w/2:(plaque.x+plaque.w/2);
+  
  const centerY=none?inner.y+.01+h/2:plaque.y+h/2;
+  
  const x=centerX-width/2+(Number(nudge.x)||0),y=centerY-h/2+(Number(nudge.y)||0);
+  
  return{x,y,w:width,h,centerX:centerX+(Number(nudge.x)||0),centerY:centerY+(Number(nudge.y)||0),narrow,none};
+  
 }
 
-let manifestPromise=null;async function frameManifest(){if(!manifestPromise)manifestPromise=fetch('./site-media/frames/frames.json').then(response=>{if(!response.ok)throw Error('Frame manifest unavailable');return response.json()});return manifestPromise}
-export function frameWindowForLayout(width,height,entry,rect,marginRatio=.02){if(!(width>0&&height>0))return null;const content=frameContentRect(width,height,entry,rect,Math.max(2,width*marginRatio));return{...content,paddingTop:content.y,paddingRight:width-content.x-content.width,paddingBottom:height-content.y-content.height,paddingLeft:content.x}}
-function applyWindow(root,rect,entry,width,height){const aspect=entry.w/entry.h;root._frameBaseWindow=entry.inner||rect;root._frameWindowRect=rect;root._frameWindowLayout={width,height};const apply=()=>{const layoutWidth=parseFloat(root.style.getPropertyValue('--width'))||root._frameWindowLayout.width,layoutHeight=parseFloat(root.style.height||root.style.getPropertyValue('--panel-max-height'))||root._frameWindowLayout.height;root._frameWindowLayout={width:layoutWidth,height:layoutHeight};const box=frameWindowForLayout(layoutWidth,layoutHeight,entry,root._frameWindowRect||rect);if(!box)return;if(root.dataset.studioDesign!=='true')root.style.setProperty('padding',`${box.paddingTop}px ${box.paddingRight}px ${box.paddingBottom}px ${box.paddingLeft}px`,'important');root.style.setProperty('--template-window-x',`${box.x}px`);root.style.setProperty('--template-window-y',`${box.y}px`);root.style.setProperty('--template-window-w',`${box.width}px`);root.style.setProperty('--template-window-h',`${box.height}px`);root.dispatchEvent(new CustomEvent('templatewindowready',{detail:{...box,window:root._frameWindowRect||rect,entry}}))};root._applyFrameWindow=apply;root.style.setProperty('--template-aspect',String(aspect));root.style.setProperty('--template-ratio',`${entry.w}/${entry.h}`);apply()}
-export function resizeFrameTemplate(root,placement){if(!root)return;if(root._frameBaseWindow){root._frameWindowRect=innerWindowWithOffsets(root._frameBaseWindow,placement?.inner);root._applyFrameWindow?.()}else root._applyFrameWindow?.();const base=root._framePlaqueLayout;if(base){const delta=placement?.plaque||{},title=root.querySelector(':scope > .template-plaque');if(title){title.style.setProperty('--plaque-x',`${(base.x+(Number(delta.x)||0))*100}%`);title.style.setProperty('--plaque-y',`${(base.y+(Number(delta.y)||0))*100}%`)}}}
-export function frameAssetUrl(file,base=globalThis.location?.href||'http://localhost/'){if(typeof file!=='string'||!file.trim()||file==='undefined')return null;try{const url=new URL(file,base);return['http:','https:'].includes(url.protocol)?url.href:null}catch{return null}}
-function colorLuminance(value){if(typeof value!=='string'||!/^#[0-9a-f]{6}$/i.test(value))return .5;const channels=value.slice(1).match(/../g).map(x=>parseInt(x,16)/255).map(x=>x<=.04045?x/12.92:((x+.055)/1.055)**2.4);return .2126*channels[0]+.7152*channels[1]+.0722*channels[2]}
-function makeFrameNodes(root){let art=root.querySelector(':scope > .template-frame-art');if(!art){art=document.createElement('img');art.className='template-frame-art';art.alt='';art.width=1;art.height=1;art.setAttribute('aria-hidden','true');art.decoding='async';root.prepend(art)}let title=root.querySelector(':scope > .template-plaque');if(!title){title=document.createElement('span');title.className='template-plaque';const mainWrap=document.createElement('span'),main=document.createElement('span'),subWrap=document.createElement('span'),sub=document.createElement('small');mainWrap.className='template-plaque-title-wrap';main.className='template-plaque-title';subWrap.className='template-plaque-subtitle-wrap';sub.className='template-plaque-subtitle';mainWrap.append(main);subWrap.append(sub);title.append(mainWrap,subWrap);root.append(title)}return{art,title}}
+let manifestPromise=null;
+async function frameManifest(){if(!manifestPromise)manifestPromise=fetch('./site-media/frames/frames.json').then(response=>{if(!response.ok)throw Error('Frame manifest unavailable');return response.json()});
+  return manifestPromise}
+/** Handle window for layout.
+ * @param {unknown} width Function input.
+ * @param {unknown} height Function input.
+ * @param {unknown} entry Function input.
+ * @param {unknown} rect Function input.
+ * @param {unknown} marginRatio Function input.
+ * @returns {unknown} The function result.
+ */
+export function frameWindowForLayout(width,height,entry,rect,marginRatio=.02){if(!(width>0&&height>0))return null;
+  const content=frameContentRect(width,height,entry,rect,Math.max(2,width*marginRatio));
+  return{...content,paddingTop:content.y,paddingRight:width-content.x-content.width,paddingBottom:height-content.y-content.height,paddingLeft:content.x}}
+function applyWindow(root,rect,entry,width,height){const aspect=entry.w/entry.h;
+  root._frameBaseWindow=entry.inner||rect;
+  root._frameWindowRect=rect;
+  root._frameWindowLayout={width,height};
+  const apply=()=>{const layoutWidth=parseFloat(root.style.getPropertyValue('--width'))||root._frameWindowLayout.width,layoutHeight=parseFloat(root.style.height||root.style.getPropertyValue('--panel-max-height'))||root._frameWindowLayout.height;
+    root._frameWindowLayout={width:layoutWidth,height:layoutHeight};
+    const box=frameWindowForLayout(layoutWidth,layoutHeight,entry,root._frameWindowRect||rect);
+    if(!box)return;
+    if(root.dataset.studioDesign!=='true')root.style.setProperty('padding',`${box.paddingTop}px ${box.paddingRight}px ${box.paddingBottom}px ${box.paddingLeft}px`,'important');
+    root.style.setProperty('--template-window-x',`${box.x}px`);
+    root.style.setProperty('--template-window-y',`${box.y}px`);
+    root.style.setProperty('--template-window-w',`${box.width}px`);
+    root.style.setProperty('--template-window-h',`${box.height}px`);
+    root.dispatchEvent(new CustomEvent('templatewindowready',{detail:{...box,window:root._frameWindowRect||rect,entry}}))};
+  root._applyFrameWindow=apply;
+  root.style.setProperty('--template-aspect',String(aspect));
+  root.style.setProperty('--template-ratio',`${entry.w}/${entry.h}`);
+  apply()}
+/** Handle frame template.
+ * @param {unknown} root Function input.
+ * @param {unknown} placement Function input.
+ * @returns {unknown} The function result.
+ */
+export function resizeFrameTemplate(root,placement){if(!root)return;
+  if(root._frameBaseWindow){root._frameWindowRect=innerWindowWithOffsets(root._frameBaseWindow,placement?.inner);
+    root._applyFrameWindow?.()}else root._applyFrameWindow?.();
+  const base=root._framePlaqueLayout;
+  if(base){const delta=placement?.plaque||{},title=root.querySelector(':scope > .template-plaque');
+    if(title){title.style.setProperty('--plaque-x',`${(base.x+(Number(delta.x)||0))*100}%`);
+      title.style.setProperty('--plaque-y',`${(base.y+(Number(delta.y)||0))*100}%`)}}}
+/** Handle asset url.
+ * @param {unknown} file Function input.
+ * @param {unknown} base Function input.
+ * @returns {unknown} The function result.
+ */
+export function frameAssetUrl(file,base=globalThis.location?.href||'http://localhost/'){if(typeof file!=='string'||!file.trim()||file==='undefined')return null;
+  try{const url=new URL(file,base);
+    return['http:','https:'].includes(url.protocol)?url.href:null}catch{return null}}
+function colorLuminance(value){if(typeof value!=='string'||!/^#[0-9a-f]{6}$/i.test(value))return .5;
+  const channels=value.slice(1).match(/../g).map(x=>parseInt(x,16)/255).map(x=>x<=.04045?x/12.92:((x+.055)/1.055)**2.4);
+  return .2126*channels[0]+.7152*channels[1]+.0722*channels[2]}
+function makeFrameNodes(root){let art=root.querySelector(':scope > .template-frame-art');
+  if(!art){art=document.createElement('img');
+    art.className='template-frame-art';
+    art.alt='';
+    art.width=1;
+    art.height=1;
+    art.setAttribute('aria-hidden','true');
+    art.decoding='async';
+    root.prepend(art)}let title=root.querySelector(':scope > .template-plaque');
+  if(!title){title=document.createElement('span');
+    title.className='template-plaque';
+    const mainWrap=document.createElement('span'),main=document.createElement('span'),subWrap=document.createElement('span'),sub=document.createElement('small');
+    mainWrap.className='template-plaque-title-wrap';
+    main.className='template-plaque-title';
+    subWrap.className='template-plaque-subtitle-wrap';
+    sub.className='template-plaque-subtitle';
+    mainWrap.append(main);
+    subWrap.append(sub);
+    title.append(mainWrap,subWrap);
+    root.append(title)}return{art,title}}
 
 function applyPlaqueTitleStyle(plaque,title,subtitle,style={},frameColor){
   const family=style.fontFamily||'DM Sans';
+  
   const safeFamily=family.replace(/["\\]/g,'');
   if(typeof document!=='undefined'&&document.head&&!document.querySelector?.('[data-frame-title-font="'+safeFamily+'"]')){const link=document.createElement('link');link.rel='stylesheet';link.dataset.frameTitleFont=safeFamily;link.href='https://fonts.googleapis.com/css2?family='+encodeURIComponent(family).replace(/%20/g,'+')+'&display=swap';document.head.append?.(link)}
   const color=style.followFrameColor?(frameColor||style.color||'#100905'):(style.color||'#F7F5FF');
   plaque.style.setProperty('--plaque-title-color',color);plaque.style.setProperty('--plaque-title-gradient','none');plaque.style.setProperty('--plaque-title-shadow',style.shadow||'0 1px 3px #000b');plaque.style.setProperty('--plaque-title-stroke','0 transparent');plaque.dataset.titleEffect=style.effect||'default';plaque.dataset.titleGradient='false';
   for(const node of [title,subtitle]){const wrap=node.parentElement;if(wrap)wrap.style.filter='none'}
   title.style.fontFamily='"'+safeFamily+'",serif';title.style.color=color;title.style.transform=style.tilt?'rotate('+Number(style.tilt)+'deg)':'';
-  const subFamily=(style.subtitleFontFamily||family).replace(/["\\]/g,'');subtitle.style.fontFamily='"'+subFamily+'",serif';subtitle.style.color=style.subtitleColor||color;subtitle.style.textShadow=style.shadow||'0 1px 3px #000b';title.style.textShadow=style.shadow||'0 1px 3px #000b';
+  const subFamily=(style.subtitleFontFamily||family).replace(/["\\]/g,'');
+  subtitle.style.fontFamily='"'+subFamily+'",serif';
+  subtitle.style.color=style.subtitleColor||color;
+  subtitle.style.textShadow=style.shadow||'0 1px 3px #000b';
+  title.style.textShadow=style.shadow||'0 1px 3px #000b';
+  
 }
+/** attach frame template.
+ * @param {unknown} root Function input.
+ * @param {unknown} settings Function input.
+ * @param {unknown} parameter3 Function input.
+ * @param {unknown} manifest Function input.
+ * @param {unknown} kind Function input.
+ * @param {unknown} shape Function input.
+ * @param {unknown} layout Function input.
+ * @returns {unknown} The function result.
+ */
 export async function attachFrameTemplate(root,settings,{skin=null,manifest=null,kind='chat',shape=null,layout=null}={}){
   const dreamId=typeof settings?.dreamPaintId==='string'&&/^[a-f0-9]{24}$/i.test(settings.dreamPaintId)?settings.dreamPaintId:'';
+  
   const catalogId=settings?.templateFrame||skin?.frameTemplate;
+  
   const id=catalogId||(dreamId?`dream-${dreamId}`:'');
+  
   if(id&&root.dataset.frameTemplate!==id)root._frameRect=null;
-  if(!id){root.querySelector(':scope > .template-frame-art')?.remove();root.querySelector(':scope > .template-plaque')?.remove();root.classList.remove('has-frame-template','webcam-frame-only');root.style.padding='';root.style.aspectRatio='';root.style.removeProperty('--template-ratio');root.style.removeProperty('--template-window-x');root.style.removeProperty('--template-window-y');root.style.removeProperty('--template-window-w');root.style.removeProperty('--template-window-h');root._frameResizeObserver?.disconnect();root._frameResizeObserver=null;root._frameRect=null;root._frameEntry=null;root._frameWindowLayout=null;root._applyFrameWindow=null;return null}
+  
+  if(!id){root.querySelector(':scope > .template-frame-art')?.remove();
+    root.querySelector(':scope > .template-plaque')?.remove();
+    root.classList.remove('has-frame-template','webcam-frame-only');
+    root.style.padding='';
+    root.style.aspectRatio='';
+    root.style.removeProperty('--template-ratio');
+    root.style.removeProperty('--template-window-x');
+    root.style.removeProperty('--template-window-y');
+    root.style.removeProperty('--template-window-w');
+    root.style.removeProperty('--template-window-h');
+    root._frameResizeObserver?.disconnect();
+    root._frameResizeObserver=null;
+    root._frameRect=null;
+    root._frameEntry=null;
+    root._frameWindowLayout=null;
+    root._applyFrameWindow=null;
+    return null}
   const hintedShape=shape||skin?.frameShape||'tall',hintAspect=frameShapeAspect(hintedShape);
-  root.classList.add(kind==='webcam'?'webcam-frame-only':'has-frame-template');root.dataset.frameShape=hintedShape;root.dataset.frameAspect=String(hintAspect);root.dataset.frameTemplate=id;
+  
+  root.classList.add(kind==='webcam'?'webcam-frame-only':'has-frame-template');
+  root.dataset.frameShape=hintedShape;
+  root.dataset.frameAspect=String(hintAspect);
+  root.dataset.frameTemplate=id;
+  
   // Give template skins their fixed canvas geometry before waiting for the manifest.
   // This prevents a content-sized first layout from triggering a destructive fit.
   layout?.();
-  try{let entry;if(dreamId){const response=await fetch(`/api/dream-image/${dreamId}.json`);if(!response.ok)throw Error('Painted frame metadata unavailable');const frame=await response.json();entry={id,w:frame.width||1024,h:frame.height||1536,shape:frame.shape||'tall',kind:'chat',file:frame.file,inner:frame.inner,plaque:frame.plaque}}else{const entries=manifest||await frameManifest();entry=chooseFrameEntry(entries,id,{shape:hintedShape,targetAspect:settings.templateAspect||hintAspect,kind})}if(!entry)throw Error('Frame entry unavailable');const src=frameAssetUrl(entry.file);if(!src)throw Error('Frame image unavailable');root._frameEntry=entry;const exactAspect=entry.w/entry.h;root.dataset.frameShape=entry.shape;root.dataset.frameAspect=String(exactAspect);root.style.setProperty('--template-aspect',String(exactAspect));root.style.setProperty('--template-ratio',`${entry.w}/${entry.h}`);root.style.aspectRatio=String(exactAspect);const {art,title}=makeFrameNodes(root);art.loading=root.dataset.previewCard==='true'?'lazy':'eager';art.src=src;art.dataset.frameId=id;art.dataset.frameShape=entry.shape;art.dataset.frameFile=entry.file;art.style.objectFit='fill';root.dataset.frameTemplate=id;layout?.();
-    const inner=innerWindowWithOffsets(entry.inner||{x:.12,y:.12,w:.76,h:.76},settings.placement?.inner);if(kind==="chat"){layout?.();const width=parseFloat(root.style.getPropertyValue('--width')),height=parseFloat(root.style.height||root.style.getPropertyValue('--panel-max-height'));applyWindow(root,inner,entry,width,height)}
+  
+  try{let entry;
+    if(dreamId){const response=await fetch(`/api/dream-image/${dreamId}.json`);
+      if(!response.ok)throw Error('Painted frame metadata unavailable');
+      const frame=await response.json();
+      entry={id,w:frame.width||1024,h:frame.height||1536,shape:frame.shape||'tall',kind:'chat',file:frame.file,inner:frame.inner,plaque:frame.plaque}}else{const entries=manifest||await frameManifest();
+      entry=chooseFrameEntry(entries,id,{shape:hintedShape,targetAspect:settings.templateAspect||hintAspect,kind})}if(!entry)throw Error('Frame entry unavailable');
+    const src=frameAssetUrl(entry.file);
+    if(!src)throw Error('Frame image unavailable');
+    root._frameEntry=entry;const exactAspect=entry.w/entry.h;
+    root.dataset.frameShape=entry.shape;
+    root.dataset.frameAspect=String(exactAspect);
+    root.style.setProperty('--template-aspect',String(exactAspect));
+    root.style.setProperty('--template-ratio',`${entry.w}/${entry.h}`);
+    root.style.aspectRatio=String(exactAspect);
+    const {art,title}=makeFrameNodes(root);
+    art.loading=root.dataset.previewCard==='true'?'lazy':'eager';
+    art.src=src;
+    art.dataset.frameId=id;
+    art.dataset.frameShape=entry.shape;
+    art.dataset.frameFile=entry.file;
+    art.style.objectFit='fill';
+    root.dataset.frameTemplate=id;
+    layout?.();
+    
+    const inner=innerWindowWithOffsets(entry.inner||{x:.12,y:.12,w:.76,h:.76},settings.placement?.inner);
+    if(kind==="chat"){layout?.();
+      const width=parseFloat(root.style.getPropertyValue('--width')),height=parseFloat(root.style.height||root.style.getPropertyValue('--panel-max-height'));
+      applyWindow(root,inner,entry,width,height)}
     const plaque={...(entry.plaque||{x:.2,y:.045,w:.6,h:.075,font:settings.templateFont||'DM Sans'}),...(skin?.plaque||{})};
-    const plaqueBox=plaqueLayout(plaque,entry.inner||{x:.12,y:.12,w:.76});root._framePlaqueLayout=plaqueBox;
-    title.style.setProperty('--plaque-x',`${plaqueBox.x*100}%`);title.style.setProperty('--plaque-y',`${plaqueBox.y*100}%`);title.style.setProperty('--plaque-w',`${plaqueBox.w*100}%`);title.style.setProperty('--plaque-h',`${plaqueBox.h*100}%`);title.style.setProperty('--plaque-center-x',`${plaqueBox.centerX*100}%`);title.style.setProperty('--plaque-center-y',`${plaqueBox.centerY*100}%`);title.style.fontFamily=`"${plaque.font||settings.templateFont||'DM Sans'}",sans-serif`;
-    title.classList.toggle('cover-painted',!!(plaque.painted||plaque.coverPainted));title.classList.toggle('narrow-plaque',plaqueBox.narrow);title.classList.toggle('no-plaque',plaqueBox.none);title.dataset.plaqueTone=plaque.tone||'dark';
-    const model=templateTitleModel(settings),titleNode=title.querySelector('.template-plaque-title'),subtitleNode=title.querySelector('.template-plaque-subtitle');const titleStyle=skin?.titleStyle||(dreamId?{color:plaque.tone==='light'?'#3A2410':'#FFF4E0',fontFamily:settings.templateFont||'DM Sans',shadow:'0 1px 2px #0008'}:undefined);applyPlaqueTitleStyle(title,titleNode,subtitleNode,skin?.titleStyle,settings.frameColor);if(dreamId)applyPlaqueTitleStyle(title,titleNode,subtitleNode,titleStyle,settings.frameColor);titleNode.textContent=model.title;subtitleNode.textContent=model.subtitle;resizeFrameTemplate(root,settings.placement);
+    
+    const plaqueBox=plaqueLayout(plaque,entry.inner||{x:.12,y:.12,w:.76});
+    root._framePlaqueLayout=plaqueBox;
+    
+    title.style.setProperty('--plaque-x',`${plaqueBox.x*100}%`);
+    title.style.setProperty('--plaque-y',`${plaqueBox.y*100}%`);
+    title.style.setProperty('--plaque-w',`${plaqueBox.w*100}%`);
+    title.style.setProperty('--plaque-h',`${plaqueBox.h*100}%`);
+    title.style.setProperty('--plaque-center-x',`${plaqueBox.centerX*100}%`);
+    title.style.setProperty('--plaque-center-y',`${plaqueBox.centerY*100}%`);
+    title.style.fontFamily=`"${plaque.font||settings.templateFont||'DM Sans'}",sans-serif`;
+    
+    title.classList.toggle('cover-painted',!!(plaque.painted||plaque.coverPainted));
+    title.classList.toggle('narrow-plaque',plaqueBox.narrow);
+    title.classList.toggle('no-plaque',plaqueBox.none);
+    title.dataset.plaqueTone=plaque.tone||'dark';
+    
+    const model=templateTitleModel(settings),titleNode=title.querySelector('.template-plaque-title'),subtitleNode=title.querySelector('.template-plaque-subtitle');
+    const titleStyle=skin?.titleStyle||(dreamId?{color:plaque.tone==='light'?'#3A2410':'#FFF4E0',fontFamily:settings.templateFont||'DM Sans',shadow:'0 1px 2px #0008'}:undefined);
+    applyPlaqueTitleStyle(title,titleNode,subtitleNode,skin?.titleStyle,settings.frameColor);
+    if(dreamId)applyPlaqueTitleStyle(title,titleNode,subtitleNode,titleStyle,settings.frameColor);
+    titleNode.textContent=model.title;
+    subtitleNode.textContent=model.subtitle;
+    resizeFrameTemplate(root,settings.placement);
+    
     const fitOne=fitPlaqueText;
-    const serifTight=/cinzel|marcellus|cormorant/i.test(titleStyle?.fontFamily||'');const baseSpacing=titleStyle?.letterSpacing??(serifTight?'.005em':'');const fitTitle=()=>{fitOne(titleNode,baseSpacing);fitOne(subtitleNode,titleStyle?.subtitleLetterSpacing??baseSpacing);const hide=title.clientHeight<26||titleNode.scrollHeight+subtitleNode.scrollHeight>title.clientHeight;subtitleNode.hidden=hide;subtitleNode.parentElement.hidden=hide};requestAnimationFrame(fitTitle);const fontFamily=titleStyle?.fontFamily||'DM Sans',subFamily=titleStyle?.subtitleFontFamily||fontFamily,fontSize=Math.max(9,parseFloat(getComputedStyle(titleNode).fontSize)||16),subSize=Math.max(9,parseFloat(getComputedStyle(subtitleNode).fontSize)||10);refitPlaqueAfterFonts(document.fonts,[{family:fontFamily,size:fontSize,text:model.title},{family:subFamily,size:subSize,text:model.subtitle}],fitTitle);document.fonts?.ready?.then(fitTitle);if(typeof ResizeObserver!=='undefined'){root._plaqueObserver?.disconnect();root._plaqueObserver=new ResizeObserver(fitTitle);root._plaqueObserver.observe(title)}root.style.setProperty('--template-frame-color',settings.frameColor||'#B7AAFF');root.style.setProperty('--template-frame-filter',`hue-rotate(${settings.frameTint||0}deg) saturate(${Math.max(0,Number(settings.frameSaturation)||1)})`);root.style.setProperty('--template-image-mask',`url("${src}")`);root.style.setProperty('--template-name-color',settings.templateNameMode==='fixed'?(settings.nameColor||settings.frameColor):settings.templateNameMode==='twitch'?'inherit':settings.frameColor||'#B7AAFF');title.style.setProperty('--plaque-cover',plaque.fill||plaque.color||settings.middleColor||'#241b2b');const plaqueInk=plaque.ink||titleStyle?.color||settings.templateTextColor||'#100905';title.dataset.inkMode=colorLuminance(plaqueInk)>.5?'light':'dark';title.style.setProperty('--plaque-ink',plaqueInk);root.style.setProperty('--template-glow-color',settings.glowColor||'#A9CAFF');root.style.setProperty('--template-glow-strength',String(settings.glowStrength??.55));root.dataset.templateGlow=settings.glowAnimation||'off';root.dataset.middleBackground=settings.middleBackground||'color';root.style.setProperty('--template-middle-color',settings.middleColor||'#111827');root.style.setProperty('--template-middle-opacity',String(settings.middleOpacity??.55));let safeImage='none';try{const imageUrl=new URL(settings.middleImage,location.href);if(['http:','https:'].includes(imageUrl.protocol))safeImage=`url(\"${imageUrl.href.replace(/[\"\\]/g,'')}\")`}catch{}root.style.setProperty('--template-middle-image',safeImage);root.style.setProperty('--template-font',`"${settings.templateFont||'DM Sans'}",sans-serif`);root.style.setProperty('--template-text-color',settings.templateTextColor||'#F2F0EE');root.dataset.templateMessageStyle=skin?.messageStyle||id;root.dataset.templateMessageBorders=String(settings.templateMessageBorders===true);return{entry,window:entry.inner||null,plaque};
-  }catch{root.querySelector(':scope > .template-frame-art')?.remove();root.querySelector(':scope > .template-plaque')?.remove();root.classList.remove('has-frame-template','webcam-frame-only');root.dataset.frameAspect='';root.style.padding='';root.style.aspectRatio='';root._frameRect=null;root._frameEntry=null;root._frameWindowLayout=null;root._applyFrameWindow=null;layout?.();return null}
+    
+    const serifTight=/cinzel|marcellus|cormorant/i.test(titleStyle?.fontFamily||'');
+    const baseSpacing=titleStyle?.letterSpacing??(serifTight?'.005em':'');
+    const fitTitle=()=>{fitOne(titleNode,baseSpacing);
+      fitOne(subtitleNode,titleStyle?.subtitleLetterSpacing??baseSpacing);
+      const hide=title.clientHeight<26||titleNode.scrollHeight+subtitleNode.scrollHeight>title.clientHeight;
+      subtitleNode.hidden=hide;
+      subtitleNode.parentElement.hidden=hide};
+    requestAnimationFrame(fitTitle);
+    const fontFamily=titleStyle?.fontFamily||'DM Sans',subFamily=titleStyle?.subtitleFontFamily||fontFamily,fontSize=Math.max(9,parseFloat(getComputedStyle(titleNode).fontSize)||16),subSize=Math.max(9,parseFloat(getComputedStyle(subtitleNode).fontSize)||10);
+    refitPlaqueAfterFonts(document.fonts,[{family:fontFamily,size:fontSize,text:model.title},{family:subFamily,size:subSize,text:model.subtitle}],fitTitle);
+    document.fonts?.ready?.then(fitTitle);
+    if(typeof ResizeObserver!=='undefined'){root._plaqueObserver?.disconnect();
+      root._plaqueObserver=new ResizeObserver(fitTitle);
+      root._plaqueObserver.observe(title)}root.style.setProperty('--template-frame-color',settings.frameColor||'#B7AAFF');
+    root.style.setProperty('--template-frame-filter',`hue-rotate(${settings.frameTint||0}deg) saturate(${Math.max(0,Number(settings.frameSaturation)||1)})`);
+    root.style.setProperty('--template-image-mask',`url("${src}")`);
+    root.style.setProperty('--template-name-color',settings.templateNameMode==='fixed'?(settings.nameColor||settings.frameColor):settings.templateNameMode==='twitch'?'inherit':settings.frameColor||'#B7AAFF');
+    title.style.setProperty('--plaque-cover',plaque.fill||plaque.color||settings.middleColor||'#241b2b');
+    const plaqueInk=plaque.ink||titleStyle?.color||settings.templateTextColor||'#100905';
+    title.dataset.inkMode=colorLuminance(plaqueInk)>.5?'light':'dark';
+    title.style.setProperty('--plaque-ink',plaqueInk);
+    root.style.setProperty('--template-glow-color',settings.glowColor||'#A9CAFF');
+    root.style.setProperty('--template-glow-strength',String(settings.glowStrength??.55));
+    root.dataset.templateGlow=settings.glowAnimation||'off';
+    root.dataset.middleBackground=settings.middleBackground||'color';
+    root.style.setProperty('--template-middle-color',settings.middleColor||'#111827');
+    root.style.setProperty('--template-middle-opacity',String(settings.middleOpacity??.55));
+    let safeImage='none';
+    try{const imageUrl=new URL(settings.middleImage,location.href);
+      if(['http:','https:'].includes(imageUrl.protocol))safeImage=`url(\"${imageUrl.href.replace(/[\"\\]/g,'')}\")`}catch{}root.style.setProperty('--template-middle-image',safeImage);
+    root.style.setProperty('--template-font',`"${settings.templateFont||'DM Sans'}",sans-serif`);
+    root.style.setProperty('--template-text-color',settings.templateTextColor||'#F2F0EE');
+    root.dataset.templateMessageStyle=skin?.messageStyle||id;
+    root.dataset.templateMessageBorders=String(settings.templateMessageBorders===true);
+    return{entry,window:entry.inner||null,plaque};
+    
+  }catch{root.querySelector(':scope > .template-frame-art')?.remove();
+    root.querySelector(':scope > .template-plaque')?.remove();
+    root.classList.remove('has-frame-template','webcam-frame-only');
+    root.dataset.frameAspect='';
+    root.style.padding='';
+    root.style.aspectRatio='';
+    root._frameRect=null;
+    root._frameEntry=null;
+    root._frameWindowLayout=null;
+    root._applyFrameWindow=null;
+    layout?.();
+    return null}
 }
 
-export async function afterFrameTemplateReady(attach,initialize){let frame=null;try{frame=await attach()}catch{}return initialize(frame)}
+/** Handle frame template ready.
+ * @param {unknown} attach Function input.
+ * @param {unknown} initialize Function input.
+ * @returns {unknown} The function result.
+ */
+export async function afterFrameTemplateReady(attach,initialize){let frame=null;
+  try{frame=await attach()}catch{}return initialize(frame)}
 
-export async function mountIllustrated(root,settings,skin){const source=skin?.illustration?.source||settings?.illustrationSource;if(!source){root.querySelector(':scope > svg.illustrated-art')?.remove();root.classList.remove('has-illustrated-art');return false}try{let text=svgCache.get(source);if(!text){const response=await fetch(`./${source}`);if(!response.ok)throw Error();text=await response.text();svgCache.set(source,text)}const doc=new DOMParser().parseFromString(text,'image/svg+xml'),svg=doc.documentElement;if(svg.localName!=='svg'||doc.querySelector('parsererror'))throw Error('Invalid SVG');for(const el of [...svg.querySelectorAll('*')]){if(!ALLOWED_SVG.has(el.localName))el.remove();for(const attr of [...el.attributes])if(/^on/i.test(attr.name)||(/href$/i.test(attr.name)&&!attr.value.startsWith('#'))||(/url\(/i.test(attr.value)&&!/url\(\s*#[\w-]+\s*\)/.test(attr.value)))el.removeAttribute(attr.name)}const prefix=`art-${Math.random().toString(36).slice(2)}-`,ids=new Map([...svg.querySelectorAll('[id]')].map(el=>[el.id,prefix+el.id]));for(const el of [svg,...svg.querySelectorAll('*')])for(const attr of [...el.attributes]){let value=attr.value;for(const[id,newId]of ids){value=value.replaceAll(`url(#${id})`,`url(#${newId})`);if((attr.name==='href'||attr.name==='xlink:href')&&value===`#${id}`)value=`#${newId}`}if(attr.name==='aria-labelledby'||attr.name==='aria-describedby')value=value.split(/\s+/).map(id=>ids.get(id)||id).join(' ');if(attr.name==='id'&&ids.has(value))value=ids.get(value);el.setAttribute(attr.name,value)}for(const style of svg.querySelectorAll('style')){if(/@import|url\(\s*https?:|javascript:/i.test(style.textContent)){style.remove();continue}let text=style.textContent;for(const[id,newId]of ids)text=text.replaceAll(`#${id}`,`#${newId}`);style.textContent=text}svg.setAttribute('class',`illustrated-art art-${source.split('/').at(-2)}`);svg.setAttribute('viewBox','0 0 600 680');svg.setAttribute('aria-hidden','true');svg.setAttribute('focusable','false');svg.dataset.motion=settings.reduceMotion||matchMedia('(prefers-reduced-motion: reduce)').matches?'off':'on';const old=root.querySelector(':scope > svg.illustrated-art');const imported=document.importNode(svg,true);if(old)old.replaceWith(imported);else root.prepend(imported);root.classList.add('has-illustrated-art');root.style.setProperty('--art-surface',skin?.illustration?.surface||settings.illustrationSurface||'#10141D');for(const layer of imported.querySelectorAll('[data-layer]')){const name=layer.dataset.layer,setting=settings.illustration?.layers?.[name];layer.dataset.hidden=String(setting?.enabled===false);layer.style.setProperty('--layer-color',setting?.color||'currentColor')}return true}catch{return false}}
+/** Handle illustrated.
+ * @param {unknown} root Function input.
+ * @param {unknown} settings Function input.
+ * @param {unknown} skin Function input.
+ * @returns {unknown} The function result.
+ */
+export async function mountIllustrated(root,settings,skin){const source=skin?.illustration?.source||settings?.illustrationSource;
+  if(!source){root.querySelector(':scope > svg.illustrated-art')?.remove();
+    root.classList.remove('has-illustrated-art');
+    return false}try{let text=svgCache.get(source);
+    if(!text){const response=await fetch(`./${source}`);
+      if(!response.ok)throw Error();
+      text=await response.text();
+      svgCache.set(source,text)}const doc=new DOMParser().parseFromString(text,'image/svg+xml'),svg=doc.documentElement;
+    if(svg.localName!=='svg'||doc.querySelector('parsererror'))throw Error('Invalid SVG');
+    for(const el of [...svg.querySelectorAll('*')]){if(!ALLOWED_SVG.has(el.localName))el.remove();
+      for(const attr of [...el.attributes])if(/^on/i.test(attr.name)||(/href$/i.test(attr.name)&&!attr.value.startsWith('#'))||(/url\(/i.test(attr.value)&&!/url\(\s*#[\w-]+\s*\)/.test(attr.value)))el.removeAttribute(attr.name)}const prefix=`art-${Math.random().toString(36).slice(2)}-`,ids=new Map([...svg.querySelectorAll('[id]')].map(el=>[el.id,prefix+el.id]));for(const el of [svg,...svg.querySelectorAll('*')])for(const attr of [...el.attributes]){let value=attr.value;for(const[id,newId]of ids){value=value.replaceAll(`url(#${id})`,`url(#${newId})`);if((attr.name==='href'||attr.name==='xlink:href')&&value===`#${id}`)value=`#${newId}`}if(attr.name==='aria-labelledby'||attr.name==='aria-describedby')value=value.split(/\s+/).map(id=>ids.get(id)||id).join(' ');if(attr.name==='id'&&ids.has(value))value=ids.get(value);el.setAttribute(attr.name,value)}for(const style of svg.querySelectorAll('style')){if(/@import|url\(\s*https?:|javascript:/i.test(style.textContent)){style.remove();continue}let text=style.textContent;for(const[id,newId]of ids)text=text.replaceAll(`#${id}`,`#${newId}`);style.textContent=text}svg.setAttribute('class',`illustrated-art art-${source.split('/').at(-2)}`);svg.setAttribute('viewBox','0 0 600 680');svg.setAttribute('aria-hidden','true');svg.setAttribute('focusable','false');svg.dataset.motion=settings.reduceMotion||matchMedia('(prefers-reduced-motion: reduce)').matches?'off':'on';const old=root.querySelector(':scope > svg.illustrated-art');const imported=document.importNode(svg,true);if(old)old.replaceWith(imported);else root.prepend(imported);root.classList.add('has-illustrated-art');root.style.setProperty('--art-surface',skin?.illustration?.surface||settings.illustrationSurface||'#10141D');for(const layer of imported.querySelectorAll('[data-layer]')){const name=layer.dataset.layer,setting=settings.illustration?.layers?.[name];layer.dataset.hidden=String(setting?.enabled===false);layer.style.setProperty('--layer-color',setting?.color||'currentColor')}return true}catch{return false}}
 
+/** Handle plaque after fonts.
+ * @param {unknown} fonts Function input.
+ * @param {unknown} requests Function input.
+ * @param {unknown} refit Function input.
+ * @returns {unknown} The function result.
+ */
 export async function refitPlaqueAfterFonts(fonts,requests,refit){
   try{if(fonts?.load)await Promise.all(requests.map(item=>fonts.load(`${item.size}px "${item.family.replace(/["\\]/g,'')}"`,item.text)))}catch{}
   try{if(fonts?.ready)await fonts.ready}catch{}
   refit();
 }
+/** fit plaque text.
+ * @param {unknown} node Function input.
+ * @param {unknown} baseSpacing Function input.
+ * @returns {unknown} The function result.
+ */
 export function fitPlaqueText(node,baseSpacing=''){
   const original=node.textContent;node.style.fontSize='';node.style.letterSpacing=baseSpacing;node.style.textOverflow='clip';node.title='';let size=parseFloat(getComputedStyle(node).fontSize)||16;if(size<9){size=9;node.style.fontSize='9px'}
   while(node.scrollWidth>node.clientWidth&&size>9){size=Math.max(9,size-1);node.style.fontSize=size+'px'}
@@ -106,4 +449,10 @@ export function fitPlaqueText(node,baseSpacing=''){
   return{fontSize:parseFloat(node.style.fontSize)||size,letterSpacing:node.style.letterSpacing,overflow:node.scrollWidth>node.clientWidth};
 }
 
+/** build webcam frame url.
+ * @param {unknown} baseUrl Function input.
+ * @param {unknown} frameId Function input.
+ * @param {unknown} settings Function input.
+ * @returns {unknown} The function result.
+ */
 export function buildWebcamFrameUrl(baseUrl,frameId,settings){const url=new URL('overlay.html',baseUrl),query=new URLSearchParams({webcam:frameId});url.search=query.toString();url.hash=new URLSearchParams(Object.entries(frameSettingsRoundTrip(settings)).map(([k,v])=>[k,String(v)])).toString();return url.href}

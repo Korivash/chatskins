@@ -15,7 +15,7 @@ ChatSkins was built entirely with **OpenAI Codex**. Instead of one giant thread,
 
 The list below is generated from the local Codex session logs by `log-sessions.mjs`, so no row is typed by hand.
 
-Total: **31** sessions.
+Total: **40** sessions.
 
 | # | Started (UTC) | Session ID | Model | Role | Area | Task (first line of the prompt) |
 |---|---|---|---|---|---|---|
@@ -50,3 +50,12 @@ Total: **31** sessions.
 | 29 | 2026-10-25 11:26:06 | `01a172cf-8904-7ce2-8d39-d96851056728` | gpt-6-astra | design (Astra) | app | Round 8 design: CHAT-POWERED SKINS. Viewers play with the overlay. You are the designer. Read DESIGN.md (all r |
 | 30 | 2026-10-25 11:29:35 | `01a172d2-b8fa-7793-9ad4-91c3e53619fa` | gpt-6-luna | build (Luna) | app | Round 9c: the previews don't run a test chat (owner: "the previews are not working, it should be doing a fake  |
 | 31 | 2026-10-25 12:10:05 | `01a172f7-cff6-7af3-9e4a-688e53b8037f` | gpt-6-astra | design (Astra) | app | Round 10 design: SKINS THAT STAND OUT. You are the designer. Read DESIGN.md (all rounds), design/skins.json, t |
+| 32 | 2026-10-25 19:05:05 | `01a17473-c075-72b3-8cd7-2cd2665f731c` | gpt-6-astra | design (Astra) | app | Round 11 design: make the Twitch-connected settings EASY. You are the designer (Astra). Don't edit js/ or css/ |
+| 33 | 2026-10-25 19:31:41 | `01a1748c-1aaa-77c1-a644-b286f987fcc5` | gpt-6-astra | design (Astra) | app | Round 12 (Astra, design + build): a HIGHLY ANIMATED interactive README page at `/readme.html`, for the Codex x |
+| 34 | 2026-10-25 19:44:42 | `01a17498-04ca-7b70-9bd4-0b441754d405` | gpt-6-astra | design (Astra) | app | Round 13 design (Astra): make customizing DEAD SIMPLE for people who don't know what they're doing. Write only |
+| 35 | 2026-10-25 19:47:20 | `01a1749a-6d19-7600-b4d5-206a776d41e7` | gpt-6-astra | design (Astra) | app |  |
+| 36 | 2026-10-25 22:01:28 | `01a17515-3cf2-7fc2-8f0b-6388d36c93f1` | gpt-6-astra | design (Astra) | app |  |
+| 37 | 2026-10-25 22:45:10 | `01a1753d-3cce-7c41-ab50-4fa3892c1435` | gpt-6-astra | design (Astra) | app |  |
+| 38 | 2026-10-25 23:25:39 | `01a17562-4ebb-7733-bdfc-632f1b37fa93` | gpt-6-astra | design (Astra) | app | Round 19 design (Astra): **FRAME STUDIO**, letting streamers craft their own frame. The owner approved: "let p |
+| 39 | 2026-10-26 01:09:16 | `01a175c1-2abe-7371-b23d-9563bfa8401d` | gpt-6-astra | design (Astra) | app | You are Astra. NEW TASK (round 24): fix the bugs from a code review. The full review is in `.git/FABLE-REVIEW. |
+| 40 | 2026-10-26 01:25:57 | `01a175d0-70dd-7f13-9be1-01a14d0fb686` | gpt-6-astra | design (Astra) | app | You are Astra. NEW TASK (round 24b): one remaining message-fit bug, measured by the lead in real Chromium (`ov |

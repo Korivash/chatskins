@@ -1,3 +1,8 @@
+/*
+ * Styles for place mode components.
+ * Used by the site pages that load this stylesheet.
+ * Keep selector scope and cascade order stable for previews and overlays.
+ */
 .game.editor .toolbar #place-toggle[aria-pressed=true]{border-color:#72e5db;background:#103e4b;color:#dffffa;box-shadow:0 0 0 2px #51e0d333}
 .game.editor .toolbar .place-fit-label{font-size:12px;color:var(--site-muted);margin-left:auto}
 .game.editor .toolbar #place-fit{min-width:145px;max-width:175px;min-height:36px}

@@ -1,3 +1,8 @@
+/*
+ * Styles for preview fit components.
+ * Used by the site pages that load this stylesheet.
+ * Keep selector scope and cascade order stable for previews and overlays.
+ */
 /* Round 23g: give real-render previews room and fit artwork without cropping. */
 .game:not(.editor) .selection-layout {
   grid-template-columns: minmax(0, 0.95fr) minmax(560px, 1.35fr);

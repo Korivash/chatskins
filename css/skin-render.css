@@ -1,3 +1,8 @@
+/*
+ * Styles for skin render components.
+ * Used by the site pages that load this stylesheet.
+ * Keep selector scope and cascade order stable for previews and overlays.
+ */
 @import url("https://fonts.googleapis.com/css2?family=Bungee&family=IBM+Plex+Sans:wght@400;500;600;700&family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@400;500;600;700&family=Bree+Serif&family=Chakra+Petch:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&family=Lato:wght@400;500;600;700&family=Lora:wght@400;500;600;700&family=Noto+Sans:wght@400;500;600;700&family=Nunito+Sans:wght@400;500;600;700&family=Pixelify+Sans:wght@400;500;600;700&family=Roboto+Slab:wght@400;500;600;700&family=VT323&display=swap");
 
 /* Round 14: transparent, measured frame templates shared by OBS and previews. */

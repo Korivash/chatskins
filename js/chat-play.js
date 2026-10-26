@@ -1,31 +1,267 @@
+/**
+ * Browser module chat-play.js implements one ChatSkins page or overlay feature.
+ * Used by the site, editor, or OBS overlay module graph.
+ * Main exports: defaultChatPlay, normalizeChatPlay, parseChatPlayCommand, resolveAllowedSkin, isAllowedSkin.
+ * Invariant: preserve existing settings links and render chat content as text.
+ */
 import {normalizeSettings,CLEAN} from './settings.js';
+
 import {settingsDiff,applySettingsDiff,compactOverlayUrl,decompressJson} from './compact-link.js';
+
 import {encodeStudio} from './frame-studio.js';
 
+
 export const CHAT_PLAY_KEY='chat-studio.chat-play.v1';
+
 export const DEFAULT_ALLOWED_SKINS=['chatskins-signature','guild-chat','retro-rpg','block-craft'];
+
 const PERMISSIONS=['everyone','subs','vip','mods'];
+
 const EFFECTS=['swap','rain','chaos','flash','spotlight'];
+
 const DEFAULT_ALIASES={'chatskins-signature':['signature'],'guild-chat':['guild'],'retro-rpg':['rpg'],'block-craft':['pixel']};
+
+/** Handle chat play.
+ * @returns {unknown} The function result.
+ */
 export function defaultChatPlay(){return{version:1,enabled:false,commands:{enabled:true,swap:{enabled:true,permission:'everyone'},vote:{enabled:true,permission:'everyone',voterPermission:'everyone'},reset:{enabled:true,permission:'mods'},userCooldownSeconds:120,globalCooldownSeconds:15},allowedSkinIds:[...DEFAULT_ALLOWED_SKINS],aliases:DEFAULT_ALLOWED_SKINS.map(skinId=>({skinId,names:[...(DEFAULT_ALIASES[skinId]||[])]})),effects:{swap:{enabled:true,holdSeconds:60},rain:{enabled:true,durationSeconds:6},flash:{enabled:true,durationMs:1800},spotlight:{enabled:true,holdSeconds:10},chaos:{enabled:false,intervalSeconds:8,durationSeconds:40}},vote:{durationSeconds:45,winnerSeconds:120,optionCount:3,tie:'random'},points:{enabled:false,createDisabled:false,userCooldownSeconds:60,globalCooldownSeconds:15,rewards:EFFECTS.map((effect,i)=>({effect,enabled:i<2,title:['ChatSkins: Swap skin','ChatSkins: Emote rain','ChatSkins: Chaos mode','ChatSkins: Frame flash','ChatSkins: Spotlight'][i]}))},feedback:{banner:true,countdown:true},reduceMotion:false,panic:{restore:'home',latch:true}}}
 const integer=(value,fallback,min,max)=>Number.isFinite(Number(value))?Math.max(min,Math.min(max,Math.round(Number(value)))):fallback;
+
 function aliasName(value){return String(value||'').normalize('NFKC').trim().replace(/\s+/g,' ').toLocaleLowerCase('en-US')}
-export function normalizeChatPlay(input,skins=[]){const d=defaultChatPlay();if(!input||typeof input!=='object'||input.version!==1)return d;const allowedIds=new Set(skins.map(s=>s.id));const allowed=[...new Set((Array.isArray(input.allowedSkinIds)?input.allowedSkinIds:[]).filter(id=>allowedIds.has(id)))].slice(0,100),out=defaultChatPlay();out.enabled=!!input.enabled;out.commands.enabled=input.commands?.enabled!==false;for(const key of ['swap','vote']){out.commands[key].enabled=input.commands?.[key]?.enabled!==false;for(const field of key==='vote'?['permission','voterPermission']:['permission'])out.commands[key][field]=PERMISSIONS.includes(input.commands?.[key]?.[field])?input.commands[key][field]:'everyone'}out.commands.reset.enabled=input.commands?.reset?.enabled!==false;out.commands.reset.permission=['mods','broadcaster'].includes(input.commands?.reset?.permission)?input.commands.reset.permission:'mods';out.commands.userCooldownSeconds=integer(input.commands?.userCooldownSeconds,120,0,3600);out.commands.globalCooldownSeconds=integer(input.commands?.globalCooldownSeconds,15,0,600);out.allowedSkinIds=allowed;const rawAliases=Array.isArray(input.aliases)?input.aliases:[];out.aliases=allowed.map(skinId=>{const entry=rawAliases.find(item=>item?.skinId===skinId),names=(Array.isArray(entry?.names)?entry.names:DEFAULT_ALIASES[skinId]||[]).map(String).map(x=>x.trim()).filter(x=>/^[A-Za-z0-9 -]{1,24}$/.test(x)).slice(0,8);return{skinId,names:[...new Set(names.map(x=>x.toLowerCase()))]}});for(const key of EFFECTS){out.effects[key].enabled=input.effects?.[key]?.enabled===undefined?d.effects[key].enabled:!!input.effects[key].enabled;if(key==='swap')out.effects.swap.holdSeconds=integer(input.effects?.swap?.holdSeconds,60,10,600)}out.vote.durationSeconds=45;out.vote.winnerSeconds=120;out.vote.optionCount=3;out.vote.tie='random';out.points.enabled=!!input.points?.enabled;out.points.createDisabled=!!input.points?.createDisabled;out.points.userCooldownSeconds=integer(input.points?.userCooldownSeconds,60,0,3600);out.points.globalCooldownSeconds=integer(input.points?.globalCooldownSeconds,15,0,600);const inputRewards=Array.isArray(input.points?.rewards)?input.points.rewards:[];out.points.rewards=EFFECTS.map((effect,i)=>{const entry=inputRewards.find(x=>x?.effect===effect)||d.points.rewards[i];const title=Array.from(String(entry.title||'').trim()).slice(0,45).join('');return{effect,enabled:!!entry.enabled,title,...(entry.id?{id:String(entry.id).slice(0,100)}:{})}});out.reduceMotion=!!input.reduceMotion;out.feedback={banner:input.feedback?.banner!==false,countdown:input.feedback?.countdown!==false};return out}
-export function parseChatPlayCommand(raw){const text=String(raw??'').trim();if([...text].length>160)return{type:'invalid',reason:'too-long'};if(/^[123]$/.test(text))return{type:'ballot',choice:Number(text)-1};const swap=/^!skin(?:\s+([\s\S]*))?$/i.exec(text);if(swap)return swap[1]?.trim()?{type:'swap',name:swap[1].trim()}:{type:'invalid',reason:'missing-name'};if(/^!skinvote$/i.test(text))return{type:'vote'};if(/^!skinreset$/i.test(text))return{type:'reset'};if(/^!(?:skinvote|skinreset)\s+/i.test(text))return{type:'invalid',reason:'trailing-arguments'};return{type:'other'}}
-export function resolveAllowedSkin(name,config,skins){const normalized=aliasName(name);if(!normalized)return null;const aliases=new Map(config.aliases.map(entry=>[entry.skinId,entry.names]));return skins.find(skin=>config.allowedSkinIds.includes(skin.id)&&[skin.id,skin.name,...(aliases.get(skin.id)||[])].some(value=>aliasName(value)===normalized))||null}
+/** normalize chat play.
+ * @param {unknown} input Function input.
+ * @param {unknown} skins Function input.
+ * @returns {unknown} The function result.
+ */
+export function normalizeChatPlay(input,skins=[]){const d=defaultChatPlay();
+  if(!input||typeof input!=='object'||input.version!==1)return d;
+  const allowedIds=new Set(skins.map(s=>s.id));
+  const allowed=[...new Set((Array.isArray(input.allowedSkinIds)?input.allowedSkinIds:[]).filter(id=>allowedIds.has(id)))].slice(0,100),out=defaultChatPlay();
+  out.enabled=!!input.enabled;
+  out.commands.enabled=input.commands?.enabled!==false;
+  for(const key of ['swap','vote']){out.commands[key].enabled=input.commands?.[key]?.enabled!==false;
+    for(const field of key==='vote'?['permission','voterPermission']:['permission'])out.commands[key][field]=PERMISSIONS.includes(input.commands?.[key]?.[field])?input.commands[key][field]:'everyone'}out.commands.reset.enabled=input.commands?.reset?.enabled!==false;
+  out.commands.reset.permission=['mods','broadcaster'].includes(input.commands?.reset?.permission)?input.commands.reset.permission:'mods';
+  out.commands.userCooldownSeconds=integer(input.commands?.userCooldownSeconds,120,0,3600);
+  out.commands.globalCooldownSeconds=integer(input.commands?.globalCooldownSeconds,15,0,600);
+  out.allowedSkinIds=allowed;
+  const rawAliases=Array.isArray(input.aliases)?input.aliases:[];
+  out.aliases=allowed.map(skinId=>{const entry=rawAliases.find(item=>item?.skinId===skinId),names=(Array.isArray(entry?.names)?entry.names:DEFAULT_ALIASES[skinId]||[]).map(String).map(x=>x.trim()).filter(x=>/^[A-Za-z0-9 -]{1,24}$/.test(x)).slice(0,8);return{skinId,names:[...new Set(names.map(x=>x.toLowerCase()))]}});
+  for(const key of EFFECTS){out.effects[key].enabled=input.effects?.[key]?.enabled===undefined?d.effects[key].enabled:!!input.effects[key].enabled;
+    if(key==='swap')out.effects.swap.holdSeconds=integer(input.effects?.swap?.holdSeconds,60,10,600)}out.vote.durationSeconds=45;
+  out.vote.winnerSeconds=120;
+  out.vote.optionCount=3;
+  out.vote.tie='random';
+  out.points.enabled=!!input.points?.enabled;
+  out.points.createDisabled=!!input.points?.createDisabled;
+  out.points.userCooldownSeconds=integer(input.points?.userCooldownSeconds,60,0,3600);
+  out.points.globalCooldownSeconds=integer(input.points?.globalCooldownSeconds,15,0,600);
+  const inputRewards=Array.isArray(input.points?.rewards)?input.points.rewards:[];
+  out.points.rewards=EFFECTS.map((effect,i)=>{const entry=inputRewards.find(x=>x?.effect===effect)||d.points.rewards[i];const title=Array.from(String(entry.title||'').trim()).slice(0,45).join('');return{effect,enabled:!!entry.enabled,title,...(entry.id?{id:String(entry.id).slice(0,100)}:{})}});
+  out.reduceMotion=!!input.reduceMotion;
+  out.feedback={banner:input.feedback?.banner!==false,countdown:input.feedback?.countdown!==false};
+  return out}
+/** parse chat play command.
+ * @param {unknown} raw Function input.
+ * @returns {unknown} The function result.
+ */
+export function parseChatPlayCommand(raw){const text=String(raw??'').trim();
+  if([...text].length>160)return{type:'invalid',reason:'too-long'};
+  if(/^[123]$/.test(text))return{type:'ballot',choice:Number(text)-1};
+  const swap=/^!skin(?:\s+([\s\S]*))?$/i.exec(text);
+  if(swap)return swap[1]?.trim()?{type:'swap',name:swap[1].trim()}:{type:'invalid',reason:'missing-name'};
+  if(/^!skinvote$/i.test(text))return{type:'vote'};
+  if(/^!skinreset$/i.test(text))return{type:'reset'};
+  if(/^!(?:skinvote|skinreset)\s+/i.test(text))return{type:'invalid',reason:'trailing-arguments'};
+  return{type:'other'}}
+/** resolve allowed skin.
+ * @param {unknown} name Function input.
+ * @param {unknown} config Function input.
+ * @param {unknown} skins Function input.
+ * @returns {unknown} The function result.
+ */
+export function resolveAllowedSkin(name,config,skins){const normalized=aliasName(name);
+  if(!normalized)return null;
+  const aliases=new Map(config.aliases.map(entry=>[entry.skinId,entry.names]));
+  return skins.find(skin=>config.allowedSkinIds.includes(skin.id)&&[skin.id,skin.name,...(aliases.get(skin.id)||[])].some(value=>aliasName(value)===normalized))||null}
+/** is allowed skin.
+ * @param {unknown} id Function input.
+ * @param {unknown} config Function input.
+ * @param {unknown} skins Function input.
+ * @returns {unknown} The function result.
+ */
 export function isAllowedSkin(id,config,skins){return config.allowedSkinIds.includes(id)&&skins.some(s=>s.id===id)}
-export function roleForChatMessage(message,{roomId=''}={}){if(message.userId&&roomId&&String(message.userId)===String(roomId)||message.badges?.broadcaster)return'broadcaster';if(message.badges?.moderator||message.badges?.mod)return'mod';if(message.badges?.vip)return'vip';if(message.badges?.subscriber||message.badges?.founder)return'sub';return message.badges?'everyone':null}
-export function permissionAllows(permission,message,context={}){if(permission==='everyone')return !!message&&!message.system;const role=roleForChatMessage(message,context);if(role==='broadcaster'||role==='mod')return permission==='broadcaster'?role==='broadcaster':true;if(!role)return false;if(permission==='subs')return role==='sub';if(permission==='vip')return role==='vip';return false}
-export function createChatPlayCooldowns({now=()=>performance.now(),maxUsers=10000,maxEvents=10000}={}){const users=new Map(),seen=new Map();let globalUntil=0,ballots=new Map();function prune(){const t=now();for(const[k,v]of users)if(v<=t)users.delete(k);for(const[k,v]of ballots)if(v<=t)ballots.delete(k);for(const[k,v]of seen)if(v<=t)seen.delete(k)}return{admitCommand(userId,userSeconds,globalSeconds,eventId=''){prune();const t=now(),id=String(userId||'');if(eventId&&seen.has(eventId))return{ok:false,reason:'duplicate'};if(users.has(id))return{ok:false,reason:'user-cooldown',wait:Math.ceil((users.get(id)-t)/1000)};if(t<globalUntil)return{ok:false,reason:'global-cooldown',wait:Math.ceil((globalUntil-t)/1000)};if(!users.has(id)&&users.size>=maxUsers)return{ok:false,reason:'capacity'};if(eventId){if(seen.size>=maxEvents)return{ok:false,reason:'capacity'};seen.set(eventId,t+600000)}if(userSeconds)users.set(id,t+userSeconds*1000);if(globalSeconds)globalUntil=t+globalSeconds*1000;return{ok:true}},admitBallot(userId,eventId=''){prune();const t=now(),id=String(userId||'');if(eventId&&seen.has(eventId))return{ok:false,reason:'duplicate'};if(ballots.has(id)&&ballots.get(id)>t)return{ok:false,reason:'ballot-cooldown'};if(!ballots.has(id)&&ballots.size>=maxUsers)return{ok:false,reason:'capacity'};if(eventId){if(seen.size>=maxEvents)return{ok:false,reason:'capacity'};seen.set(eventId,t+600000)}ballots.set(id,t+1000);return{ok:true}},reset(){globalUntil=0;users.clear();ballots.clear()},get size(){return users.size}}}
-export function tallyVotes(choices,votes,rng=Math.random){const counts=choices.map((_,index)=>[...votes.values()].filter(choice=>choice===index).length),max=Math.max(0,...counts),tied=counts.map((count,index)=>count===max?index:-1).filter(index=>index>=0);return{counts,winner:max===0?null:tied[Math.min(tied.length-1,Math.floor(Math.max(0,Math.min(.999999,rng()))*tied.length))],tied,max}}
+/** Handle for chat message.
+ * @param {unknown} message Function input.
+ * @param {unknown} parameter2 Function input.
+ * @returns {unknown} The function result.
+ */
+export function roleForChatMessage(message,{roomId=''}={}){if(message.userId&&roomId&&String(message.userId)===String(roomId)||message.badges?.broadcaster)return'broadcaster';
+  if(message.badges?.moderator||message.badges?.mod)return'mod';
+  if(message.badges?.vip)return'vip';
+  if(message.badges?.subscriber||message.badges?.founder)return'sub';
+  return message.badges?'everyone':null}
+/** Handle allows.
+ * @param {unknown} permission Function input.
+ * @param {unknown} message Function input.
+ * @param {unknown} context Function input.
+ * @returns {unknown} The function result.
+ */
+export function permissionAllows(permission,message,context={}){if(permission==='everyone')return !!message&&!message.system;
+  const role=roleForChatMessage(message,context);
+  if(role==='broadcaster'||role==='mod')return permission==='broadcaster'?role==='broadcaster':true;
+  if(!role)return false;
+  if(permission==='subs')return role==='sub';
+  if(permission==='vip')return role==='vip';
+  return false}
+/** create chat play cooldowns.
+ * @param {unknown} parameter1 Function input.
+ * @returns {unknown} The function result.
+ */
+export function createChatPlayCooldowns({now=()=>performance.now(),maxUsers=10000,maxEvents=10000}={}){const users=new Map(),seen=new Map();
+  let globalUntil=0,ballots=new Map();
+  function prune(){const t=now();
+    for(const[k,v]of users)if(v<=t)users.delete(k);
+    for(const[k,v]of ballots)if(v<=t)ballots.delete(k);
+    for(const[k,v]of seen)if(v<=t)seen.delete(k)}return{admitCommand(userId,userSeconds,globalSeconds,eventId=''){prune();
+      const t=now(),id=String(userId||'');
+      if(eventId&&seen.has(eventId))return{ok:false,reason:'duplicate'};
+      if(users.has(id))return{ok:false,reason:'user-cooldown',wait:Math.ceil((users.get(id)-t)/1000)};
+      if(t<globalUntil)return{ok:false,reason:'global-cooldown',wait:Math.ceil((globalUntil-t)/1000)};
+      if(!users.has(id)&&users.size>=maxUsers)return{ok:false,reason:'capacity'};
+      if(eventId){if(seen.size>=maxEvents)return{ok:false,reason:'capacity'};
+        seen.set(eventId,t+600000)}if(userSeconds)users.set(id,t+userSeconds*1000);
+      if(globalSeconds)globalUntil=t+globalSeconds*1000;
+      return{ok:true}},admitBallot(userId,eventId=''){prune();
+      const t=now(),id=String(userId||'');
+      if(eventId&&seen.has(eventId))return{ok:false,reason:'duplicate'};
+      if(ballots.has(id)&&ballots.get(id)>t)return{ok:false,reason:'ballot-cooldown'};
+      if(!ballots.has(id)&&ballots.size>=maxUsers)return{ok:false,reason:'capacity'};
+      if(eventId){if(seen.size>=maxEvents)return{ok:false,reason:'capacity'};
+        seen.set(eventId,t+600000)}ballots.set(id,t+1000);
+      return{ok:true}},reset(){globalUntil=0;
+      users.clear();
+      ballots.clear()},get size(){return users.size}}}
+/** Handle votes.
+ * @param {unknown} choices Function input.
+ * @param {unknown} votes Function input.
+ * @param {unknown} rng Function input.
+ * @returns {unknown} The function result.
+ */
+export function tallyVotes(choices,votes,rng=Math.random){const counts=choices.map((_,index)=>[...votes.values()].filter(choice=>choice===index).length),max=Math.max(0,...counts),tied=counts.map((count,index)=>count===max?index:-1).filter(index=>index>=0);
+  return{counts,winner:max===0?null:tied[Math.min(tied.length-1,Math.floor(Math.max(0,Math.min(.999999,rng()))*tied.length))],tied,max}}
+/** Handle reward title.
+ * @param {unknown} title Function input.
+ * @param {unknown} rewards Function input.
+ * @returns {unknown} The function result.
+ */
 export function matchRewardTitle(title,rewards){return rewards.find(reward=>reward.enabled&&reward.title===title)||null}
-export function makePlayBanner(document,text){const banner=document.createElement('div');banner.className='play-banner';banner.setAttribute('role','status');banner.textContent=String(text||'').replace(/[\u0000-\u001f\u007f-\u009f\u202a-\u202e\u2066-\u2069]/g,'').slice(0,240);return banner}
-export function createChatPlayAdmission({config,skins,roomId='',cooldowns=createChatPlayCooldowns(),bypassCooldowns=false,isVoteActive=()=>false,onSwap=()=>{},onVote=()=>{},onBallot=()=>{},onReset=()=>{},onStatus=()=>{}}={}){return{handle(message){if(!config?.enabled||!config.commands.enabled||!message||message.system)return{accepted:false,reason:'disabled'};const command=parseChatPlayCommand(message.text);if(command.type==='other')return{accepted:false,reason:'not-command'};const userId=String(message.userId||message.login||'');if(!userId)return{accepted:false,reason:'missing-identity'};const announce=(text)=>{onStatus(text);return{accepted:false,reason:text}};if(command.type==='reset'){if(!config.commands.reset.enabled||!permissionAllows(config.commands.reset.permission,message,{roomId}))return announce('This command is for mods and the broadcaster.');onReset(message);return{accepted:true,type:'reset'}}if(command.type==='swap'){if(!config.commands.swap.enabled||!config.effects.swap.enabled)return announce('Skin swaps are disabled.');if(!permissionAllows(config.commands.swap.permission,message,{roomId}))return announce('This command is for '+config.commands.swap.permission+'.');const skin=resolveAllowedSkin(command.name,config,skins);if(!skin)return announce('That skin is not allowed. Try '+config.allowedSkinIds.map(id=>config.aliases.find(x=>x.skinId===id)?.names[0]||id).join(', ')+'.');const admission=bypassCooldowns?{ok:true}:cooldowns.admitCommand(userId,config.commands.userCooldownSeconds,config.commands.globalCooldownSeconds,message.id);if(!admission.ok)return announce(admission.reason==='user-cooldown'||admission.reason==='global-cooldown'?`Wait ${admission.wait}s before another skin command.`:'Chat play is busy.');onSwap(skin,message);return{accepted:true,type:'swap',skin}}if(command.type==='vote'){if(!config.commands.vote.enabled||!config.effects.swap.enabled)return announce('Voting is disabled.');if(config.allowedSkinIds.length<3)return announce('Allow at least 3 skins to start a vote.');if(!permissionAllows(config.commands.vote.permission,message,{roomId}))return announce('This command is for '+config.commands.vote.permission+'.');if(isVoteActive())return announce('Vote already running. Type 1, 2 or 3.');const admission=bypassCooldowns?{ok:true}:cooldowns.admitCommand(userId,config.commands.userCooldownSeconds,config.commands.globalCooldownSeconds,message.id);if(!admission.ok)return announce(admission.reason==='user-cooldown'||admission.reason==='global-cooldown'?`Wait ${admission.wait}s before another skin command.`:'Chat play is busy.');onVote(message);return{accepted:true,type:'vote'}}if(command.type==='ballot'){if(!isVoteActive())return{accepted:false,reason:'no-vote'};if(!permissionAllows(config.commands.vote.voterPermission,message,{roomId}))return announce('This command is for '+config.commands.vote.voterPermission+'.');const admission=bypassCooldowns?{ok:true}:cooldowns.admitBallot(userId,message.id);if(!admission.ok)return{accepted:false,reason:admission.reason};onBallot(command.choice,message);return{accepted:true,type:'ballot',choice:command.choice}}return{accepted:false,reason:command.reason}}}}
-export function encodePlaySource({chatSettings,chatPlay,skins,baseSkinId=''}){const payload={version:1,baseSkinId:String(baseSkinId||''),chatSettings:normalizeSettings(chatSettings),chatPlay,allowedSkins:skins};return btoa(unescape(encodeURIComponent(JSON.stringify(payload)))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/g,'')}
+/** make play banner.
+ * @param {unknown} document Function input.
+ * @param {unknown} text Function input.
+ * @returns {unknown} The function result.
+ */
+export function makePlayBanner(document,text){const banner=document.createElement('div');
+  banner.className='play-banner';
+  banner.setAttribute('role','status');
+  banner.textContent=String(text||'').replace(/[\u0000-\u001f\u007f-\u009f\u202a-\u202e\u2066-\u2069]/g,'').slice(0,240);
+  return banner}
+/** create chat play admission.
+ * @param {unknown} parameter1 Function input.
+ * @param {unknown} skins Function input.
+ * @param {unknown} roomId Function input.
+ * @param {unknown} cooldowns Function input.
+ * @returns {unknown} The function result.
+ */
+export function createChatPlayAdmission({config,skins,roomId='',cooldowns=createChatPlayCooldowns(),bypassCooldowns=false,isVoteActive=()=>false,onSwap=()=>{},onVote=()=>{},onBallot=()=>{},onReset=()=>{},onStatus=()=>{}}={}){return{handle(message){if(!config?.enabled||!config.commands.enabled||!message||message.system)return{accepted:false,reason:'disabled'};
+      const command=parseChatPlayCommand(message.text);
+      if(command.type==='other')return{accepted:false,reason:'not-command'};
+      const userId=String(message.userId||message.login||'');
+      if(!userId)return{accepted:false,reason:'missing-identity'};
+      const announce=(text)=>{onStatus(text);
+        return{accepted:false,reason:text}};
+      if(command.type==='reset'){if(!config.commands.reset.enabled||!permissionAllows(config.commands.reset.permission,message,{roomId}))return announce('This command is for mods and the broadcaster.');
+        onReset(message);
+        return{accepted:true,type:'reset'}}if(command.type==='swap'){if(!config.commands.swap.enabled||!config.effects.swap.enabled)return announce('Skin swaps are disabled.');
+        if(!permissionAllows(config.commands.swap.permission,message,{roomId}))return announce('This command is for '+config.commands.swap.permission+'.');
+        const skin=resolveAllowedSkin(command.name,config,skins);
+        if(!skin)return announce('That skin is not allowed. Try '+config.allowedSkinIds.map(id=>config.aliases.find(x=>x.skinId===id)?.names[0]||id).join(', ')+'.');
+        const admission=bypassCooldowns?{ok:true}:cooldowns.admitCommand(userId,config.commands.userCooldownSeconds,config.commands.globalCooldownSeconds,message.id);
+        if(!admission.ok)return announce(admission.reason==='user-cooldown'||admission.reason==='global-cooldown'?`Wait ${admission.wait}s before another skin command.`:'Chat play is busy.');
+        onSwap(skin,message);
+        return{accepted:true,type:'swap',skin}}if(command.type==='vote'){if(!config.commands.vote.enabled||!config.effects.swap.enabled)return announce('Voting is disabled.');
+        if(config.allowedSkinIds.length<3)return announce('Allow at least 3 skins to start a vote.');
+        if(!permissionAllows(config.commands.vote.permission,message,{roomId}))return announce('This command is for '+config.commands.vote.permission+'.');
+        if(isVoteActive())return announce('Vote already running. Type 1, 2 or 3.');
+        const admission=bypassCooldowns?{ok:true}:cooldowns.admitCommand(userId,config.commands.userCooldownSeconds,config.commands.globalCooldownSeconds,message.id);
+        if(!admission.ok)return announce(admission.reason==='user-cooldown'||admission.reason==='global-cooldown'?`Wait ${admission.wait}s before another skin command.`:'Chat play is busy.');
+        onVote(message);
+        return{accepted:true,type:'vote'}}if(command.type==='ballot'){if(!isVoteActive())return{accepted:false,reason:'no-vote'};
+        if(!permissionAllows(config.commands.vote.voterPermission,message,{roomId}))return announce('This command is for '+config.commands.vote.voterPermission+'.');
+        const admission=bypassCooldowns?{ok:true}:cooldowns.admitBallot(userId,message.id);
+        if(!admission.ok)return{accepted:false,reason:admission.reason};
+        onBallot(command.choice,message);
+        return{accepted:true,type:'ballot',choice:command.choice}}return{accepted:false,reason:command.reason}}}}
+/** encode play source.
+ * @param {unknown} parameter1 Function input.
+ * @param {unknown} chatPlay Function input.
+ * @param {unknown} skins Function input.
+ * @param {unknown} baseSkinId Function input.
+ * @returns {unknown} The function result.
+ */
+export function encodePlaySource({chatSettings,chatPlay,skins,baseSkinId=''}){const payload={version:1,baseSkinId:String(baseSkinId||''),chatSettings:normalizeSettings(chatSettings),chatPlay,allowedSkins:skins};
+  return btoa(unescape(encodeURIComponent(JSON.stringify(payload)))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/g,'')}
+/** decode play source.
+ * @param {unknown} value Function input.
+ * @param {unknown} catalog Function input.
+ * @returns {unknown} The function result.
+ */
 export function decodePlaySource(value,catalog=[]){try{const json=decodeURIComponent(escape(atob(String(value).replace(/-/g,'+').replace(/_/g,'/').padEnd(Math.ceil(String(value).length/4)*4,'=')))),payload=JSON.parse(json);if(payload.version!==1||!Array.isArray(payload.allowedSkins))return null;const allowedSkins=payload.allowedSkins.filter(item=>item&&catalog.some(s=>s.id===item.id)).map(item=>catalog.find(s=>s.id===item.id));return{baseSkinId:catalog.some(s=>s.id===payload.baseSkinId)?payload.baseSkinId:'',chatSettings:normalizeSettings(payload.chatSettings),chatPlay:normalizeChatPlay(payload.chatPlay,allowedSkins),allowedSkins}}catch{return null}}
+/** Handle play data.
+ * @param {unknown} parameter1 Function input.
+ * @param {unknown} chatPlay Function input.
+ * @param {unknown} skins Function input.
+ * @param {unknown} baseSkinId Function input.
+ * @param {unknown} baseSettings Function input.
+ * @returns {unknown} The function result.
+ */
 export function compactPlayData({chatSettings,chatPlay,skins=[],baseSkinId='',baseSettings=CLEAN}){const custom=skins.filter(skin=>typeof skin==='object'&&(skin.custom||skin.isCustom||skin.userModified)).map(skin=>({id:skin.id,name:skin.name,tagline:skin.tagline,settings:settingsDiff(skin.baseSettings||(skin.id===baseSkinId?baseSettings:CLEAN),skin.settings||{})}));const settings=normalizeSettings(chatSettings);if(settings.studioDesign&&typeof settings.studioDesign==='object')settings.studioDesign=encodeStudio(settings.studioDesign);return{b:String(baseSkinId||''),c:settingsDiff(baseSettings,settings)||{},s:skins.map(skin=>typeof skin==='string'?skin:skin.id),...(custom.length?{x:custom}:{}),p:chatPlay}}
+/** decode compact play data.
+ * @param {unknown} payload Function input.
+ * @param {unknown} catalog Function input.
+ * @returns {unknown} The function result.
+ */
 export function decodeCompactPlayData(payload,catalog=[]){if(!payload||!Array.isArray(payload.s))return null;const custom=new Map((payload.x||[]).map(item=>[item.id,item])),allowedSkins=payload.s.map(id=>{const source=catalog.find(skin=>skin.id===id),extra=custom.get(id);if(source)return extra?{...source,settings:applySettingsDiff(source.settings,extra.settings),userModified:true}:source;return extra?{id:extra.id,name:extra.name||extra.id,tagline:extra.tagline||'',settings:applySettingsDiff(CLEAN,extra.settings),custom:true}:null}).filter(Boolean);const base=catalog.find(skin=>skin.id===payload.b);return{baseSkinId:base?.id||'',chatSettings:normalizeSettings(applySettingsDiff(base?.settings||CLEAN,payload.c||{})),chatPlay:normalizeChatPlay(payload.p,allowedSkins),allowedSkins}}
+/** build compact play url.
+ * @param {unknown} baseUrl Function input.
+ * @param {unknown} parameter2 Function input.
+ * @param {unknown} chatPlay Function input.
+ * @param {unknown} allowedSkins Function input.
+ * @param {unknown} baseSkinId Function input.
+ * @param {unknown} baseSettings Function input.
+ * @returns {unknown} The function result.
+ */
 export async function buildCompactPlayUrl(baseUrl,{chatSettings,chatPlay,allowedSkins,baseSkinId='',baseSettings=CLEAN}={}){return compactOverlayUrl(baseUrl,compactPlayData({chatSettings,chatPlay,skins:allowedSkins,baseSkinId,baseSettings}))}
+/** build chat play url.
+ * @param {unknown} baseUrl Function input.
+ * @param {unknown} parameter2 Function input.
+ * @param {unknown} chatSettings Function input.
+ * @param {unknown} chatPlay Function input.
+ * @param {unknown} allowedSkins Function input.
+ * @param {unknown} baseSkinId Function input.
+ * @param {unknown} baseSettings Function input.
+ * @returns {unknown} The function result.
+ */
 export async function buildChatPlayUrl(baseUrl,{token,chatSettings,chatPlay,allowedSkins,baseSkinId='',baseSettings=CLEAN}){return compactOverlayUrl(baseUrl,compactPlayData({chatSettings,chatPlay,skins:allowedSkins,baseSkinId,baseSettings}),token)}
+/** parse chat play fragment.
+ * @param {unknown} hash Function input.
+ * @param {unknown} catalog Function input.
+ * @returns {unknown} The function result.
+ */
 export function parseChatPlayFragment(hash,catalog=[]){const params=new URLSearchParams(String(hash||'').replace(/^#/,''));if(params.get('v')!=='1'||!params.get('play')||!params.get('access_token'))return null;const config=decodePlaySource(params.get('play'),catalog);return config?{token:params.get('access_token'),config}:null}
+/** parse compact play fragment.
+ * @param {unknown} hash Function input.
+ * @param {unknown} catalog Function input.
+ * @returns {unknown} The function result.
+ */
 export async function parseCompactPlayFragment(hash,catalog=[]){try{const params=new URLSearchParams(String(hash||'').replace(/^#/,''));if(params.get('v')!=='2'||!params.get('data')||!params.get('access_token'))return null;const config=decodeCompactPlayData(await decompressJson(params.get('data')),catalog);return config?{token:params.get('access_token'),config}:null}catch{return null}}

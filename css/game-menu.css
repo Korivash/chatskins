@@ -1,3 +1,8 @@
+/*
+ * Styles for game menu components.
+ * Used by the site pages that load this stylesheet.
+ * Keep selector scope and cascade order stable for previews and overlays.
+ */
 @import url('https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Chakra+Petch:wght@500;600;700&display=swap');
 @import url('./app.css');
 @import url('./site-polish.css');

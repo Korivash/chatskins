@@ -1,3 +1,8 @@
+/*
+ * Styles for editor options components.
+ * Used by the site pages that load this stylesheet.
+ * Keep selector scope and cascade order stable for previews and overlays.
+ */
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Barlow:wght@500;700&family=Nunito+Sans:wght@500;700&family=IBM+Plex+Mono:wght@500&family=Chakra+Petch:wght@500;700&family=Atkinson+Hyperlegible:wght@400;700&family=Bree+Serif&family=Lato:wght@400;700&display=swap');
 :root{--opt-canvas:#05070D;--opt-surface:#0B1425;--opt-raised:#14243B;--opt-line:#344967;--opt-ink:#F3F7FF;--opt-muted:#AFBED3;--opt-action:#86B4FF;--opt-focus:#59D7FF;--tile-color:#344967}
 .options-editor{background:var(--opt-canvas);color:var(--opt-ink);font:15px/1.5 'DM Sans',sans-serif;padding-bottom:calc(100px + env(safe-area-inset-bottom,0px))}

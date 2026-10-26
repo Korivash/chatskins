@@ -1,3 +1,8 @@
+/*
+ * Styles for site components.
+ * Used by the site pages that load this stylesheet.
+ * Keep selector scope and cascade order stable for previews and overlays.
+ */
 @import url('https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap');
 .site{min-height:100vh;background:var(--site-canvas);color:var(--site-text);font:15px/1.7 var(--site-font-body);background-image:radial-gradient(ellipse at 50% 0,#10254730,transparent 55%)}
 .site *{box-sizing:border-box}.site a{color:inherit;text-decoration:none}.site button,.site input,.site select,.site textarea{font:inherit}.site :focus-visible{outline:var(--site-focus);outline-offset:3px}.site-wrap{width:min(var(--site-content),calc(100% - 64px));margin-inline:auto}.site h1,.site h2,.site h3,.site .brand{font-family:var(--site-font-display);line-height:1.08;letter-spacing:-.035em}.site h1{font-size:clamp(42px,6vw,78px);margin:18px 0}.site h2{font-size:clamp(28px,3.4vw,46px);margin:0 0 18px}.site h3{font-size:22px;margin:16px 0 8px}.site p{max-width:70ch;color:var(--site-muted)}.site .skip{position:absolute;left:12px;top:-100px;z-index:100;background:var(--site-raised);padding:10px}.site .skip:focus{top:12px}.visually-hidden{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}

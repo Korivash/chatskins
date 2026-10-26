@@ -1,19 +1,62 @@
+/**
+ * Server module skin-request.mjs handles its ChatSkins API or support task.
+ * Used by server/skin-request.mjs and the Node HTTP process.
+ * Main exports: resolveClientIp, createSkinRequestHandler, handleApiRequest, startServer.
+ * Invariant: secrets stay server-side and are never written to logs or responses.
+ */
 import http from 'node:http';
+
 import {createHash} from 'node:crypto';
+
 import {resolve} from 'node:path';
+
 import {fileURLToPath} from 'node:url';
+
 import {handleDescribeRequest} from './describe.mjs';
+
 import {handleAssistantRequest} from './assistant.mjs';
+
 import {createDreamHandler} from './dream.mjs';
 
+
 const fields={name:60,inspired:80,colors:80,font:60,frame:120,description:800,channel:25,discord:40,website:200};
+
 const required=['name','inspired','colors','description'];
+
 const hour=60*60*1000,day=24*hour;
+
 const json=(status,body,headers={})=>({status,headers:{'content-type':'application/json; charset=utf-8','cache-control':'no-store',...headers},body});
-export function resolveClientIp({remoteAddress,headers={}}={},proxyOverride=process.env.SKIN_REQUEST_TRUSTED_PROXY){const remote=String(remoteAddress||'unknown').toLowerCase();const trusted=new Set(['127.0.0.1','::1','::ffff:127.0.0.1']);if(proxyOverride)trusted.add(String(proxyOverride).toLowerCase());if(!trusted.has(remote))return remoteAddress||'unknown';const header=(name)=>{const key=Object.keys(headers).find(k=>k.toLowerCase()===name);return key?headers[key]:''};const cloudflare=String(header('cf-connecting-ip')||'').trim();if(cloudflare)return cloudflare;const forwarded=String(header('x-forwarded-for')||'').split(',').map(ip=>ip.trim()).filter(Boolean);return forwarded.at(-1)||remoteAddress||'unknown'}
-function isTrustedProxy(remoteAddress){const remote=String(remoteAddress||'unknown').toLowerCase();return remote==='127.0.0.1'||remote==='::1'||remote==='::ffff:127.0.0.1'||Boolean(process.env.SKIN_REQUEST_TRUSTED_PROXY&&remote===String(process.env.SKIN_REQUEST_TRUSTED_PROXY).toLowerCase())}
-function sanitize(value){const urls=[];let text=value.replace(/https?:\/\/[^\s<>]+/gi,url=>{urls.push(url);return `URLTOKEN${urls.length-1}TOKEN`});text=text.replace(/@(?:everyone|here)\b/gi,'').replace(/<@[!&]?[^>]+>|<#\d+>/g,'').replace(/[\u0000-\u001f\u007f]/g,' ').replace(/([\\`*_{}\[\]()#+\-.!|>])/g,'\\$1');return text.replace(/URLTOKEN(\d+)TOKEN/g,(_,i)=>`<${urls[Number(i)]}>`).trim()}
+
+/** resolve client ip.
+ * @param {unknown} parameter1 Function input.
+ * @param {unknown} headers Function input.
+ * @param {unknown} proxyOverride Function input.
+ * @returns {unknown} The function result.
+ */
+export function resolveClientIp({remoteAddress,headers={}}={},proxyOverride=process.env.SKIN_REQUEST_TRUSTED_PROXY){const remote=String(remoteAddress||'unknown').toLowerCase();
+  const trusted=new Set(['127.0.0.1','::1','::ffff:127.0.0.1']);
+  if(proxyOverride)trusted.add(String(proxyOverride).toLowerCase());
+  if(!trusted.has(remote))return remoteAddress||'unknown';
+  const header=(name)=>{const key=Object.keys(headers).find(k=>k.toLowerCase()===name);
+    return key?headers[key]:''};
+  const cloudflare=String(header('cf-connecting-ip')||'').trim();
+  if(cloudflare)return cloudflare;
+  const forwarded=String(header('x-forwarded-for')||'').split(',').map(ip=>ip.trim()).filter(Boolean);
+  return forwarded.at(-1)||remoteAddress||'unknown'}
+function isTrustedProxy(remoteAddress){const remote=String(remoteAddress||'unknown').toLowerCase();
+  return remote==='127.0.0.1'||remote==='::1'||remote==='::ffff:127.0.0.1'||Boolean(process.env.SKIN_REQUEST_TRUSTED_PROXY&&remote===String(process.env.SKIN_REQUEST_TRUSTED_PROXY).toLowerCase())}
+function sanitize(value){const urls=[];
+  let text=value.replace(/https?:\/\/[^\s<>]+/gi,url=>{urls.push(url);return `URLTOKEN${urls.length-1}TOKEN`});
+  text=text.replace(/@(?:everyone|here)\b/gi,'').replace(/<@[!&]?[^>]+>|<#\d+>/g,'').replace(/[\u0000-\u001f\u007f]/g,' ').replace(/([\\`*_{}\[\]()#+\-.!|>])/g,'\\$1');return text.replace(/URLTOKEN(\d+)TOKEN/g,(_,i)=>`<${urls[Number(i)]}>`).trim()}
 function retryAfter(list,now,windowMs,limit){if(!list.length)return Math.ceil(windowMs/1000);return Math.max(1,Math.ceil((list[0]+windowMs-now)/1000))}
+/** create skin request handler.
+ * @param {unknown} parameter1 Function input.
+ * @param {unknown} webhookUrl Function input.
+ * @param {unknown} now Function input.
+ * @param {unknown} resolveIp Function input.
+ * @param {unknown} originHost Function input.
+ * @returns {unknown} The function result.
+ */
 export function createSkinRequestHandler({fetchImpl=globalThis.fetch,webhookUrl=process.env.SKIN_REQUEST_WEBHOOK,now=Date.now,resolveIp=resolveClientIp,originHost=process.env.SKIN_REQUEST_ORIGIN_HOST??'getchatskins.com'}={}){
  const acceptedByIp=new Map(),globalAccepted=[],reservedByIp=new Map();
  return async function handleSkinRequest({method='POST',url='/api/skin-request',headers={},remoteAddress='unknown',body=''}={}){
@@ -37,7 +80,15 @@ export function createSkinRequestHandler({fetchImpl=globalThis.fetch,webhookUrl=
 }
 export const handleSkinRequest=createSkinRequestHandler();
 export const handleDreamRequest=createDreamHandler();
+/** handle api request.
+ * @param {unknown} request Function input.
+ * @returns {unknown} The function result.
+ */
 export async function handleApiRequest(request){const path=new URL(request.url||'/','http://localhost').pathname;if(path==='/api/describe')return handleDescribeRequest(request);if(path==='/api/assistant')return handleAssistantRequest(request);if(path.startsWith('/api/dream'))return handleDreamRequest(request);return handleSkinRequest(request)}
+/** start server.
+ * @param {unknown} parameter1 Function input.
+ * @returns {unknown} The function result.
+ */
 export function startServer({port=Number(process.env.PORT)||4417,host='127.0.0.1',handler=handleApiRequest}={}){
  const server=http.createServer(async(req,res)=>{
   let body='';

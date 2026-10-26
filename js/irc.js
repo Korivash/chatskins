@@ -1,12 +1,101 @@
-export function unescapeTag(value=""){return value.replace(/\\([s:\\\\rn])/g,(_,c)=>({s:" ",":":";", "\\":"\\",r:"\r",n:"\n"}[c]??c));}
-export function parseTags(raw=""){const tags={};for(const part of raw.split(";")){if(!part)continue;const i=part.indexOf("=");tags[i<0?part:part.slice(0,i)]=i<0?"":unescapeTag(part.slice(i+1));}return tags;}
-export function parseIRC(line){let rest=line,tags={};if(rest.startsWith("@")){const i=rest.indexOf(" ");if(i<0)return null;tags=parseTags(rest.slice(1,i));rest=rest.slice(i+1);}let prefix="";if(rest.startsWith(":")){const i=rest.indexOf(" ");if(i<0)return null;prefix=rest.slice(1,i);rest=rest.slice(i+1);}const sep=rest.indexOf(" :");const head=sep<0?rest:rest.slice(0,sep);const trailing=sep<0?null:rest.slice(sep+2);const words=head.trim().split(/\s+/);if(!words[0])return null;const command=words.shift().toUpperCase();const params=words;return{tags,prefix,command,params,trailing};}
-export function createIRCClient(channel,{WebSocketImpl=globalThis.WebSocket,onMessage=()=>{},onState=()=>{},onRoomState=()=>{},onCapabilities=()=>{},random=Math.random,setTimer=setTimeout,clearTimer=clearTimeout}={}){let socket=null,closed=false,timer=null,attempt=0,live=false,announcedRoomId="";const channelName=String(channel||"").replace(/^#/ ,"").toLowerCase();
-const state=v=>{if(v!==live){live=v;onState(v?"live":"error");}};
-const publishRoomId=tags=>{const roomId=tags["room-id"]||"";if(roomId&&roomId!==announcedRoomId){announcedRoomId=roomId;onRoomState({roomId,tags});}};
-function connect(){if(closed||!channelName)return;state(false);try{socket=new WebSocketImpl("wss://irc-ws.chat.twitch.tv:443");}catch{schedule();return;}socket.addEventListener("open",()=>{attempt=0;socket.send("PASS SCHMOOPIIE\r\n");socket.send(`NICK justinfan${String(Math.floor(random()*90000)+10000)}\r\n`);socket.send("CAP REQ :twitch.tv/tags twitch.tv/commands\r\n");socket.send(`JOIN #${channelName}\r\n`);});socket.addEventListener("message",e=>{for(const line of String(e.data).split(/\r\n/)){if(!line)continue;const m=parseIRC(line);if(!m)continue;if(m.command==="PING"){socket.send(`PONG :${m.trailing||m.params[0]||"tmi.twitch.tv"}\r\n`);continue;}if(m.command==="001")state(true);if(m.command==="CAP"&&m.params[1]==="ACK")onCapabilities((m.trailing||"").split(/\s+/).filter(Boolean));if(m.command==="ROOMSTATE"){state(true);publishRoomId(m.tags);}if(m.command==="PRIVMSG"){publishRoomId(m.tags);const user=m.prefix.split("!")[0],rawText=m.trailing||"",actionMatch=/^\u0001ACTION ([\s\S]*)\u0001$/.exec(rawText);onMessage({id:m.tags.id||"",username:m.tags["display-name"]||user,login:user.toLowerCase(),userId:m.tags["user-id"]||"",sourceRoomId:m.tags["source-room-id"]||"",text:actionMatch?actionMatch[1]:rawText,action:!!actionMatch,color:m.tags.color||"",badges:parseBadgeTag(m.tags.badges),emotes:parseEmoteTag(m.tags.emotes),firstMessage:m.tags["first-msg"]==="1",system:false});}else if(m.command==="CLEARMSG"){onMessage({deleteMessageId:m.tags["target-msg-id"]||""});}else if(m.command==="CLEARCHAT"){onMessage({clearUsername:m.trailing||"",clearAll:!m.trailing});}}});socket.addEventListener("close",()=>{live=false;onState("error");if(!closed)schedule();});socket.addEventListener("error",()=>{live=false;onState("error");});}
-function schedule(){if(closed||timer)return;const delay=Math.min(30000,1000*2**attempt++);timer=setTimer(()=>{timer=null;connect();},delay);}
-connect();return{disconnect(){closed=true;if(timer)clearTimer(timer);timer=null;socket?.close();},get socket(){return socket;}};}
-function parseBadgeTag(raw=""){const out={};for(const item of raw.split(",")){const [name,version]=item.split("/");if(name)out[name]=version||true;}return out;}
-function parseEmoteTag(raw=""){const out={};for(const item of raw.split("/")){const [id,positions]=item.split(":");if(!id||!positions)continue;out[id]=positions.split(",").map(range=>range.split("-").map(Number));}return out;}
-export function connectChat(channel,onMessage,onState=()=>{},options={}){const{onRoomState,...clientOptions}=options;return createIRCClient(channel,{...clientOptions,onMessage,onState,onRoomState});}
+/**
+ * Browser module irc.js implements one ChatSkins page or overlay feature.
+ * Used by the site, editor, or OBS overlay module graph.
+ * Main exports: unescapeTag, parseTags, parseIRC, createIRCClient, connectChat.
+ * Invariant: preserve existing settings links and render chat content as text.
+ */
+export function unescapeTag(value=""){return value.replace(/\\([s:\\\\rn])/g,(_,c)=>({s:" ",":":";", "\\":"\\",r:"\r",n:"\n"}[c]??c));
+  }
+/** parse tags.
+ * @param {unknown} raw Function input.
+ * @returns {unknown} The function result.
+ */
+export function parseTags(raw=""){const tags={};
+  for(const part of raw.split(";")){if(!part)continue;
+    const i=part.indexOf("=");
+    tags[i<0?part:part.slice(0,i)]=i<0?"":unescapeTag(part.slice(i+1));
+    }return tags;
+  }
+/** parse irc.
+ * @param {unknown} line Function input.
+ * @returns {unknown} The function result.
+ */
+export function parseIRC(line){let rest=line,tags={};
+  if(rest.startsWith("@")){const i=rest.indexOf(" ");
+    if(i<0)return null;
+    tags=parseTags(rest.slice(1,i));
+    rest=rest.slice(i+1);
+    }let prefix="";
+  if(rest.startsWith(":")){const i=rest.indexOf(" ");
+    if(i<0)return null;
+    prefix=rest.slice(1,i);
+    rest=rest.slice(i+1);
+    }const sep=rest.indexOf(" :");
+  const head=sep<0?rest:rest.slice(0,sep);
+  const trailing=sep<0?null:rest.slice(sep+2);
+  const words=head.trim().split(/\s+/);
+  if(!words[0])return null;
+  const command=words.shift().toUpperCase();
+  const params=words;
+  return{tags,prefix,command,params,trailing};
+  }
+/** create ircclient.
+ * @param {unknown} channel Function input.
+ * @param {unknown} parameter2 Function input.
+ * @param {unknown} onMessage Function input.
+ * @returns {unknown} The function result.
+ */
+export function createIRCClient(channel,{WebSocketImpl=globalThis.WebSocket,onMessage=()=>{},onState=()=>{},onRoomState=()=>{},onCapabilities=()=>{},random=Math.random,setTimer=setTimeout,clearTimer=clearTimeout}={}){let socket=null,closed=false,timer=null,attempt=0,live=false,announcedRoomId="";
+  const channelName=String(channel||"").replace(/^#/ ,"").toLowerCase();
+  
+const state=v=>{if(v!==live){live=v;
+      onState(v?"live":"error");
+      }};
+  
+const publishRoomId=tags=>{const roomId=tags["room-id"]||"";
+    if(roomId&&roomId!==announcedRoomId){announcedRoomId=roomId;
+      onRoomState({roomId,tags});
+      }};
+  
+function connect(){if(closed||!channelName)return;
+    state(false);
+    try{socket=new WebSocketImpl("wss://irc-ws.chat.twitch.tv:443");
+      }catch{schedule();
+      return;
+      }socket.addEventListener("open",()=>{attempt=0;socket.send("PASS SCHMOOPIIE\r\n");socket.send(`NICK justinfan${String(Math.floor(random()*90000)+10000)}\r\n`);socket.send("CAP REQ :twitch.tv/tags twitch.tv/commands\r\n");socket.send(`JOIN #${channelName}\r\n`);});
+    socket.addEventListener("message",e=>{for(const line of String(e.data).split(/\r\n/)){if(!line)continue;const m=parseIRC(line);if(!m)continue;if(m.command==="PING"){socket.send(`PONG :${m.trailing||m.params[0]||"tmi.twitch.tv"}\r\n`);continue;}if(m.command==="001")state(true);if(m.command==="CAP"&&m.params[1]==="ACK")onCapabilities((m.trailing||"").split(/\s+/).filter(Boolean));if(m.command==="ROOMSTATE"){state(true);publishRoomId(m.tags);}if(m.command==="PRIVMSG"){publishRoomId(m.tags);const user=m.prefix.split("!")[0],rawText=m.trailing||"",actionMatch=/^\u0001ACTION ([\s\S]*)\u0001$/.exec(rawText);onMessage({id:m.tags.id||"",username:m.tags["display-name"]||user,login:user.toLowerCase(),userId:m.tags["user-id"]||"",sourceRoomId:m.tags["source-room-id"]||"",text:actionMatch?actionMatch[1]:rawText,action:!!actionMatch,color:m.tags.color||"",badges:parseBadgeTag(m.tags.badges),emotes:parseEmoteTag(m.tags.emotes),firstMessage:m.tags["first-msg"]==="1",system:false});}else if(m.command==="CLEARMSG"){onMessage({deleteMessageId:m.tags["target-msg-id"]||""});}else if(m.command==="CLEARCHAT"){onMessage({clearUsername:m.trailing||"",clearAll:!m.trailing});}}});
+    socket.addEventListener("close",()=>{live=false;onState("error");if(!closed)schedule();});
+    socket.addEventListener("error",()=>{live=false;onState("error");});
+    }
+function schedule(){if(closed||timer)return;
+    const delay=Math.min(30000,1000*2**attempt++);
+    timer=setTimer(()=>{timer=null;connect();},delay);
+    }
+connect();
+  return{disconnect(){closed=true;
+      if(timer)clearTimer(timer);
+      timer=null;
+      socket?.close();
+      },get socket(){return socket;
+      }};
+  }
+function parseBadgeTag(raw=""){const out={};
+  for(const item of raw.split(",")){const [name,version]=item.split("/");
+    if(name)out[name]=version||true;
+    }return out;
+  }
+function parseEmoteTag(raw=""){const out={};
+  for(const item of raw.split("/")){const [id,positions]=item.split(":");
+    if(!id||!positions)continue;
+    out[id]=positions.split(",").map(range=>range.split("-").map(Number));
+    }return out;
+  }
+/** connect chat.
+ * @param {unknown} channel Function input.
+ * @param {unknown} onMessage Function input.
+ * @param {unknown} onState Function input.
+ * @returns {unknown} The function result.
+ */
+export function connectChat(channel,onMessage,onState=()=>{},options={}){const{onRoomState,...clientOptions}=options;
+  return createIRCClient(channel,{...clientOptions,onMessage,onState,onRoomState});
+  }

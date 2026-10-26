@@ -1,23 +1,44 @@
 /**
+ * Server module assistant.mjs handles its ChatSkins API or support task.
+ * Used by server/skin-request.mjs and the Node HTTP process.
+ * Main exports: buildAssistantKnowledge, validateAssistantAction, isDesignArtRequest, createAssistantHandler.
+ * Invariant: secrets stay server-side and are never written to logs or responses.
+ */
+/**
  * Ask ChatSkins API handler.
  * Reads the documentation as UTF-8 and returns validated, browser-run actions.
  */
 import {createHash} from 'node:crypto';
+
 import {readdir,readFile} from 'node:fs/promises';
+
 import {dirname,resolve} from 'node:path';
+
 import {fileURLToPath} from 'node:url';
+
 import {clientIp,originAllowed,validateDescribeReply} from './describe.mjs';
+
 import {createAiUsageStore} from './ai-usage.mjs';
+
 import {createDreamHandler} from './dream.mjs';
 
+
 const here=dirname(fileURLToPath(import.meta.url)),defaultKeyFile='C:/ops/secrets/openai-chatskins.txt',dayMs=86400000,reservation=5000;
+
 const tabs=['look','style','chat','viewers','alerts','getlink','studio'];
+
 const walks=['obs-setup','frames','chat-commands','alerts','place-it'];
+
 export const ASSISTANT_CONTROLS=Object.freeze(['Place it','Get my OBS link','Set up everything with Twitch','Frame color','Match my brand color','Chat commands','Channel points','Send test alert','Chat size','Transparent background','Studio','Pause previews']);
+
 const nullableString={type:['string','null']};
+
 const nullableNumber={type:['number','null']};
+
 const styleProperties={fontFamily:nullableString,fontSize:nullableNumber,fontWeight:nullableNumber,textColor:nullableString,nameColor:nullableString,nameColorMode:nullableString,backgroundColor:nullableString,backgroundOpacity:nullableNumber,backgroundScope:nullableString,backgroundType:nullableString,frameColor:nullableString,glowColor:nullableString,glowStrength:nullableNumber,glowMode:nullableString,middleBackground:nullableString,middleColor:nullableString,middleOpacity:nullableNumber,titleText:nullableString,entranceAnimation:nullableString,messageBorders:{type:['boolean','null']},maxMessages:nullableNumber,messageLifetime:nullableNumber,middleImage:nullableString};
+
 const strictObject=properties=>({type:'object',properties,required:Object.keys(properties),additionalProperties:false});
+
 /** Strict function schemas sent to Responses; every argument is required. */
 export const assistantToolDefinitions=[
  {type:'function',name:'create_design',description:'Create a new original Frame Studio design when the user asks for new art or decorations.',strict:true,parameters:strictObject({prompt:{type:'string'}})},
@@ -27,9 +48,15 @@ export const assistantToolDefinitions=[
  {type:'function',name:'start_walkthrough',description:'Start a built-in setup guide.',strict:true,parameters:strictObject({id:{type:'string',enum:walks}})},
  {type:'function',name:'open_doc',description:'Open a documentation page by slug.',strict:true,parameters:strictObject({slug:{type:'string'}})}
 ];
+
 const json=(status,body,headers={})=>({status,headers:{'content-type':'application/json; charset=utf-8','cache-control':'no-store',...headers},body});
+
 const digest=value=>createHash('sha256').update(String(value)).digest('hex');
-const responseText=data=>{if(typeof data?.output_text==='string')return data.output_text;for(const item of data?.output||[])if(item.type==='message')for(const part of item.content||[])if(part.type==='output_text'&&typeof part.text==='string')return part.text;return''};
+
+const responseText=data=>{if(typeof data?.output_text==='string')return data.output_text;
+  for(const item of data?.output||[])if(item.type==='message')for(const part of item.content||[])if(part.type==='output_text'&&typeof part.text==='string')return part.text;
+  return''};
+
 const removeMarkdown=value=>String(value).replace(/```[\s\S]*?```/g,m=>m.replace(/```[^\n]*\n?/g,'')).replace(/!\[([^\]]*)\]\([^)]*\)/g,'$1').replace(/\[([^\]]+)\]\([^)]*\)/g,'$1').replace(/^\s{0,3}#{1,6}\s*/gm,'').replace(/^\s{0,3}>\s?/gm,'').replace(/^\s*[-*+]\s+/gm,'- ').replace(/`([^`]+)`/g,'$1').replace(/[*_~]/g,'').replace(/<[^>]*>/g,'').replace(/\n{3,}/g,'\n\n').trim();
 /** Build a compact, plain-text help pack from UTF-8 Markdown files. */
 export async function buildAssistantKnowledge(contentDir=resolve(here,'../docs/content')){const files=(await readdir(contentDir)).filter(name=>name.endsWith('.md')).sort(),pages=[];for(const file of files){const markdown=await readFile(resolve(contentDir,file),'utf8'),title=markdown.match(/^#\s+(.+)$/m)?.[1]||file.slice(0,-3);pages.push({slug:file.slice(0,-3),title,text:removeMarkdown(markdown)})}return pages.map(page=>`## ${page.title} (${page.slug})\n${page.text}`).join('\n\n').slice(0,120000)}

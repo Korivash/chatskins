@@ -1,43 +1,256 @@
+/**
+ * Browser module place-mode.js implements one ChatSkins page or overlay feature.
+ * Used by the site, editor, or OBS overlay module graph.
+ * Main exports: normalizePlacement, placementFromPixelRect, placementPixelRect, snapPanelRect, movePanelRect.
+ * Invariant: preserve existing settings links and render chat content as text.
+ */
 const clamp=(n,min=0,max=1)=>Math.max(min,Math.min(max,Number(n)||0));
-export function normalizePlacement(value={}){const p=value.panel||{},w=clamp(p.w||.34,.05,1),h=clamp(p.h||.55,.05,1);return{panel:{x:clamp(p.x,0,1-w),y:clamp(p.y,0,1-h),w,h},inner:{top:clamp(value.inner?.top,-.5,.5),right:clamp(value.inner?.right,-.5,.5),bottom:clamp(value.inner?.bottom,-.5,.5),left:clamp(value.inner?.left,-.5,.5)},plaque:{x:clamp(value.plaque?.x,-.5,.5),y:clamp(value.plaque?.y,-.5,.5)}}}
-export function placementFromPixelRect(rect,width,height){return normalizePlacement({panel:{x:rect.x/width,y:rect.y/height,w:rect.w/width,h:rect.h/height}})}
-export function placementPixelRect(placement,width,height){const p=normalizePlacement(placement).panel;return{x:p.x*width,y:p.y*height,w:p.w*width,h:p.h*height}}
-export function snapPanelRect(rect,{grid=.05,threshold=.012}={}){const out={...rect},guides=[];for(const axis of ['x','y']){const span=axis==='x'?'w':'h',max=1-out[span],candidates=[0,.5-out[span]/2,1-out[span],...Array.from({length:21},(_,i)=>i*grid).filter(v=>v<=max)];let best=out[axis],distance=threshold;for(const value of candidates){const delta=Math.abs(value-out[axis]);if(delta<distance){distance=delta;best=value}}if(best!==out[axis]){out[axis]=best;guides.push(axis==='x'?(best===.5-out[span]/2?'vertical-center':'vertical'):(best===.5-out[span]/2?'horizontal-center':'horizontal'))}}return{rect:out,guides}}
-export function movePanelRect(rect,dx,dy,{snap=true}={}){let moved={...rect,x:clamp(rect.x+dx,0,1-rect.w),y:clamp(rect.y+dy,0,1-rect.h)},guides=[];if(snap){const result=snapPanelRect(moved);moved=result.rect;guides=result.guides}return{...moved,guides}}
-export function resizePanelRect(rect,dx,dy,{frameAspect=0,corner='se'}={}){const xSign=corner.endsWith('w')?-1:1,ySign=corner.startsWith('n')?-1:1;let w=clamp(rect.w+dx*xSign,.08,1),h=clamp(rect.h+dy*ySign,.08,1);if(frameAspect>0){if(Math.abs(dx)>Math.abs(dy))h=w/frameAspect;else w=h*frameAspect;const ratio=frameAspect;if(w>1){w=1;h=w/ratio}if(h>1){h=1;w=h*ratio}}let x=corner.endsWith('w')?rect.x+rect.w-w:rect.x,y=corner.startsWith('n')?rect.y+rect.h-h:rect.y;x=clamp(x,0,1-w);y=clamp(y,0,1-h);return{x,y,w,h,guides:[]}}
-export function fitPanelRect(rect,preset,frameAspect=0){let w=rect.w,h=rect.h;if(frameAspect>0){const maxW=Math.min(.9,frameAspect*.9),maxH=Math.min(.9,.9/frameAspect);w=Math.min(w,maxW);h=w/frameAspect;if(h>maxH){h=maxH;w=h*frameAspect}}const pad=.025,xRight=1-pad-w,yBottom=1-pad-h;const coords={ 'bottom-left':[pad,yBottom],'bottom-right':[xRight,yBottom],'left-side':[pad,.1],'right-side':[xRight,.1],center:[.5-w/2,.5-h/2]};const[x,y]=coords[preset]||coords['bottom-left'];return{x,y,w,h,guides:[]}}
-export function adjustInnerOffsets(offsets,edge,dx,dy,panelWidth,panelHeight){const next={top:offsets?.top||0,right:offsets?.right||0,bottom:offsets?.bottom||0,left:offsets?.left||0};if(edge==='top')next.top=clamp(next.top+dy/panelHeight,-.25,.45);if(edge==='bottom')next.bottom=clamp(next.bottom-dy/panelHeight,-.25,.45);if(edge==='left')next.left=clamp(next.left+dx/panelWidth,-.25,.45);if(edge==='right')next.right=clamp(next.right-dx/panelWidth,-.25,.45);return next}
-export function centerInnerPadding(base,offsets={}){const left=base.x+(offsets.left||0),right=base.x+base.w-(offsets.right||0),width=Math.max(.1,right-left),x=(1-width)/2;return{...offsets,left:x-base.x,right:base.x+base.w-(x+width)}}
-export function innerWindowWithOffsets(base,offsets={}){const left=clamp(offsets.left||0,-base.x,base.w-.05),top=clamp(offsets.top||0,-base.y,base.h-.05),rightOffset=clamp(offsets.right||0,-(1-base.x-base.w),base.w-.05-left),bottomOffset=clamp(offsets.bottom||0,-(1-base.y-base.h),base.h-.05-top),x=base.x+left,y=base.y+top,right=base.x+base.w-rightOffset,bottom=base.y+base.h-bottomOffset;return{x,y,w:Math.max(.05,right-x),h:Math.max(.05,bottom-y)}}
-export function movePlaqueOffset(offset,dx,dy,width,height){return{x:clamp((offset?.x||0)+dx/width,-.2,.2),y:clamp((offset?.y||0)+dy/height,-.2,.2)}}
-export function keyboardMove(rect,key,{shift=false,step=.01}={}){const d=step*(shift?10:1);if(key==='ArrowLeft')return{...rect,x:clamp(rect.x-d,0,1-rect.w)};if(key==='ArrowRight')return{...rect,x:clamp(rect.x+d,0,1-rect.w)};if(key==='ArrowUp')return{...rect,y:clamp(rect.y-d,0,1-rect.h)};if(key==='ArrowDown')return{...rect,y:clamp(rect.y+d,0,1-rect.h)};return rect}
 
+/** normalize placement.
+ * @param {unknown} value Function input.
+ * @returns {unknown} The function result.
+ */
+export function normalizePlacement(value={}){const p=value.panel||{},w=clamp(p.w||.34,.05,1),h=clamp(p.h||.55,.05,1);
+  return{panel:{x:clamp(p.x,0,1-w),y:clamp(p.y,0,1-h),w,h},inner:{top:clamp(value.inner?.top,-.5,.5),right:clamp(value.inner?.right,-.5,.5),bottom:clamp(value.inner?.bottom,-.5,.5),left:clamp(value.inner?.left,-.5,.5)},plaque:{x:clamp(value.plaque?.x,-.5,.5),y:clamp(value.plaque?.y,-.5,.5)}}}
+/** Handle from pixel rect.
+ * @param {unknown} rect Function input.
+ * @param {unknown} width Function input.
+ * @param {unknown} height Function input.
+ * @returns {unknown} The function result.
+ */
+export function placementFromPixelRect(rect,width,height){return normalizePlacement({panel:{x:rect.x/width,y:rect.y/height,w:rect.w/width,h:rect.h/height}})}
+/** Handle pixel rect.
+ * @param {unknown} placement Function input.
+ * @param {unknown} width Function input.
+ * @param {unknown} height Function input.
+ * @returns {unknown} The function result.
+ */
+export function placementPixelRect(placement,width,height){const p=normalizePlacement(placement).panel;
+  return{x:p.x*width,y:p.y*height,w:p.w*width,h:p.h*height}}
+/** Handle panel rect.
+ * @param {unknown} rect Function input.
+ * @param {unknown} parameter2 Function input.
+ * @param {unknown} threshold Function input.
+ * @returns {unknown} The function result.
+ */
+export function snapPanelRect(rect,{grid=.05,threshold=.012}={}){const out={...rect},guides=[];
+  for(const axis of ['x','y']){const span=axis==='x'?'w':'h',max=1-out[span],candidates=[0,.5-out[span]/2,1-out[span],...Array.from({length:21},(_,i)=>i*grid).filter(v=>v<=max)];
+    let best=out[axis],distance=threshold;
+    for(const value of candidates){const delta=Math.abs(value-out[axis]);
+      if(delta<distance){distance=delta;
+        best=value}}if(best!==out[axis]){out[axis]=best;
+      guides.push(axis==='x'?(best===.5-out[span]/2?'vertical-center':'vertical'):(best===.5-out[span]/2?'horizontal-center':'horizontal'))}}return{rect:out,guides}}
+/** Handle panel rect.
+ * @param {unknown} rect Function input.
+ * @param {unknown} dx Function input.
+ * @param {unknown} dy Function input.
+ * @param {unknown} parameter4 Function input.
+ * @returns {unknown} The function result.
+ */
+export function movePanelRect(rect,dx,dy,{snap=true}={}){let moved={...rect,x:clamp(rect.x+dx,0,1-rect.w),y:clamp(rect.y+dy,0,1-rect.h)},guides=[];
+  if(snap){const result=snapPanelRect(moved);
+    moved=result.rect;
+    guides=result.guides}return{...moved,guides}}
+/** Handle panel rect.
+ * @param {unknown} rect Function input.
+ * @param {unknown} dx Function input.
+ * @param {unknown} dy Function input.
+ * @param {unknown} parameter4 Function input.
+ * @param {unknown} corner Function input.
+ * @returns {unknown} The function result.
+ */
+export function resizePanelRect(rect,dx,dy,{frameAspect=0,corner='se'}={}){const xSign=corner.endsWith('w')?-1:1,ySign=corner.startsWith('n')?-1:1;
+  let w=clamp(rect.w+dx*xSign,.08,1),h=clamp(rect.h+dy*ySign,.08,1);
+  if(frameAspect>0){if(Math.abs(dx)>Math.abs(dy))h=w/frameAspect;
+    else w=h*frameAspect;
+    const ratio=frameAspect;
+    if(w>1){w=1;
+      h=w/ratio}if(h>1){h=1;
+      w=h*ratio}}let x=corner.endsWith('w')?rect.x+rect.w-w:rect.x,y=corner.startsWith('n')?rect.y+rect.h-h:rect.y;
+  x=clamp(x,0,1-w);
+  y=clamp(y,0,1-h);
+  return{x,y,w,h,guides:[]}}
+/** fit panel rect.
+ * @param {unknown} rect Function input.
+ * @param {unknown} preset Function input.
+ * @param {unknown} frameAspect Function input.
+ * @returns {unknown} The function result.
+ */
+export function fitPanelRect(rect,preset,frameAspect=0){let w=rect.w,h=rect.h;
+  if(frameAspect>0){const maxW=Math.min(.9,frameAspect*.9),maxH=Math.min(.9,.9/frameAspect);
+    w=Math.min(w,maxW);
+    h=w/frameAspect;
+    if(h>maxH){h=maxH;
+      w=h*frameAspect}}const pad=.025,xRight=1-pad-w,yBottom=1-pad-h;
+  const coords={ 'bottom-left':[pad,yBottom],'bottom-right':[xRight,yBottom],'left-side':[pad,.1],'right-side':[xRight,.1],center:[.5-w/2,.5-h/2]};
+  const[x,y]=coords[preset]||coords['bottom-left'];
+  return{x,y,w,h,guides:[]}}
+/** Handle inner offsets.
+ * @param {unknown} offsets Function input.
+ * @param {unknown} edge Function input.
+ * @param {unknown} dx Function input.
+ * @param {unknown} dy Function input.
+ * @param {unknown} panelWidth Function input.
+ * @param {unknown} panelHeight Function input.
+ * @returns {unknown} The function result.
+ */
+export function adjustInnerOffsets(offsets,edge,dx,dy,panelWidth,panelHeight){const next={top:offsets?.top||0,right:offsets?.right||0,bottom:offsets?.bottom||0,left:offsets?.left||0};
+  if(edge==='top')next.top=clamp(next.top+dy/panelHeight,-.25,.45);
+  if(edge==='bottom')next.bottom=clamp(next.bottom-dy/panelHeight,-.25,.45);
+  if(edge==='left')next.left=clamp(next.left+dx/panelWidth,-.25,.45);
+  if(edge==='right')next.right=clamp(next.right-dx/panelWidth,-.25,.45);
+  return next}
+/** Handle inner padding.
+ * @param {unknown} base Function input.
+ * @param {unknown} offsets Function input.
+ * @returns {unknown} The function result.
+ */
+export function centerInnerPadding(base,offsets={}){const left=base.x+(offsets.left||0),right=base.x+base.w-(offsets.right||0),width=Math.max(.1,right-left),x=(1-width)/2;
+  return{...offsets,left:x-base.x,right:base.x+base.w-(x+width)}}
+/** Handle window with offsets.
+ * @param {unknown} base Function input.
+ * @param {unknown} offsets Function input.
+ * @returns {unknown} The function result.
+ */
+export function innerWindowWithOffsets(base,offsets={}){const left=clamp(offsets.left||0,-base.x,base.w-.05),top=clamp(offsets.top||0,-base.y,base.h-.05),rightOffset=clamp(offsets.right||0,-(1-base.x-base.w),base.w-.05-left),bottomOffset=clamp(offsets.bottom||0,-(1-base.y-base.h),base.h-.05-top),x=base.x+left,y=base.y+top,right=base.x+base.w-rightOffset,bottom=base.y+base.h-bottomOffset;
+  return{x,y,w:Math.max(.05,right-x),h:Math.max(.05,bottom-y)}}
+/** Handle plaque offset.
+ * @param {unknown} offset Function input.
+ * @param {unknown} dx Function input.
+ * @param {unknown} dy Function input.
+ * @param {unknown} width Function input.
+ * @param {unknown} height Function input.
+ * @returns {unknown} The function result.
+ */
+export function movePlaqueOffset(offset,dx,dy,width,height){return{x:clamp((offset?.x||0)+dx/width,-.2,.2),y:clamp((offset?.y||0)+dy/height,-.2,.2)}}
+/** Handle move.
+ * @param {unknown} rect Function input.
+ * @param {unknown} key Function input.
+ * @param {unknown} parameter3 Function input.
+ * @param {unknown} step Function input.
+ * @returns {unknown} The function result.
+ */
+export function keyboardMove(rect,key,{shift=false,step=.01}={}){const d=step*(shift?10:1);
+  if(key==='ArrowLeft')return{...rect,x:clamp(rect.x-d,0,1-rect.w)};
+  if(key==='ArrowRight')return{...rect,x:clamp(rect.x+d,0,1-rect.w)};
+  if(key==='ArrowUp')return{...rect,y:clamp(rect.y-d,0,1-rect.h)};
+  if(key==='ArrowDown')return{...rect,y:clamp(rect.y+d,0,1-rect.h)};
+  return rect}
+
+/** create place mode.
+ * @param {unknown} parameter1 Function input.
+ * @param {unknown} layer Function input.
+ * @param {unknown} getSettings Function input.
+ * @param {unknown} onStart Function input.
+ * @param {unknown} onUpdate Function input.
+ * @param {unknown} getZoom Function input.
+ * @returns {unknown} The function result.
+ */
 export function createPlaceMode({stage,layer,getSettings,onStart,onUpdate,getZoom=()=>1}){
  const panelNode=layer.querySelector('#place-panel'),innerNode=layer.querySelector('#place-inner'),plaqueNode=layer.querySelector('#place-plaque'),tools=layer.querySelector('#place-tools'),guideV=layer.querySelector('#place-guide-v'),guideH=layer.querySelector('#place-guide-h'),toggle=document.querySelector('#place-toggle'),fit=document.querySelector('#place-fit');
+  
  let enabled=false,root=null,host=null,entry=null,selection='panel',drag=null;
- const buttons=(container,items)=>{container.replaceChildren();for(const [key,label]of items){const button=document.createElement('button');button.type='button';button.dataset.handle=key;button.setAttribute('aria-label',label);button.title=label;button.textContent='';container.append(button)}};
- buttons(panelNode,[['nw','Resize chat from top left'],['ne','Resize chat from top right'],['sw','Resize chat from bottom left'],['se','Resize chat from bottom right']]);buttons(innerNode,[['top','Move top edge of frame chat window'],['right','Move right edge of frame chat window'],['bottom','Move bottom edge of frame chat window'],['left','Move left edge of frame chat window']]);
+  
+ const buttons=(container,items)=>{container.replaceChildren();
+    for(const [key,label]of items){const button=document.createElement('button');
+      button.type='button';
+      button.dataset.handle=key;
+      button.setAttribute('aria-label',label);
+      button.title=label;
+      button.textContent='';
+      container.append(button)}};
+  
+ buttons(panelNode,[['nw','Resize chat from top left'],['ne','Resize chat from top right'],['sw','Resize chat from bottom left'],['se','Resize chat from bottom right']]);
+  buttons(innerNode,[['top','Move top edge of frame chat window'],['right','Move right edge of frame chat window'],['bottom','Move bottom edge of frame chat window'],['left','Move left edge of frame chat window']]);
+  
  const current=()=>normalizePlacement(getSettings().placement||{});
- function readRect(){const saved=getSettings().placement?.panel;if(saved)return{...saved};const h=host?.getBoundingClientRect(),r=root?.getBoundingClientRect();if(!h||!r||!h.width||!h.height)return{x:.02,y:.2,w:.34,h:.55};return normalizePlacement({panel:{x:(r.left-h.left)/h.width,y:(r.top-h.top)/h.height,w:r.width/h.width,h:r.height/h.height}}).panel}
- function updatePlacement(next){const normalized=normalizePlacement(next);onUpdate(normalized);draw()}
- function bind(nextRoot,nextHost,nextEntry){root=nextRoot;host=nextHost;entry=nextEntry||null;draw()}
- function draw(){if(!enabled||!root||!host){layer.hidden=true;return}layer.hidden=false;tools.hidden=!entry;const p=current().panel;Object.assign(panelNode.style,{left:`${p.x*100}%`,top:`${p.y*100}%`,width:`${p.w*100}%`,height:`${p.h*100}%`});panelNode.dataset.selected=selection==='panel';panelNode.tabIndex=0;panelNode.setAttribute('aria-label','Move or resize chat panel. Use arrow keys to move.');
-  if(entry){const base=entry.inner||{x:.12,y:.12,w:.76,h:.76},offset=current().inner,windowRect=innerWindowWithOffsets(base,offset);Object.assign(innerNode.style,{left:`${(p.x+windowRect.x*p.w)*100}%`,top:`${(p.y+windowRect.y*p.h)*100}%`,width:`${windowRect.w*p.w*100}%`,height:`${windowRect.h*p.h*100}%`});innerNode.hidden=false;const plaque=entry.plaque;if(plaque&&!plaque.none){const centerX=plaque.x+plaque.w/2+current().plaque.x,centerY=plaque.y+plaque.h/2+current().plaque.y;Object.assign(plaqueNode.style,{left:`${(p.x+centerX*p.w)*100}%`,top:`${(p.y+centerY*p.h)*100}%`});plaqueNode.hidden=false}else plaqueNode.hidden=true}else{innerNode.hidden=true;plaqueNode.hidden=true}
+  
+ function readRect(){const saved=getSettings().placement?.panel;
+    if(saved)return{...saved};
+    const h=host?.getBoundingClientRect(),r=root?.getBoundingClientRect();
+    if(!h||!r||!h.width||!h.height)return{x:.02,y:.2,w:.34,h:.55};
+    return normalizePlacement({panel:{x:(r.left-h.left)/h.width,y:(r.top-h.top)/h.height,w:r.width/h.width,h:r.height/h.height}}).panel}
+ function updatePlacement(next){const normalized=normalizePlacement(next);
+    onUpdate(normalized);
+    draw()}
+ function bind(nextRoot,nextHost,nextEntry){root=nextRoot;
+    host=nextHost;
+    entry=nextEntry||null;
+    draw()}
+ function draw(){if(!enabled||!root||!host){layer.hidden=true;
+      return}layer.hidden=false;
+    tools.hidden=!entry;
+    const p=current().panel;
+    Object.assign(panelNode.style,{left:`${p.x*100}%`,top:`${p.y*100}%`,width:`${p.w*100}%`,height:`${p.h*100}%`});
+    panelNode.dataset.selected=selection==='panel';
+    panelNode.tabIndex=0;
+    panelNode.setAttribute('aria-label','Move or resize chat panel. Use arrow keys to move.');
+    
+  if(entry){const base=entry.inner||{x:.12,y:.12,w:.76,h:.76},offset=current().inner,windowRect=innerWindowWithOffsets(base,offset);
+      Object.assign(innerNode.style,{left:`${(p.x+windowRect.x*p.w)*100}%`,top:`${(p.y+windowRect.y*p.h)*100}%`,width:`${windowRect.w*p.w*100}%`,height:`${windowRect.h*p.h*100}%`});
+      innerNode.hidden=false;
+      const plaque=entry.plaque;
+      if(plaque&&!plaque.none){const centerX=plaque.x+plaque.w/2+current().plaque.x,centerY=plaque.y+plaque.h/2+current().plaque.y;
+        Object.assign(plaqueNode.style,{left:`${(p.x+centerX*p.w)*100}%`,top:`${(p.y+centerY*p.h)*100}%`});
+        plaqueNode.hidden=false}else plaqueNode.hidden=true}else{innerNode.hidden=true;
+      plaqueNode.hidden=true}
  }
- function startDrag(event,type,handle=''){if(event.button!==undefined&&event.button!==0)return;event.preventDefault();event.stopPropagation();fit.value='';onStart();selection=type==='panel'||type==='resize'?'panel':type;const rect=readRect(),placement=current();drag={type,handle,x:event.clientX,y:event.clientY,rect,placement};event.currentTarget?.setPointerCapture?.(event.pointerId);draw()}
- function move(event){if(!drag)return;const bounds=stage.getBoundingClientRect(),zoom=Math.max(.01,Number(getZoom())||1),dx=(event.clientX-drag.x)/(bounds.width*zoom),dy=(event.clientY-drag.y)/(bounds.height*zoom),p=structuredClone(drag.placement);let guides=[];
-  if(drag.type==='panel'){const result=movePanelRect(drag.rect,dx,dy);p.panel={x:result.x,y:result.y,w:drag.rect.w,h:drag.rect.h};guides=result.guides}
-  else if(drag.type==='resize'){const frameAspect=entry?entry.w/entry.h*(bounds.height/bounds.width):0;p.panel=resizePanelRect(drag.rect,dx,dy,{frameAspect,corner:drag.handle})}
-  else if(drag.type==='inner'){const pixelWidth=drag.rect.w*bounds.width,pixelHeight=drag.rect.h*bounds.height;p.inner=adjustInnerOffsets(drag.placement.inner,drag.handle,dx*bounds.width,dy*bounds.height,pixelWidth,pixelHeight)}
+ function startDrag(event,type,handle=''){if(event.button!==undefined&&event.button!==0)return;
+    event.preventDefault();
+    event.stopPropagation();
+    fit.value='';
+    onStart();
+    selection=type==='panel'||type==='resize'?'panel':type;
+    const rect=readRect(),placement=current();
+    drag={type,handle,x:event.clientX,y:event.clientY,rect,placement};
+    event.currentTarget?.setPointerCapture?.(event.pointerId);
+    draw()}
+ function move(event){if(!drag)return;
+    const bounds=stage.getBoundingClientRect(),zoom=Math.max(.01,Number(getZoom())||1),dx=(event.clientX-drag.x)/(bounds.width*zoom),dy=(event.clientY-drag.y)/(bounds.height*zoom),p=structuredClone(drag.placement);
+    let guides=[];
+    
+  if(drag.type==='panel'){const result=movePanelRect(drag.rect,dx,dy);
+      p.panel={x:result.x,y:result.y,w:drag.rect.w,h:drag.rect.h};
+      guides=result.guides}
+  else if(drag.type==='resize'){const frameAspect=entry?entry.w/entry.h*(bounds.height/bounds.width):0;
+      p.panel=resizePanelRect(drag.rect,dx,dy,{frameAspect,corner:drag.handle})}
+  else if(drag.type==='inner'){const pixelWidth=drag.rect.w*bounds.width,pixelHeight=drag.rect.h*bounds.height;
+      p.inner=adjustInnerOffsets(drag.placement.inner,drag.handle,dx*bounds.width,dy*bounds.height,pixelWidth,pixelHeight)}
   else if(drag.type==='plaque')p.plaque=movePlaqueOffset(drag.placement.plaque,dx,dy,drag.rect.w,drag.rect.h);
-  guideV.hidden=!guides.some(v=>v.startsWith('vertical'));guideH.hidden=!guides.some(v=>v.startsWith('horizontal'));if(!guideV.hidden)guideV.style.left=`${p.panel.x*100}%`;if(!guideH.hidden)guideH.style.top=`${p.panel.y*100}%`;updatePlacement(p)
+    
+  guideV.hidden=!guides.some(v=>v.startsWith('vertical'));
+    guideH.hidden=!guides.some(v=>v.startsWith('horizontal'));
+    if(!guideV.hidden)guideV.style.left=`${p.panel.x*100}%`;
+    if(!guideH.hidden)guideH.style.top=`${p.panel.y*100}%`;
+    updatePlacement(p)
  }
- function end(){if(!drag)return;drag=null;guideV.hidden=true;guideH.hidden=true}
- panelNode.addEventListener('pointerdown',event=>{const handle=event.target.closest('[data-handle]');startDrag(event,handle?'resize':'panel',handle?.dataset.handle||'')});innerNode.addEventListener('pointerdown',event=>{const handle=event.target.closest('[data-handle]');if(handle)startDrag(event,'inner',handle.dataset.handle)});plaqueNode.addEventListener('pointerdown',event=>startDrag(event,'plaque'));window.addEventListener('pointermove',move);window.addEventListener('pointerup',end);window.addEventListener('pointercancel',end);
+ function end(){if(!drag)return;
+    drag=null;
+    guideV.hidden=true;
+    guideH.hidden=true}
+ panelNode.addEventListener('pointerdown',event=>{const handle=event.target.closest('[data-handle]');startDrag(event,handle?'resize':'panel',handle?.dataset.handle||'')});
+  innerNode.addEventListener('pointerdown',event=>{const handle=event.target.closest('[data-handle]');if(handle)startDrag(event,'inner',handle.dataset.handle)});
+  plaqueNode.addEventListener('pointerdown',event=>startDrag(event,'plaque'));
+  window.addEventListener('pointermove',move);
+  window.addEventListener('pointerup',end);
+  window.addEventListener('pointercancel',end);
+  
  panelNode.addEventListener('keydown',event=>{if(!event.key.startsWith('Arrow'))return;event.preventDefault();onStart();const p=current(),next=keyboardMove(p.panel,event.key,{shift:event.shiftKey});updatePlacement({...p,panel:next})});
+  
  innerNode.addEventListener('keydown',event=>{if(!event.key.startsWith('Arrow'))return;event.preventDefault();onStart();const step=event.shiftKey ? .05 : .01,key=event.key,p=current(),delta={top:0,right:0,bottom:0,left:0},edge=innerNode.querySelector('[data-handle]:focus')?.dataset.handle||'left';if(edge==='top')delta.top=key==='ArrowDown'?step:key==='ArrowUp'?-step:0;if(edge==='bottom')delta.bottom=key==='ArrowUp'?step:key==='ArrowDown'?-step:0;if(edge==='left')delta.left=key==='ArrowRight'?step:key==='ArrowLeft'?-step:0;if(edge==='right')delta.right=key==='ArrowLeft'?step:key==='ArrowRight'?-step:0;updatePlacement({...p,inner:{...p.inner,...Object.fromEntries(Object.keys(delta).map(k=>[k,(p.inner[k]||0)+delta[k]]))}})});
+  
  plaqueNode.addEventListener('keydown',event=>{if(!event.key.startsWith('Arrow'))return;event.preventDefault();onStart();const p=current(),step=event.shiftKey ? .05 : .01,dx=event.key==='ArrowLeft'?-step:event.key==='ArrowRight'?step:0,dy=event.key==='ArrowUp'?-step:event.key==='ArrowDown'?step:0;updatePlacement({...p,plaque:movePlaqueOffset(p.plaque,dx,dy,p.panel.w,p.panel.h)})});
- toggle.addEventListener('click',()=>{enabled=!enabled;toggle.setAttribute('aria-pressed',String(enabled));if(enabled&&!getSettings().placement){onStart();updatePlacement({...current(),panel:readRect()})}else draw()});fit.addEventListener('change',()=>{if(!fit.value)return;onStart();const p=current(),rect=readRect(),ratio=entry?entry.w/entry.h*(stage.clientHeight/stage.clientWidth):0;updatePlacement({...p,panel:fitPanelRect(rect,fit.value,ratio)})});
- layer.querySelector('#place-center-chat').addEventListener('click',()=>{onStart();const p=current(),base=entry?.inner||{x:.12,y:.12,w:.76,h:.76};updatePlacement({...p,inner:centerInnerPadding(base,p.inner)})});layer.querySelector('#place-reset-inner').addEventListener('click',()=>{onStart();updatePlacement({...current(),inner:{top:0,right:0,bottom:0,left:0}})});layer.querySelector('#place-reset-plaque').addEventListener('click',()=>{onStart();updatePlacement({...current(),plaque:{x:0,y:0}})});
- plaqueNode.tabIndex=0;return{bind,draw,get enabled(){return enabled},setEnabled(value){enabled=!!value;toggle.setAttribute('aria-pressed',String(enabled));draw()}};
+  
+ toggle.addEventListener('click',()=>{enabled=!enabled;toggle.setAttribute('aria-pressed',String(enabled));if(enabled&&!getSettings().placement){onStart();updatePlacement({...current(),panel:readRect()})}else draw()});
+  fit.addEventListener('change',()=>{if(!fit.value)return;onStart();const p=current(),rect=readRect(),ratio=entry?entry.w/entry.h*(stage.clientHeight/stage.clientWidth):0;updatePlacement({...p,panel:fitPanelRect(rect,fit.value,ratio)})});
+  
+ layer.querySelector('#place-center-chat').addEventListener('click',()=>{onStart();const p=current(),base=entry?.inner||{x:.12,y:.12,w:.76,h:.76};updatePlacement({...p,inner:centerInnerPadding(base,p.inner)})});
+  layer.querySelector('#place-reset-inner').addEventListener('click',()=>{onStart();updatePlacement({...current(),inner:{top:0,right:0,bottom:0,left:0}})});
+  layer.querySelector('#place-reset-plaque').addEventListener('click',()=>{onStart();updatePlacement({...current(),plaque:{x:0,y:0}})});
+  
+ plaqueNode.tabIndex=0;
+  return{bind,draw,get enabled(){return enabled},setEnabled(value){enabled=!!value;
+      toggle.setAttribute('aria-pressed',String(enabled));
+      draw()}};
+  
 }

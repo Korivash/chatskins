@@ -1,3 +1,9 @@
+<!--
+  Server operations guide for the skin request and AI helper endpoints.
+  Used by maintainers running the Node HTTP service behind the site proxy.
+  See the API module headers for endpoint behavior and security invariants.
+-->
+
 # Skin request service
 
 Run with Node 20 or newer and no npm install:
