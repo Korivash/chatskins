@@ -1,7 +1,7 @@
 /**
  * Browser module dream-client.js implements one ChatSkins page or overlay feature.
  * Used by the site, editor, or OBS overlay module graph.
- * Main exports: isDreamArtRequest, requestDream, watchDreamPaint.
+ * Main exports: isDreamArtRequest, requestDream, selectPaintedDream, selectDreamParts, watchDreamPaint.
  * Invariant: preserve existing settings links and render chat content as text.
  */
 /**
@@ -28,6 +28,32 @@ export async function requestDream(fetcher,text,extra={}){
   
  return payload;
   
+}
+
+/** Select a ready painted variation and clear its parts placeholder.
+ * @param {object} settings Current editor settings.
+ * @param {string} dreamId Ready painted-frame identifier.
+ * @returns {object} Settings with the painted frame selected.
+ */
+export function selectPaintedDream(settings,dreamId){
+ return{...settings,studioDesign:null,dreamPaintId:String(dreamId||'')};
+}
+
+/** Restore the retained parts composition as the selected version.
+ * @param {object} settings Current editor settings.
+ * @param {object} design The retained editable Studio composition.
+ * @returns {object} Settings with parts selected and painting cleared.
+ */
+export function selectDreamParts(settings,design){
+ return{...settings,studioDesign:structuredClone(design),dreamPaintId:''};
+}
+
+/** Check whether the painted art should replace the Studio composition.
+ * @param {object} settings Current editor settings.
+ * @returns {boolean} True when a painted frame is selected.
+ */
+export function isPaintedDreamSelected(settings){
+ return Boolean(settings?.dreamPaintId)&&!settings?.studioDesign;
 }
 
 /** Poll the private painting job without putting its owner key in the URL. */

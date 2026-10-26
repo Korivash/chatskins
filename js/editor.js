@@ -60,7 +60,7 @@ import {mountStudioComposition} from './studio-render.js';
 
 import {describeCurrentSettings,applyDescribeReply,describeFailureMessage,describeSettingsPatch} from './describe-helper.js';
 
-import {isDreamArtRequest,requestDream,watchDreamPaint} from './dream-client.js';
+import {isDreamArtRequest,requestDream,watchDreamPaint,selectPaintedDream,selectDreamParts} from './dream-client.js';
 
 import {loadDreamReview} from './dream-review.js';
 
@@ -69,7 +69,7 @@ const $=s=>document.querySelector(s), clone=x=>structuredClone(x);
 function cleanChannel(v){return String(v||'').trim().replace(/^https?:\/\//i,'').replace(/^(www\.)?twitch\.tv\//i,'').replace(/^[@#]+/,'').split(/[/?#\s]/)[0].toLowerCase()}
 function deepMerge(a,b){if(!a||!b||typeof a!=='object'||typeof b!=='object'||Array.isArray(a)||Array.isArray(b))return b===undefined?clone(a):b;const out={...a};for(const[k,v]of Object.entries(b))out[k]=k in a?deepMerge(a[k],v):v;return out}
 const editorPreviewObserver=new IntersectionObserver(entries=>entries.forEach(({target,isIntersecting})=>{target.querySelectorAll('.message').forEach(row=>row.dataset.motionPaused=String(!isIntersecting||state.reduceMotion||matchMedia('(prefers-reduced-motion: reduce)').matches));if(isIntersecting)target._mountSkin?.()}));
-let optionsMenu=null,placeMode=null,studioController=null,previewDisplay=null,skinQuery='',skinCategory='all',activeVibe='',activePalette='',activeSize='',skins=[],state=decodeSettings(location.hash),base='clean',label='Clean',baseline=clone(CLEAN),history=[],future=[],live=false,fakeOn=false,client=null,chatRows=[],fakeTimer=null,communityMap=new Map(),community=null,playPreviewSettings=null,chatPlayEditor=null,chatPlayPreview=null,alertsController=null,initialChatPlay=null,authRestore=null,authReturnTarget="",previewZoom=1,dreamPaintOptOut=false;
+let optionsMenu=null,placeMode=null,studioController=null,previewDisplay=null,skinQuery='',skinCategory='all',activeVibe='',activePalette='',activeSize='',skins=[],state=decodeSettings(location.hash),base='clean',label='Clean',baseline=clone(CLEAN),history=[],future=[],live=false,fakeOn=false,client=null,chatRows=[],fakeTimer=null,communityMap=new Map(),community=null,playPreviewSettings=null,chatPlayEditor=null,chatPlayPreview=null,alertsController=null,initialChatPlay=null,authRestore=null,authReturnTarget="",previewZoom=1,dreamPaintOptOut=false,dreamPartsDesign=null;
 function get(path){return path.split('.').reduce((a,k)=>a?.[k],state)}function put(path,value){const keys=path.split('.');let o=state;for(const k of keys.slice(0,-1))o=o[k];o[keys.at(-1)]=value}
 function track(){history.push({state:clone(state),base,label,baseline:clone(baseline)});if(history.length>100)history.shift();future=[];$('#undo').disabled=false;$('#redo').disabled=true}
 function set(path,value){track();put(path,value);playPreviewSettings=null;chatPlayPreview?.setHome(state,label);if(path.startsWith('emotes.'))community?.refresh();render()}
@@ -206,11 +206,15 @@ function applyOptionPatch(patch,title,{vibe=false}={}){const preset=skins.find(s
 /** Apply one generated Frame Studio design as a single undoable editor change. */
 function acceptDream(dream){
  if(!dream?.design?.instances)throw new Error('That generated design is incomplete.');
+ let paintedReady=dream.imageStatus==='ready';
  dreamPaintOptOut=false;
  track();
- state=normalizeSettings({...deepMerge(state,describeSettingsPatch(dream.settings||{})),studioDesign:dream.design,dreamPaintId:dream.imageStatus==='ready'?dream.id:''});
+ dreamPartsDesign=clone(dream.design);
+ const initialSettings={...deepMerge(state,describeSettingsPatch(dream.settings||{})),studioDesign:dream.imageStatus==='ready'?null:dream.design,dreamPaintId:dream.imageStatus==='ready'?dream.id:''};
+ state=normalizeSettings(initialSettings);
+ if(dream.imageStatus==='ready')state.studioDesign=null;
  label=String(dream.name||dream.design.name||'My custom frame').slice(0,40);
- studioController?.setDraft?.(dream.design);
+ if(dream.imageStatus!=='ready')studioController?.setDraft?.(dream.design);
  render();
  try{
   const saved=JSON.parse(localStorage.getItem('mySkins')||'[]');
@@ -221,12 +225,49 @@ function acceptDream(dream){
  const card=$('#dream-gallery-submit');if(card){card.dataset.dreamId=dream.id||'';card.dataset.dreamKey=dream.key||'';card.hidden=false}
  optionsMenu?.activate(1,{focusPanel:true});
  const paintChoice=$('#dream-frame-choice');
- if(paintChoice&&dream.imageStatus==='painting'&&dream.id&&dream.key){paintChoice.hidden=false;paintChoice.textContent='Use parts version instead';$('#studio-status').textContent=dream.paintMessage||'Painting your frame… ~15s';paintChoice.onclick=()=>{const useParts=!!state.dreamPaintId||!dreamPaintOptOut;dreamPaintOptOut=useParts;track();state.dreamPaintId=useParts?'':dream.id;if(dream.imageStatus==='painting'&&useParts)state.dreamPaintId='';render();try{const saved=JSON.parse(localStorage.getItem('mySkins')||'[]'),item=saved.find(entry=>entry.dreamId===dream.id);if(item){item.settings=clone(state);localStorage.setItem('mySkins',JSON.stringify(saved));refreshMySkins()}}catch{}paintChoice.textContent=dreamPaintOptOut?'Use painted frame':'Use parts version instead';$('#studio-status').textContent=dreamPaintOptOut?'Using the editable parts version.':'The painted frame is now selected.'}}
+ if(paintChoice&&['painting','ready'].includes(dream.imageStatus)&&dream.id&&dream.key){
+  paintChoice.hidden=false;
+  paintChoice.textContent=state.dreamPaintId?'Use parts version instead':'Use painted frame';
+  $('#studio-status').textContent=dream.imageStatus==='painting'?(dream.paintMessage||'Painting your frame… ~15s'):'The hand-drawn frame is ready.';
+  paintChoice.onclick=()=>{
+   if(state.dreamPaintId){
+    track();dreamPaintOptOut=true;
+    state=normalizeSettings(selectDreamParts(state,dreamPartsDesign||dream.design));
+    studioController?.setDraft?.(dreamPartsDesign||dream.design);
+   }else if(paintedReady){
+    track();dreamPaintOptOut=false;
+    state=normalizeSettings(selectPaintedDream(state,dream.id));
+    state.studioDesign=null;
+   }else{
+    // While painting, the editable parts are already selected.
+    dreamPaintOptOut=true;
+   }
+   render();
+   try{
+    const saved=JSON.parse(localStorage.getItem('mySkins')||'[]'),item=saved.find(entry=>entry.dreamId===dream.id);
+    if(item){item.settings=clone(state);localStorage.setItem('mySkins',JSON.stringify(saved));refreshMySkins()}
+   }catch{}
+   paintChoice.textContent=state.dreamPaintId?'Use parts version instead':'Use painted frame';
+   $('#studio-status').textContent=state.dreamPaintId?'The painted frame is selected.':'Using the editable parts version.';
+  };
+ }
  if(dream.imageStatus==='painting'&&dream.id&&dream.key){
   const currentId=dream.id;
   void watchDreamPaint(fetch,dream,{onReady:()=>{
    if(state.studioDesign?.name!==dream.design.name)return;
-   if(!dreamPaintOptOut){state.dreamPaintId=currentId;render();try{const saved=JSON.parse(localStorage.getItem('mySkins')||'[]'),item=saved.find(entry=>entry.dreamId===currentId);if(item){item.settings=clone(state);localStorage.setItem('mySkins',JSON.stringify(saved));refreshMySkins()}}catch{}}
+   paintedReady=true;
+   dreamPartsDesign=clone(state.studioDesign||dreamPartsDesign||dream.design);
+   if(!dreamPaintOptOut){
+    // Treat the async art swap as one undoable state change.
+    track();
+    state=normalizeSettings(selectPaintedDream(state,currentId));
+    state.studioDesign=null;
+    render();
+    try{
+     const saved=JSON.parse(localStorage.getItem('mySkins')||'[]'),item=saved.find(entry=>entry.dreamId===currentId);
+     if(item){item.settings=clone(state);localStorage.setItem('mySkins',JSON.stringify(saved));refreshMySkins()}
+    }catch{}
+   }
    if(paintChoice)paintChoice.textContent=dreamPaintOptOut?'Use painted frame':'Use parts version instead';
    const status=$('#studio-status');if(status)status.textContent=dreamPaintOptOut?'Your painted frame is ready whenever you want to switch to it.':'The hand-drawn frame is ready. It is now used in your preview and OBS link.';
   },onUnavailable:()=>{if(paintChoice)paintChoice.hidden=true;const status=$('#studio-status');if(status)status.textContent='The editable Studio frame is ready. The hand-drawn version could not be finished.'}});
