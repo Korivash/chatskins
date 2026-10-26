@@ -3,11 +3,11 @@ import assert from 'node:assert/strict';
 import {mkdtemp,readFile,rm,writeFile} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {join,resolve} from 'node:path';
-import {buildAssistantKnowledge,createAssistantHandler,validateAssistantAction,ASSISTANT_CONTROLS} from '../server/assistant.mjs';
+import {buildAssistantKnowledge,createAssistantHandler,validateAssistantAction,ASSISTANT_CONTROLS,isDesignArtRequest} from '../server/assistant.mjs';
 import {mountAskChat,TOURS,STARTER_PROMPTS,canRunAssistantAction,containsPrivateDetails,assistantLauncherOffset} from '../js/ask-chatskins.js';
 
 const message=(content='How do I add my chat to OBS?')=>JSON.stringify({messages:[{role:'user',content}],page:'editor',state:{tab:'look',hasChannel:true,access_token:'must-not-leak'}});
-async function fixture(t,{fetchImpl,now=()=>Date.UTC(2026,9,25),originHost='getchatskins.com',contentDir=resolve('docs/content')}={}){const dir=await mkdtemp(join(tmpdir(),'chatskins-assistant-')),keyFile=join(dir,'openai-key.txt'),usageFile=join(dir,'usage.json');await writeFile(keyFile,'private-test-key','utf8');const handler=createAssistantHandler({fetchImpl,now,originHost,keyFile,usageFile,contentDir});t.after(()=>rm(dir,{recursive:true,force:true}));return{dir,keyFile,usageFile,handler}}
+async function fixture(t,{fetchImpl,dreamHandler,now=()=>Date.UTC(2026,9,25),originHost='getchatskins.com',contentDir=resolve('docs/content')}={}){const dir=await mkdtemp(join(tmpdir(),'chatskins-assistant-')),keyFile=join(dir,'openai-key.txt'),usageFile=join(dir,'usage.json');await writeFile(keyFile,'private-test-key','utf8');const handler=createAssistantHandler({fetchImpl,dreamHandler,now,originHost,keyFile,usageFile,contentDir});t.after(()=>rm(dir,{recursive:true,force:true}));return{dir,keyFile,usageFile,handler}}
 function fakeOpenAI({flagged=false,output=[],tokens=20}={}){const calls=[];return{calls,fetchImpl:async(url,options)=>{calls.push({url,options});if(url.endsWith('/moderations'))return{ok:true,json:async()=>({results:[{flagged}],usage:{total_tokens:2}})};return{ok:true,json:async()=>({output,usage:{total_tokens:tokens}})}}}}
 
 test('knowledge pack includes headings and text from the documentation pages',async()=>{const knowledge=await buildAssistantKnowledge(resolve('docs/content'));assert.match(knowledge,/## Getting started \(getting-started\)/);assert.match(knowledge,/Browser Source/);assert.match(knowledge,/## Frames \(frames\)/)});
@@ -105,13 +105,13 @@ test('the browser catches private values before adding them to session history',
 
 class FakeElement{
  constructor(tag){this.tagName=tag;this.children=[];this.attrs={};this.dataset={};this.style={};this.listeners={};this.hidden=false;this.value='';this.className='';this.classList={add:name=>{this.className+=` ${name}`},remove:name=>{this.className=this.className.replace(name,'')},contains:name=>this.className.includes(name)};this.scrollTop=0;this.scrollHeight=0}
- append(...nodes){for(const node of nodes){node.parentElement=this;this.children.push(node)}}replaceChildren(...nodes){this.children=[];this.append(...nodes)}setAttribute(k,v){this.attrs[k]=String(v)}getAttribute(k){return this.attrs[k]}addEventListener(k,fn){(this.listeners[k]||=[]).push(fn)}dispatchEvent(event){this.dispatched=event;return true}click(){for(const fn of this.listeners.click||[])fn({target:this,preventDefault(){}})}focus(){this.ownerDocument.activeElement=this}scrollIntoView(){}querySelectorAll(selector=''){const all=this.children.flatMap(child=>[child,...child.querySelectorAll()]);if(!selector)return all;return all.filter(node=>(selector.includes('button')&&node.tagName==='button'&&!node.disabled)||(selector.includes('textarea')&&node.tagName==='textarea'&&!node.disabled)||(selector.includes('a[href]')&&node.tagName==='a'&&node.attrs.href)||(selector.includes('summary')&&node.tagName==='summary')||(selector.includes('[tabindex="0"]')&&node.attrs.tabindex==='0'))}querySelector(selector){return this.ownerDocument.querySelector(selector)}remove(){this.parentElement?.children.splice(this.parentElement.children.indexOf(this),1)}
+ append(...nodes){for(const node of nodes){node.parentElement=this;this.children.push(node)}}replaceChildren(...nodes){this.children=[];this.append(...nodes)}setAttribute(k,v){this.attrs[k]=String(v);if(k==='hidden')this.hidden=true}getAttribute(k){return this.attrs[k]}addEventListener(k,fn){(this.listeners[k]||=[]).push(fn)}dispatchEvent(event){this.dispatched=event;return true}click(){for(const fn of this.listeners.click||[])fn({target:this,preventDefault(){}})}focus(){this.ownerDocument.activeElement=this}scrollIntoView(){}querySelectorAll(selector=''){const all=this.children.flatMap(child=>[child,...child.querySelectorAll()]);if(!selector)return all;return all.filter(node=>(selector.includes('button')&&node.tagName==='button'&&!node.disabled)||(selector.includes('textarea')&&node.tagName==='textarea'&&!node.disabled)||(selector.includes('a[href]')&&node.tagName==='a'&&node.attrs.href)||(selector.includes('summary')&&node.tagName==='summary')||(selector.includes('[tabindex="0"]')&&node.attrs.tabindex==='0'))}querySelector(selector){return this.ownerDocument.querySelector(selector)}remove(){this.parentElement?.children.splice(this.parentElement.children.indexOf(this),1)}
 }
 class FakeDocument{
  constructor(){this.body=new FakeElement('body');this.body.ownerDocument=this;this.nodes=new Map();this.listeners={};this.activeElement=null}createElement(tag){const node=new FakeElement(tag);node.ownerDocument=this;return node}querySelector(selector){return this.nodes.get(selector)||null}addEventListener(k,fn){(this.listeners[k]||=[]).push(fn)}dispatchEvent(event){this.dispatched=event;return true}
 }
 test('walkthroughs are static and start without any API request',()=>{assert.equal(Object.keys(TOURS).length,5);for(const tour of Object.values(TOURS))assert.ok(tour.steps.length>=3);assert.equal(STARTER_PROMPTS.length,4);const doc=new FakeDocument(),location={pathname:'/editor.html',href:'https://getchatskins.com/editor.html'},storage={getItem:()=>null,setItem(){},removeItem(){}};let fetches=0;const ui=mountAskChat(doc,{fetcher:()=>{fetches++},storage,location});ui.startTour('obs-setup');assert.equal(fetches,0);assert.equal(ui.panel.hidden,false);assert.equal(doc.body.children.some(x=>x.className==='ask-tour-card'),true)});
-test('API errors reveal the static FAQ and tour choices',async()=>{const doc=new FakeDocument(),storage={getItem:()=>null,setItem(){},removeItem(){}},ui=mountAskChat(doc,{storage,location:{pathname:'/editor.html',href:'https://getchatskins.com/editor.html'},fetcher:async()=>({ok:false,status:429,json:async()=>({message:'Please try again soon.'})})});await ui.send('How do I add this chat to OBS?');const fallback=ui.panel.querySelectorAll().find(node=>node.className==='ask-fallback');assert.equal(fallback.hidden,false);assert.match(ui.log.children.at(-1).children[0].textContent,/Please try again soon/);assert.ok(ui.panel.querySelectorAll().some(node=>node.className==='ask-tours'))});
+test('API errors reveal the static FAQ and tour choices, with starter chips hidden after the first message',async()=>{const doc=new FakeDocument(),storage={getItem:()=>null,setItem(){},removeItem(){}},ui=mountAskChat(doc,{storage,location:{pathname:'/editor.html',href:'https://getchatskins.com/editor.html'},fetcher:async()=>({ok:false,status:429,json:async()=>({message:'Please try again soon.'})})});const chips=ui.panel.querySelectorAll().find(node=>node.className==='ask-starters'),guides=ui.panel.querySelectorAll().find(node=>node.className==='ask-guides-toggle'),tours=ui.panel.querySelectorAll().find(node=>node.className==='ask-tours');assert.equal(chips.hidden,false);assert.equal(tours.hidden,true);await ui.send('How do I add this chat to OBS?');const fallback=ui.panel.querySelectorAll().find(node=>node.className==='ask-fallback');assert.equal(chips.hidden,true);assert.equal(fallback.hidden,false);assert.equal(tours.hidden,true,'tour choices stay behind the Setup guides toggle');assert.ok(guides);assert.match(ui.log.children.at(-1).children[0].textContent,/Please try again soon/)});
 test('the guide validates and executes all returned UI action kinds',async()=>{
  const doc=new FakeDocument(),location={pathname:'/editor.html',href:'https://getchatskins.com/editor.html'},storage={getItem:()=>null,setItem(){},removeItem(){}};for(const id of ['options-tab-look','options-tab-style','get-link','place-toggle']){const target=new FakeElement('button');target.ownerDocument=doc;target.click=()=>{target.clicked=true};target.scrollIntoView=()=>{};doc.nodes.set('#'+id,target)}const ui=mountAskChat(doc,{storage,location,fetcher:async()=>{throw Error('not used')}});
  const actions=[{type:'apply_style',settings:{fontSize:28}},{type:'open_tab',tab:'style'},{type:'highlight',control:'Get my OBS link'},{type:'start_walkthrough',id:'frames'},{type:'open_doc',slug:'frames'}];for(const action of actions){assert.ok(canRunAssistantAction(action));await ui.execute(action)}assert.equal(doc.dispatched.detail.type,'apply_style','style action is sent to the editor');assert.ok(doc.nodes.get('#options-tab-style').clicked,'tab action activates the editor tab');assert.ok(doc.nodes.get('#get-link').classList.contains('ask-target-highlight'),'highlight action marks its control');assert.equal(ui.panel.hidden,false);assert.equal(location.href,'https://getchatskins.com/docs/#/page/frames');assert.ok(ui.log.children.length>=4)
@@ -141,14 +141,89 @@ test('create_design is a validated assistant action and runs the design endpoint
  assert.equal(requested,'/api/dream');assert.equal(studio.clicked,true);assert.equal(doc.dispatched.type,'chatskins:dream-generated');assert.equal(doc.dispatched.detail.dream.name,'Ghost Garden');
 });
 
+test('a server-generated design opens Studio and applies without making a second Dream request',async()=>{
+ const doc=new FakeDocument(),location={pathname:'/editor.html',href:'https://getchatskins.com/editor.html'},storage={getItem:()=>null,setItem(){},removeItem(){}};
+ const look=new FakeElement('button'),studio=new FakeElement('button');look.ownerDocument=studio.ownerDocument=doc;studio.click=()=>{studio.clicked=true};doc.nodes.set('#options-tab-look',look);doc.nodes.set('#options-tab-studio',studio);
+ const dream={id:'b'.repeat(24),key:'private-key',name:'Autumn Leaves',imageStatus:'off',design:{instances:[{part:19},{part:42}]}};let networkCalls=0;
+ const ui=mountAskChat(doc,{storage,location,fetcher:async()=>{networkCalls++;throw Error('generated action should not call Dream again')}});
+ await ui.execute({type:'create_design',prompt:'autumn leaves frame',dream});
+ assert.equal(networkCalls,0);
+ assert.equal(studio.clicked,true);
+ assert.equal(doc.dispatched.type,'chatskins:dream-generated');
+ assert.equal(doc.dispatched.detail.dream.name,'Autumn Leaves');
+ assert.ok(ui.log.children.some(node=>node.className==='ask-action-notes'));
+});
+
 test('guide system requests original art and returns a useful design action',async t=>{
  const calls=[],first={id:'dream-response',output:[{type:'reasoning',id:'rs_dream',summary:[]},{type:'function_call',call_id:'design-1',name:'create_design',arguments:'{"prompt":"spooky purple frame with a ghost"}'}],usage:{total_tokens:7}};
  const fetchImpl=async(url,options)=>{calls.push({url,options});if(url.endsWith('/moderations'))return{ok:true,json:async()=>({results:[{flagged:false}],usage:{total_tokens:1}})};const count=calls.filter(item=>item.url.endsWith('/responses')).length;return{ok:true,json:async()=>count===1?first:{output:[{type:'message',content:[{type:'output_text',text:'I made a spooky purple frame with a ghost and opened it in Studio. You can adjust the parts, then copy your OBS link.'}]}],usage:{total_tokens:8}}}};
- const fx=await fixture(t,{fetchImpl}),response=await fx.handler({headers:{origin:'https://getchatskins.com'},body:message('Make me a spooky purple frame with a ghost')});
+ const dreamHandler=async()=>({status:200,body:{ok:true,id:'c'.repeat(24),key:'private-dream-key',name:'Spooky Garden',design:{instances:[{part:19}]}}});
+ const fx=await fixture(t,{fetchImpl,dreamHandler}),response=await fx.handler({headers:{origin:'https://getchatskins.com'},body:message('Make me a spooky purple frame with a ghost')});
  const firstRequest=JSON.parse(calls.find(item=>item.url.endsWith('/responses')).options.body);
  assert.match(firstRequest.input[0].content[0].text,/When the user wants new art.*call create_design/s);
  assert.ok(firstRequest.tools.some(tool=>tool.name==='create_design'&&tool.strict===true));
  assert.equal(response.status,200);assert.equal(response.body.actions[0].type,'create_design');assert.match(response.body.reply,/opened it in Studio/);assert.doesNotMatch(response.body.reply,/add (?:a|the) ghost (?:image|art)/i);
+});
+
+test('art intent routing catches ten design requests and leaves ten ordinary questions alone',()=>{
+ const art=[
+  'Make me a cozy autumn frame with leaves and a coffee cup','Create a spooky border with a ghost',
+  'Design a cat on top of my chat','Build me a moon and stars overlay','I want a bunny skin',
+  'Give me a heart frame','Make a crown for the chat panel','Create a neon look with sparkles',
+  'I need vines and flowers around chat','Paint a skull and bats border'
+ ];
+ const normal=[
+  'How do I add this to OBS?','Why is chat not showing in my browser source?',
+  'Where do I copy the overlay link?','How do I turn on alerts?','Can I connect my Twitch channel?',
+  'How do I move the chat panel?','Why are messages too small?','How do I reset my settings?',
+  'Can you explain the channel points card?','Where can I find the frames tab?'
+ ];
+ assert.ok(art.every(isDesignArtRequest),'each visual request should force the design tool');
+ assert.ok(normal.every(value=>!isDesignArtRequest(value)),'ordinary help questions should keep automatic tool selection');
+});
+
+test('design requests force create_design, run Dream server-side, and return the generated design with a useful reply',async t=>{
+ const calls=[],prompt='make me a cozy autumn frame with leaves and a coffee cup';
+ const fetchImpl=async(url,options)=>{
+  calls.push({url,options});
+  if(url.endsWith('/moderations'))return{ok:true,json:async()=>({results:[{flagged:false}],usage:{total_tokens:2}})};
+  const count=calls.filter(call=>call.url.endsWith('/responses')).length;
+  if(count===1)return{ok:true,json:async()=>({id:'design-response',output:[{type:'reasoning',id:'rs-design',summary:[]},{type:'function_call',call_id:'design-call',name:'create_design',arguments:'{"prompt":"wrong model prompt"}'}],usage:{total_tokens:9}})};
+  return{ok:true,json:async()=>({output:[{type:'message',content:[{type:'output_text',text:'I made a cozy autumn frame with leaves and a coffee cup. Open Studio to adjust the parts, then use Get link.'}]}],usage:{total_tokens:6}})};
+ };
+ const dream={ok:true,id:'a'.repeat(24),key:'private-dream-key',name:'Autumn Cafe',design:{instances:[{part:19},{part:42}]},imageStatus:'off'};const dreamCalls=[];
+ const dreamHandler=async request=>{dreamCalls.push(request);return{status:200,body:dream}};
+ const fx=await fixture(t,{fetchImpl,dreamHandler});
+ const response=await fx.handler({headers:{origin:'https://getchatskins.com'},remoteAddress:'198.51.100.3',body:message(prompt)});
+ const requests=calls.filter(call=>call.url.endsWith('/responses')).map(call=>JSON.parse(call.options.body));
+ assert.deepEqual(requests[0].tool_choice,{type:'function',name:'create_design'});
+ assert.equal(requests[1].tool_choice,'none');
+ assert.equal(dreamCalls.length,1);
+ assert.equal(JSON.parse(dreamCalls[0].body).text,prompt,'the original request, not model-supplied tool text, goes to Dream');
+ assert.doesNotMatch(requests[0].input[0].content[0].text,/\(request-a-skin\)/);
+ assert.match(requests[0].input[0].content[0].text,/Never send users to the request form for a design/);
+ assert.equal(response.status,200);
+ assert.match(response.body.reply,/cozy autumn frame.*adjust the parts/s);
+ assert.equal(response.body.actions[0].type,'create_design');
+ assert.deepEqual(response.body.actions[0].dream,dream);
+});
+
+test('a Dream limit response offers Studio kits without failing the rest of the guide',async t=>{
+ const calls=[];
+ const fetchImpl=async(url,options)=>{
+  calls.push({url,options});
+  if(url.endsWith('/moderations'))return{ok:true,json:async()=>({results:[{flagged:false}],usage:{total_tokens:1}})};
+  const count=calls.filter(call=>call.url.endsWith('/responses')).length;
+  return{ok:true,json:async()=>count===1?{id:'limit-response',output:[{type:'function_call',call_id:'create',name:'create_design',arguments:'{"prompt":"coffee cup frame"}'}],usage:{total_tokens:3}}:{output:[{type:'message',content:[{type:'output_text',text:'You have reached the custom design limit today. I opened Studio so you can choose a ready-made kit.'}]}],usage:{total_tokens:4}}};
+ };
+ const fx=await fixture(t,{fetchImpl,dreamHandler:async()=>({status:429,body:{ok:false,message:'limit'}})});
+ const response=await fx.handler({headers:{origin:'https://getchatskins.com'},body:message('Make me a coffee cup frame')});
+ assert.equal(response.status,200);
+ assert.match(response.body.reply,/custom design limit today/);
+ assert.deepEqual(response.body.actions,[{type:'open_tab',tab:'studio'}]);
+ const requests=calls.filter(call=>call.url.endsWith('/responses')).map(call=>JSON.parse(call.options.body));
+ assert.deepEqual(requests[0].tool_choice,{type:'function',name:'create_design'});
+ assert.equal(requests[1].tool_choice,'none');
 });
 
 test('assistant rejects requests without browser origin evidence',async t=>{
