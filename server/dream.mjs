@@ -6,8 +6,10 @@ import {createHash, randomBytes} from 'node:crypto';
 import {mkdir, readFile, readdir, unlink, writeFile} from 'node:fs/promises';
 import {dirname, resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
+import {spawn} from 'node:child_process';
 import {clientIp, originAllowed} from './describe.mjs';
 import {createAiUsageStore} from './ai-usage.mjs';
+import {measurePaintedFrame} from './dream-image.mjs';
 import {blankStudio, makeStudioKit, normalizeStudio, STUDIO_LIMIT} from '../js/frame-studio.js';
 
 const here=dirname(fileURLToPath(import.meta.url));
@@ -175,7 +177,7 @@ export function buildDreamSchema(partIds,fontOptions,maxParts=16){
 }
 
 /** Create /api/dream and /api/dream/submit handlers with injectable services. */
-export function createDreamHandler({fetchImpl=globalThis.fetch,now=Date.now,originHost=process.env.SKIN_REQUEST_ORIGIN_HOST??'getchatskins.com',keyFile=process.env.OPENAI_KEY_FILE||defaultKeyFile,model=process.env.DREAM_MODEL||'gpt-5-mini',partsFile=resolve(here,'../site-media/parts/parts.json'),usageFile=resolve(here,'describe-usage.json'),dataDir=defaultDataDir,webhookUrl=process.env.SKIN_REQUEST_WEBHOOK,imagesEnabled=process.env.DREAM_IMAGES!=='false',logger=line=>console.warn(line)}={}){
+export function createDreamHandler({fetchImpl=globalThis.fetch,now=Date.now,originHost=process.env.SKIN_REQUEST_ORIGIN_HOST??'getchatskins.com',keyFile=process.env.OPENAI_KEY_FILE||defaultKeyFile,model=process.env.DREAM_MODEL||'gpt-5-mini',imageModel=process.env.DREAM_IMAGE_MODEL||'gpt-image-2.5-flare',webpEncoder=encodeWebpWithFfmpeg,partsFile=resolve(here,'../site-media/parts/parts.json'),usageFile=resolve(here,'describe-usage.json'),dataDir=defaultDataDir,webhookUrl=process.env.SKIN_REQUEST_WEBHOOK,imagesEnabled=process.env.DREAM_IMAGES!=='false',logger=line=>console.warn(line)}={}){
  const usageStore=createAiUsageStore(usageFile);let partsPromise;
  const parts=()=>partsPromise||=(typeof partsFile==='string'?readDreamParts(partsFile):Promise.resolve(partsFile.parts||partsFile));
  const privateDir=resolve(dataDir,'dream-submissions'),imageUsageFile=resolve(dataDir,'dream-images.json');let imageUsageQueue=Promise.resolve(),cleanupPromise=null;
@@ -198,21 +200,25 @@ export function createDreamHandler({fetchImpl=globalThis.fetch,now=Date.now,orig
  }
  return async function handleDream({method='POST',url='/api/dream',headers={},remoteAddress='unknown',body=''}={}){
   await cleanupRejected();
-  const imageMatch=url.match(/^\/api\/dream\/image\/([a-f0-9]{24})$/i);
+  const imageMatch=url.match(/^\/api\/dream-image\/([a-f0-9]{24})\.webp$/i);
   if(method==='GET'&&imageMatch){
    const saved=await readSubmission(imageMatch[1]);
-   if(!saved||saved.imageStatus!=='ready'||!saved.paintFile)return json(404,{ok:false,error:'not_found'});
-   try{return{status:200,headers:{'content-type':'image/png','cache-control':'public, max-age=31536000, immutable','x-content-type-options':'nosniff'},body:await readFile(resolve(privateDir,saved.paintFile)),binary:true}}
+   if(!saved||saved.id!==imageMatch[1]||saved.imageStatus!=='ready'||saved.paintFile!==`${saved.id}.webp`)return json(404,{ok:false,error:'not_found'});
+   try{const image=await readFile(resolve(privateDir,saved.paintFile));if(!isWebp(image))return json(404,{ok:false,error:'not_found'});return{status:200,headers:{'content-type':'image/webp','cache-control':'public, max-age=31536000, immutable','x-content-type-options':'nosniff'},body:image,binary:true}}
    catch{return json(404,{ok:false,error:'not_found'})}
   }
+  const metadataMatch=url.match(/^\/api\/dream-image\/([a-f0-9]{24})\.json$/i);
+  if(method==='GET'&&metadataMatch){const saved=await readSubmission(metadataMatch[1]);if(!saved||saved.id!==metadataMatch[1]||saved.imageStatus!=='ready'||saved.paintFile!==`${saved.id}.webp`||!saved.frame)return json(404,{ok:false,error:'not_found'});return json(200,{ok:true,...saved.frame,file:`/api/dream-image/${saved.id}.webp`,id:saved.id})}
+  // Preserve the old private PNG path for links that predate painted templates.
+  const legacyImageMatch=url.match(/^\/api\/dream\/image\/([a-f0-9]{24})$/i);
+  if(method==='GET'&&legacyImageMatch){const saved=await readSubmission(legacyImageMatch[1]),file=saved?.legacyPaintFile||(/^[a-f0-9]{24}\.png$/i.test(saved?.paintFile||'')?saved.paintFile:'');if(!saved||saved.id!==legacyImageMatch[1]||saved.imageStatus!=='ready'||!file)return json(404,{ok:false,error:'not_found'});try{return{status:200,headers:{'content-type':'image/png','cache-control':'public, max-age=31536000, immutable','x-content-type-options':'nosniff'},body:await readFile(resolve(privateDir,file)),binary:true}}catch{return json(404,{ok:false,error:'not_found'})}}
   if(method!=='POST'||!['/api/dream','/api/dream/submit','/api/dream/status','/api/dream/review'].includes(url))return json(404,{ok:false,error:'not_found'});
   if(!originAllowed({headers,remoteAddress,originHost}))return json(403,{ok:false,error:'forbidden',message:'This request could not be verified.'});
   if(Buffer.byteLength(body,'utf8')>18000)return json(400,{ok:false,error:'invalid_input',message:'Keep your idea under 300 characters.'});
   let input;try{input=JSON.parse(body)}catch{return json(400,{ok:false,error:'invalid_input',message:'Enter a short design idea.'})}
   if(url==='/api/dream/status'){
    const saved=await readSubmission(String(input?.id||''));if(!saved||!input.key||sha(input.key)!==saved.ownerKeyHash)return json(404,{ok:false,error:'not_found',message:'That saved design could not be found.'});
-   let paintedImage=null;if(saved.imageStatus==='ready'&&saved.paintFile){try{paintedImage=(await readFile(resolve(privateDir,saved.paintFile))).toString('base64')}catch{}}
-   return json(200,{ok:true,imageStatus:saved.imageStatus||'off',paintedImage});
+   return json(200,{ok:true,imageStatus:saved.imageStatus||'off'});
   }
   if(url==='/api/dream/review'){
    const saved=await readSubmission(String(input?.id||''));
@@ -276,21 +282,41 @@ export function createDreamHandler({fetchImpl=globalThis.fetch,now=Date.now,orig
   // Never accept a painted or non-library asset from the model. The SVG
   // composition is immediately usable; an optional image job is tracked next.
   const id=randomBytes(12).toString('hex'),ownerKey=randomBytes(24).toString('base64url');const saved={id,...valid,credit:String(input.credit||'').trim(),createdAt:new Date(time).toISOString(),status:'private',ownerKeyHash:sha(ownerKey),ipHash:ip,imageStatus:imagesEnabled?'painting':'off',paintFile:''};await writeSubmission(saved);await finish((Number(mod?.usage?.total_tokens)||0)+usedResponseTokens+(Number(generatedModeration.usage?.total_tokens)||0));
-  if(imagesEnabled)void paintImage(saved,{fetchImpl,key,ip,time,privateDir,reserveImageQuota,logger});
-  return json(200,{ok:true,id,key:ownerKey,design:valid.design,settings:valid.settings,name:valid.name,description:valid.description,moodTags:valid.moodTags,imageStatus:saved.imageStatus,paintMessage:imagesEnabled?'Painting a hand-drawn version...':''});
+  if(imagesEnabled)void paintImage(saved,{fetchImpl,key,ip,time,privateDir,reserveImageQuota,logger,imageModel,webpEncoder});
+  return json(200,{ok:true,id,key:ownerKey,design:valid.design,settings:valid.settings,name:valid.name,description:valid.description,moodTags:valid.moodTags,imageStatus:saved.imageStatus,paintMessage:imagesEnabled?'Painting your frame… ~15s':''});
  };
 }
 
 /** Generate the optional painted variation under its separate daily caps. */
-async function paintImage(saved,{fetchImpl,key,ip,time,privateDir,reserveImageQuota,logger}){
+async function paintImage(saved,{fetchImpl,key,ip,time,privateDir,reserveImageQuota,logger,imageModel,webpEncoder}){
  try{
   if(!await reserveImageQuota(ip,time)){saved.imageStatus='unavailable';await writeFile(resolve(privateDir,`${saved.id}.json`),JSON.stringify(saved,null,2),'utf8');return}
-  const prompt=`Create a hand-drawn stream chat frame for "${saved.name}": ${saved.description}. Transparent outside the art and in a large empty center window. No text, letters, logos, interface, or people. Leave a blank title plaque at the top.`;
-  const response=await fetchImpl('https://api.openai.com/v1/images/generations',{method:'POST',headers:{authorization:`Bearer ${key}`,'content-type':'application/json'},body:JSON.stringify({model:'gpt-image-1',size:'1024x1024',background:'transparent',output_format:'png',prompt})});
-  if(!response.ok)throw Error('painting unavailable');const data=await response.json(),base64=data.data?.[0]?.b64_json;if(!base64)throw Error('painting result missing');
-  const file=`${saved.id}.png`;await writeFile(resolve(privateDir,file),Buffer.from(base64,'base64'));saved.imageStatus='ready';saved.paintFile=file;await writeFile(resolve(privateDir,`${saved.id}.json`),JSON.stringify(saved,null,2),'utf8');
+  const cleaned=cleanImageDescription(saved.description),basePrompt=`Decorative frame for a live-stream chat overlay. ${cleaned}. A BLANK name plaque at the top center. The CENTER is completely EMPTY and transparent (at least 70% of width and height). Transparent background outside the frame. Rich, polished illustration. No text, no letters, no logos, no real people, no existing characters.`;
+  let png=await generateImagePng(fetchImpl,key,imageModel,basePrompt);
+  let measured=measurePaintedFrame(png);
+  if(measured.centerTransparency<.95){const stronger=`${basePrompt} Make the entire central 40% × 40% box fully transparent with absolutely no texture, particles or decoration inside it. Put all decoration in a narrow outer border only.`;png=await generateImagePng(fetchImpl,key,imageModel,stronger);measured=measurePaintedFrame(png)}
+  if(measured.centerTransparency<.95)throw Error('center transparency check failed');
+  const webp=await webpEncoder(png);if(!isWebp(webp)||webp.length>400*1024)throw Error('WebP conversion exceeded storage limit');
+  const file=`${saved.id}.webp`;await writeFile(resolve(privateDir,file),webp);saved.imageStatus='ready';saved.paintFile=file;saved.frame={width:measured.width,height:measured.height,shape:'tall',inner:measured.inner,plaque:measured.plaque};await writeFile(resolve(privateDir,`${saved.id}.json`),JSON.stringify(saved,null,2),'utf8');
  }catch{saved.imageStatus='unavailable';try{await writeFile(resolve(privateDir,`${saved.id}.json`),JSON.stringify(saved,null,2),'utf8')}catch{}logger('Dream painting unavailable.')}
 }
+
+/** Keep untrusted descriptions short and suitable for an image prompt. */
+export function cleanImageDescription(value){return String(value||'').replace(/[\u0000-\u001f<>]/g,' ').replace(/\s+/g,' ').trim().slice(0,240)}
+function isWebp(bytes){return Buffer.isBuffer(bytes)&&bytes.length>=12&&bytes.toString('ascii',0,4)==='RIFF'&&bytes.readUInt32LE(4)+8===bytes.length&&bytes.toString('ascii',8,12)==='WEBP'}
+async function generateImagePng(fetchImpl,key,primaryModel,prompt){
+ const models=[primaryModel,'gpt-image-1.5'].filter((value,index,all)=>value&&all.indexOf(value)===index);let lastError;
+ for(const model of models){const response=await fetchImpl('https://api.openai.com/v1/images/generations',{method:'POST',headers:{authorization:`Bearer ${key}`,'content-type':'application/json'},body:JSON.stringify({model,size:'1024x1536',quality:'medium',background:'transparent',output_format:'png',prompt})});if(!response.ok){lastError=new Error(`image API ${response.status}`);if((response.status===400||response.status===404)&&model===primaryModel)continue;throw lastError}const data=await response.json(),base64=data.data?.[0]?.b64_json;if(!base64)throw new Error('image response missing');return Buffer.from(base64,'base64')}
+ throw lastError||new Error('image model unavailable');
+}
+
+/** Convert PNG to a compact WebP using the server's local ffmpeg binary. */
+export async function encodeWebpWithFfmpeg(png,{binary=process.env.DREAM_WEBP_ENCODER||'ffmpeg'}={}){
+ let last;
+ for(const quality of [82,72,62,52,42,32]){const output=await runEncoder(binary,['-hide_banner','-loglevel','error','-i','pipe:0','-frames:v','1','-c:v','libwebp','-quality',String(quality),'-f','webp','pipe:1'],png);if(output.length<=400*1024)return output;last=new Error('WebP image exceeds 400 KB')}
+ throw last||new Error('WebP conversion failed');
+}
+function runEncoder(binary,args,input){return new Promise((resolvePromise,reject)=>{const child=spawn(binary,args,{stdio:['pipe','pipe','ignore']});const chunks=[];child.stdout.on('data',chunk=>chunks.push(chunk));child.once('error',reject);child.once('close',code=>code===0?resolvePromise(Buffer.concat(chunks)):reject(new Error('WebP encoder failed')));child.stdin.end(input)})}
 
 /** Review a pending submission without exposing its identifying network data. */
 export async function approveDream(id,{dataDir=defaultDataDir,skinsFile=resolve(here,'../design/skins.json'),reject=false}={}){

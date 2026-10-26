@@ -21,7 +21,7 @@ function renderSkinPreview(host,skin,{card=false,messages=null}={}){
  const settings=normalizeSettings(skin.settings),previewSettings=applySkinMetadata(structuredClone(settings),skin);
  for(const part of Object.values(previewSettings.parts||{}))part.fontSize=24;
  const frame=document.createElement('div');frame.className=card?'portrait-preview':'monitor-preview';
- const isFrame=!!skin.frameTemplate,wrapper=document.createElement('div');wrapper.className='skin-preview-measure'+(isFrame?' preview-virtual-stage':'');
+ const isFrame=!!(skin.frameTemplate||previewSettings.dreamPaintId),wrapper=document.createElement('div');wrapper.className='skin-preview-measure'+(isFrame?' preview-virtual-stage':'');
  const canvasSize=previewCanvasSize(skin),canvas=isFrame?document.createElement('div'):null;if(canvas){canvas.className='source preview-virtual-canvas';canvas.style.width=`${canvasSize.width}px`;canvas.style.height=`${canvasSize.height}px`;wrapper.style.width=`${canvasSize.width}px`;wrapper.style.height=`${canvasSize.height}px`}
  const chat=document.createElement('div');chat.className='chat chat-panel skin-live-preview';applyChatStyle(chat,previewSettings);
  for(const message of(messages||buildSkinPreviewMessages(skin,card?2:3)))chat.append(createMessage(message,previewSettings));
