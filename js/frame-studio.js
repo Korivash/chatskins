@@ -1,3 +1,9 @@
+// Sibling layers use the positioned panel host's layout coordinates, never viewport coordinates.
+export function syncStudioLayer(panel,layer){
+ const host=panel.parentElement;if(!host)return;
+ if(layer.parentElement!==host)host.append(layer);
+ Object.assign(layer.style,{position:'absolute',left:panel.offsetLeft+'px',top:panel.offsetTop+'px',width:panel.offsetWidth+'px',height:panel.offsetHeight+'px'});
+}
 export const STUDIO_BOARD=Object.freeze([600,680]);
 export const STUDIO_LIMIT=25;
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,Number.isFinite(+v)?+v:a));
@@ -54,12 +60,11 @@ export function createStudioController({root, getDraft, setDraft, getBase=()=>nu
  function render(){
   const board=globalThis.__studioLiveBoard||$('.studio-board');if(!board)return;
   board.replaceChildren();board.dataset.parts=String(draft.instances.length);
-  const chatElement=document.querySelector('#chat'),live=board.dataset.liveStage==='true';
+  const chatElement=document.querySelector('#stage > .source > #chat'),live=board.dataset.liveStage==='true';
   let panel={x:0,y:0,w:600,h:680};
   if(live&&chatElement?.offsetWidth&&chatElement?.offsetHeight){
    panel={x:0,y:0,w:chatElement.offsetWidth,h:chatElement.offsetHeight};
-   board.style.left=chatElement.offsetLeft+'px';board.style.top=chatElement.offsetTop+'px';
-   board.style.width=panel.w+'px';board.style.height=panel.h+'px';
+   syncStudioLayer(chatElement,board);
   }else board.style.aspectRatio='600 / 680';
   const model=studioRenderModel(draft,panel),windowPart=draft.instances.find(p=>p.part===19);
   const geometry=[{uid:windowPart.uid,part:19,rect:{x:model.window.x,y:model.window.y,w:model.window.width,h:model.window.height}}];

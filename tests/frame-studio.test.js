@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFile} from 'node:fs/promises';
-import {blankStudio,makeStudioKit,randomizeStudio,normalizeStudio,encodeStudio,decodeStudio,studioWindowRect,studioPartRect,studioRenderModel,createStudioHistory,createStudioController,STUDIO_LIMIT} from '../js/frame-studio.js';
+import {blankStudio,makeStudioKit,randomizeStudio,normalizeStudio,encodeStudio,decodeStudio,studioWindowRect,studioPartRect,studioRenderModel,createStudioHistory,createStudioController,syncStudioLayer,STUDIO_LIMIT} from '../js/frame-studio.js';
 import {CLEAN,buildCompactSettingsUrl} from '../js/settings.js';
 import {decompressJson} from '../js/compact-link.js';
 import {mountStudioComposition} from '../js/studio-render.js';
@@ -59,8 +59,12 @@ test('six kits and twenty Randomize seeds keep decoration outside the window at 
 });
 test('Studio board edits on the large preview stage and Get link can enable from a channel',async()=>{
  const html=await readFile(new URL('editor.html',root),'utf8'),editor=await readFile(new URL('js/editor.js',root),'utf8');
- assert.match(html,/<div class="studio-board"[^>]*hidden/);assert.doesNotMatch(html,/studio-canvas-wrap/);
- assert.match(editor,/__studioLiveBoard=board/);assert.match(editor,/\$\('\.source'\)\.append\(board\)/);assert.match(editor,/linkReady=!!state\.channel/);assert.match(editor,/buildCompactSettingsUrl\(location\.href/);assert.match(await readFile(new URL('js/frame-studio.js',root),'utf8'),/chatElement\.offsetLeft/);
+ assert.match(html,/<div class="studio-board"[^>]*hidden/);assert.doesNotMatch(html,/studio-canvas-wrap/);assert.ok(html.includes('href="css/studio-render.css"'));
+ assert.ok(editor.includes("window.addEventListener('scroll',syncStudioPreview,true)"));
+ assert.ok(editor.includes("board._studioStageObserver.observe($('#stage'))"));
+ assert.ok(editor.includes("board._studioStageObserver.observe($('#stage > .source > #chat'))"));
+ assert.ok((await readFile(new URL('js/frame-studio.js',root),'utf8')).includes("document.querySelector('#stage > .source > #chat')"));
+ assert.match(editor,/__studioLiveBoard=board/);assert.match(editor,/\$\('#stage > \.source'\)\.append\(board\)/);assert.match(editor,/linkReady=!!state\.channel/);assert.match(editor,/buildCompactSettingsUrl\(location\.href/);assert.match(await readFile(new URL('js/frame-studio.js',root),'utf8'),/syncStudioLayer\(chatElement,board\)/);
  const kit=makeStudioKit('Spooky'),settings={...CLEAN,channel:'channelpal',studioDesign:kit},url=await buildCompactSettingsUrl('https://getchatskins.com/editor.html',{settings,baseSkinId:'clean',baseSettings:CLEAN}),payload=await decompressJson(new URLSearchParams(new URL(url).hash.slice(1)).get('data'));
  assert.equal(payload.c.studioDesign,encodeStudio(kit));assert.equal(decodeStudio(payload.c.studioDesign).instances.length,kit.instances.length);
 });
@@ -73,9 +77,9 @@ test('editor preview and overlay use the same studio DOM geometry at scaled stag
  class Doc{createElement(tag){return new El(tag)}}
  const old={document:globalThis.document,window:globalThis.window,ResizeObserver:globalThis.ResizeObserver,requestAnimationFrame:globalThis.requestAnimationFrame};
  globalThis.document=new Doc();globalThis.window={__studioParts:[]};globalThis.ResizeObserver=class{observe(){}};globalThis.requestAnimationFrame=fn=>fn();
- const mount=async scale=>{const host=new El('div');host.scale=scale;const chat=new El('div');chat.offsetWidth=480;chat.offsetHeight=660;chat.offsetLeft=128;chat.offsetTop=28;chat.parentElement=host;const kit=makeStudioKit('Royal');await mountStudioComposition({root:chat,draft:kit,channel:'ChannelPal',document:globalThis.document,fetcher:async()=>{throw Error('No parts needed for geometry')}});return{host,layer:host.querySelector(':scope > .studio-composition'),scale}};
+ const mount=async scale=>{const host=new El('div');host.scale=scale;host.getBoundingClientRect=()=>({left:146,top:208,scale});const chat=new El('div');chat.offsetWidth=480;chat.offsetHeight=660;chat.offsetLeft=0;chat.offsetTop=0;chat.parentElement=host;const kit=makeStudioKit('Royal');await mountStudioComposition({root:chat,draft:kit,channel:'ChannelPal',document:globalThis.document,fetcher:async()=>{throw Error('No parts needed for geometry')}});const layer=host.querySelector(':scope > .studio-composition'),board=new El('div');syncStudioLayer(chat,board);for(const node of [board,layer]){assert.equal(node.parentElement,host);assert.equal(node.style.position,'absolute');assert.equal(node.style.left,'0px');assert.equal(node.style.top,'0px');assert.equal(node.style.width,'480px');assert.equal(node.style.height,'660px')}chat.offsetLeft=32;chat.offsetTop=16;chat.offsetWidth=293;chat.offsetHeight=415;syncStudioLayer(chat,board);chat._studioSync();for(const node of [board,layer]){assert.equal(node.style.left,'32px');assert.equal(node.style.top,'16px');assert.equal(node.style.width,'293px');assert.equal(node.style.height,'415px')}return{host,layer,scale}};
  try{
-  for(const size of [1,.4]){const rendered=await mount(size);assert.ok(rendered.layer);const rects=rendered.layer.querySelectorAll('.studio-art').map(node=>node.getBoundingClientRect()).map(r=>({x:r.left/rendered.scale,y:r.top/rendered.scale,w:r.width/rendered.scale,h:r.height/rendered.scale}));if(size===1)globalThis.__overlayPartRects=rects;else{assert.equal(rects.length,globalThis.__overlayPartRects.length);for(let i=0;i<rects.length;i++)for(const key of ['x','y','w','h']){const expected=globalThis.__overlayPartRects[i][key],actual=rects[i][key];assert.ok(Math.abs(actual-expected)<=Math.max(1,Math.abs(expected)*.01),`part ${i} ${key}: editor ${actual}, overlay ${expected}`)}}}
+  for(const size of [1,.4]){const rendered=await mount(size);assert.ok(rendered.layer);const rects=rendered.layer.querySelectorAll('.studio-art').map(node=>node.getBoundingClientRect()).map(r=>({x:(r.left-146)/rendered.scale,y:(r.top-208)/rendered.scale,w:r.width/rendered.scale,h:r.height/rendered.scale}));if(size===1)globalThis.__overlayPartRects=rects;else{assert.equal(rects.length,globalThis.__overlayPartRects.length);for(let i=0;i<rects.length;i++)for(const key of ['x','y','w','h']){const expected=globalThis.__overlayPartRects[i][key],actual=rects[i][key];assert.ok(Math.abs(actual-expected)<=Math.max(1,Math.abs(expected)*.01),`part ${i} ${key}: editor ${actual}, overlay ${expected}`)}}}
   const editor=await readFile(new URL('js/editor.js',root),'utf8');assert.match(editor,/mountStudioComposition/);assert.match(await readFile(new URL('js/frame-studio.js',root),'utf8'),/studioRenderModel\(draft,panel\)/);
  }finally{delete globalThis.__overlayPartRects;for(const [key,value]of Object.entries(old)){if(value===undefined)delete globalThis[key];else globalThis[key]=value}}
 });
