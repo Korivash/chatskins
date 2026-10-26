@@ -2,7 +2,7 @@
 
 # Getting started
 
-Pick a skin, make a few choices, and add one link to your stream. Ordinary chat works without signing in.
+Pick a skin, make a few choices, and add one link to your stream. No account needed. Connect Twitch only if you want alerts or channel points.
 
 ## Make your overlay
 1. Open **Skins**, choose a look, then select **Customize**.

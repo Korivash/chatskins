@@ -4,8 +4,8 @@
 
 Ordinary ChatSkins overlays read public Twitch chat to display it in your stream. They do not send chat messages or perform moderation actions.
 
-## No account for ordinary chat
-Enter a channel name and generate a link. Optional Twitch connect looks up your login and does not persist its token. Read Connect with Twitch for the exact token handling and permission boundary.
+## Ordinary chat needs no account
+Enter a channel name and generate a link. Connect Twitch only if you want alerts or channel-point rewards. Read Connect with Twitch for the exact connection and permission details.
 
 ## Local designs and links
 Saved designs belong to your browser profile. Export a backup if you want to keep them across devices or browser resets. Your overlay URL contains settings and a channel name; anyone with it may inspect those settings. Do not put secrets into custom CSS, image URLs, or other appearance fields.
