@@ -12,7 +12,7 @@ NEW TASK (round 21): **"Dream up a skin"**. Viewers describe a skin; the server 
 
 **UI:** in the Studio and on skins.html, a "Dream up a skin" card: a text box + "Dream it" button → a loading shimmer → the generated design opens in the Studio. "Submit for the gallery" is optional and has a clear note ("We review every submission before it goes live. Credit: your Twitch name (optional)"). Plain words, mobile-friendly.
 
-**Image generation is OFF by default:** add an optional flag `DREAM_IMAGES=true` that asks the image API for a painted frame PNG (transparent, empty center), stored with the submission (cost: the owner's $10 cap applies; limit 20/day). Default false; parts-based dreams are free and instant.
+**Painted frames ON:** env `DREAM_IMAGES` (default **true**) also asks the image API for a painted frame PNG (transparent background, empty center, blank name plaque, no text/logos), stored with the submission and used as the dream's frame art (window + plaque auto-measured like site-media/frames). Hard limits: 20 images/day total, 2/IP/day; when the limit is hit, fall back to the parts-based design. The parts design always comes back instantly; the painted version arrives after it and the user can switch between the two.
 
 **Tests (mock OpenAI):** schema validation/clamping, limits, moderation on output, the submission file written outside the web root, the webhook payload has no IP, the review token is required for the private preview, approve-dream adds a valid skin, and the parts-only path works with images off.
 
