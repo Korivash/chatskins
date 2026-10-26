@@ -15,7 +15,7 @@ ChatSkins is a browser-based editor for Twitch chat overlays. It's built for the
 
 ![Animated skins and a ChatSkins overlay over a stream](docs/media/demo.gif)
 
-**Full demo** (2:52, narrated, original music, including a real Twitch chat test): [docs/media/demo.mp4](docs/media/demo.mp4). It shows every feature on the live site, then how the Codex agent team built it.
+**Full demo** (2:03, narrated, original music): [docs/media/demo.mp4](docs/media/demo.mp4). Recorded on the live site: hand-painted frames, a **real Twitch chat** test with `!skin` switching live, an AI-painted frame made from one sentence, the Ask ChatSkins guide, Frame Studio, Place it, styling, viewer features, and how the Codex agent team built it.
 
 **How we built it** (2:36, narrated, original music): [docs/media/making-of.mp4](docs/media/making-of.mp4). It covers the idea, the agent team (Astra designs, Luna builds, Claude tests and ships), a real prompt, Astra's mockups, a live Luna build log, testing the full skin catalog through the real overlay, and the 31-session / 120-commit loop.
 
@@ -27,6 +27,18 @@ ChatSkins is a browser-based editor for Twitch chat overlays. It's built for the
 ![Frames tour](docs/media/frames-tour.gif)
 
 Full-quality clip: [docs/media/frames-tour.mp4](docs/media/frames-tour.mp4). Frame art by Korivash and KittyVenom (made with ChatGPT image generation) and by OpenAI Codex image generation; all code by Codex.
+
+### Describe it, get a painted frame
+Type what you want ("cozy autumn frame with leaves and a coffee cup") in **Describe your chat** or ask the **Ask ChatSkins** guide. You get a quick preview right away, then in about 15 seconds a hand-painted frame made just for you, with your channel name on the plaque and chat fitted inside the window. It's yours immediately and travels in your OBS link; sharing it to the public gallery is optional and reviewed first.
+
+![An AI-painted frame arriving in the editor](docs/media/ai-painted.gif)
+
+| | |
+|---|---|
+| ![The painted Cozy Autumn frame in the live preview](docs/media/ai-painted-frame.jpg) | ![Ask ChatSkins: a setup guide that knows every setting](docs/media/ask-chatskins.jpg) |
+| ![Frame Studio: build your own frame from parts](docs/media/frame-studio.jpg) | ![Place it: drag, resize or snap chat anywhere](docs/media/place-it.jpg) |
+
+**Ask ChatSkins** knows what the editor can do and where, opens the right tab, runs guided walkthroughs (OBS, channel points, alerts) and can apply a style for you. It never shares keys, logs or code. **Frame Studio** builds a frame from 60 parts (borders, corners, stickers, effects). **Place it** lets you drag, resize or snap the chat to a corner.
 
 ### Gallery
 | | |
