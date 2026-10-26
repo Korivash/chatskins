@@ -17,7 +17,8 @@ const nullableString={type:['string','null']};
 const nullableNumber={type:['number','null']};
 const styleProperties={fontFamily:nullableString,fontSize:nullableNumber,fontWeight:nullableNumber,textColor:nullableString,nameColor:nullableString,nameColorMode:nullableString,backgroundColor:nullableString,backgroundOpacity:nullableNumber,backgroundScope:nullableString,backgroundType:nullableString,frameColor:nullableString,glowColor:nullableString,glowStrength:nullableNumber,glowMode:nullableString,middleBackground:nullableString,middleColor:nullableString,middleOpacity:nullableNumber,titleText:nullableString,entranceAnimation:nullableString,messageBorders:{type:['boolean','null']},maxMessages:nullableNumber,messageLifetime:nullableNumber,middleImage:nullableString};
 const strictObject=properties=>({type:'object',properties,required:Object.keys(properties),additionalProperties:false});
-const toolDefinitions=[
+/** Strict function schemas sent to Responses; every argument is required. */
+export const assistantToolDefinitions=[
  {type:'function',name:'create_design',description:'Create a new original Frame Studio design when the user asks for new art or decorations.',strict:true,parameters:strictObject({prompt:{type:'string'}})},
  {type:'function',name:'apply_style',description:'Apply a safe skin and selected appearance settings in the editor.',strict:true,parameters:strictObject({skinId:nullableString,settings:strictObject(styleProperties)})},
  {type:'function',name:'open_tab',description:'Open an editor section.',strict:true,parameters:strictObject({tab:{type:'string',enum:tabs}})},
@@ -70,7 +71,7 @@ export function createAssistantHandler({fetchImpl=globalThis.fetch,now=Date.now,
   const firstInput=[{role:'system',content:[{type:'input_text',text:system}]},...messages.map(m=>({role:m.role,content:[{type:'input_text',text:m.content}]}))];
   // Function calls are returned as output items; the browser runs only the
   // allowlisted actions after this handler validates their arguments.
-  let result;try{result=await fetchImpl('https://api.openai.com/v1/responses',{method:'POST',headers:openAiHeaders,body:JSON.stringify({model,input:firstInput,store:true,tools:toolDefinitions,tool_choice:'auto',max_output_tokens:850,reasoning:{effort:'low'}})})}catch{await finish(moderationTokens);return json(503,{ok:false,error:'unavailable',message:'Ask ChatSkins could not reply. Try a setup guide or the Docs.'})}
+  let result;try{result=await fetchImpl('https://api.openai.com/v1/responses',{method:'POST',headers:openAiHeaders,body:JSON.stringify({model,input:firstInput,store:true,tools:assistantToolDefinitions,tool_choice:'auto',max_output_tokens:850,reasoning:{effort:'low'}})})}catch{await finish(moderationTokens);return json(503,{ok:false,error:'unavailable',message:'Ask ChatSkins could not reply. Try a setup guide or the Docs.'})}
   if(!result.ok){await finish(moderationTokens);return json(result.status===429?429:503,{ok:false,error:result.status===429?'rate_limited':'unavailable',message:result.status===429?'Ask ChatSkins is busy. Try again soon, or use a setup guide below.':'Ask ChatSkins could not reply. Try a setup guide or the Docs.'})}
   let data;try{data=await result.json()}catch{await finish(moderationTokens);return json(502,{ok:false,error:'invalid_reply',message:'I could not read that reply. Please try again.'})}
   const allowedSlugs=(await readdir(contentDir)).filter(file=>file.endsWith('.md')).map(file=>file.slice(0,-3));
@@ -93,7 +94,7 @@ export function createAssistantHandler({fetchImpl=globalThis.fetch,now=Date.now,
    // context stay attached. Only the safe function results are new input.
    let followUp;
    try{
-    followUp=await fetchImpl('https://api.openai.com/v1/responses',{method:'POST',headers:openAiHeaders,body:JSON.stringify({model,previous_response_id:data.id,input:toolResults,tools:toolDefinitions,tool_choice:'none',max_output_tokens:850,reasoning:{effort:'low'}})});
+    followUp=await fetchImpl('https://api.openai.com/v1/responses',{method:'POST',headers:openAiHeaders,body:JSON.stringify({model,previous_response_id:data.id,input:toolResults,tools:assistantToolDefinitions,tool_choice:'none',max_output_tokens:850,reasoning:{effort:'low'}})});
    }catch{
     await finish(moderationTokens+answerTokens);
     return json(503,{ok:false,error:'unavailable',message:'Ask ChatSkins could not finish the explanation. Try again or use a setup guide.'});
