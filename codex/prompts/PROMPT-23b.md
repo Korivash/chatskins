@@ -23,7 +23,7 @@ Keep the code commented. Run each test file with node directly. Try git add + co
 
 **SECURITY (owner, hard requirement): the guide must NEVER leak anything sensitive.**
 - **The capability map builder only reads public site files** (js/, css/, *.html, design/skins.json, site-media/parts/parts.json, site-media/frames/frames.json, docs/content). It must NEVER read:
-  - server/*.mjs internals, server-data/, usage/limit files, logs, .env or any secrets path, C:/ops/secrets
+  - server/*.mjs internals, server-data/, usage/limit files, logs, .env or any secrets path, the server secrets folder
   - git history, tools/ output with IPs, submission files
 - Build it with an explicit ALLOWLIST of paths/globs, not a denylist.
 - **The map and the docs pack are scrubbed before use.** A redaction pass removes anything that looks like:
