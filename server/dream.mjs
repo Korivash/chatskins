@@ -29,8 +29,6 @@ import {blankStudio, makeStudioKit, normalizeStudio, STUDIO_LIMIT} from '../js/f
 
 const here=dirname(fileURLToPath(import.meta.url));
 
-const defaultKeyFile='C:/ops/secrets/openai-chatskins.txt';
-
 const defaultDataDir=resolve(here,'../../server-data');
 
 const dayMs=86400000, tokenReserve=7000;
@@ -286,7 +284,9 @@ export function buildDreamSchema(partIds,fontOptions,maxParts=16){
 }
 
 /** Create /api/dream and /api/dream/submit handlers with injectable services. */
-export function createDreamHandler({fetchImpl=globalThis.fetch,now=Date.now,originHost=process.env.SKIN_REQUEST_ORIGIN_HOST??'getchatskins.com',keyFile=process.env.OPENAI_KEY_FILE||defaultKeyFile,model=process.env.DREAM_MODEL||'gpt-5-mini',imageModel=process.env.DREAM_IMAGE_MODEL||'gpt-image-2.5-flare',webpEncoder=encodeWebpWithFfmpeg,measureFrame=measureImageFrame,partsFile=resolve(here,'../site-media/parts/parts.json'),usageFile=resolve(here,'describe-usage.json'),dataDir=defaultDataDir,webhookUrl=process.env.SKIN_REQUEST_WEBHOOK,imagesEnabled=process.env.DREAM_IMAGES!=='false',imagesPerIp=quotaFromEnv(process.env.DREAM_IMAGES_PER_IP,4),imagesPerDay=quotaFromEnv(process.env.DREAM_IMAGES_PER_DAY,20),logger=line=>console.warn(line)}={}){
+export function createDreamHandler({fetchImpl=globalThis.fetch,now=Date.now,originHost=process.env.SKIN_REQUEST_ORIGIN_HOST??'getchatskins.com',model=process.env.DREAM_MODEL||'gpt-5-mini',imageModel=process.env.DREAM_IMAGE_MODEL||'gpt-image-2.5-flare',webpEncoder=encodeWebpWithFfmpeg,measureFrame=measureImageFrame,partsFile=resolve(here,'../site-media/parts/parts.json'),usageFile=resolve(here,'describe-usage.json'),dataDir=defaultDataDir,webhookUrl=process.env.SKIN_REQUEST_WEBHOOK,imagesEnabled=process.env.DREAM_IMAGES!=='false',imagesPerIp=quotaFromEnv(process.env.DREAM_IMAGES_PER_IP,4),imagesPerDay=quotaFromEnv(process.env.DREAM_IMAGES_PER_DAY,20),logger=line=>console.warn(line)}={}){
+ // Keep the image generator opt-in when the production launcher has no key path.
+ const keyFile=process.env.OPENAI_KEY_FILE;
  const usageStore=createAiUsageStore(usageFile);
   let partsPromise;
   

@@ -25,7 +25,7 @@ import {createAiUsageStore} from './ai-usage.mjs';
 import {createDreamHandler} from './dream.mjs';
 
 
-const here=dirname(fileURLToPath(import.meta.url)),defaultKeyFile='C:/ops/secrets/openai-chatskins.txt',dayMs=86400000,reservation=5000;
+const here=dirname(fileURLToPath(import.meta.url)),dayMs=86400000,reservation=5000;
 
 const tabs=['look','style','chat','viewers','alerts','getlink','studio'];
 
@@ -93,9 +93,11 @@ async function runDesignRequest({prompt,dreamHandler,headers,remoteAddress,logge
  }
 }
 /** Create the isolated, rate-limited handler for POST /api/assistant. */
-export function createAssistantHandler({fetchImpl=globalThis.fetch,now=Date.now,originHost=process.env.SKIN_REQUEST_ORIGIN_HOST??'getchatskins.com',keyFile=process.env.OPENAI_KEY_FILE||defaultKeyFile,model=process.env.ASSISTANT_MODEL||'gpt-5-mini',catalogFile=resolve(here,'../design/skins.json'),contentDir=resolve(here,'../docs/content'),usageFile=resolve(here,'describe-usage.json'),dreamHandler:providedDreamHandler,logger=()=>{}}={}){
+export function createAssistantHandler({fetchImpl=globalThis.fetch,now=Date.now,originHost=process.env.SKIN_REQUEST_ORIGIN_HOST??'getchatskins.com',model=process.env.ASSISTANT_MODEL||'gpt-5-mini',catalogFile=resolve(here,'../design/skins.json'),contentDir=resolve(here,'../docs/content'),usageFile=resolve(here,'describe-usage.json'),dreamHandler:providedDreamHandler,logger=()=>{}}={}){
+ // AI stays unavailable unless the launcher supplies a private key-file path.
+ const keyFile=process.env.OPENAI_KEY_FILE;
  const usageStore=createAiUsageStore(usageFile),knowledgePromise=buildAssistantKnowledge(contentDir);let catalogPromise;
- const dreamHandler=providedDreamHandler||createDreamHandler({fetchImpl,now,originHost,keyFile,usageFile,logger});
+ const dreamHandler=providedDreamHandler||createDreamHandler({fetchImpl,now,originHost,usageFile,logger});
  const loadCatalog=()=>catalogPromise||=(async()=>{const raw=typeof catalogFile==='string'?JSON.parse(await readFile(catalogFile,'utf8')):catalogFile;return raw.skins||raw})();
  return async function handleAssistant({method='POST',url='/api/assistant',headers={},remoteAddress='unknown',body=''}={}){
   if(method!=='POST'||url!=='/api/assistant')return json(404,{ok:false,error:'not_found'});

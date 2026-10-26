@@ -1,7 +1,7 @@
 Round 16 build: **"Describe your chat"**, an AI style helper built on the OpenAI API. It sets up a skin from plain words. This is NOT a general chatbot.
 
 **Server (extend server/skin-request.mjs; same process, same IIS /api rewrite):** `POST /api/describe {text, current?}`
-- Read the API key from the file named in env `OPENAI_KEY_FILE` (default `C:/ops/secrets/openai-chatskins.txt`). NEVER log it, return it or send it to the browser.
+- Read the API key only from the private file named by env `OPENAI_KEY_FILE`. NEVER log it, return it or send it to the browser.
 - Model from env `DESCRIBE_MODEL` (default `gpt-5-mini`, which is inside the account's free daily data-sharing allowance; `gpt-6-luna` also works on this key) via `/v1/responses` with `max_output_tokens` ~700 and reasoning effort low. Use a **strict JSON schema** (Structured Outputs) for the reply:
   `{ skinId (one of the catalog ids), settings: {only whitelisted keys: font family/size/weight, colors, name color mode, background + opacity, frame color/glow/glowMode/middle background/opacity/title text, entrance animation, message borders, max messages, lifetime}, summary (1 short sentence) }`.
 - The system prompt contains the compact skin catalog (id, name, category, mood tags) and the allowed keys/ranges.

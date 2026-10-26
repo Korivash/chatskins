@@ -21,8 +21,6 @@ const dayMs=24*60*60*1000;
 
 const tokenReservation=5000;
 
-const defaultKeyFile='C:/ops/secrets/openai-chatskins.txt';
-
 const fontFamilies=['DM Sans','Barlow','Nunito Sans','IBM Plex Mono','Chakra Petch','Atkinson Hyperlegible','Bree Serif','Lato','Cinzel Decorative','Fredoka','Black Ops One','Bungee'];
 
 const enums={nameColorMode:['fixed','twitch','role'],backgroundScope:['message','panel'],backgroundType:['none','color','image'],middleBackground:['none','color','image'],glowMode:['off','pulse','shimmer'],entranceAnimation:['none','fade','pop','slide']};
@@ -138,7 +136,9 @@ function outputText(data){if(typeof data?.output_text==='string')return data.out
  * @param {unknown} parameter8 Function input.
  * @returns {unknown} The function result.
  */
-export function createDescribeHandler({fetchImpl=globalThis.fetch,now=Date.now,originHost=process.env.SKIN_REQUEST_ORIGIN_HOST??'getchatskins.com',keyFile=process.env.OPENAI_KEY_FILE||defaultKeyFile,model=process.env.DESCRIBE_MODEL||'gpt-5-mini',catalogFile=null,usageFile=resolve(here,'describe-usage.json'),logger=()=>{}}={}){
+export function createDescribeHandler({fetchImpl=globalThis.fetch,now=Date.now,originHost=process.env.SKIN_REQUEST_ORIGIN_HOST??'getchatskins.com',model=process.env.DESCRIBE_MODEL||'gpt-5-mini',catalogFile=null,usageFile=resolve(here,'describe-usage.json'),logger=()=>{}}={}){
+ // An unset launcher setting is handled by the same unavailable response as a missing file.
+ const keyFile=process.env.OPENAI_KEY_FILE;
  const usageStore=createAiUsageStore(usageFile),loadState=usageStore.load,persist=usageStore.persist;
   
  return async function handleDescribe({method='POST',url='/api/describe',headers={},remoteAddress='unknown',body=''}={}){
