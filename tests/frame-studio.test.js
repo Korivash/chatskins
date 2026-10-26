@@ -31,6 +31,26 @@ test('starter kits and randomization remain valid, include a protected chat wind
  for(const vibe of ['Cozy','Spooky','Cute','Neon','Royal','Gamer']){const kit=normalizeStudio(makeStudioKit(vibe));assert.equal(kit.instances.filter(p=>p.part===19).length,1);assert.ok(kit.instances.length<=STUDIO_LIMIT)}
  const randomized=randomizeStudio('Spooky',()=>.25);assert.ok(normalizeStudio(randomized));const before=makeStudioKit('Cozy'),after=structuredClone(before),history=createStudioHistory();after.instances[0].x+=1;history.record(before);assert.deepEqual(history.undo(after),before);assert.deepEqual(history.redo(before),after);
 });
+test('all six kits are curated complete compositions with panel-relative geometry',()=>{
+ const vibes=['Cozy','Spooky','Cute','Neon','Royal','Gamer'],palettes=new Set();
+ for(const vibe of vibes){
+  const d=makeStudioKit(vibe),border=d.instances.find(p=>p.part<=10),plaque=d.instances.find(p=>p.part>=29&&p.part<=36),corners=d.instances.filter(p=>p.part>=11&&p.part<=18),stickers=d.instances.filter(p=>p.part>=37&&p.part<=59),effects=d.instances.filter(p=>p.part>=20&&p.part<=28);
+  assert.deepEqual([border.x,border.y,border.w,border.h],[0,0,100,100],`${vibe} border follows chat panel`);
+  assert.equal(corners.length,4,`${vibe} has four matching corners`);
+  assert.deepEqual(corners.map(p=>[p.x,p.y]),[[0,0],[91,0],[0,91],[91,91]],`${vibe} corners touch panel corners`);
+  assert.ok(Math.abs(plaque.x+plaque.w/2-50)<=2,`${vibe} plaque is centered`);assert.ok(plaque.y<=2,`${vibe} plaque touches top edge`);
+  assert.ok(stickers.length>=1&&stickers.length<=3);assert.ok(effects.length<=1);assert.equal(d.instances.filter(p=>p.part===19).length,1);palettes.add(d.palette.join(','));
+ }
+ assert.equal(palettes.size,6,'each kit has its own palette');
+ const random=randomizeStudio('Spooky',()=>.5);assert.equal(random.instances.filter(p=>p.part<=10).length,1);assert.equal(random.instances.filter(p=>p.part>=11&&p.part<=18).length,4);
+});
+test('Studio board edits on the large preview stage and Get link can enable from a channel',async()=>{
+ const html=await readFile(new URL('editor.html',root),'utf8'),editor=await readFile(new URL('js/editor.js',root),'utf8');
+ assert.match(html,/<div class="studio-board"[^>]*hidden/);assert.doesNotMatch(html,/studio-canvas-wrap/);
+ assert.match(editor,/__studioLiveBoard=board/);assert.match(editor,/linkReady=!!state\.channel/);assert.match(editor,/buildCompactSettingsUrl\(location\.href/);
+ const kit=makeStudioKit('Spooky'),settings={...CLEAN,channel:'channelpal',studioDesign:kit},url=await buildCompactSettingsUrl('https://getchatskins.com/editor.html',{settings,baseSkinId:'clean',baseSettings:CLEAN}),payload=await decompressJson(new URLSearchParams(new URL(url).hash.slice(1)).get('data'));
+ assert.equal(payload.c.studioDesign,encodeStudio(kit));assert.equal(decodeStudio(payload.c.studioDesign).instances.length,kit.instances.length);
+});
 test('Studio UI and overlays contain no paid-tier wording',async()=>{
  const html=await readFile(new URL('editor.html',root),'utf8'),js=await readFile(new URL('js/frame-studio.js',root),'utf8'),json=await readFile(new URL('site-media/parts/parts.json',root),'utf8');assert.doesNotMatch(`${html}${js}${json}`,/premium/i);assert.match(html,/options-tab-studio/);assert.match(html,/aria-label="Parts you can add"/);
 });

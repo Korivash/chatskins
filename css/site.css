@@ -47,3 +47,5 @@
 .game .preview-virtual-canvas .skin-live-preview.has-frame-template{padding:0!important}
 
 .game .monitor-preview.preview-loading .skin-preview-measure,.game .portrait-preview.preview-loading .skin-preview-measure{visibility:hidden}
+
+.game.editor .stage{position:relative}
