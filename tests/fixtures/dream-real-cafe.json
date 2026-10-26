@@ -1,0 +1,262 @@
+{
+ "design": {
+  "v": 1,
+  "cat": 19,
+  "b": [
+   600,
+   680
+  ],
+  "n": "Cozy Cafe",
+  "m": true,
+  "p": [
+   "#B87542",
+   "#F2D6A2",
+   "#9ED6A4"
+  ],
+  "a": [
+   {
+    "i": 19,
+    "x": 80,
+    "y": 100,
+    "w": 840,
+    "h": 800,
+    "r": 0,
+    "fx": false,
+    "fy": false,
+    "c": [
+     0,
+     1,
+     2
+    ]
+   },
+   {
+    "i": 0,
+    "x": 80,
+    "y": 60,
+    "w": 840,
+    "h": 40,
+    "r": 0,
+    "fx": false,
+    "fy": false,
+    "c": [
+     0,
+     1,
+     2
+    ]
+   },
+   {
+    "i": 0,
+    "x": 80,
+    "y": 980,
+    "w": 840,
+    "h": 40,
+    "r": 180,
+    "fx": false,
+    "fy": false,
+    "c": [
+     0,
+     1,
+     2
+    ]
+   },
+   {
+    "i": 0,
+    "x": 40,
+    "y": 100,
+    "w": 40,
+    "h": 800,
+    "r": 0,
+    "fx": false,
+    "fy": false,
+    "c": [
+     0,
+     1,
+     2
+    ]
+   },
+   {
+    "i": 0,
+    "x": 960,
+    "y": 100,
+    "w": 40,
+    "h": 800,
+    "r": 0,
+    "fx": false,
+    "fy": false,
+    "c": [
+     0,
+     1,
+     2
+    ]
+   },
+   {
+    "i": 16,
+    "x": 40,
+    "y": 60,
+    "w": 40,
+    "h": 40,
+    "r": 0,
+    "fx": false,
+    "fy": false,
+    "c": [
+     0,
+     1,
+     2
+    ]
+   },
+   {
+    "i": 16,
+    "x": 960,
+    "y": 60,
+    "w": 40,
+    "h": 40,
+    "r": 0,
+    "fx": true,
+    "fy": false,
+    "c": [
+     0,
+     1,
+     2
+    ]
+   },
+   {
+    "i": 16,
+    "x": 40,
+    "y": 980,
+    "w": 40,
+    "h": 40,
+    "r": 0,
+    "fx": false,
+    "fy": true,
+    "c": [
+     0,
+     1,
+     2
+    ]
+   },
+   {
+    "i": 16,
+    "x": 960,
+    "y": 980,
+    "w": 40,
+    "h": 40,
+    "r": 0,
+    "fx": true,
+    "fy": true,
+    "c": [
+     0,
+     1,
+     2
+    ]
+   },
+   {
+    "i": 36,
+    "x": 330,
+    "y": 0,
+    "w": 340,
+    "h": 80,
+    "r": 0,
+    "fx": false,
+    "fy": false,
+    "c": [
+     0,
+     1,
+     2
+    ]
+   },
+   {
+    "i": 42,
+    "x": 0,
+    "y": 280,
+    "w": 80,
+    "h": 80,
+    "r": 0,
+    "fx": false,
+    "fy": false,
+    "c": [
+     0,
+     1,
+     2
+    ]
+   },
+   {
+    "i": 57,
+    "x": 960,
+    "y": 640,
+    "w": 80,
+    "h": 80,
+    "r": 0,
+    "fx": false,
+    "fy": false,
+    "c": [
+     0,
+     1,
+     2
+    ]
+   },
+   {
+    "i": 24,
+    "x": 120,
+    "y": 950,
+    "w": 760,
+    "h": 50,
+    "r": 0,
+    "fx": false,
+    "fy": false,
+    "c": [
+     0,
+     1,
+     2
+    ]
+   },
+   {
+    "i": 42,
+    "x": 120,
+    "y": 220,
+    "w": 120,
+    "h": 120,
+    "r": 0,
+    "fx": false,
+    "fy": false,
+    "c": [
+     0,
+     1,
+     2
+    ]
+   }
+  ]
+ },
+ "settings": {
+  "fontFamily": null,
+  "fontSize": null,
+  "fontWeight": null,
+  "textColor": null,
+  "nameColor": null,
+  "nameColorMode": null,
+  "backgroundColor": null,
+  "backgroundOpacity": null,
+  "backgroundScope": null,
+  "backgroundType": null,
+  "middleImage": null,
+  "frameColor": null,
+  "glowColor": null,
+  "glowStrength": null,
+  "glowMode": null,
+  "middleBackground": null,
+  "middleColor": null,
+  "middleOpacity": null,
+  "titleText": null,
+  "entranceAnimation": null,
+  "messageBorders": null,
+  "maxMessages": null,
+  "messageLifetime": null
+ },
+ "name": "Cozy Cafe",
+ "description": "A warm cafe frame with carved-wood borders, leafy corners, a wooden plaque title and coffee cup sticker for a cozy vibe.",
+ "moodTags": [
+  "cozy",
+  "cafe",
+  "coffee",
+  "warm"
+ ]
+}

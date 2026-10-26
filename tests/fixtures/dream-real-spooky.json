@@ -1,0 +1,260 @@
+{
+ "design": {
+  "v": 1,
+  "cat": 19,
+  "b": [
+   600,
+   680
+  ],
+  "n": "",
+  "m": true,
+  "p": [
+   "#8A69B8",
+   "#D9C7F2",
+   "#9E7BCE"
+  ],
+  "a": [
+   {
+    "i": 19,
+    "x": 80,
+    "y": 60,
+    "w": 840,
+    "h": 760,
+    "r": 0,
+    "fx": false,
+    "fy": false,
+    "c": [
+     0,
+     1,
+     2
+    ]
+   },
+   {
+    "i": 1,
+    "x": 80,
+    "y": 48,
+    "w": 840,
+    "h": 40,
+    "r": 0,
+    "fx": false,
+    "fy": false,
+    "c": [
+     0,
+     1,
+     2
+    ]
+   },
+   {
+    "i": 1,
+    "x": 80,
+    "y": 952,
+    "w": 840,
+    "h": 40,
+    "r": 180,
+    "fx": false,
+    "fy": false,
+    "c": [
+     0,
+     1,
+     2
+    ]
+   },
+   {
+    "i": 1,
+    "x": 40,
+    "y": 60,
+    "w": 40,
+    "h": 800,
+    "r": 0,
+    "fx": false,
+    "fy": false,
+    "c": [
+     0,
+     1,
+     2
+    ]
+   },
+   {
+    "i": 1,
+    "x": 960,
+    "y": 60,
+    "w": 40,
+    "h": 800,
+    "r": 0,
+    "fx": false,
+    "fy": false,
+    "c": [
+     0,
+     1,
+     2
+    ]
+   },
+   {
+    "i": 17,
+    "x": 40,
+    "y": 48,
+    "w": 40,
+    "h": 40,
+    "r": 0,
+    "fx": false,
+    "fy": false,
+    "c": [
+     0,
+     1,
+     2
+    ]
+   },
+   {
+    "i": 17,
+    "x": 960,
+    "y": 48,
+    "w": 40,
+    "h": 40,
+    "r": 0,
+    "fx": true,
+    "fy": false,
+    "c": [
+     0,
+     1,
+     2
+    ]
+   },
+   {
+    "i": 17,
+    "x": 40,
+    "y": 952,
+    "w": 40,
+    "h": 40,
+    "r": 0,
+    "fx": false,
+    "fy": true,
+    "c": [
+     0,
+     1,
+     2
+    ]
+   },
+   {
+    "i": 17,
+    "x": 960,
+    "y": 952,
+    "w": 40,
+    "h": 40,
+    "r": 0,
+    "fx": true,
+    "fy": true,
+    "c": [
+     0,
+     1,
+     2
+    ]
+   },
+   {
+    "i": 35,
+    "x": 330,
+    "y": 0,
+    "w": 340,
+    "h": 80,
+    "r": 0,
+    "fx": false,
+    "fy": false,
+    "c": [
+     0,
+     1,
+     2
+    ]
+   },
+   {
+    "i": 37,
+    "x": 0,
+    "y": 280,
+    "w": 80,
+    "h": 80,
+    "r": 0,
+    "fx": false,
+    "fy": false,
+    "c": [
+     0,
+     1,
+     2
+    ]
+   },
+   {
+    "i": 53,
+    "x": 960,
+    "y": 640,
+    "w": 80,
+    "h": 80,
+    "r": 0,
+    "fx": false,
+    "fy": false,
+    "c": [
+     0,
+     1,
+     2
+    ]
+   },
+   {
+    "i": 51,
+    "x": 0,
+    "y": 720,
+    "w": 80,
+    "h": 80,
+    "r": 0,
+    "fx": false,
+    "fy": false,
+    "c": [
+     0,
+     1,
+     2
+    ]
+   },
+   {
+    "i": 20,
+    "x": 120,
+    "y": 952,
+    "w": 760,
+    "h": 50,
+    "r": 0,
+    "fx": false,
+    "fy": false,
+    "c": [
+     0,
+     1,
+     2
+    ]
+   }
+  ]
+ },
+ "settings": {
+  "fontFamily": null,
+  "fontSize": null,
+  "fontWeight": null,
+  "textColor": null,
+  "nameColor": null,
+  "nameColorMode": null,
+  "backgroundColor": null,
+  "backgroundOpacity": null,
+  "backgroundScope": null,
+  "backgroundType": null,
+  "middleImage": null,
+  "frameColor": null,
+  "glowColor": null,
+  "glowStrength": null,
+  "glowMode": null,
+  "middleBackground": null,
+  "middleColor": null,
+  "middleOpacity": null,
+  "titleText": null,
+  "entranceAnimation": null,
+  "messageBorders": null,
+  "maxMessages": null,
+  "messageLifetime": null
+ },
+ "name": "spooky purple frame",
+ "description": "Spooky purple border with a cute ghost and bats, royal scroll plaque at top",
+ "moodTags": [
+  "spooky",
+  "cute"
+ ]
+}
