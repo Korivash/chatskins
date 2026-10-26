@@ -63,13 +63,16 @@
 .ask-header button { padding: 6px 9px; border: 1px solid var(--ask-edge); border-radius: 7px; background: #172942; }
 .ask-close { font-size: 20px; line-height: 1; }
 
+/* Keep the starter actions above the transcript and the input at the bottom. */
+.ask-quick-actions { flex: 0 0 auto; }
+
 .ask-log {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  min-height: 90px;
+  min-height: 0;
   flex: 1 1 auto;
-  max-height: min(520px, 62vh);
+  max-height: none;
   overflow: auto;
   margin: 12px 0;
   padding: 4px;

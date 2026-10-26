@@ -7,7 +7,7 @@ import {buildAssistantKnowledge,createAssistantHandler,validateAssistantAction,A
 import {mountAskChat,TOURS,STARTER_PROMPTS,canRunAssistantAction,containsPrivateDetails,assistantLauncherOffset} from '../js/ask-chatskins.js';
 
 const message=(content='How do I add my chat to OBS?')=>JSON.stringify({messages:[{role:'user',content}],page:'editor',state:{tab:'look',hasChannel:true,access_token:'must-not-leak'}});
-async function fixture(t,{fetchImpl,dreamHandler,now=()=>Date.UTC(2026,9,25),originHost='getchatskins.com',contentDir=resolve('docs/content')}={}){const dir=await mkdtemp(join(tmpdir(),'chatskins-assistant-')),keyFile=join(dir,'openai-key.txt'),usageFile=join(dir,'usage.json');await writeFile(keyFile,'private-test-key','utf8');const handler=createAssistantHandler({fetchImpl,dreamHandler,now,originHost,keyFile,usageFile,contentDir});t.after(()=>rm(dir,{recursive:true,force:true}));return{dir,keyFile,usageFile,handler}}
+async function fixture(t,{fetchImpl,dreamHandler,logger,now=()=>Date.UTC(2026,9,25),originHost='getchatskins.com',contentDir=resolve('docs/content')}={}){const dir=await mkdtemp(join(tmpdir(),'chatskins-assistant-')),keyFile=join(dir,'openai-key.txt'),usageFile=join(dir,'usage.json');await writeFile(keyFile,'private-test-key','utf8');const handler=createAssistantHandler({fetchImpl,dreamHandler,logger,now,originHost,keyFile,usageFile,contentDir});t.after(()=>rm(dir,{recursive:true,force:true}));return{dir,keyFile,usageFile,handler}}
 function fakeOpenAI({flagged=false,output=[],tokens=20}={}){const calls=[];return{calls,fetchImpl:async(url,options)=>{calls.push({url,options});if(url.endsWith('/moderations'))return{ok:true,json:async()=>({results:[{flagged}],usage:{total_tokens:2}})};return{ok:true,json:async()=>({output,usage:{total_tokens:tokens}})}}}}
 
 test('knowledge pack includes headings and text from the documentation pages',async()=>{const knowledge=await buildAssistantKnowledge(resolve('docs/content'));assert.match(knowledge,/## Getting started \(getting-started\)/);assert.match(knowledge,/Browser Source/);assert.match(knowledge,/## Frames \(frames\)/)});
@@ -44,6 +44,36 @@ test('tool calls receive a useful follow-up answer and never use generic fallbac
  assert.equal(response.body.actions[0].type,'apply_style');assert.equal(response.body.actions[0].settings.textColor,'#ABCDEF');assert.equal('unknown'in response.body.actions[0].settings,false);
  assert.deepEqual(response.body.actions.slice(1),[{type:'open_tab',tab:'getlink'},{type:'highlight',control:'Get my OBS link'},{type:'start_walkthrough',id:'obs-setup'}]);
  const usage=JSON.parse(await readFile(fx.usageFile,'utf8'));assert.equal(usage.days['2026-10-25'].tokens,42,'moderation and both Responses calls count toward the shared daily budget');
+});
+
+test('three-turn history uses Responses input_text for users and output_text for assistant turns',async t=>{
+ const calls=[];
+ const fetchImpl=async(url,options)=>{
+  calls.push({url,options});
+  if(url.endsWith('/moderations'))return{ok:true,json:async()=>({results:[{flagged:false}],usage:{total_tokens:2}})};
+  return{ok:true,json:async()=>({output:[{type:'message',content:[{type:'output_text',text:'Use Get link to copy your OBS URL.'}]}],usage:{total_tokens:5}})};
+ };
+ const fx=await fixture(t,{fetchImpl});
+ const result=await fx.handler({headers:{origin:'https://getchatskins.com'},body:JSON.stringify({messages:[{role:'user',content:'How do I set up chat?'},{role:'assistant',content:'Choose a skin first.'},{role:'user',content:'Where do I copy the link?'}],page:'editor'})});
+ assert.equal(result.status,200);
+ const request=JSON.parse(calls.find(call=>call.url.endsWith('/responses')).options.body);
+ assert.deepEqual(request.input.slice(1).map(turn=>[turn.role,turn.content[0].type]),[
+  ['user','input_text'],['assistant','output_text'],['user','input_text'],
+ ]);
+});
+
+test('an upstream HTTP error logs only its status code',async t=>{
+ const calls=[],lines=[];
+ const fetchImpl=async(url,options)=>{
+  calls.push({url,options});
+  if(url.endsWith('/moderations'))return{ok:true,json:async()=>({results:[{flagged:false}],usage:{total_tokens:2}})};
+  return{ok:false,status:400,text:async()=>'{"error":"private-test-key must never be logged"}'};
+ };
+ const fx=await fixture(t,{fetchImpl,logger:line=>lines.push(String(line))});
+ const result=await fx.handler({headers:{origin:'https://getchatskins.com'},body:message()});
+ assert.equal(result.status,503);
+ assert.deepEqual(lines,['assistant OpenAI response status 400']);
+ assert.doesNotMatch(lines.join('\n'),/private-test-key|error|body/i);
 });
 
 test('an incomplete first Assistant response is rejected without parsing partial text',async t=>{
@@ -118,6 +148,17 @@ test('the guide validates and executes all returned UI action kinds',async()=>{
 });
 test('panel markup exposes dialog semantics, labeled input, close/clear and keyboard focus trapping',async()=>{
  let removed=false;const doc=new FakeDocument(),storage={getItem:()=>null,setItem(){},removeItem(){removed=true}},ui=mountAskChat(doc,{storage,location:{pathname:'/',href:'https://getchatskins.com/'},fetcher:async()=>{}});assert.equal(ui.panel.getAttribute('role'),'dialog');assert.equal(ui.panel.getAttribute('aria-modal'),'true');const textarea=ui.panel.querySelectorAll().find(node=>node.tagName==='textarea');assert.equal(textarea.getAttribute('aria-label'),'Ask a ChatSkins setup question');const close=ui.panel.querySelectorAll().find(node=>node.className==='ask-close');assert.ok(close);const clear=ui.panel.querySelectorAll().find(node=>node.className==='ask-clear');assert.ok(clear);assert.ok((doc.listeners.keydown||[]).length>0);assert.ok(ui.panel.querySelectorAll().filter(node=>node.tagName==='button').length>=10);ui.panel.hidden=false;const tabbables=ui.panel.querySelectorAll().filter(node=>node.tagName==='button'||node.tagName==='textarea');doc.activeElement=clear;let prevented=false;doc.listeners.keydown[0]({key:'Tab',shiftKey:true,preventDefault(){prevented=true}});assert.equal(prevented,true,`Shift+Tab at first (active=${doc.activeElement?.className}, clear=${clear.className})`);assert.equal(doc.activeElement,tabbables.at(-1),'focus moves to the final item');ui.clear();assert.equal(removed,true);assert.equal(ui.log.children.length,0)
+});
+test('starter controls are above the conversation and input stays at the panel bottom',async()=>{
+ const doc=new FakeDocument(),ui=mountAskChat(doc,{storage:{getItem:()=>null,setItem(){},removeItem(){}},location:{pathname:'/',href:'https://getchatskins.com/'},fetcher:async()=>({ok:true,json:async()=>({ok:true,reply:'Newest answer'})})});
+ const quick=ui.panel.children.find(node=>node.className==='ask-quick-actions'),logIndex=ui.panel.children.indexOf(ui.log),form=ui.panel.children.at(-1);
+ assert.ok(quick);assert.ok(ui.panel.children.indexOf(quick)<logIndex);
+ assert.equal(quick.children[0].className,'ask-starters');
+ assert.equal(quick.children[1].className,'ask-guides-toggle');
+ assert.equal(form.className,'ask-form');
+ assert.equal(form.children[0].tagName,'textarea');
+ ui.log.scrollHeight=88;await ui.send('How do I add chat to OBS?');
+ assert.equal(ui.log.scrollTop,88,'the newest message scrolls into view above the input');
 });
 test('launcher assets are present on every public site and docs page',async()=>{for(const file of ['index.html','skins.html','editor.html','request.html','readme.html','docs/index.html']){const html=await readFile(resolve(file),'utf8');assert.match(html,/ask-chatskins\.css/,file);assert.match(html,/ask-chatskins\.js/,file)}});
 test('help launcher clears the sticky editor bar at desktop and mobile sizes',()=>{
