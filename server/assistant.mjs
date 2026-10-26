@@ -68,7 +68,7 @@ export function createAssistantHandler({fetchImpl=globalThis.fetch,now=Date.now,
   const firstInput=[{role:'system',content:[{type:'input_text',text:system}]},...messages.map(m=>({role:m.role,content:[{type:'input_text',text:m.content}]}))];
   // Function calls are returned as output items; the browser runs only the
   // allowlisted actions after this handler validates their arguments.
-  let result;try{result=await fetchImpl('https://api.openai.com/v1/responses',{method:'POST',headers:openAiHeaders,body:JSON.stringify({model,input:firstInput,tools:toolDefinitions,tool_choice:'auto',max_output_tokens:850,reasoning:{effort:'low'}})})}catch{await finish(moderationTokens);return json(503,{ok:false,error:'unavailable',message:'Ask ChatSkins could not reply. Try a setup guide or the Docs.'})}
+  let result;try{result=await fetchImpl('https://api.openai.com/v1/responses',{method:'POST',headers:openAiHeaders,body:JSON.stringify({model,input:firstInput,store:true,tools:toolDefinitions,tool_choice:'auto',max_output_tokens:850,reasoning:{effort:'low'}})})}catch{await finish(moderationTokens);return json(503,{ok:false,error:'unavailable',message:'Ask ChatSkins could not reply. Try a setup guide or the Docs.'})}
   if(!result.ok){await finish(moderationTokens);return json(result.status===429?429:503,{ok:false,error:result.status===429?'rate_limited':'unavailable',message:result.status===429?'Ask ChatSkins is busy. Try again soon, or use a setup guide below.':'Ask ChatSkins could not reply. Try a setup guide or the Docs.'})}
   let data;try{data=await result.json()}catch{await finish(moderationTokens);return json(502,{ok:false,error:'invalid_reply',message:'I could not read that reply. Please try again.'})}
   const allowedSlugs=(await readdir(contentDir)).filter(file=>file.endsWith('.md')).map(file=>file.slice(0,-3));
@@ -87,11 +87,11 @@ export function createAssistantHandler({fetchImpl=globalThis.fetch,now=Date.now,
   let answerData=data;
   let answerTokens=Number(data.usage?.total_tokens)||0;
   if(functionCalls.length){
-   // Complete the standard Responses function-call loop. Passing the returned
-   // call items and their safe results lets the model explain the actual plan.
+   // Continue from the stored response so its reasoning and function-call
+   // context stay attached. Only the safe function results are new input.
    let followUp;
    try{
-    followUp=await fetchImpl('https://api.openai.com/v1/responses',{method:'POST',headers:openAiHeaders,body:JSON.stringify({model,input:[...firstInput,...functionCalls,...toolResults],tools:toolDefinitions,tool_choice:'none',max_output_tokens:850,reasoning:{effort:'low'}})});
+    followUp=await fetchImpl('https://api.openai.com/v1/responses',{method:'POST',headers:openAiHeaders,body:JSON.stringify({model,previous_response_id:data.id,input:toolResults,tools:toolDefinitions,tool_choice:'none',max_output_tokens:850,reasoning:{effort:'low'}})});
    }catch{
     await finish(moderationTokens+answerTokens);
     return json(503,{ok:false,error:'unavailable',message:'Ask ChatSkins could not finish the explanation. Try again or use a setup guide.'});
