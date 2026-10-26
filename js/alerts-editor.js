@@ -29,6 +29,23 @@ const formatUnavailable=items=>items.map(type=>subscriptionLabels[type]||'Event 
 
 const variants=['tier1','tier2','tier3','prime'];
 
+/** Choose the visible preview surface for a local test alert.
+ * @param {{asTest:boolean,mainStage:object|null,previewStage:object|null,createLayer:Function}} options Preview targets.
+ * @returns {object|null} The alert layer that should receive the card.
+ */
+export function alertPreviewTarget({asTest,mainStage,previewStage,createLayer}){
+ if(asTest&&mainStage){
+  let target=mainStage.querySelector('.alerts-layer');
+  if(!target){
+   target=createLayer();
+   target.classList.add('alerts-preview-layer');
+   mainStage.append(target);
+  }
+  return target;
+ }
+ return previewStage;
+}
+
 function sample(type,variant='tier1'){
  const common={type,name:'Moss',userId:'sample-follower'};
   
@@ -65,7 +82,7 @@ export function initAlertsEditor({design,initialAuth,getChatSettings,getSkin,get
     if(typeof getSkin()?.alertRecipe?.followMessage==='string')config.types.follow.message=getSkin().alertRecipe.followMessage}
  const $=selector=>root.querySelector(selector),persist=()=>storage.setItem('chat-studio.alerts.v1',JSON.stringify(config)),getRecipe=()=>getSkin()?.alertRecipe||{version:1,title:'Community update',iconTreatment:'outline',motion:'fade',soundWave:'sine'},setStatus=text=>{$('#alerts-status').textContent=String(text).replace(/channel:[a-z:]+/gi,'the requested access').replace(/\b(?:scope|EventSub|OAuth|token)\b/gi,'Twitch access')};
   
- let layer=null,rewardSetupPromise=Promise.resolve(null);
+ let layer=null,previewStage=null,rewardSetupPromise=Promise.resolve(null);
   
  function stopClient(){client?.stop();
     client=null;
@@ -79,23 +96,17 @@ export function initAlertsEditor({design,initialAuth,getChatSettings,getSkin,get
     const id=++sequence;
     card.dataset.queueId=String(id);
     card.classList.add('alert-editor-card');
-    let targetLayer=layer;
-    
- if(!stage.getClientRects().length){
-  const liveStage=doc.querySelector('#stage');
-      
-  if(liveStage){
-   targetLayer=liveStage.querySelector('.alerts-layer');
-        
-   if(!targetLayer){targetLayer=createAlertLayer({document:doc,config});
-          liveStage.append(targetLayer)}
-   targetLayer.dataset.position=config.position;
-        
-  }
- }
+    const liveStage=doc.querySelector('#stage');
+    const targetLayer=alertPreviewTarget({
+     asTest,
+     mainStage:liveStage,
+     previewStage:layer,
+     createLayer:()=>createAlertLayer({document:doc,config})
+    })||layer;
+    if(asTest)targetLayer.dataset.position=config.position;
  targetLayer.append(card);
     
- if(asTest && stage.getClientRects().length)stage.scrollIntoView({block:'nearest',behavior:'auto'});
+ if(asTest)liveStage?.scrollIntoView?.({block:'nearest',behavior:'auto'});
     if(config.sound.enabled&&!soundPlayer.play({event,recipe:getRecipe(),design,volume:config.sound.volume}))$('#alerts-sound-note').textContent='Sound is unavailable. Allow audio in OBS, then test again.';
     const reduced=win.matchMedia?.('(prefers-reduced-motion: reduce)').matches||current.reduceMotion;
     card.dataset.reducedMotion=String(reduced);
@@ -248,13 +259,13 @@ export function initAlertsEditor({design,initialAuth,getChatSettings,getSkin,get
     subnote.className='alerts-note';
     root.append(subnote);
     
- const stage=make(doc,'div',undefined,'alert-preview-stage');
-    stage.id='alerts-preview';
-    stage.setAttribute('aria-label','Alert preview stage');
+ previewStage=make(doc,'div',undefined,'alert-preview-stage');
+    previewStage.id='alerts-preview';
+    previewStage.setAttribute('aria-label','Alert preview stage');
     layer=createAlertLayer({document:doc,config});
     layer.classList.add('alerts-editor-layer');
-    stage.append(layer);
-    root.append(stage);
+    previewStage.append(layer);
+    root.append(previewStage);
     const soundNote=make(doc,'small');
     soundNote.id='alerts-sound-note';
     root.append(soundNote);

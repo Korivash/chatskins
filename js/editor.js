@@ -16,7 +16,7 @@ import {CONTROL_MAP,CONTROL_LABELS} from './controls.js';
 
 import {applyChatStyle,appendChatMessage,removeChatMessage,createMessage,applySkinMetadata} from './render.js';
 
-import {attachFrameTemplate,mountIllustrated,resizeFrameTemplate,buildWebcamFrameUrl} from './frame-templates.js';
+import {attachFrameTemplate,mountIllustrated,resizeFrameTemplate,buildWebcamFrameUrl,syncFrameTemplateTitle} from './frame-templates.js';
 
 import {samples,nextFakeMessage,nextFakeDelay} from './fakechat.js';
 
@@ -62,7 +62,7 @@ import {mountStudioComposition} from './studio-render.js';
 
 import {describeCurrentSettings,applyDescribeReply,describeFailureMessage,describeSettingsPatch} from './describe-helper.js';
 
-import {isDreamArtRequest,requestDream,watchDreamPaint,selectPaintedDream,selectDreamParts} from './dream-client.js';
+import {isDreamArtRequest,requestDream,watchDreamPaint,selectPaintedDream,selectDreamParts,dreamPaintControlState} from './dream-client.js';
 
 import {loadDreamReview} from './dream-review.js';
 
@@ -71,7 +71,7 @@ const $=s=>document.querySelector(s), clone=x=>structuredClone(x);
 function cleanChannel(v){return String(v||'').trim().replace(/^https?:\/\//i,'').replace(/^(www\.)?twitch\.tv\//i,'').replace(/^[@#]+/,'').split(/[/?#\s]/)[0].toLowerCase()}
 function deepMerge(a,b){if(!a||!b||typeof a!=='object'||typeof b!=='object'||Array.isArray(a)||Array.isArray(b))return b===undefined?clone(a):b;const out={...a};for(const[k,v]of Object.entries(b))out[k]=k in a?deepMerge(a[k],v):v;return out}
 const editorPreviewObserver=new IntersectionObserver(entries=>entries.forEach(({target,isIntersecting})=>{target.querySelectorAll('.message').forEach(row=>row.dataset.motionPaused=String(!isIntersecting||state.reduceMotion||matchMedia('(prefers-reduced-motion: reduce)').matches));if(isIntersecting)target._mountSkin?.()}));
-let optionsMenu=null,placeMode=null,studioController=null,previewDisplay=null,skinQuery='',skinCategory='all',activeVibe='',activePalette='',activeSize='',skins=[],state=decodeSettings(location.hash),base='clean',label='Clean',baseline=clone(CLEAN),history=[],future=[],live=false,fakeOn=false,client=null,chatRows=[],fakeTimer=null,communityMap=new Map(),community=null,playPreviewSettings=null,chatPlayEditor=null,chatPlayPreview=null,alertsController=null,initialChatPlay=null,authRestore=null,authReturnTarget="",previewZoom=1,dreamPaintOptOut=false,dreamPartsDesign=null;
+let optionsMenu=null,placeMode=null,studioController=null,previewDisplay=null,skinQuery='',skinCategory='all',activeVibe='',activePalette='',activeSize='',skins=[],state=decodeSettings(location.hash),base='clean',label='Clean',baseline=clone(CLEAN),history=[],future=[],live=false,fakeOn=false,client=null,chatRows=[],fakeTimer=null,communityMap=new Map(),community=null,playPreviewSettings=null,chatPlayEditor=null,chatPlayPreview=null,alertsController=null,initialChatPlay=null,authRestore=null,authReturnTarget="",previewZoom=1,dreamPaintOptOut=false,dreamPartsDesign=null,dreamPaintOption={id:'',key:'',designName:'',available:false};
 function get(path){return path.split('.').reduce((a,k)=>a?.[k],state)}function put(path,value){const keys=path.split('.');let o=state;for(const k of keys.slice(0,-1))o=o[k];o[keys.at(-1)]=value}
 function track(){history.push({state:clone(state),base,label,baseline:clone(baseline)});if(history.length>100)history.shift();future=[];$('#undo').disabled=false;$('#redo').disabled=true}
 function set(path,value){track();put(path,value);playPreviewSettings=null;chatPlayPreview?.setHome(state,label);if(path.startsWith('emotes.'))community?.refresh();render()}
@@ -139,7 +139,17 @@ async function preview(){
  window.__chatskinsFitOk=()=>{const b=root.getBoundingClientRect(),v=stage.getBoundingClientRect(),scale=v.width/1280,o=display.frame.outer.enabled?display.frame.outer.offset+display.frame.outer.width:0;return b.top>=v.top+display.edgeInset*scale-1&&b.left>=v.left+display.edgeInset*scale-1&&b.right<=v.right-display.edgeInset*scale+1&&b.bottom<=v.bottom-display.edgeInset*scale+1&&b.top-o*scale>=v.top-1&&b.left-o*scale>=v.left-1&&b.right+o*scale<=v.right+1&&b.bottom+o*scale<=v.bottom+1};
  window.__chatskinsStats=()=>{const b=root.getBoundingClientRect(),v=stage.getBoundingClientRect();return{messages:root.querySelectorAll(':scope > .message').length,panelTop:b.top,panelBottom:b.bottom,viewportHeight:v.height}}
 }
-function render(){buildFields();syncSimple();preview();$('#skin-label').textContent=label+(isModified()?' · Modified':'')}
+function syncDreamPaintControls(){
+ const choice=$('#dream-frame-choice');
+ if(!choice)return;
+ const view=dreamPaintControlState(state,dreamPaintOption);
+ choice.hidden=view.hidden;
+ choice.textContent=view.label;
+ const status=$('#studio-status');
+ if(view.status)status.textContent=view.status;
+ else if(dreamPaintOption.id)status.textContent='Drag to move · Arrow keys nudge. Studio edits are saved in this browser or in your OBS link.';
+}
+function render(){buildFields();syncSimple();preview();syncDreamPaintControls();$('#skin-label').textContent=label+(isModified()?' · Modified':'')}
 function installSimpleReadouts(){}
 function isModified(){return JSON.stringify(state)!==JSON.stringify(baseline)}
 function drawSkins(){
@@ -212,7 +222,8 @@ function acceptDream(dream){
  dreamPaintOptOut=false;
  track();
  dreamPartsDesign=clone(dream.design);
- const initialSettings={...deepMerge(state,describeSettingsPatch(dream.settings||{})),studioDesign:dream.imageStatus==='ready'?null:dream.design,dreamPaintId:dream.imageStatus==='ready'?dream.id:''};
+ dreamPaintOption={id:String(dream.id||''),key:String(dream.key||''),designName:String(dream.design.name||''),available:['painting','ready'].includes(dream.imageStatus)&&!!dream.id&&!!dream.key};
+ const initialSettings={...deepMerge(state,describeSettingsPatch(dream.settings||{})),templateFrame:'',studioDesign:dream.imageStatus==='ready'?null:dream.design,dreamPaintId:dream.imageStatus==='ready'?dream.id:''};
  state=normalizeSettings(initialSettings);
  if(dream.imageStatus==='ready')state.studioDesign=null;
  label=String(dream.name||dream.design.name||'My custom frame').slice(0,40);
@@ -227,7 +238,7 @@ function acceptDream(dream){
  const card=$('#dream-gallery-submit');if(card){card.dataset.dreamId=dream.id||'';card.dataset.dreamKey=dream.key||'';card.hidden=false}
  optionsMenu?.activate(1,{focusPanel:true});
  const paintChoice=$('#dream-frame-choice');
- if(paintChoice&&['painting','ready'].includes(dream.imageStatus)&&dream.id&&dream.key){
+ if(paintChoice&&dreamPaintOption.available){
   paintChoice.hidden=false;
   paintChoice.textContent=state.dreamPaintId?'Use parts version instead':'Use painted frame';
   $('#studio-status').textContent=dream.imageStatus==='painting'?(dream.paintMessage||'Painting your frame… ~15s'):'The hand-drawn frame is ready.';
@@ -249,8 +260,7 @@ function acceptDream(dream){
     const saved=JSON.parse(localStorage.getItem('mySkins')||'[]'),item=saved.find(entry=>entry.dreamId===dream.id);
     if(item){item.settings=clone(state);localStorage.setItem('mySkins',JSON.stringify(saved));refreshMySkins()}
    }catch{}
-   paintChoice.textContent=state.dreamPaintId?'Use parts version instead':'Use painted frame';
-   $('#studio-status').textContent=state.dreamPaintId?'The painted frame is selected.':'Using the editable parts version.';
+   syncDreamPaintControls();
   };
  }
  if(dream.imageStatus==='painting'&&dream.id&&dream.key){
@@ -258,6 +268,7 @@ function acceptDream(dream){
   void watchDreamPaint(fetch,dream,{onReady:()=>{
    if(state.studioDesign?.name!==dream.design.name)return;
    paintedReady=true;
+   dreamPaintOption.available=true;
    dreamPartsDesign=clone(state.studioDesign||dreamPartsDesign||dream.design);
    if(!dreamPaintOptOut){
     // Treat the async art swap as one undoable state change.
@@ -270,9 +281,9 @@ function acceptDream(dream){
      if(item){item.settings=clone(state);localStorage.setItem('mySkins',JSON.stringify(saved));refreshMySkins()}
     }catch{}
    }
-   if(paintChoice)paintChoice.textContent=dreamPaintOptOut?'Use painted frame':'Use parts version instead';
+   syncDreamPaintControls();
    const status=$('#studio-status');if(status)status.textContent=dreamPaintOptOut?'Your painted frame is ready whenever you want to switch to it.':'The hand-drawn frame is ready. It is now used in your preview and OBS link.';
-  },onUnavailable:()=>{if(paintChoice)paintChoice.hidden=true;const status=$('#studio-status');if(status)status.textContent='The editable Studio frame is ready. The hand-drawn version could not be finished.'}});
+  },onUnavailable:()=>{dreamPaintOption.available=false;syncDreamPaintControls();const status=$('#studio-status');if(status)status.textContent='The editable Studio frame is ready. The hand-drawn version could not be finished.'}});
  }
  return label;
 }
@@ -327,7 +338,7 @@ function wireOptionsMenu(){
 }
 
 function updateCopy(){const value=cleanChannel($('#channel').value);$('#channel').value=value;$('#copy').disabled=!value;$('#copy').title=value?'':'Enter your Twitch name first.'}
-$('#connect-twitch').onclick=()=>{saveEditorRestore(sessionStorage,{state,base,returnTo:'#connect-twitch'});beginTwitchAuth()};$('#channel').oninput=()=>{state.channel=cleanChannel($('#channel').value);updateCopy();syncGuided()};$('#channel').onchange=()=>{const reconnect=live;track();state.channel=cleanChannel($('#channel').value);updateCopy();render();window.dispatchEvent(new CustomEvent('chat:channel-change'));if(reconnect){community?.clearRoomId();document.querySelector('[data-mode="live"]').click()}};$('#copy').onclick=async()=>{try{const play=chatPlayEditor?.getConfig(),url=play?.enabled?await buildCompactPlayUrl(location.href,{chatSettings:state,chatPlay:play,allowedSkins:skins.filter(s=>play.allowedSkinIds.includes(s.id)),baseSkinId:base,baseSettings:skins.find(item=>item.id===base)?.settings||CLEAN}):await buildCompactSettingsUrl(location.href,{settings:state,baseSkinId:base,baseSettings:skins.find(item=>item.id===base)?.settings||CLEAN});await navigator.clipboard.writeText(url);$('#notice').textContent='Overlay URL copied.'}catch(error){$('#notice').textContent=error?.message||'Could not make the overlay link. Try allowing fewer custom skins.'}};
+$('#connect-twitch').onclick=()=>{saveEditorRestore(sessionStorage,{state,base,returnTo:'#connect-twitch'});beginTwitchAuth()};$('#channel').oninput=()=>{state.channel=cleanChannel($('#channel').value);updateCopy();syncFrameTemplateTitle($('#stage > .source > #chat'),state);syncGuided()};$('#channel').onchange=()=>{const reconnect=live;track();state.channel=cleanChannel($('#channel').value);updateCopy();render();window.dispatchEvent(new CustomEvent('chat:channel-change'));if(reconnect){community?.clearRoomId();document.querySelector('[data-mode="live"]').click()}};$('#copy').onclick=async()=>{try{const play=chatPlayEditor?.getConfig(),url=play?.enabled?await buildCompactPlayUrl(location.href,{chatSettings:state,chatPlay:play,allowedSkins:skins.filter(s=>play.allowedSkinIds.includes(s.id)),baseSkinId:base,baseSettings:skins.find(item=>item.id===base)?.settings||CLEAN}):await buildCompactSettingsUrl(location.href,{settings:state,baseSkinId:base,baseSettings:skins.find(item=>item.id===base)?.settings||CLEAN});await navigator.clipboard.writeText(url);$('#notice').textContent='Overlay URL copied.'}catch(error){$('#notice').textContent=error?.message||'Could not make the overlay link. Try allowing fewer custom skins.'}};
 $('#preview-zoom-toggle').onclick=event=>{previewZoom=previewZoom?0:1;event.currentTarget.textContent=previewZoom?'Zoom to chat':'Fit to canvas';event.currentTarget.setAttribute('aria-pressed',String(!!previewZoom));preview()};
 $('#reset').onclick=()=>{track();state=clone(baseline);render()};$('#skin-reset').onclick=()=>{drawSkins();$('#notice').textContent='Skin gallery restored. Saved skins were kept.'};$('#scratch').onclick=()=>selectSkin(skins.find(s=>s.id==='clean'));$('#undo').disabled=true;$('#redo').disabled=true;$('#undo').onclick=()=>{if(!history.length)return;future.push({state:clone(state),base,label,baseline:clone(baseline)});const x=history.pop();state=x.state;base=x.base;label=x.label;baseline=x.baseline||baseline;$('#undo').disabled=!history.length;$('#redo').disabled=false;render()};$('#redo').onclick=()=>{if(!future.length)return;history.push({state:clone(state),base,label,baseline:clone(baseline)});const x=future.pop();state=x.state;base=x.base;label=x.label;baseline=x.baseline||baseline;$('#undo').disabled=false;$('#redo').disabled=!future.length;render()};
 $('#search').oninput=()=>{const q=$('#search').value.toLowerCase();for(const d of $('#settings').querySelectorAll('details')){const fields=[...d.querySelectorAll('.field')];for(const f of fields)f.hidden=!!q&&!f.dataset.search.includes(q);d.hidden=!!q&&!fields.some(f=>!f.hidden)&&!d.querySelector('summary').textContent.toLowerCase().includes(q);if(q&&!d.hidden)d.open=true}};

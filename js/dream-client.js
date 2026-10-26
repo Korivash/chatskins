@@ -4,16 +4,15 @@
  * Main exports: isDreamArtRequest, requestDream, selectPaintedDream, selectDreamParts, watchDreamPaint.
  * Invariant: preserve existing settings links and render chat content as text.
  */
+import {isDesignArtRequest} from './design-intent.js';
+
 /**
  * Browser helpers for the custom-design generator.
  * Keep request detection deterministic so styling-only requests still use the
  * lighter catalogue picker.
  */
 export function isDreamArtRequest(value){
- const text=String(value||'').toLowerCase();
-  
- return /\b(?:with|add|include|draw|paint|put|make)\b.{0,35}\b(?:ghost|cat|vines?|flowers?|hearts?|skull|bat|spider|crown|mascot|sticker|illustration|artwork|creature|dragon|moon|stars?)\b|\b(?:ghost|cat|vines?|mascot|sticker)\s+(?:on|above|around|atop|in)\b/i.test(text);
-  
+ return isDesignArtRequest(value);
 }
 
 /** Call the shared dream endpoint and normalize expected failures. */
@@ -36,7 +35,7 @@ export async function requestDream(fetcher,text,extra={}){
  * @returns {object} Settings with the painted frame selected.
  */
 export function selectPaintedDream(settings,dreamId){
- return{...settings,studioDesign:null,dreamPaintId:String(dreamId||'')};
+ return{...settings,templateFrame:'',studioDesign:null,dreamPaintId:String(dreamId||'')};
 }
 
 /** Restore the retained parts composition as the selected version.
@@ -45,7 +44,7 @@ export function selectPaintedDream(settings,dreamId){
  * @returns {object} Settings with parts selected and painting cleared.
  */
 export function selectDreamParts(settings,design){
- return{...settings,studioDesign:structuredClone(design),dreamPaintId:''};
+ return{...settings,templateFrame:'',studioDesign:structuredClone(design),dreamPaintId:''};
 }
 
 /** Check whether the painted art should replace the Studio composition.
@@ -54,6 +53,23 @@ export function selectDreamParts(settings,design){
  */
 export function isPaintedDreamSelected(settings){
  return Boolean(settings?.dreamPaintId)&&!settings?.studioDesign;
+}
+
+/** Describe the painted-frame choice control from the state being rendered.
+ * @param {object} settings Current editor settings.
+ * @param {{id:string,designName:string,available:boolean}} option Paint option metadata.
+ * @returns {{active:boolean,hidden:boolean,label:string,status:string|null}} Control state.
+ */
+export function dreamPaintControlState(settings,{id='',designName='',available=false}={}){
+ const active=Boolean(id&&(settings?.dreamPaintId===id
+  ||settings?.studioDesign?.name===designName));
+ const painted=active&&settings?.dreamPaintId===id;
+ return{
+  active,
+  hidden:!active||!available,
+  label:painted?'Use parts version instead':'Use painted frame',
+  status:!active?null:painted?'The painted frame is selected.':'Using the editable parts version.'
+ };
 }
 
 /** Poll the private painting job without putting its owner key in the URL. */

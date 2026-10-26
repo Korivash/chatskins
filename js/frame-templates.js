@@ -100,6 +100,18 @@ export function chooseFrameEntry(entries,id,{shape='tall',targetAspect=null,kind
  return selectFrameEntry(entries,id,aspect,kind);
   
 }
+
+/** Prefer a generated painted frame over catalog skin metadata.
+ * @param {object} settings Overlay settings.
+ * @param {object|null} skin Selected catalog skin metadata.
+ * @returns {string} The id used to resolve the frame image and geometry.
+ */
+export function frameTemplateId(settings,skin=null){
+ const dreamId=typeof settings?.dreamPaintId==='string'&&/^[a-f0-9]{24}$/i.test(settings.dreamPaintId)?settings.dreamPaintId:'';
+ if(dreamId)return`dream-${dreamId}`;
+ if(settings&&Object.prototype.hasOwnProperty.call(settings,'templateFrame'))return settings.templateFrame||'';
+ return skin?.frameTemplate||'';
+}
 /** fit frame box.
  * @param {unknown} width Function input.
  * @param {unknown} height Function input.
@@ -123,6 +135,23 @@ export function frameContentRect(width,height,entry,windowRect,padding=8){const 
  * @returns {unknown} The function result.
  */
 export function templateTitleModel(settings){return{title:String(settings.templateTitle||settings.channel||'Your Channel'),subtitle:String(settings.templateSubtitle??'LIVE CHAT')}}
+
+/** Update a mounted plaque title without reloading its frame asset.
+ * @param {Element|null} root A mounted template panel.
+ * @param {object} settings Current title and channel settings.
+ * @returns {boolean} True when a mounted plaque was updated.
+ */
+export function syncFrameTemplateTitle(root,settings){
+ const plaque=root?.querySelector(':scope > .template-plaque');
+ const title=plaque?.querySelector('.template-plaque-title');
+ const subtitle=plaque?.querySelector('.template-plaque-subtitle');
+ if(!title||!subtitle)return false;
+ const model=templateTitleModel(settings);
+ title.textContent=model.title;
+ subtitle.textContent=model.subtitle;
+ root._fitPlaqueTitle?.();
+ return true;
+}
 /** Handle settings round trip.
  * @param {unknown} settings Function input.
  * @returns {unknown} The function result.
@@ -258,10 +287,8 @@ function applyPlaqueTitleStyle(plaque,title,subtitle,style={},frameColor){
  */
 export async function attachFrameTemplate(root,settings,{skin=null,manifest=null,kind='chat',shape=null,layout=null}={}){
   const dreamId=typeof settings?.dreamPaintId==='string'&&/^[a-f0-9]{24}$/i.test(settings.dreamPaintId)?settings.dreamPaintId:'';
-  
-  const catalogId=settings?.templateFrame||skin?.frameTemplate;
-  
-  const id=catalogId||(dreamId?`dream-${dreamId}`:'');
+  // A personal painted frame replaces any catalog template retained by the skin picker.
+  const id=frameTemplateId(settings,skin);
   
   if(id&&root.dataset.frameTemplate!==id)root._frameRect=null;
   
@@ -281,6 +308,7 @@ export async function attachFrameTemplate(root,settings,{skin=null,manifest=null
     root._frameEntry=null;
     root._frameWindowLayout=null;
     root._applyFrameWindow=null;
+    root._fitPlaqueTitle=null;
     return null}
   const hintedShape=shape||skin?.frameShape||'tall',hintAspect=frameShapeAspect(hintedShape);
   
@@ -356,6 +384,7 @@ export async function attachFrameTemplate(root,settings,{skin=null,manifest=null
       const hide=title.clientHeight<26||titleNode.scrollHeight+subtitleNode.scrollHeight>title.clientHeight;
       subtitleNode.hidden=hide;
       subtitleNode.parentElement.hidden=hide};
+    root._fitPlaqueTitle=fitTitle;
     requestAnimationFrame(fitTitle);
     const fontFamily=titleStyle?.fontFamily||'DM Sans',subFamily=titleStyle?.subtitleFontFamily||fontFamily,fontSize=Math.max(9,parseFloat(getComputedStyle(titleNode).fontSize)||16),subSize=Math.max(9,parseFloat(getComputedStyle(subtitleNode).fontSize)||10);
     refitPlaqueAfterFonts(document.fonts,[{family:fontFamily,size:fontSize,text:model.title},{family:subFamily,size:subSize,text:model.subtitle}],fitTitle);
@@ -395,6 +424,7 @@ export async function attachFrameTemplate(root,settings,{skin=null,manifest=null
     root._frameEntry=null;
     root._frameWindowLayout=null;
     root._applyFrameWindow=null;
+    root._fitPlaqueTitle=null;
     layout?.();
     return null}
 }

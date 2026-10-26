@@ -133,7 +133,7 @@ else{
  const communityChat=createCommunityChat({getSettings:()=>chatPlay?.currentSettings||s,onUpdate:()=>{}});
   
  function queueFit(){
-  if(fitPaused||s.templateFrame&&(!root._frameRect||!root._applyFrameWindow)||fitQueued)return;
+  if(fitPaused||(s.templateFrame||s.dreamPaintId)&&(!root._frameRect||!root._applyFrameWindow)||fitQueued)return;
     
   fitQueued=true;
     

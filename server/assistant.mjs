@@ -10,6 +10,8 @@
  */
 import {createHash} from 'node:crypto';
 
+import {isDesignArtRequest} from '../js/design-intent.js';
+
 import {readdir,readFile} from 'node:fs/promises';
 
 import {dirname,resolve} from 'node:path';
@@ -73,16 +75,8 @@ export function validateAssistantAction(call,{catalog=[],docSlugs=[]}={}){
  if(name==='start_walkthrough'&&walks.includes(args.id))return{type:name,id:args.id};
  if(name==='open_doc'&&docSlugs.includes(args.slug))return{type:name,slug:args.slug};return null;
 }
-/** Route explicit visual-design requests without relying on model guesswork. */
-export function isDesignArtRequest(value){
- const text=String(value||'').toLowerCase();
- const designTarget=/\b(?:frame|skin|border|overlay|look|design)\b/;
- const chatTarget=/\bchat\b/;
- const makeVerb=/\b(?:make|create|design|build|draw|paint|give me|i want|i need)\b/;
- const styleAdjustment=/\b(?:pink|purple|blue|green|red|orange|yellow|black|white|color|colour|bigger|smaller|large|small|font|text|size|glow|brighter|darker|readable|transparent)\b/;
- const artObject=/\b(?:ghosts?|cats?|bunnies|rabbit|leaves|leaf|vines?|coffee|moons?|stars?|crowns?|flowers?|bats?|skulls?|dragons?|swords?|hearts?|neon|sparkles?)\b/;
- return (makeVerb.test(text)&&(designTarget.test(text)||(chatTarget.test(text)&&!styleAdjustment.test(text))))||artObject.test(text);
-}
+/** Keep the assistant API's detector export compatible with existing callers. */
+export {isDesignArtRequest};
 /** Omit the official-skin request page while generating personal designs. */
 function knowledgeForDesign(knowledge){
  return knowledge.split(/(?=^## )/m).filter(section=>!/^## .*\(request-a-skin\)/m.test(section)).join('\n').trim();
