@@ -4,17 +4,39 @@ import {mkdtemp,readFile,rm,writeFile} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {join,resolve} from 'node:path';
 import {buildAssistantKnowledge,createAssistantHandler,validateAssistantAction,ASSISTANT_CONTROLS} from '../server/assistant.mjs';
-import {mountAskChat,TOURS,STARTER_PROMPTS,canRunAssistantAction,containsPrivateDetails} from '../js/ask-chatskins.js';
+import {mountAskChat,TOURS,STARTER_PROMPTS,canRunAssistantAction,containsPrivateDetails,assistantLauncherOffset} from '../js/ask-chatskins.js';
 
 const message=(content='How do I add my chat to OBS?')=>JSON.stringify({messages:[{role:'user',content}],page:'editor',state:{tab:'look',hasChannel:true,access_token:'must-not-leak'}});
 async function fixture(t,{fetchImpl,now=()=>Date.UTC(2026,9,25),originHost='getchatskins.com',contentDir=resolve('docs/content')}={}){const dir=await mkdtemp(join(tmpdir(),'chatskins-assistant-')),keyFile=join(dir,'openai-key.txt'),usageFile=join(dir,'usage.json');await writeFile(keyFile,'private-test-key','utf8');const handler=createAssistantHandler({fetchImpl,now,originHost,keyFile,usageFile,contentDir});t.after(()=>rm(dir,{recursive:true,force:true}));return{dir,keyFile,usageFile,handler}}
 function fakeOpenAI({flagged=false,output=[],tokens=20}={}){const calls=[];return{calls,fetchImpl:async(url,options)=>{calls.push({url,options});if(url.endsWith('/moderations'))return{ok:true,json:async()=>({results:[{flagged}],usage:{total_tokens:2}})};return{ok:true,json:async()=>({output,usage:{total_tokens:tokens}})}}}}
 
 test('knowledge pack includes headings and text from the documentation pages',async()=>{const knowledge=await buildAssistantKnowledge(resolve('docs/content'));assert.match(knowledge,/## Getting started \(getting-started\)/);assert.match(knowledge,/Browser Source/);assert.match(knowledge,/## Frames \(frames\)/)});
+test('documentation symbols remain UTF-8 through the knowledge pack and JSON reply',async t=>{
+ const dir=await mkdtemp(join(tmpdir(),'chatskins-utf8-')),symbols='Arrow → times × dash — dot ·';
+ await writeFile(join(dir,'symbols.md'),`# Symbols\n\n${symbols}\n`,'utf8');t.after(()=>rm(dir,{recursive:true,force:true}));
+ assert.ok((await buildAssistantKnowledge(dir)).includes(symbols));
+ const mock=fakeOpenAI({output:[{type:'message',content:[{type:'output_text',text:symbols}]}]});
+ const fx=await fixture(t,{fetchImpl:mock.fetchImpl,contentDir:dir});const response=await fx.handler({headers:{origin:'https://getchatskins.com'},body:message()});
+ assert.equal(response.headers['content-type'],'application/json; charset=utf-8');assert.equal(JSON.parse(JSON.stringify(response.body)).reply,symbols);
+});
 test('tool actions are whitelist validated and appearance values use describe validation',async()=>{
  const catalog=JSON.parse(await readFile(resolve('design/skins.json'),'utf8')).skins,docs=['frames'];
  const style=validateAssistantAction({name:'apply_style',arguments:JSON.stringify({skinId:catalog[0].id,settings:{fontSize:99,textColor:'#abcdef',script:'bad'}})},{catalog,docSlugs:docs});assert.equal(style.settings.fontSize,48);assert.equal(style.settings.textColor,'#ABCDEF');assert.equal('script'in style.settings,false);
  assert.equal(validateAssistantAction({name:'launch_shell',arguments:'{}'},{catalog,docSlugs:docs}),null);assert.equal(validateAssistantAction({name:'highlight',arguments:'{"control":"delete account"}'},{catalog,docSlugs:docs}),null);assert.equal(validateAssistantAction({name:'open_doc',arguments:'{"slug":"missing"}'},{catalog,docSlugs:docs}),null);assert.ok(ASSISTANT_CONTROLS.includes('Place it'));
+});
+test('Responses tools use strict schemas and validated function calls become actions',async t=>{
+ const catalog=JSON.parse(await readFile(resolve('design/skins.json'),'utf8')).skins;
+ const mock=fakeOpenAI({output:[
+  {type:'function_call',name:'apply_style',arguments:JSON.stringify({skinId:catalog[0].id,settings:{fontSize:27,textColor:'#abcdef',unknown:'drop'}})},
+  {type:'function_call',name:'open_tab',arguments:'{"tab":"style"}'},
+  {type:'function_call',name:'highlight',arguments:'{"control":"Frame color"}'}
+ ]});
+ const fx=await fixture(t,{fetchImpl:mock.fetchImpl});const response=await fx.handler({headers:{origin:'https://getchatskins.com'},body:message('Make my chat pink and bigger')});
+ const request=JSON.parse(mock.calls.find(call=>call.url.endsWith('/responses')).options.body);
+ assert.equal(request.tool_choice,'auto');assert.ok(request.tools.length>=5);assert.ok(request.tools.every(tool=>tool.strict===true));
+ assert.match(request.input[0].content[0].text,/When the user wants a change, call apply_style/);
+ assert.equal(response.status,200);assert.equal(response.body.actions[0].type,'apply_style');assert.equal(response.body.actions[0].settings.textColor,'#ABCDEF');assert.equal('unknown'in response.body.actions[0].settings,false);
+ assert.deepEqual(response.body.actions.slice(1),[{type:'open_tab',tab:'style'},{type:'highlight',control:'Frame color'}]);
 });
 test('moderation, origin, off-topic refusal and key secrecy are enforced',async t=>{
  const mock=fakeOpenAI({output:[{type:'message',content:[{type:'output_text',text:'Use the Docs to add a Browser Source.'}]}]});const {handler}=await fixture(t,{fetchImpl:mock.fetchImpl});
@@ -50,3 +72,10 @@ test('panel markup exposes dialog semantics, labeled input, close/clear and keyb
  let removed=false;const doc=new FakeDocument(),storage={getItem:()=>null,setItem(){},removeItem(){removed=true}},ui=mountAskChat(doc,{storage,location:{pathname:'/',href:'https://getchatskins.com/'},fetcher:async()=>{}});assert.equal(ui.panel.getAttribute('role'),'dialog');assert.equal(ui.panel.getAttribute('aria-modal'),'true');const textarea=ui.panel.querySelectorAll().find(node=>node.tagName==='textarea');assert.equal(textarea.getAttribute('aria-label'),'Ask a ChatSkins setup question');const close=ui.panel.querySelectorAll().find(node=>node.className==='ask-close');assert.ok(close);const clear=ui.panel.querySelectorAll().find(node=>node.className==='ask-clear');assert.ok(clear);assert.ok((doc.listeners.keydown||[]).length>0);assert.ok(ui.panel.querySelectorAll().filter(node=>node.tagName==='button').length>=10);ui.panel.hidden=false;const tabbables=ui.panel.querySelectorAll().filter(node=>node.tagName==='button'||node.tagName==='textarea');doc.activeElement=clear;let prevented=false;doc.listeners.keydown[0]({key:'Tab',shiftKey:true,preventDefault(){prevented=true}});assert.equal(prevented,true,`Shift+Tab at first (active=${doc.activeElement?.className}, clear=${clear.className})`);assert.equal(doc.activeElement,tabbables.at(-1),'focus moves to the final item');ui.clear();assert.equal(removed,true);assert.equal(ui.log.children.length,0)
 });
 test('launcher assets are present on every public site and docs page',async()=>{for(const file of ['index.html','skins.html','editor.html','request.html','readme.html','docs/index.html']){const html=await readFile(resolve(file),'utf8');assert.match(html,/ask-chatskins\.css/,file);assert.match(html,/ask-chatskins\.js/,file)}});
+test('help launcher clears the sticky editor bar at desktop and mobile sizes',()=>{
+ for(const [width,height,dockHeight] of [[1440,900,76],[390,844,124]]){
+  const bottomOffset=assistantLauncherOffset(dockHeight),launcherBottom=height-bottomOffset;
+  const dockTop=height-dockHeight;assert.ok(launcherBottom<=dockTop-12,`${width}px launcher clears the bar with a 12px gap`);
+ }
+ assert.equal(assistantLauncherOffset(0),22);
+});

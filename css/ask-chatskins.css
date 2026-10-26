@@ -1,16 +1,130 @@
-#ask-chatskins{--ask-bg:#0a1322;--ask-panel:#101e32;--ask-edge:#355173;--ask-accent:#58a8ff;--ask-ink:#edf5ff;--ask-muted:#abc0da;position:fixed;z-index:10000;right:22px;bottom:22px;color:var(--ask-ink);font:14px/1.45 var(--site-font-body,'DM Sans',sans-serif)}
-.ask-launcher,.ask-panel button,.ask-tour-card button{font:inherit;color:inherit;cursor:pointer}
-.ask-launcher{min-height:48px;padding:0 18px;border:1px solid #77b6ff;border-radius:999px;background:linear-gradient(120deg,#1463b5,#6748bc);box-shadow:0 10px 36px #0008;font-weight:750}
-.ask-launcher:hover,.ask-launcher:focus-visible{filter:brightness(1.15);outline:3px solid #c4ddff;outline-offset:3px}
-.ask-panel{position:absolute;right:0;bottom:60px;display:flex;flex-direction:column;width:min(390px,calc(100vw - 28px));max-height:min(690px,calc(100dvh - 105px));padding:15px;border:1px solid var(--ask-edge);border-radius:18px;background:var(--ask-panel);box-shadow:0 22px 75px #000c}
-.ask-panel[hidden],.ask-tour-card[hidden],.ask-spotlight[hidden]{display:none}
-.ask-header{display:flex;align-items:center;gap:8px}.ask-header h2{flex:1;margin:0;font-size:18px}.ask-header button{border:1px solid var(--ask-edge);border-radius:7px;padding:6px 9px;background:#172942}.ask-close{font-size:20px;line-height:1}
-.ask-log{display:flex;flex-direction:column;gap:8px;min-height:90px;max-height:260px;overflow:auto;margin:12px 0;padding:4px;scrollbar-color:#42658a transparent}.ask-message{max-width:91%;padding:9px 11px;border:1px solid #304967;border-radius:12px;background:#13243a;overflow-wrap:anywhere}.ask-user{align-self:flex-end;background:#193d67;border-color:#3e72a7}.ask-assistant,.ask-typing{align-self:flex-start}.ask-typing{color:var(--ask-muted);font-style:italic;animation:ask-pulse 1.2s ease-in-out infinite alternate}
-.ask-starters{display:grid;grid-template-columns:1fr 1fr;gap:6px}.ask-chip,.ask-tours button{padding:7px 9px;border:1px solid #365575;border-radius:8px;background:#13243a;text-align:left;font-size:12px}.ask-chip:hover,.ask-tours button:hover{border-color:var(--ask-accent);background:#183252}
-.ask-fallback{max-height:220px;overflow:auto;margin-top:10px;padding:10px;border:1px solid #3d5570;border-radius:10px;background:#0c1829}.ask-fallback strong{display:block;margin-bottom:6px}.ask-faq details{padding:6px 0;border-top:1px solid #233b57}.ask-faq summary{cursor:pointer;color:var(--ask-ink)}.ask-faq p{margin:6px 0;color:var(--ask-muted);font-size:12px}.ask-faq a{font-size:12px;color:#9bc9ff}
-.ask-tours{display:flex;flex-wrap:wrap;gap:5px;margin-top:9px}.ask-tours button{font-size:11px}.ask-note{margin:9px 0 5px;color:var(--ask-muted);font-size:11px}.ask-form{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px}.ask-form textarea{width:100%;min-height:43px;max-height:120px;resize:vertical;padding:9px;border:1px solid #3b5574;border-radius:9px;background:#07111f;color:var(--ask-ink);font:inherit}.ask-form textarea:focus-visible{outline:2px solid #91c7ff;outline-offset:1px}.ask-send{align-self:end;min-height:42px;padding:0 14px;border:1px solid #69adf9;border-radius:9px;background:#15599d;font-weight:700}.ask-status{margin:6px 0 0;color:#ffd99c;font-size:12px}
-.ask-spotlight{position:fixed;z-index:10001;pointer-events:none;border:2px solid #9bd3ff;border-radius:10px;box-shadow:0 0 0 9999px #030914b8,0 0 28px #4fa5ff;transition:all .2s ease}
-.ask-tour-card{position:fixed;z-index:10002;right:24px;bottom:24px;width:min(370px,calc(100vw - 32px));padding:18px;border:1px solid #6393c5;border-radius:14px;background:#0e1c30;color:var(--ask-ink);box-shadow:0 18px 60px #000c}.ask-tour-card h2{margin:0 0 7px;font-size:18px}.ask-tour-card p{margin:7px 0;color:var(--ask-muted)}.ask-tour-card .ask-tour-count{font-size:12px}.ask-tour-card button{margin:5px 5px 0 0;padding:7px 11px;border:1px solid #3d5f83;border-radius:7px;background:#172b45}.ask-tour-card button:disabled{opacity:.5}.ask-target-highlight{outline:3px solid #83c4ff!important;outline-offset:4px!important;scroll-margin:100px}
-@keyframes ask-pulse{to{opacity:.45}}
-@media(max-width:600px){#ask-chatskins{inset:0;display:flex;flex-direction:column;justify-content:flex-end;pointer-events:none}#ask-chatskins>*{pointer-events:auto}.ask-launcher{align-self:flex-end;margin:0 14px 14px}.ask-panel{position:fixed;inset:0;width:100%;max-height:none;height:100dvh;border:0;border-radius:0;padding:max(14px,env(safe-area-inset-top)) 14px max(14px,env(safe-area-inset-bottom));background:#091321}.ask-log{flex:1;max-height:none}.ask-fallback{max-height:26vh}.ask-tour-card{right:12px;bottom:12px}.ask-spotlight{border-radius:6px}}
-@media(prefers-reduced-motion:reduce){.ask-typing{animation:none}.ask-spotlight{transition:none}}
+/* Ask ChatSkins guide: shared launcher, chat panel, and walkthrough styling. */
+#ask-chatskins {
+  --ask-bg: #0a1322;
+  --ask-panel: #101e32;
+  --ask-edge: #355173;
+  --ask-accent: #58a8ff;
+  --ask-ink: #edf5ff;
+  --ask-muted: #abc0da;
+  position: fixed;
+  z-index: 10000;
+  right: 22px;
+  bottom: var(--ask-launcher-bottom, 22px);
+  color: var(--ask-ink);
+  font: 14px/1.45 var(--site-font-body, 'DM Sans', sans-serif);
+}
+
+.ask-launcher,
+.ask-panel button,
+.ask-tour-card button {
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+.ask-launcher {
+  min-height: 48px;
+  padding: 0 18px;
+  border: 1px solid #77b6ff;
+  border-radius: 999px;
+  background: linear-gradient(120deg, #1463b5, #6748bc);
+  box-shadow: 0 10px 36px #0008;
+  font-weight: 750;
+}
+
+.ask-launcher:hover,
+.ask-launcher:focus-visible {
+  filter: brightness(1.15);
+  outline: 3px solid #c4ddff;
+  outline-offset: 3px;
+}
+
+.ask-panel {
+  position: absolute;
+  right: 0;
+  bottom: 60px;
+  display: flex;
+  flex-direction: column;
+  width: min(390px, calc(100vw - 28px));
+  max-height: min(690px, calc(100dvh - 105px));
+  padding: 15px;
+  border: 1px solid var(--ask-edge);
+  border-radius: 18px;
+  background: var(--ask-panel);
+  box-shadow: 0 22px 75px #000c;
+}
+
+.ask-panel[hidden],
+.ask-tour-card[hidden],
+.ask-spotlight[hidden] { display: none; }
+.ask-header { display: flex; align-items: center; gap: 8px; }
+.ask-header h2 { flex: 1; margin: 0; font-size: 18px; }
+.ask-header button { padding: 6px 9px; border: 1px solid var(--ask-edge); border-radius: 7px; background: #172942; }
+.ask-close { font-size: 20px; line-height: 1; }
+
+.ask-log {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-height: 90px;
+  max-height: 260px;
+  overflow: auto;
+  margin: 12px 0;
+  padding: 4px;
+  scrollbar-color: #42658a transparent;
+}
+
+.ask-message { max-width: 91%; padding: 9px 11px; border: 1px solid #304967; border-radius: 12px; background: #13243a; overflow-wrap: anywhere; }
+.ask-user { align-self: flex-end; border-color: #3e72a7; background: #193d67; }
+.ask-assistant, .ask-typing { align-self: flex-start; }
+.ask-typing { color: var(--ask-muted); font-style: italic; animation: ask-pulse 1.2s ease-in-out infinite alternate; }
+.ask-starters { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.ask-chip, .ask-tours button { padding: 7px 9px; border: 1px solid #365575; border-radius: 8px; background: #13243a; text-align: left; font-size: 12px; }
+.ask-chip:hover, .ask-tours button:hover { border-color: var(--ask-accent); background: #183252; }
+.ask-fallback { max-height: 220px; overflow: auto; margin-top: 10px; padding: 10px; border: 1px solid #3d5570; border-radius: 10px; background: #0c1829; }
+.ask-fallback strong { display: block; margin-bottom: 6px; }
+.ask-faq details { padding: 6px 0; border-top: 1px solid #233b57; }
+.ask-faq summary { color: var(--ask-ink); cursor: pointer; }
+.ask-faq p { margin: 6px 0; color: var(--ask-muted); font-size: 12px; }
+.ask-faq a { color: #9bc9ff; font-size: 12px; }
+.ask-tours { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 9px; }
+.ask-tours button { font-size: 11px; }
+.ask-note { margin: 9px 0 5px; color: var(--ask-muted); font-size: 11px; }
+.ask-form { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; }
+.ask-form textarea { width: 100%; min-height: 43px; max-height: 120px; resize: vertical; padding: 9px; border: 1px solid #3b5574; border-radius: 9px; background: #07111f; color: var(--ask-ink); font: inherit; }
+.ask-form textarea:focus-visible { outline: 2px solid #91c7ff; outline-offset: 1px; }
+.ask-send { align-self: end; min-height: 42px; padding: 0 14px; border: 1px solid #69adf9; border-radius: 9px; background: #15599d; font-weight: 700; }
+.ask-status { margin: 6px 0 0; color: #ffd99c; font-size: 12px; }
+
+.ask-spotlight { position: fixed; z-index: 10001; pointer-events: none; border: 2px solid #9bd3ff; border-radius: 10px; box-shadow: 0 0 0 9999px #030914b8, 0 0 28px #4fa5ff; transition: all .2s ease; }
+.ask-tour-card { position: fixed; z-index: 10002; right: 24px; bottom: 24px; width: min(370px, calc(100vw - 32px)); padding: 18px; border: 1px solid #6393c5; border-radius: 14px; background: #0e1c30; color: var(--ask-ink); box-shadow: 0 18px 60px #000c; }
+.ask-tour-card h2 { margin: 0 0 7px; font-size: 18px; }
+.ask-tour-card p { margin: 7px 0; color: var(--ask-muted); }
+.ask-tour-card .ask-tour-count { font-size: 12px; }
+.ask-tour-card button { margin: 5px 5px 0 0; padding: 7px 11px; border: 1px solid #3d5f83; border-radius: 7px; background: #172b45; }
+.ask-tour-card button:disabled { opacity: .5; }
+.ask-target-highlight { outline: 3px solid #83c4ff !important; outline-offset: 4px !important; scroll-margin: 100px; }
+
+@keyframes ask-pulse { to { opacity: .45; } }
+
+/* Keep the help launcher clear of the editor's fixed action bar. */
+@media (min-width: 601px) {
+  body:has(#options-dock) #ask-chatskins { --ask-launcher-bottom: 100px; }
+}
+
+@media (max-width: 600px) {
+  #ask-chatskins { inset: auto 0 var(--ask-launcher-bottom, 14px) 0; display: flex; flex-direction: column; align-items: flex-end; pointer-events: none; }
+  #ask-chatskins > * { pointer-events: auto; }
+  body:has(#options-dock) #ask-chatskins { --ask-launcher-bottom: 205px; }
+  .ask-launcher { margin: 0 14px 0 0; }
+  .ask-panel { position: fixed; inset: 0; width: 100%; max-height: none; height: 100dvh; border: 0; border-radius: 0; padding: max(14px, env(safe-area-inset-top)) 14px max(14px, env(safe-area-inset-bottom)); background: #091321; }
+  .ask-log { flex: 1; max-height: none; }
+  .ask-fallback { max-height: 26vh; }
+  .ask-tour-card { right: 12px; bottom: 12px; }
+  .ask-spotlight { border-radius: 6px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ask-typing { animation: none; }
+  .ask-spotlight { transition: none; }
+}
