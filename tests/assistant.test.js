@@ -24,19 +24,24 @@ test('tool actions are whitelist validated and appearance values use describe va
  const style=validateAssistantAction({name:'apply_style',arguments:JSON.stringify({skinId:catalog[0].id,settings:{fontSize:99,textColor:'#abcdef',script:'bad'}})},{catalog,docSlugs:docs});assert.equal(style.settings.fontSize,48);assert.equal(style.settings.textColor,'#ABCDEF');assert.equal('script'in style.settings,false);
  assert.equal(validateAssistantAction({name:'launch_shell',arguments:'{}'},{catalog,docSlugs:docs}),null);assert.equal(validateAssistantAction({name:'highlight',arguments:'{"control":"delete account"}'},{catalog,docSlugs:docs}),null);assert.equal(validateAssistantAction({name:'open_doc',arguments:'{"slug":"missing"}'},{catalog,docSlugs:docs}),null);assert.ok(ASSISTANT_CONTROLS.includes('Place it'));
 });
-test('Responses tools use strict schemas and validated function calls become actions',async t=>{
+test('tool calls receive a useful follow-up answer and never use generic fallback copy',async t=>{
  const catalog=JSON.parse(await readFile(resolve('design/skins.json'),'utf8')).skins;
- const mock=fakeOpenAI({output:[
-  {type:'function_call',name:'apply_style',arguments:JSON.stringify({skinId:catalog[0].id,settings:{fontSize:27,textColor:'#abcdef',unknown:'drop'}})},
-  {type:'function_call',name:'open_tab',arguments:'{"tab":"style"}'},
-  {type:'function_call',name:'highlight',arguments:'{"control":"Frame color"}'}
- ]});
- const fx=await fixture(t,{fetchImpl:mock.fetchImpl});const response=await fx.handler({headers:{origin:'https://getchatskins.com'},body:message('Make my chat pink and bigger')});
- const request=JSON.parse(mock.calls.find(call=>call.url.endsWith('/responses')).options.body);
+ const calls=[],firstOutput=[
+  {type:'function_call',call_id:'style-1',name:'apply_style',arguments:JSON.stringify({skinId:catalog[0].id,settings:{fontSize:27,textColor:'#abcdef',unknown:'drop'}})},
+  {type:'function_call',call_id:'tab-1',name:'open_tab',arguments:'{"tab":"getlink"}'},
+  {type:'function_call',call_id:'highlight-1',name:'highlight',arguments:'{"control":"Get my OBS link"}'},
+  {type:'function_call',call_id:'tour-1',name:'start_walkthrough',arguments:'{"id":"obs-setup"}'}
+ ];
+ const fetchImpl=async(url,options)=>{calls.push({url,options});if(url.endsWith('/moderations'))return{ok:true,json:async()=>({results:[{flagged:false}],usage:{total_tokens:2}})};const responseNumber=calls.filter(call=>call.url.endsWith('/responses')).length;return{ok:true,json:async()=>responseNumber===1?{id:'resp-tools',output:firstOutput,usage:{total_tokens:15}}:{output:[{type:'message',content:[{type:'output_text',text:'To add chat to OBS: 1. Choose a skin. 2. Open Get link and copy your URL. 3. Add a Browser Source, paste the complete link, and set 1280 × 720. I opened Get link, highlighted the button, and started the OBS guide.'}]}],usage:{total_tokens:25}}}};
+ const fx=await fixture(t,{fetchImpl});const response=await fx.handler({headers:{origin:'https://getchatskins.com'},body:message('Make my chat pink and bigger. How do I add it to OBS?')});
+ const requests=calls.filter(call=>call.url.endsWith('/responses')).map(call=>JSON.parse(call.options.body)),request=requests[0];
  assert.equal(request.tool_choice,'auto');assert.ok(request.tools.length>=5);assert.ok(request.tools.every(tool=>tool.strict===true));
  assert.match(request.input[0].content[0].text,/When the user wants a change, call apply_style/);
- assert.equal(response.status,200);assert.equal(response.body.actions[0].type,'apply_style');assert.equal(response.body.actions[0].settings.textColor,'#ABCDEF');assert.equal('unknown'in response.body.actions[0].settings,false);
- assert.deepEqual(response.body.actions.slice(1),[{type:'open_tab',tab:'style'},{type:'highlight',control:'Frame color'}]);
+ assert.equal(requests.length,2);assert.equal(requests[1].tool_choice,'none');assert.equal(requests[1].input.filter(item=>item.type==='function_call_output').length,4);
+ assert.equal(response.status,200);assert.match(response.body.reply,/1\. Choose a skin.*3\. Add a Browser Source/s);assert.doesNotMatch(response.body.reply,/I can do that\. Here is the change/);
+ assert.equal(response.body.actions[0].type,'apply_style');assert.equal(response.body.actions[0].settings.textColor,'#ABCDEF');assert.equal('unknown'in response.body.actions[0].settings,false);
+ assert.deepEqual(response.body.actions.slice(1),[{type:'open_tab',tab:'getlink'},{type:'highlight',control:'Get my OBS link'},{type:'start_walkthrough',id:'obs-setup'}]);
+ const usage=JSON.parse(await readFile(fx.usageFile,'utf8'));assert.equal(usage.days['2026-10-25'].tokens,42,'moderation and both Responses calls count toward the shared daily budget');
 });
 test('moderation, origin, off-topic refusal and key secrecy are enforced',async t=>{
  const mock=fakeOpenAI({output:[{type:'message',content:[{type:'output_text',text:'Use the Docs to add a Browser Source.'}]}]});const {handler}=await fixture(t,{fetchImpl:mock.fetchImpl});
