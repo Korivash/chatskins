@@ -2,7 +2,10 @@
 export function syncStudioLayer(panel,layer){
  const host=panel.parentElement;if(!host)return;
  if(layer.parentElement!==host)host.append(layer);
- Object.assign(layer.style,{position:'absolute',left:panel.offsetLeft+'px',top:panel.offsetTop+'px',width:panel.offsetWidth+'px',height:panel.offsetHeight+'px'});
+ const transform=typeof getComputedStyle==='function'?getComputedStyle(panel).transform:'none';
+ const translation=transform&&transform!=='none'?new DOMMatrixReadOnly(transform):{e:0,f:0};
+ // Layout offsets exclude the panel's centering translation; the host's scale applies to both siblings.
+ Object.assign(layer.style,{position:'absolute',left:(panel.offsetLeft+translation.e)+'px',top:(panel.offsetTop+translation.f)+'px',width:panel.offsetWidth+'px',height:panel.offsetHeight+'px'});
 }
 export const STUDIO_BOARD=Object.freeze([600,680]);
 export const STUDIO_LIMIT=25;
