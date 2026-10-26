@@ -19,14 +19,14 @@ We also wanted it to be truly easy. A lot of streamers aren't technical. So the 
 - **Docs** for every feature, and a **Request a skin** form that goes straight to our Discord.
 
 ## How we built it
-ChatSkins was built entirely with **OpenAI Codex**, using a small team of agents with separate jobs:
+**Korivash** came up with the idea and directed every round from Discord: what to build next, what looked wrong, what to cut. **OpenAI Codex** did the building, with a small team of agents with separate jobs:
 
 | Agent | Model | Job |
 |---|---|---|
 | **Astra** (designer) | `gpt-6-astra` | Turns the brief, the research and the bug reports into layouts, skin recipes, the settings schema and HTML mockups |
 | **Luna** (builder) | `gpt-6-luna` | Writes all the app code and the tests, in one long-running build thread so it keeps the whole codebase in mind |
 | **Luna** (researcher) | `gpt-6-luna` + web search | Surveyed the most popular Twitch chat overlays before the big redesign |
-| **Claude** (lead) | Claude | Writes every prompt, tests every build in a real browser, measures what's wrong, commits and deploys |
+| **Claude** (lead agent) | Claude | Turns Korivash's feedback into prompts, tests every build in a real browser, measures what's wrong, commits and deploys |
 
 The loop was always the same: **design → build → test → measure → fix.** Every task is one prompt file in the repo (55 of them), and every Codex session ID is logged next to its prompt and its commit. Over **31 Codex sessions and 120+ commits**, Luna wrote **36 test files**. After each round the lead rendered every skin through the real OBS overlay in headless Chromium and checked the screenshots by eye.
 
