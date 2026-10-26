@@ -1,0 +1,133 @@
+/* Round 23g: give real-render previews room and fit artwork without cropping. */
+.game:not(.editor) .selection-layout {
+  grid-template-columns: minmax(0, 0.95fr) minmax(560px, 1.35fr);
+  align-items: start;
+}
+
+.game:not(.editor) .roster.portraits {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.game:not(.editor) .selection-panel {
+  min-width: 0;
+  position: sticky;
+  top: 88px;
+}
+
+.game:not(.editor) .selection-panel .monitor,
+.game:not(.editor) .selection-panel .screen {
+  min-width: 0;
+}
+
+.game:not(.editor) .selection-panel .screen {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+  min-height: 0;
+  padding: 14px 18px;
+}
+
+.game:not(.editor) .selection-panel .screen > p,
+.game:not(.editor) .selection-panel .screen > h2,
+.game:not(.editor) .selection-panel .screen > a,
+.game:not(.editor) .selection-panel .screen > button {
+  margin: 0;
+}
+
+.game:not(.editor) .selection-panel #skin-preview {
+  width: 100%;
+  min-height: 0;
+  aspect-ratio: 16 / 9;
+  padding: 0;
+  overflow: hidden;
+}
+
+.game:not(.editor) .selection-panel #skin-preview > .monitor-preview {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  aspect-ratio: 16 / 9;
+  padding: 8px;
+  overflow: hidden;
+}
+
+.game:not(.editor) .selection-panel #skin-preview > .monitor-preview > .skin-preview-measure {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform-origin: top left;
+}
+
+.game:not(.editor) .selection-panel #stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  margin: 10px 0 14px;
+}
+
+.game:not(.editor) .selection-panel #stats .stat {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-rows: auto 7px;
+  gap: 4px 6px;
+  min-width: 0;
+  font-size: 10px;
+}
+
+.game:not(.editor) .selection-panel #stats .stat > span:nth-child(2) {
+  grid-column: 1 / -1;
+  width: 100%;
+}
+
+.game:not(.editor) .roster.portraits .portrait-preview {
+  height: clamp(128px, 13vw, 176px);
+}
+
+.game.editor .preview-heading-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 7px;
+  flex-wrap: wrap;
+}
+
+.game.editor #preview-zoom-toggle {
+  min-height: 36px;
+  padding: 6px 10px;
+  font-size: 12px;
+}
+
+.game.editor #place-layer {
+  transform-origin: top left;
+}
+
+@media (max-width: 1050px) {
+  .game:not(.editor) .selection-layout {
+    grid-template-columns: minmax(0, 0.8fr) minmax(460px, 1.2fr);
+  }
+}
+
+@media (max-width: 850px) {
+  .game:not(.editor) .selection-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .game:not(.editor) .selection-panel {
+    grid-row: 1;
+    position: static;
+  }
+
+  .game:not(.editor) .roster.portraits {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .game:not(.editor) .selection-panel #stats {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .game:not(.editor) .selection-panel #stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

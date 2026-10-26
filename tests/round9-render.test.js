@@ -4,7 +4,7 @@ import {readFile} from 'node:fs/promises';
 import {resolveChannelRules,fillChannelTemplate} from '../js/channels.js';
 import {createMessage} from '../js/render.js';
 import {normalizeSettings} from '../js/settings.js';
-import {fitSkinPreview} from '../js/skin-preview.js';
+import {fitSkinPreview,fitPreviewPanel} from '../js/skin-preview.js';
 
 const catalog=JSON.parse(await readFile(new URL('../design/skins.json',import.meta.url),'utf8'));
 const samples=[
@@ -29,7 +29,16 @@ test('skin page previews use the overlay message builder and retain a name/messa
  try {const skin=catalog.skins.find(item=>item.id==='bubble-lift'),message={username:'Orbit',text:'Welcome, everyone!',badges:{},emotes:{}};const row=createMessage(message,normalizeSettings(skin.settings));assert.match(row.textContent,/Orbit\s+Welcome, everyone!/)} finally {globalThis.document=prior}
 });
 
-test('preview fit centers the measured wrapper and uses the Round 7f scale bounds',()=>{
+test('preview fit centers the complete panel inside the measured preview box',()=>{
  const prior=globalThis.ResizeObserver,priorDocument=globalThis.document;globalThis.ResizeObserver=class{observe(){}};globalThis.document={fonts:{ready:Promise.resolve()}};
- try {const frame={getBoundingClientRect:()=>({width:100,height:80})},wrapper={offsetWidth:200,offsetHeight:400,style:{},dataset:{}};fitSkinPreview(frame,wrapper);assert.equal(wrapper.dataset.scale,String(Math.min(100*.88/200,80*.85/400,1.4)));assert.match(wrapper.style.transform,/translate\(-50%,-50%\) scale\(/)} finally {globalThis.ResizeObserver=prior;globalThis.document=priorDocument}
+ try {
+  const frame={getBoundingClientRect:()=>({width:560,height:315})};
+  const panel={getBoundingClientRect:()=>({left:80,top:50,width:220,height:300})};
+  const wrapper={style:{},dataset:{},querySelector:()=>panel,getBoundingClientRect:()=>({left:0,top:0,width:1280,height:720})};
+  fitSkinPreview(frame,wrapper);
+  const expected=fitPreviewPanel(560,315,{left:80,top:50,width:220,height:300},{padding:.04,targetHeight:.92});
+  assert.equal(wrapper.dataset.scale,String(expected.scale));
+  assert.match(wrapper.style.transform,/translate\(/);
+  assert.equal(wrapper.style.left,'0');assert.equal(wrapper.style.top,'0');
+ } finally {globalThis.ResizeObserver=prior;globalThis.document=priorDocument}
 });

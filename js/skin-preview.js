@@ -1,4 +1,3 @@
-import {panelMaxHeight} from './fit.js';
 import {resolveChannelRules,fillChannelTemplate} from './channels.js';
 
 const fixtures=[
@@ -44,10 +43,9 @@ export function createSkinMonitorPreview(initialSkinId,render,{timers=globalThis
 }
 
 export function previewCanvasSize(skin,width=1280,height=720){
- if(!skin?.frameTemplate)return{width,height};
- const shape=skin.frameShape||'tall',aspect={tall:2/3,wide:1.5,square:1,webcam:16/9}[shape]||2/3,settings=skin.settings||{},frame=settings.frame||{},outer=frame.outer?.enabled?frame.outer.offset:0,frameWidth=frame.outer?.enabled?frame.outer.width:0,ornaments=frame.target==='panel'&&frame.ornament?.style!=='none'?Math.max(0,(frame.ornament?.size||0)-(frame.ornament?.inset||0)):0;
- const panelHeight=Math.min(height*.92,panelMaxHeight(height,settings.edgeInset??20,outer,frameWidth,ornaments)),panelWidth=Math.min(panelHeight*aspect,width*.92);
- return{width:panelWidth/.92,height};
+ // Keep the same native canvas as overlay.html. Previews zoom the resulting
+ // panel as a picture instead of changing its layout dimensions.
+ return{width,height};
 }
 
 export function marketingPreviewTransform(hostWidth,hostHeight,canvasWidth,canvasHeight,panelRect){
@@ -57,8 +55,32 @@ export function marketingPreviewTransform(hostWidth,hostHeight,canvasWidth,canva
 }
 
 export function fitSkinPreview(frame,wrapper){
- const fit=()=>{const box=frame.getBoundingClientRect();wrapper.style.transform='translate(-50%,-50%)';const w=wrapper.offsetWidth,h=wrapper.offsetHeight;if(!w||!h)return;const scale=Math.min(box.width*.88/w,box.height*.85/h,1.4);wrapper.style.transform=`translate(-50%,-50%) scale(${scale})`;wrapper.dataset.scale=String(scale)};
+ const fit=()=>{
+  const box=frame.getBoundingClientRect(),panel=wrapper.querySelector('.skin-live-preview');
+  if(!box.width||!box.height||!panel)return;
+  // Put the native stage at the preview origin before measuring it. The frame
+  // art is contained by the panel, so sizing from this full panel keeps it whole.
+  wrapper.style.left='0';wrapper.style.top='0';
+  wrapper.style.transform='none';
+  const stageRect=wrapper.getBoundingClientRect(),panelRect=panel.getBoundingClientRect();
+  const panelBox={left:panelRect.left-stageRect.left,top:panelRect.top-stageRect.top,width:panelRect.width,height:panelRect.height};
+  const result=fitPreviewPanel(box.width,box.height,panelBox,{padding:.04,targetHeight:.92});
+  wrapper.style.transformOrigin='top left';
+  wrapper.style.transform=`translate(${result.left}px,${result.top}px) scale(${result.scale})`;
+  wrapper.dataset.scale=String(result.scale);
+ };
  fit();const observer=new ResizeObserver(fit);observer.observe(frame);document.fonts?.ready.then(fit);return fit;
+}
+
+/** Fit and center an outer panel box inside a marketing preview viewport. */
+export function fitPreviewPanel(boxWidth,boxHeight,panel,{padding=.04,targetHeight=.92,maxScale=1.4}={}){
+ const width=Math.max(1,Number(panel?.width)||1),height=Math.max(1,Number(panel?.height)||1);
+ const left=Number(panel?.left)||0,top=Number(panel?.top)||0,padX=width*padding,padY=height*padding;
+ const targetWidth=Math.max(1,boxWidth*(1-padding*2)),targetHeightPx=Math.max(1,boxHeight*targetHeight);
+ const scale=Math.min(targetWidth/(width+padX*2),targetHeightPx/(height+padY*2),maxScale);
+ const centerX=boxWidth/2,centerY=boxHeight/2;
+ return{scale,left:centerX-(left+width/2)*scale,top:centerY-(top+height/2)*scale,width:width*scale,height:height*scale,
+  bounds:{left:centerX-(width/2+padX)*scale,top:centerY-(height/2+padY)*scale,right:centerX+(width/2+padX)*scale,bottom:centerY+(height/2+padY)*scale}};
 }
 
 export function formatSkinPreviewLine(message,settings){
