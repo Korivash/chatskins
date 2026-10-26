@@ -4,7 +4,7 @@
 
 ![ChatSkins](marketing/thumbnail.png)
 
-ChatSkins is a browser-based editor for Twitch chat overlays. It's built for the **Codex x TwitchCon Hackathon (2026)**. Streamers pick a one-click look inspired by popular game chats, like MMO guild chat, retro RPG dialog boxes or pixel sandbox chat, then change anything about it. There's no account, no install and no server. The overlay link *is* the whole configuration.
+ChatSkins is a browser-based editor for Twitch chat overlays. It's built for the **Codex x TwitchCon Hackathon (2026)**. Streamers pick a one-click look inspired by popular game chats, like MMO guild chat, retro RPG dialog boxes or pixel sandbox chat, then change anything about it. No account and no install needed. Twitch login is optional and only unlocks alerts and channel points. The overlay link *is* the whole configuration.
 
 **Live site:** https://getchatskins.com/
 

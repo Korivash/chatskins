@@ -56,7 +56,7 @@ where $L$ is relative luminance. Skins that fail keep their card behind the text
 - **Measure, don't describe.** "The frame is broken" got vague fixes. Exact pixel measurements from the browser, pasted into the prompt, got a correct fix the first time.
 - **Tests aren't enough for visual work.** Some bugs only showed up by rendering every skin and looking at it.
 - **Small details sell a style:** name brackets, a double gold border, a pixel text-shadow, the right channel color.
-- **"No login" removes most of the setup pain** for streamers. Login is only needed for the features Twitch requires it for: alerts and channel points.
+- **"Login optional" removes most of the setup pain** for streamers. Login is only needed for the features Twitch requires it for: alerts and channel points.
 
 ## What's next
 - More skins, starting with the ones streamers request through the site
