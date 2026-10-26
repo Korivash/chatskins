@@ -3,6 +3,7 @@ import {createHash} from 'node:crypto';
 import {resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {handleDescribeRequest} from './describe.mjs';
+import {handleAssistantRequest} from './assistant.mjs';
 
 const fields={name:60,inspired:80,colors:80,font:60,frame:120,description:800,channel:25,discord:40,website:200};
 const required=['name','inspired','colors','description'];
@@ -34,6 +35,6 @@ export function createSkinRequestHandler({fetchImpl=globalThis.fetch,webhookUrl=
  };
 }
 export const handleSkinRequest=createSkinRequestHandler();
-export async function handleApiRequest(request){if(new URL(request.url||'/','http://localhost').pathname==='/api/describe')return handleDescribeRequest(request);return handleSkinRequest(request)}
+export async function handleApiRequest(request){const path=new URL(request.url||'/','http://localhost').pathname;if(path==='/api/describe')return handleDescribeRequest(request);if(path==='/api/assistant')return handleAssistantRequest(request);return handleSkinRequest(request)}
 export function startServer({port=Number(process.env.PORT)||4417,host='127.0.0.1',handler=handleApiRequest}={}){const server=http.createServer(async(req,res)=>{let body='';try{for await(const chunk of req){body+=chunk;if(Buffer.byteLength(body)>8192){res.writeHead(400,{'content-type':'application/json','cache-control':'no-store'});res.end(JSON.stringify({ok:false,errors:{form:'Request body must be 8 KiB or smaller.'}}));req.destroy();return}}const result=await handler({method:req.method,url:new URL(req.url,'http://localhost').pathname,headers:req.headers,remoteAddress:req.socket.remoteAddress,body});res.writeHead(result.status,result.headers);res.end(JSON.stringify(result.body))}catch{res.writeHead(400,{'content-type':'application/json','cache-control':'no-store'});res.end(JSON.stringify({ok:false,errors:{form:'Enter a valid request.'}}))}});server.listen(port,host);return server}
 if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url))startServer();

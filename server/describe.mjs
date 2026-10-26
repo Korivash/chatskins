@@ -1,7 +1,8 @@
 import {createHash} from 'node:crypto';
-import {readFile, rename, writeFile} from 'node:fs/promises';
+import {readFile} from 'node:fs/promises';
 import {dirname, resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
+import {createAiUsageStore} from './ai-usage.mjs';
 
 const here=dirname(fileURLToPath(import.meta.url));
 const dayMs=24*60*60*1000;
@@ -20,8 +21,8 @@ const schema={type:'object',additionalProperties:false,required:['skinId','setti
 }};
 const json=(status,body,headers={})=>({status,headers:{'content-type':'application/json; charset=utf-8','cache-control':'no-store',...headers},body});
 const header=(headers,name)=>{const key=Object.keys(headers||{}).find(k=>k.toLowerCase()===name);return key?headers[key]:''};
-function originAllowed({headers,remoteAddress,originHost}){const origin=header(headers,'origin');if(!origin)return true;try{const hosts=String(originHost||'getchatskins.com').split(',').map(x=>x.trim().toLowerCase()).filter(Boolean);const remote=String(remoteAddress||'').toLowerCase();const trusted=['127.0.0.1','::1','::ffff:127.0.0.1',process.env.SKIN_REQUEST_TRUSTED_PROXY].filter(Boolean).map(x=>String(x).toLowerCase()).includes(remote);const forwarded=header(headers,'x-forwarded-host');if(trusted&&forwarded)hosts.push(...String(forwarded).split(',').map(x=>x.trim().toLowerCase()).filter(Boolean));return hosts.includes(new URL(origin).host.toLowerCase())}catch{return false}}
-function clientIp({remoteAddress='unknown',headers={}}){const remote=String(remoteAddress||'unknown').toLowerCase(),trusted=['127.0.0.1','::1','::ffff:127.0.0.1',process.env.SKIN_REQUEST_TRUSTED_PROXY].filter(Boolean).some(x=>remote===String(x).toLowerCase());if(!trusted)return String(remoteAddress||'unknown');const cf=String(header(headers,'cf-connecting-ip')||'').trim();if(cf)return cf;return String(header(headers,'x-forwarded-for')||'').split(',').map(x=>x.trim()).filter(Boolean).at(-1)||String(remoteAddress||'unknown')}
+export function originAllowed({headers,remoteAddress,originHost}){const origin=header(headers,'origin');if(!origin)return true;try{const hosts=String(originHost||'getchatskins.com').split(',').map(x=>x.trim().toLowerCase()).filter(Boolean);const remote=String(remoteAddress||'').toLowerCase();const trusted=['127.0.0.1','::1','::ffff:127.0.0.1',process.env.SKIN_REQUEST_TRUSTED_PROXY].filter(Boolean).map(x=>String(x).toLowerCase()).includes(remote);const forwarded=header(headers,'x-forwarded-host');if(trusted&&forwarded)hosts.push(...String(forwarded).split(',').map(x=>x.trim().toLowerCase()).filter(Boolean));return hosts.includes(new URL(origin).host.toLowerCase())}catch{return false}}
+export function clientIp({remoteAddress='unknown',headers={}}){const remote=String(remoteAddress||'unknown').toLowerCase(),trusted=['127.0.0.1','::1','::ffff:127.0.0.1',process.env.SKIN_REQUEST_TRUSTED_PROXY].filter(Boolean).some(x=>remote===String(x).toLowerCase());if(!trusted)return String(remoteAddress||'unknown');const cf=String(header(headers,'cf-connecting-ip')||'').trim();if(cf)return cf;return String(header(headers,'x-forwarded-for')||'').split(',').map(x=>x.trim()).filter(Boolean).at(-1)||String(remoteAddress||'unknown')}
 const digest=value=>createHash('sha256').update(String(value)).digest('hex');
 
 export function validateDescribeReply(value,catalog,fontOptions=fontFamilies){
@@ -43,9 +44,7 @@ function compactCatalog(catalog){return(catalog.skins||[]).map(s=>({id:s.id,name
 function outputText(data){if(typeof data?.output_text==='string')return data.output_text;for(const item of data?.output||[])for(const part of item.content||[])if(part.type==='output_text'&&typeof part.text==='string')return part.text;return''}
 
 export function createDescribeHandler({fetchImpl=globalThis.fetch,now=Date.now,originHost=process.env.SKIN_REQUEST_ORIGIN_HOST??'getchatskins.com',keyFile=process.env.OPENAI_KEY_FILE||defaultKeyFile,model=process.env.DESCRIBE_MODEL||'gpt-5-mini',catalogFile=null,usageFile=resolve(here,'describe-usage.json'),logger=()=>{}}={}){
- let statePromise=null,writeQueue=Promise.resolve();
- const loadState=()=>statePromise||=(async()=>{try{const data=JSON.parse(await readFile(usageFile,'utf8'));if(data&&data.version===1){for(const day of Object.values(data.days||{}))day.reservedTokens=0;return data}return{version:1,days:{}}}catch{return{version:1,days:{}}}})();
- const persist=state=>{writeQueue=writeQueue.catch(()=>{}).then(async()=>{const temp=`${usageFile}.tmp`;try{await writeFile(temp,JSON.stringify(state),'utf8');await rename(temp,usageFile)}catch{await writeFile(usageFile,JSON.stringify(state),'utf8').catch(()=>{})}});return writeQueue};
+ const usageStore=createAiUsageStore(usageFile),loadState=usageStore.load,persist=usageStore.persist;
  return async function handleDescribe({method='POST',url='/api/describe',headers={},remoteAddress='unknown',body=''}={}){
   if(method!=='POST'||url!=='/api/describe')return json(404,{ok:false,error:'not_found'});
   if(!originAllowed({headers,remoteAddress,originHost}))return json(403,{ok:false,error:'forbidden',message:'This request could not be verified.'});
