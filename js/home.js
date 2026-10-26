@@ -6,7 +6,7 @@
  */
 import {forwardLegacyRoot} from './routes.js';
 
-import {applyChatStyle,createMessage,applySkinMetadata} from './render.js';
+import {applyChatStyle,createMessage,appendRenderedMessage,applySkinMetadata} from './render.js';
 
 import {normalizeSettings} from './settings.js';
 
@@ -29,7 +29,7 @@ if(!forwardLegacyRoot()){
     const chat=document.createElement('div');
     chat.className='chat chat-panel skin-live-preview';
     applyChatStyle(chat,settings);
-    for(const message of buildSkinPreviewMessages(skin,count))chat.append(createMessage(message,settings));
+    for(const message of buildSkinPreviewMessages(skin,count))appendRenderedMessage(chat,createMessage(message,settings));
     chat.querySelectorAll('.msg').forEach(row=>row.dataset.motionPaused=String(!host._motionVisible||paused||reduced.matches||document.hidden));
     host.replaceChildren(chat);
     host.dataset.skin=skin.id}

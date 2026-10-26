@@ -205,7 +205,14 @@ function applyWindow(root,rect,entry,width,height){const aspect=entry.w/entry.h;
     root._frameWindowLayout={width:layoutWidth,height:layoutHeight};
     const box=frameWindowForLayout(layoutWidth,layoutHeight,entry,root._frameWindowRect||rect);
     if(!box)return;
-    if(root.dataset.studioDesign!=='true')root.style.setProperty('padding',`${box.paddingTop}px ${box.paddingRight}px ${box.paddingBottom}px ${box.paddingLeft}px`,'important');
+    // Keep frame rows in a dedicated clipped window. The outer panel remains
+    // fixed to the frame art, so its padding can never change the fit geometry.
+    const messageWindow=ensureFrameMessageWindow(root);
+    root.style.setProperty('padding','0px','important');
+    messageWindow.style.left=`${box.x}px`;
+    messageWindow.style.top=`${box.y}px`;
+    messageWindow.style.width=`${box.width}px`;
+    messageWindow.style.height=`${box.height}px`;
     root.style.setProperty('--template-window-x',`${box.x}px`);
     root.style.setProperty('--template-window-y',`${box.y}px`);
     root.style.setProperty('--template-window-w',`${box.width}px`);
@@ -215,6 +222,31 @@ function applyWindow(root,rect,entry,width,height){const aspect=entry.w/entry.h;
   root.style.setProperty('--template-aspect',String(aspect));
   root.style.setProperty('--template-ratio',`${entry.w}/${entry.h}`);
   apply()}
+
+/** Create the bottom-anchored clipping box and preserve any existing rows. */
+function ensureFrameMessageWindow(root){
+  let messageWindow=root.querySelector(':scope > .template-message-window');
+  if(!messageWindow){
+    messageWindow=document.createElement('div');
+    messageWindow.className='template-message-window';
+    messageWindow.setAttribute('aria-live','off');
+    const rows=[...root.children].filter(child=>child.classList?.contains('message'));
+    for(const row of rows)messageWindow.append(row);
+    root.append(messageWindow);
+  }
+  root._messageContainer=messageWindow;
+  return messageWindow;
+}
+
+/** Return message rows to the panel when a frame template is removed. */
+function releaseFrameMessageWindow(root){
+  const messageWindow=root.querySelector(':scope > .template-message-window');
+  if(messageWindow){
+    for(const row of [...messageWindow.children])root.append(row);
+    messageWindow.remove();
+  }
+  root._messageContainer=null;
+}
 /** Handle frame template.
  * @param {unknown} root Function input.
  * @param {unknown} placement Function input.
@@ -294,6 +326,7 @@ export async function attachFrameTemplate(root,settings,{skin=null,manifest=null
   
   if(!id){root.querySelector(':scope > .template-frame-art')?.remove();
     root.querySelector(':scope > .template-plaque')?.remove();
+    releaseFrameMessageWindow(root);
     root.classList.remove('has-frame-template','webcam-frame-only');
     root.style.padding='';
     root.style.aspectRatio='';
@@ -416,6 +449,7 @@ export async function attachFrameTemplate(root,settings,{skin=null,manifest=null
     
   }catch{root.querySelector(':scope > .template-frame-art')?.remove();
     root.querySelector(':scope > .template-plaque')?.remove();
+    releaseFrameMessageWindow(root);
     root.classList.remove('has-frame-template','webcam-frame-only');
     root.dataset.frameAspect='';
     root.style.padding='';

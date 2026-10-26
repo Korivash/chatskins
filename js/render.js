@@ -435,13 +435,15 @@ export function createMessage(message,s,community=new Map()){s=effective(s);
  * @param {unknown} community Function input.
  * @returns {unknown} The function result.
  */
-export function appendChatMessage(root,message,s,community=new Map()){const row=createMessage(message,s,community),previous=root.lastElementChild,windowMs=(s.grouping?.windowSeconds||20)*1000,eligible=s.grouping?.enabled&&!message.system&&!message.firstMessage&&previous?.classList.contains('message')&&!previous.classList.contains('system')&&previous.dataset.userKey===row.dataset.userKey&&previous.dataset.roleKey===row.dataset.roleKey&&previous.dataset.nameKey===row.dataset.nameKey&&previous.dataset.firstMessage!=='true'&&Date.now()-Number(previous.dataset.createdAt)<=windowMs;
+export function messageListTarget(root){return root?._messageContainer||root}
+export function appendRenderedMessage(root,row){messageListTarget(root)?.append(row);return row}
+export function appendChatMessage(root,message,s,community=new Map()){const target=messageListTarget(root),row=createMessage(message,s,community),previous=target.lastElementChild,windowMs=(s.grouping?.windowSeconds||20)*1000,eligible=s.grouping?.enabled&&!message.system&&!message.firstMessage&&previous?.classList.contains('message')&&!previous.classList.contains('system')&&previous.dataset.userKey===row.dataset.userKey&&previous.dataset.roleKey===row.dataset.roleKey&&previous.dataset.nameKey===row.dataset.nameKey&&previous.dataset.firstMessage!=='true'&&Date.now()-Number(previous.dataset.createdAt)<=windowMs;
     if(eligible){row.classList.add('grouped');
       const n=row.querySelector('.chat-name'),b=row.querySelector('.chat-badges'),i=row.querySelector('.chat-initial');
       if(n)n.style.visibility='hidden';
       if(b)b.style.visibility='hidden';
-      if(i)i.style.visibility='hidden'}root.append(row);
-    const oldest=[...root.children].find(x=>x.classList?.contains('message'));
+      if(i)i.style.visibility='hidden'}target.append(row);
+    const oldest=[...target.children].find(x=>x.classList?.contains('message'));
     if(oldest&&s.lifecycle?.fadeMaskPx>0){const depth=s.lifecycle.fadeMaskPx,edge=s.direction==='top'?'to top':'to bottom';
       oldest.style.maskImage=`linear-gradient(${edge}, transparent, black ${depth}px)`;
       oldest.style.webkitMaskImage=oldest.style.maskImage}else if(oldest){oldest.style.maskImage='';

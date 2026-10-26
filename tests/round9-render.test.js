@@ -23,7 +23,7 @@ test('every skin renders a readable separator between name formatting and messag
 test('skin page previews use the overlay message builder and retain a name/message separator',async()=>{
  const source=await readFile(new URL('../js/skins-page.js',import.meta.url),'utf8');
  assert.match(source,/import\s*\{[^}]*createMessage[^}]*\}\s*from\s*['"]\.\/render\.js['"]/);
- assert.match(source,/chat\.append\(createMessage\(message,previewSettings\)\)/);
+ assert.match(source,/appendRenderedMessage\(chat,createMessage\(message,previewSettings\)\)/);
  class Node {constructor(tag,text=''){this.nodeType=text?3:1;this.text=text;this.childNodes=[];this.dataset={};this.style={setProperty(){},getPropertyValue(){return ''}};this.classList={add(){}}}append(...items){this.childNodes.push(...items)}prepend(...items){this.childNodes.unshift(...items)}querySelector(){return null}setAttribute(){}get textContent(){return this.nodeType===3?this.text:this.text+this.childNodes.map(node=>node.textContent).join('')}set textContent(value){this.text=String(value);this.childNodes=[]}}
  const prior=globalThis.document;globalThis.document={createElement:tag=>new Node(tag),createTextNode:text=>new Node('#text',text)};
  try {const skin=catalog.skins.find(item=>item.id==='bubble-lift'),message={username:'Orbit',text:'Welcome, everyone!',badges:{},emotes:{}};const row=createMessage(message,normalizeSettings(skin.settings));assert.match(row.textContent,/Orbit\s+Welcome, everyone!/)} finally {globalThis.document=prior}

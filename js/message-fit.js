@@ -16,7 +16,8 @@ const warnedPanels = new WeakSet();
  * @returns {unknown} The function result.
  */
 export function pendingMessageAnimations(panel) {
-  return [...panel.children].filter(row => row.classList?.contains('message'))
+  const target=panel?._messageContainer||panel;
+  return [...target.children].filter(row => row.classList?.contains('message'))
     .flatMap(row => row.getAnimations?.() || [])
     .filter(animation => (animation.playState === 'running' || animation.pending)
       && Number.isFinite(animation.effect?.getComputedTiming().endTime));
@@ -27,13 +28,16 @@ export function pendingMessageAnimations(panel) {
 export function fitPanelMessages(panel, maxHeight) {
   // Entrance keyframes can also animate layout properties; wait for final layout.
   if (pendingMessageAnimations(panel).length) return 0;
+
+  const target=panel?._messageContainer||panel;
+  const frameWindow=target!==panel;
   
   const limit = Math.max(0, Number(maxHeight) || 0);
   
-  const messages = () => [...panel.children].filter(child => child.classList?.contains('message'));
+  const messages = () => [...target.children].filter(child => child.classList?.contains('message'));
   
   const rowStackHeight = rows => {
-    const style = typeof getComputedStyle === 'function' ? getComputedStyle(panel) : null;
+    const style = typeof getComputedStyle === 'function' ? getComputedStyle(target) : null;
     
     const gap = parseFloat(style?.rowGap || style?.gap) || 0;
     
@@ -48,11 +52,11 @@ export function fitPanelMessages(panel, maxHeight) {
   };
   
   const availableContent = () => {
-    const client = Number(panel.clientHeight) || 0;
+    const client = Number(target.clientHeight) || 0;
     
     if (!client) return limit;
     
-    const style = typeof getComputedStyle === 'function' ? getComputedStyle(panel) : null;
+    const style = typeof getComputedStyle === 'function' ? getComputedStyle(target) : null;
     
     const padding = (parseFloat(style?.paddingTop)||0) + (parseFloat(style?.paddingBottom)||0);
     
@@ -65,7 +69,12 @@ export function fitPanelMessages(panel, maxHeight) {
   while (true) {
     const rows = messages();
     
-    const over = rowStackHeight(rows) - availableContent() > 1;
+    const windowBox=frameWindow?target.getBoundingClientRect?.():null;
+    const outsideWindow=frameWindow&&windowBox&&rows.some(row=>{
+      const box=row.getBoundingClientRect?.();
+      return box&&(box.top<windowBox.top-1||box.bottom>windowBox.bottom+1);
+    });
+    const over = rowStackHeight(rows) - availableContent() > 1 || outsideWindow;
     
     if (!over) break;
     
@@ -73,7 +82,7 @@ export function fitPanelMessages(panel, maxHeight) {
     
     if (!oldest) break;
     
-    if (rows.length === 1) {
+    if (rows.length === 1 && !frameWindow) {
       if (!warnedPanels.has(panel)) {
         warnedPanels.add(panel);
         

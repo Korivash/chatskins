@@ -4,7 +4,7 @@
  * Main exports: module declarations.
  * Invariant: preserve existing settings links and render chat content as text.
  */
-import {applyChatStyle, applySkinMetadata, createMessage} from './render.js';
+import {applyChatStyle, applySkinMetadata, createMessage, appendRenderedMessage} from './render.js';
 
 import {normalizeSettings} from './settings.js';
 
@@ -306,7 +306,7 @@ function renderPreview(host, skin, count = 4, history = null) {
   
   const messages = history || previewMessages(skin, count);
   
-  for (const message of messages) chat.append(createMessage(message, settings));
+  for (const message of messages) appendRenderedMessage(chat, createMessage(message, settings));
   
   canvas.append(chat);
    wrapper.append(canvas);

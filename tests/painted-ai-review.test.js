@@ -55,8 +55,9 @@ assert.equal(titleNode.textContent,'NewChannel','typing a channel refreshes the 
 
 const css=fs.readFileSync('css/skin-render.css','utf8');
 assert.match(css,/\.chat\.has-frame-template>\.chat-surface\{display:none!important\}/,'template artwork is not covered by the generic opaque surface');
-assert.match(css,/\.chat\.has-frame-template>\.message\{display:block!important[^}]*height:auto!important/,'frame rows use natural, non-overlapping height');
-assert.match(css,/\.chat\.has-frame-template>\.message \.message-body\{[^}]*text-shadow:0 1px 2px #000c/,'transparent windows get a readable text shadow');
+assert.match(css,/\.template-message-window\{[^}]*overflow:hidden/,'frame rows are clipped to the measured inner window');
+assert.match(css,/\.template-message-window\{[^}]*justify-content:flex-end/,'frame rows anchor to the bottom of the inner window');
+assert.match(css,/\.template-message-window>\.message \.message-body\{[^}]*text-shadow:0 1px 2px #000c/,'transparent windows get a readable text shadow');
 
 class FakeNode{
  constructor(tag,text=''){

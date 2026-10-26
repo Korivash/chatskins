@@ -6,7 +6,7 @@
  */
 import {createChatPlayAdmission,createChatPlayCooldowns,tallyVotes,isAllowedSkin,resolveAllowedSkin,matchRewardTitle,makePlayBanner,normalizeChatPlay,parseChatPlayCommand} from './chat-play.js';
 
-import {applyChatStyle,createMessage} from './render.js';
+import {applyChatStyle,createMessage,messageListTarget} from './render.js';
 
 import {resolveEmotes} from './emotes.js';
 
@@ -57,7 +57,8 @@ export function renderMessageModelsInPlace(root,items,settings,renderMessage=cre
   
  const live=items.filter(item=>!item.deleted&&(!expires||now()-item.createdAt<expires));
   
- const existing=[...root.children].filter(node=>node.classList?.contains('message'));
+ const target=messageListTarget(root);
+ const existing=[...target.children].filter(node=>node.classList?.contains('message'));
   
  const claimed=new Set();
   
@@ -81,7 +82,7 @@ export function renderMessageModelsInPlace(root,items,settings,renderMessage=cre
       
    previous.replaceWith(node);
       
-  }else root.append(node);
+  }else target.append(node);
     
   item.row=node;
     

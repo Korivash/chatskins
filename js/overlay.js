@@ -158,7 +158,7 @@ else{
     return b.top>=v.top+s.edgeInset-1&&b.left>=v.left+s.edgeInset-1&&b.right<=v.right-s.edgeInset+1&&b.bottom<=v.bottom-s.edgeInset+1&&b.top-o>=v.top-1&&b.left-o>=v.left-1&&b.right+o<=v.right+1&&b.bottom+o<=v.bottom+1};
   
  window.__chatskinsStats=()=>{const b=root.getBoundingClientRect();
-    return{messages:root.querySelectorAll(':scope > .message').length,received,filtered,fitRemoved,panelTop:b.top,panelBottom:b.bottom,viewportHeight:window.innerHeight}};
+    return{messages:root.querySelectorAll('.message').length,received,filtered,fitRemoved,panelTop:b.top,panelBottom:b.bottom,viewportHeight:window.innerHeight}};
   
  const resize=()=>{panelMax=layoutPanel(host,root,s);
     resizeFrameTemplate(root,s.placement);

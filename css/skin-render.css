@@ -452,9 +452,10 @@ body.overlay{margin:0;min-height:100vh;background:transparent;overflow:hidden}
    surface would otherwise sit above the frame art with its opaque skin fill. */
 .chat.has-frame-template>.chat-surface{display:none!important}
 
-/* Keep template rows in normal flow so names and bodies cannot overlap later rows. */
-.chat.has-frame-template>.message{display:block!important;position:relative;flex:none!important;height:auto!important;min-height:min-content!important;line-height:1.35!important;overflow:visible!important}
-.chat.has-frame-template>.message .chat-identity{display:inline!important;line-height:inherit!important}
-.chat.has-frame-template>.message .message-body{display:inline!important;max-height:none!important;line-height:inherit!important;vertical-align:baseline;text-shadow:0 1px 2px #000c,0 0 4px #0008}
-.chat.has-frame-template>.message .chat-name{line-height:inherit!important;text-shadow:0 1px 2px #000c,0 0 4px #0008}
+/* The measured frame window clips rows and anchors the newest line at its bottom. */
+.chat.has-frame-template>.template-message-window{position:absolute;z-index:2;display:flex;flex-direction:column;justify-content:flex-end;gap:var(--gap,4px);box-sizing:border-box;overflow:hidden;contain:layout paint;pointer-events:none}
+.chat.has-frame-template .template-message-window>.message{display:block!important;position:relative;flex:none!important;height:auto!important;min-height:min-content!important;line-height:1.35!important;overflow:visible!important;margin-block:2px!important}
+.chat.has-frame-template .template-message-window>.message .chat-identity{display:inline!important;line-height:inherit!important}
+.chat.has-frame-template .template-message-window>.message .message-body{display:inline!important;max-height:none!important;line-height:inherit!important;vertical-align:baseline;text-shadow:0 1px 2px #000c,0 0 4px #0008}
+.chat.has-frame-template .template-message-window>.message .chat-name{line-height:inherit!important;text-shadow:0 1px 2px #000c,0 0 4px #0008}
 .chat.chat-panel>.dream-painted-frame{display:block}

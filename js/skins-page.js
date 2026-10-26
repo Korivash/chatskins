@@ -6,7 +6,7 @@
  */
 import {initSite} from './site.js';
 
-import {applyChatStyle,createMessage,applySkinMetadata} from './render.js';
+import {applyChatStyle,createMessage,appendRenderedMessage,messageListTarget,applySkinMetadata} from './render.js';
 
 import {normalizeSettings,buildCompactSettingsUrl} from './settings.js';
 
@@ -74,7 +74,7 @@ function renderSkinPreview(host,skin,{card=false,messages=null}={}){
   chat.className='chat chat-panel skin-live-preview';
   applyChatStyle(chat,previewSettings);
   
- for(const message of(messages||buildSkinPreviewMessages(skin,card?2:3)))chat.append(createMessage(message,previewSettings));
+ for(const message of(messages||buildSkinPreviewMessages(skin,card?2:3)))appendRenderedMessage(chat,createMessage(message,previewSettings));
   
  if(canvas){canvas.append(chat);
     wrapper.append(canvas)}else wrapper.append(chat);
@@ -100,7 +100,7 @@ function renderSkinPreview(host,skin,{card=false,messages=null}={}){
   
  const schedule=()=>{clearTimeout(timer);
     if(disposed||previewsPaused||reducedMotion()||!host._visible)return;
-    timer=setTimeout(()=>{if(disposed)return;const message=nextFakeMessage(Math.random,previewSettings.channel);message.id=`skin-preview-${skin.id}-${Date.now()}-${Math.random()}`;const row=createMessage(message,previewSettings);row.dataset.motionPaused=String(!host._visible||previewsPaused||reducedMotion());row.classList.add('preview-arrival');chat.append(row);const rows=[...chat.children].filter(el=>el.classList.contains('message'));if(rows.length>(card?3:6)){const old=rows[0];old.classList.add('expired');setTimeout(()=>old.isConnected&&old.remove(),previewSettings.animationOut==='none'||previewSettings.reduceMotion?0:previewSettings.animationOutDuration)}schedule()},card?3000+Math.random()*1000:nextFakeDelay());
+    timer=setTimeout(()=>{if(disposed)return;const message=nextFakeMessage(Math.random,previewSettings.channel);message.id=`skin-preview-${skin.id}-${Date.now()}-${Math.random()}`;const row=createMessage(message,previewSettings);row.dataset.motionPaused=String(!host._visible||previewsPaused||reducedMotion());row.classList.add('preview-arrival');appendRenderedMessage(chat,row);const rows=[...messageListTarget(chat).children].filter(el=>el.classList.contains('message'));if(rows.length>(card?3:6)){const old=rows[0];old.classList.add('expired');setTimeout(()=>old.isConnected&&old.remove(),previewSettings.animationOut==='none'||previewSettings.reduceMotion?0:previewSettings.animationOutDuration)}schedule()},card?3000+Math.random()*1000:nextFakeDelay());
     };
   
  host._stopPreview?.();

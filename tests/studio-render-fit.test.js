@@ -20,7 +20,7 @@ test('Studio message content is fitted to the chat-window part at both canvas si
 test('editor waits for the Studio window before it appends and fits preview rows',async()=>{
  const source=await readFile(resolve('js/editor.js'),'utf8');
  const attach=source.indexOf('await mountStudioComposition');
- const append=source.indexOf('root.append(createMessage(m,display,communityMap))',attach);
+ const append=source.indexOf('appendRenderedMessage(root,createMessage(m,display,communityMap))',attach);
  const fit=source.indexOf('fitPanelMessages(root,host.clientHeight)',append);
  assert.ok(attach>=0&&append>attach&&fit>append);
  assert.match(source,/onPreview:async draft=>\{.*?delete state\.studioDesign;const root=.*?await mountStudioComposition/s);
