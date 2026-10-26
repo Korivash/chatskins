@@ -16,7 +16,7 @@ assert(!/background\s*:/.test(reset),'border reset preserves any readability bac
 assert.equal(defaults.templateMessageBorders,false,'template message borders default off');
 const explicit=decodeSettings(encodeSettings({...skins[0].settings,templateMessageBorders:true}));
 assert.equal(explicit.templateMessageBorders,true,'template border preference round trips');
-assert.match(html,/<input id="template-message-borders" type="checkbox">\s*Message borders/,'Simple mode has the Message borders toggle');
+assert.match(html,/<input id="template-message-borders" type="checkbox"(?: role="switch")?>\s*Message borders/,'Simple mode has the Message borders toggle');
 assert.match(editor,/templateMessageBorders=e\.target\.checked/,'toggle updates the real setting');
 assert.match(css,/data-template-message-borders="true"/,'enabled setting bypasses the reset and restores style borders');
 for(const skin of skins){

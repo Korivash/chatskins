@@ -13,7 +13,7 @@ test('parts index has 60 unique trusted entries and every SVG exists',async()=>{
  for(const [i,p] of index.parts.entries()){assert.equal(p.id,i);assert.match(p.file,/^[a-z0-9-]+\.svg$/);assert.ok(p.category);assert.ok(Array.isArray(p.tags));assert.ok(p.defaultSize.w>0&&p.defaultSize.h>0);const svg=await readFile(new URL(`site-media/parts/${p.file}`,root),'utf8');assert.match(svg,/<svg\b/);assert.doesNotMatch(svg,/<script|foreignObject|(?:href|src)=["']https?:\/\//i);assert.ok(Buffer.byteLength(svg)<3000)}
 });
 test('studio transforms and palette colors round-trip compactly',()=>{
- const source=makeStudioKit('Neon');source.name='ChannelPal ✨';source.instances[2].angle=37;source.instances[2].flipX=true;
+ const source=makeStudioKit('Neon');source.name='ChannelPal âœ¨';source.instances[2].angle=37;source.instances[2].flipX=true;
  const actual=decodeStudio(encodeStudio(source));assert.deepEqual(actual,normalizeStudio(source,{strict:true}));
 });
 test('25-part design remains inside complete OBS link budget',async()=>{
@@ -95,7 +95,7 @@ test('editor preview and overlay use the same studio DOM geometry at scaled stag
 });
 test('the editor only calls methods exposed by its imported Studio controller API',async()=>{
  const editor=await readFile(new URL('js/editor.js',root),'utf8');assert.match(editor,/import\s*\{[^}]*createStudioController[^}]*\}\s*from ['"]\.\/frame-studio\.js/);
- const called=[...editor.matchAll(/studioController(?:\?\.|\.)\s*([A-Za-z][A-Za-z0-9_]*)/g)].map(match=>match[1]);assert.deepEqual([...new Set(called)].sort(),['getDraft','init','render']);
+ const called=[...editor.matchAll(/studioController(?:\?\.|\.)\s*([A-Za-z][A-Za-z0-9_]*)/g)].map(match=>match[1]);assert.deepEqual([...new Set(called)].sort(),['getDraft','init','render','setDraft']);
  const oldDocument=globalThis.document,oldBoard=globalThis.__studioLiveBoard;delete globalThis.__studioLiveBoard;
  const element=()=>({append(){},addEventListener(){},setAttribute(){},querySelectorAll(){return[]},dataset:{},style:{setProperty(){}},value:'',textContent:''});
  globalThis.document={createElement:element};const rootNode={querySelector(selector){return selector==='.studio-board'?null:element()},querySelectorAll(){return[]},addEventListener(){},setPointerCapture(){}};

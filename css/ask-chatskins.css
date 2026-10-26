@@ -45,7 +45,8 @@
   bottom: 60px;
   display: flex;
   flex-direction: column;
-  width: min(390px, calc(100vw - 28px));
+  width: min(420px, calc(100vw - 28px));
+  height: min(690px, calc(100dvh - 105px));
   max-height: min(690px, calc(100dvh - 105px));
   padding: 15px;
   border: 1px solid var(--ask-edge);
@@ -67,7 +68,8 @@
   flex-direction: column;
   gap: 8px;
   min-height: 90px;
-  max-height: 260px;
+  flex: 1 1 auto;
+  max-height: min(520px, 62vh);
   overflow: auto;
   margin: 12px 0;
   padding: 4px;
@@ -75,12 +77,19 @@
 }
 
 .ask-message { max-width: 91%; padding: 9px 11px; border: 1px solid #304967; border-radius: 12px; background: #13243a; overflow-wrap: anywhere; }
+.ask-message p { margin: 0 0 7px; }
+.ask-message p:last-child { margin-bottom: 0; }
+.ask-message ol { margin: 4px 0 0; padding-left: 21px; }
+.ask-message li + li { margin-top: 4px; }
 .ask-user { align-self: flex-end; border-color: #3e72a7; background: #193d67; }
 .ask-assistant, .ask-typing { align-self: flex-start; }
 .ask-typing { color: var(--ask-muted); font-style: italic; animation: ask-pulse 1.2s ease-in-out infinite alternate; }
 .ask-starters { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
 .ask-chip, .ask-tours button { padding: 7px 9px; border: 1px solid #365575; border-radius: 8px; background: #13243a; text-align: left; font-size: 12px; }
 .ask-chip:hover, .ask-tours button:hover { border-color: var(--ask-accent); background: #183252; }
+.ask-guides-toggle { margin-top: 8px; padding: 7px 10px; border: 1px solid #365575; border-radius: 8px; color: var(--ask-ink); background: #14253a; }
+.ask-action-notes { display: flex; flex-wrap: wrap; gap: 5px; }
+.ask-action-note { padding: 3px 8px; border: 1px solid #476c90; border-radius: 999px; color: #bfdcff; background: #10233a; font-size: 11px; }
 .ask-fallback { max-height: 220px; overflow: auto; margin-top: 10px; padding: 10px; border: 1px solid #3d5570; border-radius: 10px; background: #0c1829; }
 .ask-fallback strong { display: block; margin-bottom: 6px; }
 .ask-faq details { padding: 6px 0; border-top: 1px solid #233b57; }

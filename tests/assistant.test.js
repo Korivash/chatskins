@@ -69,7 +69,7 @@ class FakeDocument{
  constructor(){this.body=new FakeElement('body');this.body.ownerDocument=this;this.nodes=new Map();this.listeners={};this.activeElement=null}createElement(tag){const node=new FakeElement(tag);node.ownerDocument=this;return node}querySelector(selector){return this.nodes.get(selector)||null}addEventListener(k,fn){(this.listeners[k]||=[]).push(fn)}dispatchEvent(event){this.dispatched=event;return true}
 }
 test('walkthroughs are static and start without any API request',()=>{assert.equal(Object.keys(TOURS).length,5);for(const tour of Object.values(TOURS))assert.ok(tour.steps.length>=3);assert.equal(STARTER_PROMPTS.length,4);const doc=new FakeDocument(),location={pathname:'/editor.html',href:'https://getchatskins.com/editor.html'},storage={getItem:()=>null,setItem(){},removeItem(){}};let fetches=0;const ui=mountAskChat(doc,{fetcher:()=>{fetches++},storage,location});ui.startTour('obs-setup');assert.equal(fetches,0);assert.equal(ui.panel.hidden,false);assert.equal(doc.body.children.some(x=>x.className==='ask-tour-card'),true)});
-test('API errors reveal the static FAQ and tour choices',async()=>{const doc=new FakeDocument(),storage={getItem:()=>null,setItem(){},removeItem(){}},ui=mountAskChat(doc,{storage,location:{pathname:'/editor.html',href:'https://getchatskins.com/editor.html'},fetcher:async()=>({ok:false,status:429,json:async()=>({message:'Please try again soon.'})})});await ui.send('How do I add this chat to OBS?');const fallback=ui.panel.querySelectorAll().find(node=>node.className==='ask-fallback');assert.equal(fallback.hidden,false);assert.match(ui.log.children.at(-1).textContent,/Please try again soon/);assert.ok(ui.panel.querySelectorAll().some(node=>node.className==='ask-tours'))});
+test('API errors reveal the static FAQ and tour choices',async()=>{const doc=new FakeDocument(),storage={getItem:()=>null,setItem(){},removeItem(){}},ui=mountAskChat(doc,{storage,location:{pathname:'/editor.html',href:'https://getchatskins.com/editor.html'},fetcher:async()=>({ok:false,status:429,json:async()=>({message:'Please try again soon.'})})});await ui.send('How do I add this chat to OBS?');const fallback=ui.panel.querySelectorAll().find(node=>node.className==='ask-fallback');assert.equal(fallback.hidden,false);assert.match(ui.log.children.at(-1).children[0].textContent,/Please try again soon/);assert.ok(ui.panel.querySelectorAll().some(node=>node.className==='ask-tours'))});
 test('the guide validates and executes all returned UI action kinds',async()=>{
  const doc=new FakeDocument(),location={pathname:'/editor.html',href:'https://getchatskins.com/editor.html'},storage={getItem:()=>null,setItem(){},removeItem(){}};for(const id of ['options-tab-look','options-tab-style','get-link','place-toggle']){const target=new FakeElement('button');target.ownerDocument=doc;target.click=()=>{target.clicked=true};target.scrollIntoView=()=>{};doc.nodes.set('#'+id,target)}const ui=mountAskChat(doc,{storage,location,fetcher:async()=>{throw Error('not used')}});
  const actions=[{type:'apply_style',settings:{fontSize:28}},{type:'open_tab',tab:'style'},{type:'highlight',control:'Get my OBS link'},{type:'start_walkthrough',id:'frames'},{type:'open_doc',slug:'frames'}];for(const action of actions){assert.ok(canRunAssistantAction(action));await ui.execute(action)}assert.equal(doc.dispatched.detail.type,'apply_style','style action is sent to the editor');assert.ok(doc.nodes.get('#options-tab-style').clicked,'tab action activates the editor tab');assert.ok(doc.nodes.get('#get-link').classList.contains('ask-target-highlight'),'highlight action marks its control');assert.equal(ui.panel.hidden,false);assert.equal(location.href,'https://getchatskins.com/docs/#/page/frames');assert.ok(ui.log.children.length>=4)
@@ -84,4 +84,27 @@ test('help launcher clears the sticky editor bar at desktop and mobile sizes',()
   const dockTop=height-dockHeight;assert.ok(launcherBottom<=dockTop-12,`${width}px launcher clears the bar with a 12px gap`);
  }
  assert.equal(assistantLauncherOffset(0),22);
+});
+
+test('create_design is a validated assistant action and runs the design endpoint',async()=>{
+ const {validateAssistantAction}=await import('../server/assistant.mjs');
+ const valid=validateAssistantAction({name:'create_design',arguments:'{"prompt":"spooky purple frame with a ghost"}'});
+ assert.deepEqual(valid,{type:'create_design',prompt:'spooky purple frame with a ghost'});
+ assert.equal(validateAssistantAction({name:'create_design',arguments:JSON.stringify({prompt:'x'.repeat(301)})}),null);
+ const doc=new FakeDocument(),location={pathname:'/editor.html',href:'https://getchatskins.com/editor.html'},storage={getItem:()=>null,setItem(){},removeItem(){}};
+ const look=new FakeElement('button'),studio=new FakeElement('button');look.ownerDocument=studio.ownerDocument=doc;studio.click=()=>{studio.clicked=true};doc.nodes.set('#options-tab-look',look);doc.nodes.set('#options-tab-studio',studio);
+ const dream={id:'a'.repeat(24),key:'private-owner-key',name:'Ghost Garden',imageStatus:'off',design:{instances:[{part:19}]}};let requested='';
+ const ui=mountAskChat(doc,{storage,location,fetcher:async(url,options)=>{requested=url;assert.equal(JSON.parse(options.body).text,'spooky purple frame with a ghost');return{ok:true,json:async()=>({ok:true,...dream})}}});
+ await ui.execute(valid);
+ assert.equal(requested,'/api/dream');assert.equal(studio.clicked,true);assert.equal(doc.dispatched.type,'chatskins:dream-generated');assert.equal(doc.dispatched.detail.dream.name,'Ghost Garden');
+});
+
+test('guide system requests original art and returns a useful design action',async t=>{
+ const calls=[],first={id:'dream-response',output:[{type:'reasoning',id:'rs_dream',summary:[]},{type:'function_call',call_id:'design-1',name:'create_design',arguments:'{"prompt":"spooky purple frame with a ghost"}'}],usage:{total_tokens:7}};
+ const fetchImpl=async(url,options)=>{calls.push({url,options});if(url.endsWith('/moderations'))return{ok:true,json:async()=>({results:[{flagged:false}],usage:{total_tokens:1}})};const count=calls.filter(item=>item.url.endsWith('/responses')).length;return{ok:true,json:async()=>count===1?first:{output:[{type:'message',content:[{type:'output_text',text:'I made a spooky purple frame with a ghost and opened it in Studio. You can adjust the parts, then copy your OBS link.'}]}],usage:{total_tokens:8}}}};
+ const fx=await fixture(t,{fetchImpl}),response=await fx.handler({headers:{origin:'https://getchatskins.com'},body:message('Make me a spooky purple frame with a ghost')});
+ const firstRequest=JSON.parse(calls.find(item=>item.url.endsWith('/responses')).options.body);
+ assert.match(firstRequest.input[0].content[0].text,/When the user wants new art.*call create_design/s);
+ assert.ok(firstRequest.tools.some(tool=>tool.name==='create_design'&&tool.strict===true));
+ assert.equal(response.status,200);assert.equal(response.body.actions[0].type,'create_design');assert.match(response.body.reply,/opened it in Studio/);assert.doesNotMatch(response.body.reply,/add (?:a|the) ghost (?:image|art)/i);
 });

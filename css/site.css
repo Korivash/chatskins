@@ -51,3 +51,9 @@
 .game.editor .stage{position:relative}
 
 .game.editor .source{position:relative}
+.dream-skins-card{display:grid;grid-template-columns:minmax(0,1fr) minmax(250px,.8fr);gap:22px;margin:22px 0;padding:20px;border:1px solid #405d7d;border-radius:16px;background:linear-gradient(145deg,#101f34,#101827);box-shadow:0 12px 30px #02081255}
+.dream-skins-card h2{margin:0 0 7px}
+.dream-skins-card form{display:grid;gap:8px}
+.dream-skins-card textarea{width:100%;min-height:88px;padding:11px 13px;border:1px solid #526a87;border-radius:9px;background:#081525;color:#f3f7ff;font:inherit;resize:vertical}
+.dream-skins-card [role=status]{min-height:1.4em;color:#b6d7ff}
+@media(max-width:650px){.dream-skins-card{grid-template-columns:1fr}}
