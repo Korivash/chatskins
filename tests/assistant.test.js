@@ -55,7 +55,7 @@ test('an incomplete first Assistant response is rejected without parsing partial
  };
  const fx=await fixture(t,{fetchImpl});
  const result=await fx.handler({headers:{origin:'https://getchatskins.com'},body:message()});
- assert.equal(result.status,502);
+ assert.equal(result.status,422);
  assert.equal(result.body.error,'incomplete_reply');
  assert.match(result.body.message,/did not finish/);
  const request=JSON.parse(calls.find(call=>call.url.endsWith('/responses')).options.body);
@@ -76,7 +76,7 @@ test('an incomplete Assistant tool follow-up is rejected and both calls count',a
  };
  const fx=await fixture(t,{fetchImpl});
  const result=await fx.handler({headers:{origin:'https://getchatskins.com'},body:message()});
- assert.equal(result.status,502);
+ assert.equal(result.status,422);
  assert.equal(result.body.error,'incomplete_reply');
  const requests=calls.filter(call=>call.url.endsWith('/responses')).map(call=>JSON.parse(call.options.body));
  assert.equal(requests.length,2);

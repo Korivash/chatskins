@@ -74,14 +74,14 @@ export function createDescribeHandler({fetchImpl=globalThis.fetch,now=Date.now,o
   const user=JSON.stringify({description:input.text.trim(),current});let response;
   try{response=await fetchImpl('https://api.openai.com/v1/responses',{method:'POST',headers:headersOpenAI,body:JSON.stringify({model,input:[{role:'system',content:[{type:'input_text',text:system}]},{role:'user',content:[{type:'input_text',text:user}]}],max_output_tokens:2000,reasoning:{effort:'low'},text:{format:{type:'json_schema',name:'chat_style',strict:true,schema:schemaForCall}}})})}catch{await release(Number(moderation?.usage?.total_tokens)||0);return json(503,{ok:false,error:'unavailable',message:'The style helper could not finish. Try the Make it mine guide instead.'})}
   if(!response.ok){await release(Number(moderation?.usage?.total_tokens)||0);return json(response.status===429?429:503,{ok:false,error:response.status===429?'rate_limited':'unavailable',message:response.status===429?'The style helper is busy for now. Try again later, or use the Make it mine guide instead.':'The style helper could not finish. Try the Make it mine guide instead.'})}
-  let data;try{data=await response.json()}catch{await release(Number(moderation?.usage?.total_tokens)||0);return json(502,{ok:false,error:'invalid_reply',message:'The style helper returned an unusable result. Try again or use the Make it mine guide.'})}
+  let data;try{data=await response.json()}catch{await release(Number(moderation?.usage?.total_tokens)||0);return json(422,{ok:false,error:'invalid_reply',message:'The style helper returned an unusable result. Try again or use the Make it mine guide.'})}
   const responseTokens=Number(data.usage?.total_tokens)||0;
   if(data.status==='incomplete'){
    await release((Number(moderation?.usage?.total_tokens)||0)+responseTokens);
-   return json(502,{ok:false,error:'incomplete_reply',message:'The style helper could not finish that look. Try a shorter description or use the Make it mine guide.'});
+   return json(422,{ok:false,error:'incomplete_reply',message:'The style helper could not finish that look. Try a shorter description or use the Make it mine guide.'});
   }
-  let parsed;try{parsed=JSON.parse(outputText(data))}catch{await release((Number(moderation?.usage?.total_tokens)||0)+responseTokens);return json(502,{ok:false,error:'invalid_reply',message:'The style helper returned an unusable result. Try again or use the Make it mine guide.'})}
-  const validated=validateDescribeReply(parsed,catalog.skins,fontOptions);if(!validated){await release((Number(moderation?.usage?.total_tokens)||0)+responseTokens);return json(502,{ok:false,error:'invalid_reply',message:'The style helper returned an unusable result. Try again or use the Make it mine guide.'})}
+  let parsed;try{parsed=JSON.parse(outputText(data))}catch{await release((Number(moderation?.usage?.total_tokens)||0)+responseTokens);return json(422,{ok:false,error:'invalid_reply',message:'The style helper returned an unusable result. Try again or use the Make it mine guide.'})}
+  const validated=validateDescribeReply(parsed,catalog.skins,fontOptions);if(!validated){await release((Number(moderation?.usage?.total_tokens)||0)+responseTokens);return json(422,{ok:false,error:'invalid_reply',message:'The style helper returned an unusable result. Try again or use the Make it mine guide.'})}
   const tokens=(Number(moderation?.usage?.total_tokens)||0)+responseTokens;await release(tokens);return json(200,{ok:true,...validated});
  };
 }

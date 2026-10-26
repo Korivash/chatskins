@@ -73,11 +73,11 @@ export function createAssistantHandler({fetchImpl=globalThis.fetch,now=Date.now,
   // allowlisted actions after this handler validates their arguments.
   let result;try{result=await fetchImpl('https://api.openai.com/v1/responses',{method:'POST',headers:openAiHeaders,body:JSON.stringify({model,input:firstInput,store:true,tools:assistantToolDefinitions,tool_choice:'auto',max_output_tokens:1500,reasoning:{effort:'low'}})})}catch{await finish(moderationTokens);return json(503,{ok:false,error:'unavailable',message:'Ask ChatSkins could not reply. Try a setup guide or the Docs.'})}
   if(!result.ok){await finish(moderationTokens);return json(result.status===429?429:503,{ok:false,error:result.status===429?'rate_limited':'unavailable',message:result.status===429?'Ask ChatSkins is busy. Try again soon, or use a setup guide below.':'Ask ChatSkins could not reply. Try a setup guide or the Docs.'})}
-  let data;try{data=await result.json()}catch{await finish(moderationTokens);return json(502,{ok:false,error:'invalid_reply',message:'I could not read that reply. Please try again.'})}
+  let data;try{data=await result.json()}catch{await finish(moderationTokens);return json(422,{ok:false,error:'invalid_reply',message:'I could not read that reply. Please try again.'})}
   const firstTokens=Number(data.usage?.total_tokens)||0;
   if(data.status==='incomplete'){
    await finish(moderationTokens+firstTokens);
-   return json(502,{ok:false,error:'incomplete_reply',message:'That reply did not finish. Please try again or open a setup guide.'});
+   return json(422,{ok:false,error:'incomplete_reply',message:'That reply did not finish. Please try again or open a setup guide.'});
   }
   const allowedSlugs=(await readdir(contentDir)).filter(file=>file.endsWith('.md')).map(file=>file.slice(0,-3));
   const functionCalls=(data.output||[]).filter(item=>item.type==='function_call');
@@ -110,20 +110,20 @@ export function createAssistantHandler({fetchImpl=globalThis.fetch,now=Date.now,
    }
    try{answerData=await followUp.json()}catch{
     await finish(moderationTokens+answerTokens);
-    return json(502,{ok:false,error:'invalid_reply',message:'Ask ChatSkins could not finish the explanation. Try again or use a setup guide.'});
+    return json(422,{ok:false,error:'invalid_reply',message:'Ask ChatSkins could not finish the explanation. Try again or use a setup guide.'});
    }
    const followUpTokens=Number(answerData.usage?.total_tokens)||0;
    answerTokens+=followUpTokens;
    if(answerData.status==='incomplete'){
     await finish(moderationTokens+answerTokens);
-    return json(502,{ok:false,error:'incomplete_reply',message:'That reply did not finish. Please try again or open a setup guide.'});
+    return json(422,{ok:false,error:'incomplete_reply',message:'That reply did not finish. Please try again or open a setup guide.'});
    }
   }
 
   const reply=responseText(answerData).trim();
   if(!reply){
    await finish(moderationTokens+answerTokens);
-   return json(502,{ok:false,error:'invalid_reply',message:'Ask ChatSkins could not finish a useful answer. Try again or use a setup guide.'});
+   return json(422,{ok:false,error:'invalid_reply',message:'Ask ChatSkins could not finish a useful answer. Try again or use a setup guide.'});
   }
   await finish(moderationTokens+answerTokens);
   return json(200,{ok:true,reply:reply.split(/\s+/).slice(0,80).join(' '),actions});

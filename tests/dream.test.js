@@ -16,7 +16,8 @@ const request=(handler,body={},overrides={})=>handler({method:'POST',url:'/api/d
 
 test('dream validation clamps values, drops unknown settings and keeps only shipped parts',async()=>{
  const parts=await readDreamParts();const valid=validateDreamReply(responseBody(),{partIds:parts.map(part=>part.id)});assert.ok(valid);assert.equal(valid.settings.fontSize,48);assert.equal(valid.settings.glowStrength,1);assert.equal('unsafe'in valid.settings,false);assert.ok(valid.design.instances.some(part=>part.part===19));
- const invalid=responseBody();invalid.design.a.push({...invalid.design.a[0],i:999});assert.equal(validateDreamReply(invalid,{partIds:parts.map(part=>part.id)}),null);
+ const invalid=responseBody();invalid.design.a.push({...invalid.design.a[0],i:999});assert.ok(validateDreamReply(invalid,{partIds:parts.map(part=>part.id)}),'unknown decorative parts are dropped when a valid design remains');
+ const noWindow=responseBody();noWindow.design.a=noWindow.design.a.filter(part=>part.i!==19);assert.equal(validateDreamReply(noWindow,{partIds:parts.map(part=>part.id)}),null);
  const bare=makeStudioKit('Cozy');bare.instances=bare.instances.filter(part=>part.part===19);const completed=completeDreamDesign(bare,{text:'a spooky purple frame with a ghost',parts});assert.ok(completed.instances.some(part=>part.part===51));assert.ok(completed.instances.some(part=>part.part>=29&&part.part<=36));
 });
 
@@ -64,7 +65,7 @@ test('a second incomplete Dream response returns a friendly error without parsin
   throw new Error(url);
  };
  const fx=await setup(t,{fetchImpl}),result=await request(fx.handler);
- assert.equal(result.status,502);
+ assert.equal(result.status,422);
  assert.equal(result.body.error,'incomplete_reply');
  assert.match(result.body.message,/simpler description/);
  assert.equal(calls.filter(call=>call.url.endsWith('/responses')).length,2);

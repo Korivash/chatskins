@@ -36,7 +36,7 @@ test('an incomplete Describe response is rejected and its usage is counted',asyn
   return{ok:true,json:async()=>({status:'incomplete',incomplete_details:{reason:'max_output_tokens'},output_text:'{"skinId":',usage:{total_tokens:99}})};
  }});
  const result=await request(f.handler);
- assert.equal(result.status,502);
+ assert.equal(result.status,422);
  assert.equal(result.body.error,'incomplete_reply');
  assert.match(result.body.message,/could not finish/);
  assert.equal(JSON.parse(calls[1].options.body).max_output_tokens,2000);

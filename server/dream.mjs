@@ -8,7 +8,7 @@ import {dirname, resolve} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {clientIp, originAllowed} from './describe.mjs';
 import {createAiUsageStore} from './ai-usage.mjs';
-import {blankStudio, makeStudioKit, normalizeStudio} from '../js/frame-studio.js';
+import {blankStudio, makeStudioKit, normalizeStudio, STUDIO_LIMIT} from '../js/frame-studio.js';
 
 const here=dirname(fileURLToPath(import.meta.url));
 const defaultKeyFile='C:/ops/secrets/openai-chatskins.txt';
@@ -55,12 +55,62 @@ export function completeDreamDesign(design,{text='',parts=[]}={}){
 }
 
 /** Reject unsafe or malformed generated designs and clamp editable settings. */
-export function validateDreamReply(value,{partIds=[],name='',fontOptions=fontFamilies}={}){
- if(!value||typeof value!=='object'||typeof value.description!=='string'||!value.description.trim()||value.description.length>180||!Array.isArray(value.moodTags)||value.moodTags.length>6)return null;
+export function validateDreamReply(value,{partIds=[],name='',fontOptions=fontFamilies,onReject=()=>{}}={}){
+ const reject=reason=>{onReject(reason);return null};
+ if(!value||typeof value!=='object'||Array.isArray(value))return reject('invalid root');
+ const expanded=expandCompactDesign(value.design);
+ if(!expanded||typeof expanded!=='object'||!Array.isArray(expanded.instances))return reject('missing parts');
+
+ // Model coordinates are suggestions. Clamp them to the board before strict
+ // normalization so a sticker just over an edge cannot invalidate a whole look.
+ const allowedParts=new Set(partIds.map(Number));
+ const rawPalette=Array.isArray(expanded.palette)?expanded.palette:[];
+ const palette=rawPalette.filter(color=>typeof color==='string'&&/^#[\da-f]{6}$/i.test(color)).slice(0,32);
+ while(palette.length<3)palette.push(['#7D65AA','#E8DDF8','#A9D9C8'][palette.length]);
+ const candidates=expanded.instances.filter(part=>part&&typeof part==='object'&&Number.isInteger(Number(part.part))&&allowedParts.has(Number(part.part))&&Number(part.part)!==60);
+ if(!candidates.length)return reject('no valid parts');
+ const instances=[];
+ const windowPart=candidates.find(part=>Number(part.part)===19);
+ if(!windowPart)return reject('missing chat window');
+ const ordered=[windowPart,...candidates.filter(part=>part!==windowPart)].slice(0,STUDIO_LIMIT);
+ let effectCount=0,glowCount=0;
+ for(const part of ordered){
+  const id=Number(part.part);
+  if(id>=20&&id<=28){if(effectCount>=3)continue;effectCount++;if([23,26].includes(id)){if(glowCount>=2)continue;glowCount++}}
+  const finite=(value,fallback)=>Number.isFinite(Number(value))?Number(value):fallback;
+  const w=Math.max(id===19?32:1,Math.min(100,finite(part.w,10)));
+  const h=Math.max(id===19?25:1,Math.min(100,finite(part.h,10)));
+  const colors=Array.isArray(part.colors)?part.colors.slice(0,3):[];
+  while(colors.length<3)colors.push(colors.length);
+  instances.push({
+   part:id,
+   x:Math.max(0,Math.min(100-w,finite(part.x,0))),
+   y:Math.max(0,Math.min(100-h,finite(part.y,0))),
+   w,h,
+   angle:id===19?0:Math.max(-180,Math.min(180,finite(part.angle,0))),
+   flipX:id===19?false:!!part.flipX,
+   flipY:id===19?false:!!part.flipY,
+   colors:colors.map(index=>Math.max(0,Math.min(palette.length-1,Math.trunc(finite(index,0)))))
+  });
+ }
+ // Exactly one window is required. Keep the first valid one and discard extras.
+ const windowIndex=instances.findIndex(part=>part.part===19);
+ if(windowIndex<0)return reject('missing chat window');
+ let windowCount=0;
+ const usable=instances.filter(part=>part.part!==19||windowCount++===0);
+ const safeDesign={
+  version:1,
+  catalog:19,
+  board:[600,680],
+  name:typeof expanded.name==='string'?expanded.name.slice(0,40):'',
+  motion:expanded.motion!==false,
+  palette,
+  instances:usable
+ };
+ // Generated designs do not need an imported base. Ignore any model-supplied
+ // legacy reference so only validated parts from the shipped library survive.
  let design;
- try{design=normalizeStudio(expandCompactDesign(value.design),{strict:true})}catch{return null}
- if(design.instances.some(part=>!partIds.includes(part.part)))return null;
- if(!design.instances.some(part=>part.part===19))return null;
+ try{design=normalizeStudio(safeDesign,{strict:true})}catch{return reject('invalid normalized design')}
  const allowedSettings=new Set(['fontFamily','fontSize','fontWeight','textColor','nameColor','nameColorMode','backgroundColor','backgroundOpacity','backgroundScope','backgroundType','frameColor','glowColor','glowStrength','glowMode','middleBackground','middleColor','middleOpacity','middleImage','titleText','entranceAnimation','messageBorders','maxMessages','messageLifetime']);
  const settings={};
  for(const[key,raw]of Object.entries(value.settings||{})){
@@ -84,7 +134,9 @@ export function validateDreamReply(value,{partIds=[],name='',fontOptions=fontFam
  // text. An empty plaque title deliberately falls back to the channel name.
  design.name=requested;
  design.instances=design.instances.map(part=>({...part,uid:`dream-${part.part}-${Math.round(part.x*10)}-${Math.round(part.y*10)}`}));
- return{design,settings,name:String(value.name||'My custom frame').trim().slice(0,40)||'My custom frame',description:value.description.trim().slice(0,180),moodTags:value.moodTags.map(tag=>String(tag).slice(0,24))};
+ const description=typeof value.description==='string'&&value.description.trim()?value.description.trim().slice(0,180):'A custom chat frame made from your idea.';
+ const moodTags=Array.isArray(value.moodTags)?value.moodTags.filter(tag=>typeof tag==='string').slice(0,6).map(tag=>tag.trim().slice(0,24)).filter(Boolean):[];
+ return{design,settings,name:String(value.name||name||'My custom frame').trim().slice(0,40)||'My custom frame',description,moodTags};
 }
 
 /** Expand short permille transforms into the editor's percentage model. */
@@ -123,7 +175,7 @@ export function buildDreamSchema(partIds,fontOptions,maxParts=16){
 }
 
 /** Create /api/dream and /api/dream/submit handlers with injectable services. */
-export function createDreamHandler({fetchImpl=globalThis.fetch,now=Date.now,originHost=process.env.SKIN_REQUEST_ORIGIN_HOST??'getchatskins.com',keyFile=process.env.OPENAI_KEY_FILE||defaultKeyFile,model=process.env.DREAM_MODEL||'gpt-5-mini',partsFile=resolve(here,'../site-media/parts/parts.json'),usageFile=resolve(here,'describe-usage.json'),dataDir=defaultDataDir,webhookUrl=process.env.SKIN_REQUEST_WEBHOOK,imagesEnabled=process.env.DREAM_IMAGES!=='false',logger=()=>{}}={}){
+export function createDreamHandler({fetchImpl=globalThis.fetch,now=Date.now,originHost=process.env.SKIN_REQUEST_ORIGIN_HOST??'getchatskins.com',keyFile=process.env.OPENAI_KEY_FILE||defaultKeyFile,model=process.env.DREAM_MODEL||'gpt-5-mini',partsFile=resolve(here,'../site-media/parts/parts.json'),usageFile=resolve(here,'describe-usage.json'),dataDir=defaultDataDir,webhookUrl=process.env.SKIN_REQUEST_WEBHOOK,imagesEnabled=process.env.DREAM_IMAGES!=='false',logger=line=>console.warn(line)}={}){
  const usageStore=createAiUsageStore(usageFile);let partsPromise;
  const parts=()=>partsPromise||=(typeof partsFile==='string'?readDreamParts(partsFile):Promise.resolve(partsFile.parts||partsFile));
  const privateDir=resolve(dataDir,'dream-submissions'),imageUsageFile=resolve(dataDir,'dream-images.json');let imageUsageQueue=Promise.resolve(),cleanupPromise=null;
@@ -203,22 +255,24 @@ export function createDreamHandler({fetchImpl=globalThis.fetch,now=Date.now,orig
    catch{await finish((Number(mod?.usage?.total_tokens)||0)+responseTokens.reduce((sum,value)=>sum+value,0));return json(503,{ok:false,error:'unavailable',message:'I could not finish that design. Please try again.'})}
    if(!response.ok){await finish((Number(mod?.usage?.total_tokens)||0)+responseTokens.reduce((sum,value)=>sum+value,0));return json(response.status===429?429:503,{ok:false,error:response.status===429?'rate_limited':'unavailable',message:'Design generation is unavailable right now. Your ideas are safe to try again.'})}
    try{data=await response.json()}
-   catch{await finish((Number(mod?.usage?.total_tokens)||0)+responseTokens.reduce((sum,value)=>sum+value,0));return json(502,{ok:false,error:'invalid_reply',message:'That design needs another try.'})}
+   catch{await finish((Number(mod?.usage?.total_tokens)||0)+responseTokens.reduce((sum,value)=>sum+value,0));logger('dream reject: invalid response JSON');return json(422,{ok:false,error:'invalid_reply',message:'That design needs another try.'})}
    responseTokens.push(Number(data.usage?.total_tokens)||0);
    if(data.status==='incomplete'){
     if(attempt===0)continue;
     await finish((Number(mod?.usage?.total_tokens)||0)+responseTokens.reduce((sum,value)=>sum+value,0));
-    return json(502,{ok:false,error:'incomplete_reply',message:'That design was too detailed to finish. Try a simpler description.'});
+    logger('dream reject: incomplete response');
+    return json(422,{ok:false,error:'incomplete_reply',message:'That design was too detailed to finish. Try a simpler description.'});
    }
    break;
   }
   const usedResponseTokens=responseTokens.reduce((sum,value)=>sum+value,0);
-  let parsed;try{parsed=JSON.parse(responseText(data))}catch{await finish((Number(mod?.usage?.total_tokens)||0)+usedResponseTokens);return json(502,{ok:false,error:'invalid_reply',message:'That design needs another try.'})}
-  const valid=validateDreamReply(parsed,{partIds:partList.map(part=>part.id),name:input.name,fontOptions:fontFamilies});if(!valid){await finish((Number(mod?.usage?.total_tokens)||0)+usedResponseTokens);return json(502,{ok:false,error:'invalid_reply',message:'That design needs another try.'})}
-  try{valid.design=completeDreamDesign(valid.design,{text:input.text,parts:partList})}catch{await finish((Number(mod?.usage?.total_tokens)||0)+usedResponseTokens);return json(502,{ok:false,error:'invalid_reply',message:'That design needs another try.'})}
+  let parsed;try{parsed=JSON.parse(responseText(data))}catch{await finish((Number(mod?.usage?.total_tokens)||0)+usedResponseTokens);logger('dream reject: invalid response JSON');return json(422,{ok:false,error:'invalid_reply',message:'That design needs another try.'})}
+  let rejectReason='invalid model output';
+  const valid=validateDreamReply(parsed,{partIds:partList.map(part=>part.id),name:input.name,fontOptions:fontFamilies,onReject:reason=>{rejectReason=reason}});if(!valid){await finish((Number(mod?.usage?.total_tokens)||0)+usedResponseTokens);logger(`dream reject: ${rejectReason}`);return json(422,{ok:false,error:'invalid_reply',message:'That design needs another try.'})}
+  try{valid.design=completeDreamDesign(valid.design,{text:input.text,parts:partList})}catch{await finish((Number(mod?.usage?.total_tokens)||0)+usedResponseTokens);logger('dream reject: incomplete composition');return json(422,{ok:false,error:'invalid_reply',message:'That design needs another try.'})}
   let generatedModeration;
   try{const checked=await fetchImpl('https://api.openai.com/v1/moderations',{method:'POST',headers:apiHeaders,body:JSON.stringify({model:'omni-moderation-latest',input:`${valid.name}\n${valid.description}`})});if(!checked.ok)throw Error();generatedModeration=await checked.json()}catch{await finish((Number(mod?.usage?.total_tokens)||0)+usedResponseTokens);return json(503,{ok:false,error:'unavailable',message:'I could not check the generated design text. Please try again.'})}
-  if(generatedModeration?.results?.[0]?.flagged){await finish((Number(mod?.usage?.total_tokens)||0)+usedResponseTokens+(Number(generatedModeration.usage?.total_tokens)||0));return json(502,{ok:false,error:'invalid_reply',message:'The generated design text could not be used. Please try another idea.'})}
+  if(generatedModeration?.results?.[0]?.flagged){await finish((Number(mod?.usage?.total_tokens)||0)+usedResponseTokens+(Number(generatedModeration.usage?.total_tokens)||0));logger('dream reject: generated text moderation');return json(422,{ok:false,error:'invalid_reply',message:'The generated design text could not be used. Please try another idea.'})}
   // Never accept a painted or non-library asset from the model. The SVG
   // composition is immediately usable; an optional image job is tracked next.
   const id=randomBytes(12).toString('hex'),ownerKey=randomBytes(24).toString('base64url');const saved={id,...valid,credit:String(input.credit||'').trim(),createdAt:new Date(time).toISOString(),status:'private',ownerKeyHash:sha(ownerKey),ipHash:ip,imageStatus:imagesEnabled?'painting':'off',paintFile:''};await writeSubmission(saved);await finish((Number(mod?.usage?.total_tokens)||0)+usedResponseTokens+(Number(generatedModeration.usage?.total_tokens)||0));
