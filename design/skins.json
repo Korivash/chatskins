@@ -30429,7 +30429,7 @@
     },
     {
       "id": "frame-cozy-cafe",
-      "name": "Cozy Café",
+      "name": "Cozy Café Frame",
       "category": "Frames",
       "description": "A painted cozy cafe frame around your chat.",
       "tagline": "Cozy Café frame for live chat.",
@@ -32118,7 +32118,7 @@
     },
     {
       "id": "frame-lava-forge",
-      "name": "Lava Forge",
+      "name": "Lava Forge Frame",
       "category": "Frames",
       "description": "A painted lava forge frame around your chat.",
       "tagline": "Lava Forge frame for live chat.",
@@ -36059,7 +36059,7 @@
     },
     {
       "id": "frame-neon-kawaii-goth",
-      "name": "Neon Kawaii Goth",
+      "name": "Neon Kawaii Goth Frame",
       "category": "Frames",
       "description": "A painted neon kawaii goth frame around your chat.",
       "tagline": "Neon Kawaii Goth frame for live chat.",
@@ -40564,7 +40564,7 @@
     },
     {
       "id": "illustrated-neon-kawaii-goth",
-      "name": "Neon Kawaii Goth",
+      "name": "Neon Kawaii Goth Illustrated",
       "category": "Illustrated",
       "description": "Neon chains, charms and an original cat.",
       "tagline": "Neon chains, charms and an original cat.",
@@ -41142,7 +41142,7 @@
     },
     {
       "id": "illustrated-cozy-cafe",
-      "name": "Cozy Café",
+      "name": "Cozy Café Illustrated",
       "category": "Illustrated",
       "description": "A carved walnut café with warm steam.",
       "tagline": "A carved walnut café with warm steam.",
@@ -46922,7 +46922,7 @@
     },
     {
       "id": "illustrated-lava-forge",
-      "name": "Lava Forge",
+      "name": "Lava Forge Illustrated",
       "category": "Illustrated",
       "description": "Hammered metal, hot cracks and an anvil.",
       "tagline": "Hammered metal, hot cracks and an anvil.",

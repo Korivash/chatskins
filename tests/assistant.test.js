@@ -49,16 +49,16 @@ test('moderation, origin, off-topic refusal and key secrecy are enforced',async 
  const badOrigin=await handler({headers:{origin:'https://evil.example'},body:message()});assert.equal(badOrigin.status,403);assert.equal(mock.calls.length,0);
  const offTopic=await handler({headers:{origin:'https://getchatskins.com'},body:JSON.stringify({messages:[{role:'user',content:'Write a poem about Mars.'}],page:'home'})});assert.equal(offTopic.status,200);assert.match(offTopic.body.reply,/ChatSkins/);assert.equal(mock.calls.length,0);
  const ok=await handler({headers:{origin:'https://getchatskins.com'},body:message()});assert.equal(ok.status,200);const serialized=JSON.stringify(ok);assert.doesNotMatch(serialized,/private-test-key|must-not-leak/);assert.equal(mock.calls.length,2);assert.equal(mock.calls[0].url,'https://api.openai.com/v1/moderations');assert.doesNotMatch(mock.calls[0].options.body,/must-not-leak/);
- const flagged=fakeOpenAI({flagged:true}),refuse=await fixture(t,{fetchImpl:flagged.fetchImpl});const response=await refuse.handler({body:message()});assert.equal(response.status,400);assert.equal(response.body.error,'moderation_refused');assert.equal(flagged.calls.length,1);
+ const flagged=fakeOpenAI({flagged:true}),refuse=await fixture(t,{fetchImpl:flagged.fetchImpl});const response=await refuse.handler({headers:{origin:'https://getchatskins.com'},body:message()});assert.equal(response.status,400);assert.equal(response.body.error,'moderation_refused');assert.equal(flagged.calls.length,1);
 });
 test('assistant per-IP cooldown, daily count and shared token budget persist',async t=>{
  const mock=fakeOpenAI({output:[{type:'message',content:[{type:'output_text',text:'Try the OBS setup guide.'}]}]});let time=Date.UTC(2026,9,25),fx=await fixture(t,{fetchImpl:mock.fetchImpl,now:()=>time});
- const call=()=>fx.handler({remoteAddress:'203.0.113.8',body:message()});assert.equal((await call()).status,200);assert.equal((await call()).status,429);time+=3001;const stored=JSON.parse(await readFile(fx.usageFile,'utf8'));assert.equal(stored.days['2026-10-25'].tokens,22);assert.equal(stored.days['2026-10-25'].assistant.total,1);
- const budget=await fixture(t,{fetchImpl:mock.fetchImpl,now:()=>time});await writeFile(budget.usageFile,JSON.stringify({version:1,days:{'2026-10-25':{tokens:1500000,reservedTokens:0,total:0,ips:{}}}}));assert.equal((await budget.handler({body:message()})).status,429);
- const global=await fixture(t,{fetchImpl:mock.fetchImpl,now:()=>time});await writeFile(global.usageFile,JSON.stringify({version:1,days:{'2026-10-25':{tokens:0,reservedTokens:0,total:0,ips:{},assistant:{total:2000,ips:{}}}}}));assert.equal((await global.handler({body:message()})).status,429);
- const count=await fixture(t,{fetchImpl:mock.fetchImpl,now:(()=>{let n=time;return()=>n+=3001})()});let final;for(let i=0;i<41;i++)final=await count.handler({remoteAddress:'198.51.100.2',body:message()});assert.equal(final.status,429);assert.equal(final.body.error,'rate_limited');
+ const call=()=>fx.handler({headers:{origin:'https://getchatskins.com'},remoteAddress:'203.0.113.8',body:message()});assert.equal((await call()).status,200);assert.equal((await call()).status,429);time+=3001;const stored=JSON.parse(await readFile(fx.usageFile,'utf8'));assert.equal(stored.days['2026-10-25'].tokens,22);assert.equal(stored.days['2026-10-25'].assistant.total,1);
+ const budget=await fixture(t,{fetchImpl:mock.fetchImpl,now:()=>time});await writeFile(budget.usageFile,JSON.stringify({version:1,days:{'2026-10-25':{tokens:1500000,reservedTokens:0,total:0,ips:{}}}}));assert.equal((await budget.handler({headers:{origin:'https://getchatskins.com'},body:message()})).status,429);
+ const global=await fixture(t,{fetchImpl:mock.fetchImpl,now:()=>time});await writeFile(global.usageFile,JSON.stringify({version:1,days:{'2026-10-25':{tokens:0,reservedTokens:0,total:0,ips:{},assistant:{total:2000,ips:{}}}}}));assert.equal((await global.handler({headers:{origin:'https://getchatskins.com'},body:message()})).status,429);
+ const count=await fixture(t,{fetchImpl:mock.fetchImpl,now:(()=>{let n=time;return()=>n+=3001})()});let final;for(let i=0;i<41;i++)final=await count.handler({headers:{origin:'https://getchatskins.com'},remoteAddress:'198.51.100.2',body:message()});assert.equal(final.status,429);assert.equal(final.body.error,'rate_limited');
 });
-test('sensitive details are rejected before moderation or the model',async t=>{const mock=fakeOpenAI(),fx=await fixture(t,{fetchImpl:mock.fetchImpl});const result=await fx.handler({body:message('My password=secret123, can you help with OBS?')});assert.equal(result.body.error,'private_info');assert.equal(mock.calls.length,0)});
+test('sensitive details are rejected before moderation or the model',async t=>{const mock=fakeOpenAI(),fx=await fixture(t,{fetchImpl:mock.fetchImpl});const result=await fx.handler({headers:{origin:'https://getchatskins.com'},body:message('My password=secret123, can you help with OBS?')});assert.equal(result.body.error,'private_info');assert.equal(mock.calls.length,0)});
 test('the browser catches private values before adding them to session history',()=>{assert.equal(containsPrivateDetails('access_token=abc123'),true);assert.equal(containsPrivateDetails('someone@example.com'),true);assert.equal(containsPrivateDetails('How do I add my chat to OBS?'),false)});
 
 class FakeElement{
@@ -107,4 +107,10 @@ test('guide system requests original art and returns a useful design action',asy
  assert.match(firstRequest.input[0].content[0].text,/When the user wants new art.*call create_design/s);
  assert.ok(firstRequest.tools.some(tool=>tool.name==='create_design'&&tool.strict===true));
  assert.equal(response.status,200);assert.equal(response.body.actions[0].type,'create_design');assert.match(response.body.reply,/opened it in Studio/);assert.doesNotMatch(response.body.reply,/add (?:a|the) ghost (?:image|art)/i);
+});
+
+test('assistant rejects requests without browser origin evidence',async t=>{
+ const mock=fakeOpenAI(),fx=await fixture(t,{fetchImpl:mock.fetchImpl});
+ assert.equal((await fx.handler({headers:{},body:message()})).status,403);
+ assert.equal(mock.calls.length,0);
 });

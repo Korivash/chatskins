@@ -50,7 +50,7 @@ export function createAssistantHandler({fetchImpl=globalThis.fetch,now=Date.now,
  const loadCatalog=()=>catalogPromise||=(async()=>{const raw=typeof catalogFile==='string'?JSON.parse(await readFile(catalogFile,'utf8')):catalogFile;return raw.skins||raw})();
  return async function handleAssistant({method='POST',url='/api/assistant',headers={},remoteAddress='unknown',body=''}={}){
   if(method!=='POST'||url!=='/api/assistant')return json(404,{ok:false,error:'not_found'});
-  if(!originAllowed({headers,remoteAddress,originHost}))return json(403,{ok:false,error:'forbidden',message:'This request could not be verified.'});
+  if(!originAllowed({headers,remoteAddress,originHost,requireOrigin:true}))return json(403,{ok:false,error:'forbidden',message:'This request could not be verified.'});
   if(Buffer.byteLength(body,'utf8')>12000)return json(400,{ok:false,error:'invalid_input',message:'Please send a shorter message.'});
   let input;try{input=JSON.parse(body)}catch{return json(400,{ok:false,error:'invalid_input',message:'Please send a message to continue.'})}
   const messages=safeMessages(input?.messages);if(!messages)return json(400,{ok:false,error:'invalid_input',message:'Use up to 8 short messages, with your latest question last.'});

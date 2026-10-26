@@ -1,4 +1,5 @@
-﻿import assert from 'node:assert/strict';
+import assert from 'node:assert/strict';
+import test from 'node:test';
 import {defaultChatPlay,normalizeChatPlay,parseChatPlayCommand,resolveAllowedSkin,permissionAllows,createChatPlayCooldowns,tallyVotes,matchRewardTitle,isAllowedSkin,makePlayBanner,encodePlaySource,decodePlaySource,buildChatPlayUrl,parseChatPlayFragment,parseCompactPlayFragment,createChatPlayAdmission} from '../js/chat-play.js';
 import {buildEventSubSubscriptions,parseEventSubMessage} from '../js/eventsub.js';
 import {createChatPlayRewards} from '../js/chat-play-points.js';
@@ -51,3 +52,7 @@ assert.equal(previewAdmission.handle({...command,id:'preview-1'}).accepted,true)
 assert.equal(previewAdmission.handle({...command,id:'preview-2'}).accepted,true);
 assert.equal(liveAdmission.handle({...command,userId:'other-viewer',login:'other_viewer',id:'event-2'}).reason.includes('Wait'),true);
 console.log('chat-play.test.js passed');
+
+test('trimmed play settings retain safe effect defaults',()=>{
+ assert.equal(normalizeChatPlay({version:1}).effects.swap.holdSeconds,60);
+});

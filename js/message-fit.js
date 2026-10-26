@@ -1,5 +1,8 @@
 // Remove oldest rendered messages until the panel content fits its explicit cap.
 // Frame and decoration layers are deliberately excluded from the removable set.
+const warnedPanels = new WeakSet();
+
+/** Fit only genuine overflow; DOM client dimensions round fractional pixels. */
 export function fitPanelMessages(panel, maxHeight) {
   const limit = Math.max(0, Number(maxHeight) || 0);
   const messages = () => [...panel.children].filter(child => child.classList?.contains('message'));
@@ -15,7 +18,7 @@ export function fitPanelMessages(panel, maxHeight) {
     },0) + Math.max(0,rows.length-1)*gap;
   };
   const availableContent = () => {
-    const client = Number(panel.clientHeight) || 0;
+    const client = panel.getBoundingClientRect?.().height || Number(panel.clientHeight) || 0;
     if (!client) return limit;
     const style = typeof getComputedStyle === 'function' ? getComputedStyle(panel) : null;
     const padding = (parseFloat(style?.paddingTop)||0) + (parseFloat(style?.paddingBottom)||0);
@@ -25,12 +28,18 @@ export function fitPanelMessages(panel, maxHeight) {
   while (true) {
     const rows = messages();
     const hasMeasurements = measurable(rows);
-    const over = hasMeasurements ? rowStackHeight(rows) > availableContent() : panel.scrollHeight > limit;
+    const clipped = panel.scrollHeight - panel.clientHeight > 1 || panel.clientHeight > limit + 1;
+    const over = hasMeasurements
+      ? rowStackHeight(rows) - availableContent() > 1 && clipped
+      : panel.scrollHeight > limit + 1;
     if (!over) break;
     const oldest = rows[0];
     if (!oldest) break;
     if (rows.length === 1) {
-      console.warn('Chat panel is shorter than its newest message; preserving that message.');
+      if (!warnedPanels.has(panel)) {
+        warnedPanels.add(panel);
+        console.warn('Chat panel is shorter than its newest message; preserving that message.');
+      }
       break;
     }
     const wasHeader=!oldest.classList.contains('grouped');

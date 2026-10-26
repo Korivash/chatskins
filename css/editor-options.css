@@ -75,3 +75,6 @@
 .dream-share-toggle{display:flex!important;align-items:center}
 .dream-share-toggle input{order:2}
 @media(max-width:650px){.dream-skins-card{grid-template-columns:1fr}}
+
+/* Keep gallery samples inside narrow phone cards. */
+@media(max-width:600px){.gallery-group{grid-template-columns:repeat(auto-fill,minmax(150px,1fr))}.skin-sample,.skin-title{max-width:100%}}

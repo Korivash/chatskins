@@ -48,7 +48,7 @@ export async function createChatPlayRewards({token,broadcasterId,rewards=CHAT_PL
    if(response.status===403)return failure('Channel-point rewards need an Affiliate or Partner channel. Chat commands and alerts are still ready.',{created,reused,disabledExisting});
    if(!response.ok)return failure(`Could not create ${reward.title}. ${created.length} rewards were created; retry to reuse those and create the rest.`,{created,reused,disabledExisting});
    const item=(await response.json()).data?.[0];
-   if(item){created.push({id:item.id,title:item.title,isEnabled:item.is_enabled!==false});existing.push(item)}
+   if(item){created.push({effect:reward.effect,id:item.id,title:item.title,isEnabled:item.is_enabled!==false});existing.push(item)}
   }
   return{ok:true,created,reused,disabledExisting,requestedEnabled:!!enabled};
  }catch{return failure('Twitch could not be reached. Check your connection before retrying.')}

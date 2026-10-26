@@ -38,7 +38,7 @@ test('moderation refusal is friendly and stops before the Responses API',async t
 });
 
 test('input validation rejects over 300 characters and malformed input',async t=>{
- const f=await fixture(t);assert.equal((await request(f.handler,{text:'a'.repeat(301)})).status,400);assert.equal((await f.handler({body:'[]'})).status,400);assert.equal(f.calls.length,0);
+ const f=await fixture(t);assert.equal((await request(f.handler,{text:'a'.repeat(301)})).status,400);assert.equal((await f.handler({headers:{origin:'https://getchatskins.com'},body:'[]'})).status,400);assert.equal(f.calls.length,0);
 });
 
 test('per-IP cooldown, 15-per-day and 600-total limits are enforced and persisted',async t=>{
@@ -67,4 +67,12 @@ test('editor exposes the helper and its non-API guide fallback',async()=>{
 
 test('shared server routes /api/describe through the same process handler',async t=>{
  const f=await fixture(t);const old=process.env.OPENAI_KEY_FILE;process.env.OPENAI_KEY_FILE=f.keyFile;try{const result=await handleApiRequest({method:'GET',url:'/api/health',headers:{},body:''});assert.equal(result.status,200);const wrong=await handleApiRequest({method:'GET',url:'/api/describe',headers:{},body:''});assert.equal(wrong.status,404)}finally{if(old===undefined)delete process.env.OPENAI_KEY_FILE;else process.env.OPENAI_KEY_FILE=old}
+});
+
+test('AI routes require Origin or same-origin fetch metadata before spending quota',async t=>{
+ const f=await fixture(t);
+ const body=JSON.stringify({text:'cozy cafe'});
+ assert.equal((await f.handler({headers:{},body})).status,403);
+ assert.equal(f.calls.length,0);
+ assert.equal((await f.handler({headers:{'sec-fetch-site':'same-origin'},body})).status,200);
 });

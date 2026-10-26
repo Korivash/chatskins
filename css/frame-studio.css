@@ -28,3 +28,7 @@
 .studio-tools{position:sticky;top:1rem;z-index:9}
 
 .studio-part-hit{position:absolute;display:block;cursor:grab;touch-action:none;transform-origin:center;outline:none}.studio-part-hit:active{cursor:grabbing}.studio-part-hit:focus-visible,.studio-part-hit.is-selected{outline:2px solid #ffe39b;outline-offset:2px;z-index:80}
+
+/* The editor sidebar is narrow even on typical laptop screens. */
+.studio-tools{min-width:0}.studio-tool-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media(max-width:1400px){.studio-workbench{grid-template-columns:1fr}}

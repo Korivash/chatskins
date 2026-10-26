@@ -6,7 +6,7 @@ test('alert test actions render with the selected skin recipe and reveal their p
  const editor=await readFile(new URL('../js/alerts-editor.js',import.meta.url),'utf8'),css=await readFile(new URL('../css/site.css',import.meta.url),'utf8');
  assert.match(editor,/createAlertCard\(\{document:doc,event,config:\{\.\.\.config,chatSettings:current\},recipe:getRecipe\(\),design,preview:true\}\)/);
  assert.match(editor,/details\.querySelector\('\[data-alert-test\]'\)\.onclick=\(\)=>\{[^}]*testQueue\.push\(sample\(type,variant\)\);pumpTests\(\)\}/);
- assert.match(editor,/if\(asTest\)\$\('#alerts-preview'\)\.scrollIntoView/);
+ assert.match(editor,/if\(!stage\.getClientRects\(\)\.length\)/);assert.match(editor,/targetLayer=createAlertLayer/);assert.match(editor,/targetLayer\.append\(card\)/);
  assert.match(editor,/getRecipe=\(\)=>getSkin\(\)\?\.alertRecipe/);
  assert.match(css,/\.alerts-editor \.alerts-type summary input\[type=checkbox\]\{appearance:none/);
  assert.match(css,/\.alerts-editor \.alerts-type summary::after\{content:'⌄'/);

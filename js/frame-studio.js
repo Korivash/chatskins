@@ -1,11 +1,32 @@
-// Sibling layers use the positioned panel host's layout coordinates, never viewport coordinates.
+// Studio art and interaction layers share the panel host's coordinate system.
+/** Undo host scaling after measuring the panel's final viewport position. */
 export function syncStudioLayer(panel,layer){
- const host=panel.parentElement;if(!host)return;
+ const host=panel.parentElement;
+ if(!host)return;
  if(layer.parentElement!==host)host.append(layer);
- const transform=typeof getComputedStyle==='function'?getComputedStyle(panel).transform:'none';
- const translation=transform&&transform!=='none'?new DOMMatrixReadOnly(transform):{e:0,f:0};
- // Layout offsets exclude the panel's centering translation; the host's scale applies to both siblings.
- Object.assign(layer.style,{position:'absolute',left:(panel.offsetLeft+translation.e)+'px',top:(panel.offsetTop+translation.f)+'px',width:panel.offsetWidth+'px',height:panel.offsetHeight+'px'});
+ const rect=panel.getBoundingClientRect?.();
+ const hostRect=host.getBoundingClientRect?.();
+ let left,top;
+ if(rect && hostRect?.width && host.offsetWidth){
+  const scaleX=hostRect.width/host.offsetWidth;
+  const scaleY=hostRect.height/host.offsetHeight||scaleX;
+  left=(rect.left-hostRect.left)/scaleX-(host.clientLeft||0)+(host.scrollLeft||0);
+  top=(rect.top-hostRect.top)/scaleY-(host.clientTop||0)+(host.scrollTop||0);
+ }else{
+  // Unmeasured hosts (including detached previews) have no useful viewport scale.
+  const transform=typeof getComputedStyle==='function'?getComputedStyle(panel).transform:'none';
+  const translation=transform&&transform!=='none'?new DOMMatrixReadOnly(transform):{e:0,f:0};
+  left=panel.offsetLeft+translation.e;
+  top=panel.offsetTop+translation.f;
+ }
+ Object.assign(layer.style,{
+  position:'absolute',left:left+'px',top:top+'px',
+  width:panel.offsetWidth+'px',height:panel.offsetHeight+'px'
+ });
+}
+/** Empty Studio drafts must not override a skin's layout. */
+export function hasStudioDesign(draft){
+ return !!draft && (!!draft.base || draft.instances?.some(part=>part.part!==19));
 }
 export const STUDIO_BOARD=Object.freeze([600,680]);
 export const STUDIO_LIMIT=25;
@@ -56,9 +77,9 @@ export function makeStudioKit(vibe='Cozy'){
 }
 export function randomizeStudio(vibe='Cozy',rng=Math.random){const order=['Cozy','Spooky','Cute','Neon','Royal','Gamer'],index=order.indexOf(vibe),next=order[(Math.max(0,index)+Math.floor(rng()*order.length))%order.length];return makeStudioKit(next)}
 export function createStudioController({root, getDraft, setDraft, getBase=()=>null, onCommit=()=>{}, onPreview=()=>{}, storage=globalThis.localStorage, fetcher=globalThis.fetch}={}){
- let catalog=[],selected='',history=createStudioHistory(),draft=getDraft()||blankStudio(),drag=null,scale=1,ready=false,snapGuides=[];
- const $=s=>root.querySelector(s),commit=(next)=>{history.record(draft);draft=normalizeStudio(next);if(!draft.instances.some(p=>p.uid===selected))selected=draft.instances[0]?.uid||'';setDraft(draft);render();onCommit(draft)};
- const undo=()=>{const previous=history.undo(draft);if(!previous)return;draft=previous;setDraft(draft);render();onCommit(draft)},redo=()=>{const next=history.redo(draft);if(!next)return;draft=next;setDraft(draft);render();onCommit(draft)};
+ let catalog=[],selected='',history=createStudioHistory(),draft=getDraft()||blankStudio(),drag=null,scale=1,scaleY=1,ready=false,dirty=false,snapGuides=[];
+ const $=s=>root.querySelector(s),commit=(next)=>{history.record(draft);draft=normalizeStudio(next);if(!draft.instances.some(p=>p.uid===selected))selected=draft.instances[0]?.uid||'';dirty=true;setDraft(draft);render();onCommit(draft)};
+ const undo=()=>{const previous=history.undo(draft);if(!previous)return;draft=previous;dirty=true;setDraft(draft);render();onCommit(draft)},redo=()=>{const next=history.redo(draft);if(!next)return;draft=next;dirty=true;setDraft(draft);render();onCommit(draft)};
  const sourceFor=p=>catalog.find(item=>item.id===p.part);
  function render(){
   const board=globalThis.__studioLiveBoard||$('.studio-board');if(!board)return;
@@ -85,11 +106,11 @@ export function createStudioController({root, getDraft, setDraft, getBase=()=>nu
    board.append(wrap);
   }
   for(const guide of snapGuides){const line=document.createElement('i');line.className=`studio-snap-guide ${guide.axis==='x'?'vertical':'horizontal'}`;line.style[guide.axis==='x'?'left':'top']=guide.value+'%';board.append(line)}
-  $('#studio-count').textContent=`${draft.instances.length} / 25 parts`;const active=draft.instances.find(p=>p.uid===selected);const info=$('#studio-selected');info.textContent=active?`${sourceFor(active)?.name||'Chat window'} selected`:'Select a part to edit';for(const control of root.querySelectorAll('[data-studio-control]'))control.disabled=!active;$('#studio-delete').disabled=!active||[19,60].includes(active.part);$('#studio-duplicate').disabled=!active||draft.instances.length>=25||[19,60].includes(active.part);$('#studio-rotate').disabled=!active||active.part===19;$('#studio-flip-x').disabled=!active||active.part===19;$('#studio-flip-y').disabled=!active||active.part===19;if(active){$('#studio-width').value=active.w;$('#studio-height').value=active.h}if(ready)onPreview(draft)
+  $('#studio-count').textContent=`${draft.instances.length} / 25 parts`;const active=draft.instances.find(p=>p.uid===selected);const info=$('#studio-selected');info.textContent=active?`${sourceFor(active)?.name||'Chat window'} selected`:'Select a part to edit';for(const control of root.querySelectorAll('[data-studio-control]'))control.disabled=!active;$('#studio-delete').disabled=!active||[19,60].includes(active.part);$('#studio-duplicate').disabled=!active||draft.instances.length>=25||[19,60].includes(active.part);$('#studio-rotate').disabled=!active||active.part===19;$('#studio-flip-x').disabled=!active||active.part===19;$('#studio-flip-y').disabled=!active||active.part===19;if(active){$('#studio-width').value=active.w;$('#studio-height').value=active.h}if(ready && dirty){dirty=false;onPreview(draft)}
  }
  async function loadSvg(item,target){if(!item)return;try{const response=await fetcher(`site-media/parts/${item.file}`);if(!response.ok)throw Error();const text=await response.text();if(/<script|foreignObject|https?:\/\//i.test(text))throw Error();const xml=new DOMParser().parseFromString(text,'image/svg+xml');const svg=xml.documentElement;if(svg.localName!=='svg')throw Error();const imported=document.importNode(svg,true);imported.setAttribute('aria-hidden','true');imported.setAttribute('focusable','false');if(item.category==='borders'){imported.setAttribute('viewBox','24 0 72 24');imported.setAttribute('preserveAspectRatio','none')}target.append(imported)}catch{target.textContent=item.name}}
- function startDrag(event,p){if(event.button!==0)return;selected=p.uid;const board=(globalThis.__studioLiveBoard||$('.studio-board')).getBoundingClientRect();scale=board.width/600;drag={uid:p.uid,x:event.clientX,y:event.clientY,mode:event.target.dataset.resize?'resize':'move',corner:event.target.dataset.resize||'se',orig:structuredClone(draft)};root.setPointerCapture?.(event.pointerId);render();}
- root.addEventListener('pointermove',event=>{if(!drag)return;const next=structuredClone(drag.orig),p=next.instances.find(x=>x.uid===drag.uid),dx=(event.clientX-drag.x)/scale/6,dy=(event.clientY-drag.y)/scale/6;if(drag.mode==='resize'){const west=drag.corner.endsWith('w'),north=drag.corner.startsWith('n'),right=p.x+p.w,bottom=p.y+p.h;p.w=clamp(p.w+(west?-dx:dx),p.part===19?32:4,100);p.h=clamp(p.h+(north?-dy:dy),p.part===19?25:4,100);if(west)p.x=right-p.w;if(north)p.y=bottom-p.h;p.x=clamp(p.x,0,100-p.w);p.y=clamp(p.y,0,100-p.h)}else{p.x=clamp(p.x+dx,0,100-p.w);p.y=clamp(p.y+dy,0,100-p.h);snap(p)}draft=next;setDraft(draft);render()});
+ function startDrag(event,p){if(event.button!==0)return;selected=p.uid;const board=(globalThis.__studioLiveBoard||$('.studio-board')).getBoundingClientRect();scale=board.width/600;scaleY=board.height/680;drag={uid:p.uid,x:event.clientX,y:event.clientY,mode:event.target.dataset.resize?'resize':'move',corner:event.target.dataset.resize||'se',orig:structuredClone(draft)};root.setPointerCapture?.(event.pointerId);render();}
+ root.addEventListener('pointermove',event=>{if(!drag)return;const next=structuredClone(drag.orig),p=next.instances.find(x=>x.uid===drag.uid),dx=(event.clientX-drag.x)/scale/6,dy=(event.clientY-drag.y)/scaleY/6.8;if(drag.mode==='resize'){const west=drag.corner.endsWith('w'),north=drag.corner.startsWith('n'),right=p.x+p.w,bottom=p.y+p.h;p.w=clamp(p.w+(west?-dx:dx),p.part===19?32:4,100);p.h=clamp(p.h+(north?-dy:dy),p.part===19?25:4,100);if(west)p.x=right-p.w;if(north)p.y=bottom-p.h;p.x=clamp(p.x,0,100-p.w);p.y=clamp(p.y,0,100-p.h)}else{p.x=clamp(p.x+dx,0,100-p.w);p.y=clamp(p.y+dy,0,100-p.h);snap(p)}draft=next;dirty=true;setDraft(draft);render()});
  const finish=()=>{if(!drag)return;history.record(drag.orig);drag=null;onCommit(draft)};root.addEventListener('pointerup',finish);root.addEventListener('pointercancel',()=>{if(drag){draft=drag.orig;setDraft(draft);drag=null;render()}});
  function snap(p){snapGuides=[];for(const axis of ['x','y']){const size=axis==='x'?p.w:p.h,raw=p[axis],targets=[0,(100-size)/2,100-size];for(let n=0;n<=100;n+=5)targets.push(n);let best=raw,bestDistance=1.01;for(const target of targets){const value=clamp(target,0,100-size),distance=Math.abs(value-raw);if(distance<bestDistance){best=value;bestDistance=distance}}if(bestDistance<=1){p[axis]=best;snapGuides.push({axis,value:axis==='x'?best+size/2:best+size/2})}else p[axis]=Math.round(raw*10)/10}}
  root.addEventListener('click',async event=>{const action=event.target.closest('[data-studio-action]')?.dataset.studioAction;if(!action)return;try{
@@ -112,7 +133,7 @@ export function createStudioController({root, getDraft, setDraft, getBase=()=>nu
   for(const group of ['borders','corners','plaques','stickers','effects']){const optgroup=document.createElement('optgroup');optgroup.label=group[0].toUpperCase()+group.slice(1);for(const item of catalog.filter(x=>x.category===group)){const option=document.createElement('option');option.value=item.id;option.textContent=item.name;optgroup.append(option)}pick.append(optgroup)}
   for(const item of catalog.filter(x=>x.category!=='structure')){const tile=document.createElement('button');tile.type='button';tile.role='option';tile.dataset.partId=item.id;tile.dataset.category=item.category;tile.dataset.search=(item.name+' '+item.tags.join(' ')).toLowerCase();const img=document.createElement('img');img.src=`site-media/parts/${item.file}`;img.alt='';img.loading='lazy';img.draggable=false;const caption=document.createElement('span');caption.textContent=item.name;tile.append(img,caption);tile.setAttribute('aria-selected','false');tile.addEventListener('click',()=>{pick.value=String(item.id);library.querySelectorAll('[aria-selected=true]').forEach(x=>x.setAttribute('aria-selected','false'));tile.setAttribute('aria-selected','true')});library.append(tile)}
   const filter=()=>{const q=$('#studio-search').value.trim().toLowerCase(),category=$('#studio-filter').value;for(const tile of library.children)tile.hidden=(q&&!tile.dataset.search.includes(q))||(category!=='all'&&tile.dataset.category!==category)};
-  $('#studio-search').addEventListener('input',filter);$('#studio-filter').addEventListener('change',filter);root.querySelector('.studio-swatches').addEventListener('click',event=>{const color=event.target.closest('[data-palette]')?.dataset.palette;if(color)$('#studio-color').value=color});$('#studio-color').addEventListener('change',()=>{const p=draft.instances.find(x=>x.uid===selected);if(!p)return;const slot=Number($('#studio-color-slot').value),color=$('#studio-color').value.toUpperCase(),next=structuredClone(draft);let ci=next.palette.indexOf(color);if(ci<0){if(next.palette.length>=32){$('#studio-status').textContent='This design already uses 32 colors.';return}next.palette.push(color);ci=next.palette.length-1}next.instances.find(x=>x.uid===selected).colors[slot]=ci;commit(next)});$('#studio-title').value=draft.name;render();ready=true;return{getDraft:()=>structuredClone(draft),setDraft:value=>{draft=normalizeStudio(value);setDraft(draft);render()},undo,redo,render,catalog:()=>catalog}
+  $('#studio-search').addEventListener('input',filter);$('#studio-filter').addEventListener('change',filter);root.querySelector('.studio-swatches').addEventListener('click',event=>{const color=event.target.closest('[data-palette]')?.dataset.palette;if(color)$('#studio-color').value=color});$('#studio-color').addEventListener('change',()=>{const p=draft.instances.find(x=>x.uid===selected);if(!p)return;const slot=Number($('#studio-color-slot').value),color=$('#studio-color').value.toUpperCase(),next=structuredClone(draft);let ci=next.palette.indexOf(color);if(ci<0){if(next.palette.length>=32){$('#studio-status').textContent='This design already uses 32 colors.';return}next.palette.push(color);ci=next.palette.length-1}next.instances.find(x=>x.uid===selected).colors[slot]=ci;commit(next)});$('#studio-title').value=draft.name;render();ready=true;return{getDraft:()=>structuredClone(draft),setDraft:value=>{draft=normalizeStudio(value);dirty=true;setDraft(draft);render()},undo,redo,render,catalog:()=>catalog}
  }
- return{init,getDraft:()=>structuredClone(draft),setDraft:value=>{draft=normalizeStudio(value);setDraft(draft);render()},render:()=>render(),undo,redo};
+ return{init,getDraft:()=>structuredClone(draft),setDraft:value=>{draft=normalizeStudio(value);dirty=true;setDraft(draft);render()},render:()=>render(),undo,redo};
 }

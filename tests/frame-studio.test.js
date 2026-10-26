@@ -95,7 +95,7 @@ test('editor preview and overlay use the same studio DOM geometry at scaled stag
 });
 test('the editor only calls methods exposed by its imported Studio controller API',async()=>{
  const editor=await readFile(new URL('js/editor.js',root),'utf8');assert.match(editor,/import\s*\{[^}]*createStudioController[^}]*\}\s*from ['"]\.\/frame-studio\.js/);
- const called=[...editor.matchAll(/studioController(?:\?\.|\.)\s*([A-Za-z][A-Za-z0-9_]*)/g)].map(match=>match[1]);assert.deepEqual([...new Set(called)].sort(),['getDraft','init','render','setDraft']);
+ const called=[...editor.matchAll(/studioController(?:\?\.|\.)\s*([A-Za-z][A-Za-z0-9_]*)/g)].map(match=>match[1]);assert.deepEqual([...new Set(called)].sort(),['init','render','setDraft']);
  const oldDocument=globalThis.document,oldBoard=globalThis.__studioLiveBoard;delete globalThis.__studioLiveBoard;
  const element=()=>({append(){},addEventListener(){},setAttribute(){},querySelectorAll(){return[]},dataset:{},style:{setProperty(){}},value:'',textContent:''});
  globalThis.document={createElement:element};const rootNode={querySelector(selector){return selector==='.studio-board'?null:element()},querySelectorAll(){return[]},addEventListener(){},setPointerCapture(){}};
@@ -103,4 +103,68 @@ test('the editor only calls methods exposed by its imported Studio controller AP
 });
 test('Studio UI and overlays contain no paid-tier wording',async()=>{
  const html=await readFile(new URL('editor.html',root),'utf8'),js=await readFile(new URL('js/frame-studio.js',root),'utf8'),json=await readFile(new URL('site-media/parts/parts.json',root),'utf8');assert.doesNotMatch(`${html}${js}${json}`,/premium/i);assert.match(html,/options-tab-studio/);assert.match(html,/aria-label="Parts you can add"/);
+});
+
+test('centered Studio layers use final viewport rectangles at both host scales',()=>{
+ for(const scale of [1,.6]){
+  const host={
+   offsetWidth:1280,offsetHeight:720,
+   getBoundingClientRect:()=>({left:100,top:60,width:1280*scale,height:720*scale}),
+   append(layer){layer.parentElement=this}
+  };
+  const panel={
+   parentElement:host,offsetWidth:480,offsetHeight:680,
+   getBoundingClientRect:()=>({left:100+400*scale,top:60+20*scale,width:480*scale,height:680*scale})
+  };
+  const layer={style:{}};
+  syncStudioLayer(panel,layer);
+  assert.equal(layer.style.left,'400px');
+  assert.equal(layer.style.top,'20px');
+ }
+});
+
+test('blank Studio mounts leave skin padding and gap untouched',async()=>{
+ const properties=new Map([['padding','12px'],['gap','11px']]);
+ const rootNode={
+  dataset:{},parentElement:{querySelector:()=>null},
+  removeAttribute(){},
+  style:{removeProperty:key=>properties.delete(key),setProperty:(key,value)=>properties.set(key,value)}
+ };
+ assert.equal(await mountStudioComposition({root:rootNode,draft:blankStudio(),fetcher:()=>{throw Error('blank draft must not fetch')}}),null);
+ assert.equal(properties.get('padding'),'12px');
+ assert.equal(properties.get('gap'),'11px');
+});
+
+test('overlapping Studio paints append each part exactly once',async()=>{
+ class Element{
+  constructor(){this.children=[];this.dataset={};this.style={setProperty(){},removeProperty(){}};this.classList={add(){}};this.offsetWidth=480;this.offsetHeight=680;this.offsetLeft=0;this.offsetTop=0}
+  append(node){node.parentElement=this;this.children.push(node)}
+  replaceChildren(){this.children=[]}
+  setAttribute(){}
+  removeAttribute(name){if(name==='data-studio-design')delete this.dataset.studioDesign}
+  querySelector(){return null}
+ }
+ const previous={window:globalThis.window,DOMParser:globalThis.DOMParser,ResizeObserver:globalThis.ResizeObserver};
+ let resolveFetch,fetches=0;
+ globalThis.window={__studioParts:[{id:0,file:'race-regression.svg'}]};
+ globalThis.DOMParser=class{parseFromString(){return{documentElement:{localName:'svg',querySelector:()=>null}}}};
+ globalThis.ResizeObserver=class{observe(){}};
+ const host=new Element(),panel=new Element();host.append(panel);
+ const doc={createElement:()=>new Element(),importNode:()=>new Element()};
+ const fetcher=()=>{fetches++;return new Promise(resolve=>{resolveFetch=resolve})};
+ try{
+  const first=mountStudioComposition({root:panel,draft:makeStudioKit('Cozy'),document:doc,fetcher});
+  const second=panel._studioPaint();
+  resolveFetch({ok:true,text:async()=>'<svg/>'});
+  const [mounted]=await Promise.all([first,second]);
+  const expected=makeStudioKit('Cozy').instances.filter(part=>![19,60].includes(part.part)).length;
+  assert.equal(mounted.layer.children.filter(node=>node.className?.startsWith('studio-art ')).length,expected);
+  assert.equal(fetches,1);
+  await mounted.paint();
+  assert.equal(fetches,1,'warm paints reuse parsed SVGs');
+ }finally{
+  for(const [key,value] of Object.entries(previous)){
+   if(value===undefined)delete globalThis[key];else globalThis[key]=value;
+  }
+ }
 });

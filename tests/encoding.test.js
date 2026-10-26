@@ -1,28 +1,26 @@
+// All user-facing source files must remain UTF-8 without BOM or mojibake.
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {readdir, readFile} from 'node:fs/promises';
-import path from 'node:path';
-import {fileURLToPath} from 'node:url';
+import {readdir,readFile} from 'node:fs/promises';
 
-const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
-async function sourceFiles(dir){
- const found=[];
- for(const entry of await readdir(dir,{withFileTypes:true})){
-  if(entry.name==='.git')continue;
-  const full=path.join(dir,entry.name);
-  if(entry.isDirectory())found.push(...await sourceFiles(full));
-  else if(/\.(?:html|js|css)$/i.test(entry.name))found.push(full);
+async function sourceFiles(directory){
+ const result=[];
+ for(const entry of await readdir(directory,{withFileTypes:true})){
+  if(['.git','node_modules','.media-tmp'].includes(entry.name))continue;
+  const path=directory+'/'+entry.name;
+  if(entry.isDirectory())result.push(...await sourceFiles(path));
+  else if(/\.(html|js|mjs|css)$/.test(path))result.push(path);
  }
- return found;
+ return result;
 }
-
-test('HTML, JavaScript and CSS contain no common UTF-8 mojibake or replacement characters',async()=>{
- const forbidden=[String.fromCodePoint(0x00c3),String.fromCodePoint(0x00c2),String.fromCodePoint(0xfffd)];
- const offenders=[];
- for(const file of await sourceFiles(root)){
-  const text=await readFile(file,'utf8');
-  for(const marker of forbidden)if(text.includes(marker))offenders.push(`${path.relative(root,file)} contains U+${marker.codePointAt(0).toString(16).toUpperCase()}`);
-  if(/Preview only\s\?\s/.test(text))offenders.push(`${path.relative(root,file)} uses a question mark as a status separator`);
+test('HTML, JS, CSS and server sources have clean UTF-8 encoding',async()=>{
+ for(const path of await sourceFiles('.')){
+  const bytes=await readFile(path);
+  if(/\.html$/.test(path)||/^\.\/(js|css|server)\//.test(path)){
+   assert.notDeepEqual([...bytes.subarray(0,3)],[239,187,191],path+' BOM');
+  }
+  const text=new TextDecoder('utf-8',{fatal:true}).decode(bytes);
+  assert.doesNotMatch(text,/Preview only\s\?\s/,path+' status separator');
+  assert.doesNotMatch(text,/\u00e2[\u0080\u20ac\u2020]|\u00c3[\u0080-\u00bf]|\u00c2[\u0080-\u00bf]|\ufffd/,path+' mojibake');
  }
- assert.deepEqual(offenders,[]);
 });

@@ -79,3 +79,50 @@ test('rerender drops only models whose configured lifetime has elapsed',()=>{
  renderMessageModelsInPlace(root,messages,{messageLifetime:10,nameTemplate:'new skin'},(message,settings)=>new FakeNode(message.id,settings.nameTemplate),new Map(),()=>{},()=>12000,10);
  assert.deepEqual(root.children.map(node=>node.dataset.messageId),['alive']);
 });
+
+test('messages without IRC ids remain distinct through repeated skin rerenders',()=>{
+ const root=new FakeRoot();
+ const items=Array.from({length:6},(_,index)=>({message:{text:'Row '+index},createdAt:1000}));
+ const render=message=>{const node=new FakeNode();node.textContent=message.text;return node};
+ for(let pass=0;pass<3;pass++){
+  renderMessageModelsInPlace(root,items,CLEAN,render,new Map(),()=>{},()=>2000);
+  assert.equal(root.children.length,6);
+  assert.deepEqual(root.children.map(node=>node.textContent),items.map(item=>item.message.text));
+  assert.ok(items.every(item=>root.children.includes(item.row)));
+ }
+ items[1].deleted=true;
+ renderMessageModelsInPlace(root,items,CLEAN,render,new Map(),()=>{},()=>2000);
+ assert.equal(root.children.length,5);
+ assert.equal(root.children.some(node=>node.textContent==='Row 1'),false);
+});
+
+test('reward cooldowns use viewer identity and configured windows; reward ids survive renames',()=>{
+ const config=defaultChatPlay();
+ config.enabled=true;
+ config.points.enabled=true;
+ config.points.globalCooldownSeconds=2;
+ config.points.userCooldownSeconds=5;
+ config.effects.flash.enabled=true;
+ config.points.rewards=[{effect:'flash',enabled:true,title:'Original title',id:'stable-reward'}];
+ const home={...structuredClone(CLEAN),hideFrames:true};
+ const runtime=createChatPlayRuntime({
+  root:new FakeRoot(),host:null,homeSettings:home,config,skins:[],document:{},
+  storage:null,timers:fakeTimers(),applyStyle(){},preview:true
+ });
+ const originalNow=Date.now;
+ let time=100000;
+ Date.now=()=>time;
+ const event=(id,user)=>({messageId:'event-'+id,redemptionId:id,userId:user,rewardId:'stable-reward',rewardTitle:'Renamed in Twitch'});
+ try{
+  assert.equal(runtime.handleReward(event('one','a')),true);
+  time+=1000;
+  assert.equal(runtime.handleReward(event('two','b')).reason,'reward-cooldown');
+  time+=1100;
+  assert.equal(runtime.handleReward(event('three','a')).reason,'reward-cooldown');
+  assert.equal(runtime.handleReward(event('four','b')),true);
+  time+=3000;
+  assert.equal(runtime.handleReward(event('five','a')),true);
+  time+=6000;
+  assert.equal(runtime.handleReward(event('five','a')).reason,'duplicate-or-canceled');
+ }finally{Date.now=originalNow;runtime.stop()}
+});
