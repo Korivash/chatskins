@@ -4,7 +4,7 @@ import {applyChatStyle,removeChatMessage,applySkinMetadata} from './render.js';
 import {isFiltered} from './filters.js';
 import {connectChat} from './chat.js';
 import {layoutPanel} from './panel-layout.js';
-import {fitPanelMessages} from './message-fit.js';
+import {fitPanelMessages, pendingMessageAnimations} from './message-fit.js';
 import {createCommunityChat} from './community-chat.js';
 import {buildOverlayTestModel} from './overlay-test-messages.js';
 import {parseAlertsFragment,decodeCompactAlertData} from './alerts-config.js';
@@ -40,7 +40,22 @@ else{
  const root=document.querySelector('#chat');if(typeof s.studioDesign==='string')s.studioDesign=decodeStudio(s.studioDesign);if(s.studioDesign){try{window.__studioParts=(await(await fetch('./site-media/parts/parts.json')).json()).parts||[]}catch{window.__studioParts=[]}}applyChatStyle(root,s);let panelMax=0;await afterFrameTemplateReady(()=>attachFrameTemplate(root,s,{skin:activeSkin,layout:()=>{panelMax=layoutPanel(host,root,s)}}),()=>{panelMax=layoutPanel(host,root,s)});await mountIllustrated(root,s,activeSkin);await mountStudioComposition({root,draft:s.studioDesign,channel:s.channel});let chatPlay=null;
  let rows=[],pendingChatMessages=[],fitQueued=false,fitPaused=false,received=0,filtered=0,fitRemoved=0;
  const communityChat=createCommunityChat({getSettings:()=>chatPlay?.currentSettings||s,onUpdate:()=>{}});
- function queueFit(){if(fitPaused||s.templateFrame&&(!root._frameRect||!root._applyFrameWindow))return;if(fitQueued)return;fitQueued=true;requestAnimationFrame(()=>{fitQueued=false;if(fitPaused)return;fitRemoved+=fitPanelMessages(root,panelMax)})}
+ function queueFit(){
+  if(fitPaused||s.templateFrame&&(!root._frameRect||!root._applyFrameWindow)||fitQueued)return;
+  fitQueued=true;
+  requestAnimationFrame(()=>{
+   if(fitPaused){fitQueued=false;return}
+   const entrances=pendingMessageAnimations(root);
+   if(entrances.length){
+    // Animation.finished resolves at the final keyframe (and rejects on cancel).
+    // Recheck afterwards: another card may have arrived while we were waiting.
+    Promise.allSettled(entrances.map(animation=>animation.finished)).then(()=>{fitQueued=false;queueFit()});
+    return;
+   }
+   fitQueued=false;
+   fitRemoved+=fitPanelMessages(root,panelMax);
+  });
+ }
  root.addEventListener('templatewindowready',()=>queueFit());requestAnimationFrame(()=>{panelMax=layoutPanel(host,root,s);resizeFrameTemplate(root,s.placement);queueFit()});
  window.__chatskinsFitOk=()=>{const b=root.getBoundingClientRect(),v=host.getBoundingClientRect(),o=s.frame.outer.enabled?s.frame.outer.offset+s.frame.outer.width:0;return b.top>=v.top+s.edgeInset-1&&b.left>=v.left+s.edgeInset-1&&b.right<=v.right-s.edgeInset+1&&b.bottom<=v.bottom-s.edgeInset+1&&b.top-o>=v.top-1&&b.left-o>=v.left-1&&b.right+o<=v.right+1&&b.bottom+o<=v.bottom+1};
  window.__chatskinsStats=()=>{const b=root.getBoundingClientRect();return{messages:root.querySelectorAll(':scope > .message').length,received,filtered,fitRemoved,panelTop:b.top,panelBottom:b.bottom,viewportHeight:window.innerHeight}};

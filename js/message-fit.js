@@ -2,23 +2,34 @@
 // Frame and decoration layers are deliberately excluded from the removable set.
 const warnedPanels = new WeakSet();
 
+// Only finite animations on the cards themselves gate fitting. Infinite glow
+// effects and animations on decorations must never block the chat indefinitely.
+export function pendingMessageAnimations(panel) {
+  return [...panel.children].filter(row => row.classList?.contains('message'))
+    .flatMap(row => row.getAnimations?.() || [])
+    .filter(animation => (animation.playState === 'running' || animation.pending)
+      && Number.isFinite(animation.effect?.getComputedTiming().endTime));
+}
+
 /** Fit only genuine overflow; DOM client dimensions round fractional pixels. */
 export function fitPanelMessages(panel, maxHeight) {
+  // Entrance keyframes can also animate layout properties; wait for final layout.
+  if (pendingMessageAnimations(panel).length) return 0;
   const limit = Math.max(0, Number(maxHeight) || 0);
   const messages = () => [...panel.children].filter(child => child.classList?.contains('message'));
-  const measurable = rows => rows.some(row => typeof row.getBoundingClientRect === 'function' && row.getBoundingClientRect().height > 0);
   const rowStackHeight = rows => {
     const style = typeof getComputedStyle === 'function' ? getComputedStyle(panel) : null;
     const gap = parseFloat(style?.rowGap || style?.gap) || 0;
     return rows.reduce((sum,row) => {
-      const rect = row.getBoundingClientRect?.();
-      const height = rect?.height || row.offsetHeight || 0;
+      // Rects and scrollHeight include rotated/scaled visual overflow. Neither
+      // describes the space occupied by a card in the panel's flex layout.
+      const height = Number(row.offsetHeight) || 0;
       const rowStyle = typeof getComputedStyle === 'function' ? getComputedStyle(row) : null;
       return sum + height + (parseFloat(rowStyle?.marginTop)||0) + (parseFloat(rowStyle?.marginBottom)||0);
     },0) + Math.max(0,rows.length-1)*gap;
   };
   const availableContent = () => {
-    const client = panel.getBoundingClientRect?.().height || Number(panel.clientHeight) || 0;
+    const client = Number(panel.clientHeight) || 0;
     if (!client) return limit;
     const style = typeof getComputedStyle === 'function' ? getComputedStyle(panel) : null;
     const padding = (parseFloat(style?.paddingTop)||0) + (parseFloat(style?.paddingBottom)||0);
@@ -27,11 +38,7 @@ export function fitPanelMessages(panel, maxHeight) {
   let removed = 0;
   while (true) {
     const rows = messages();
-    const hasMeasurements = measurable(rows);
-    const clipped = panel.scrollHeight - panel.clientHeight > 1 || panel.clientHeight > limit + 1;
-    const over = hasMeasurements
-      ? rowStackHeight(rows) - availableContent() > 1 && clipped
-      : panel.scrollHeight > limit + 1;
+    const over = rowStackHeight(rows) - availableContent() > 1;
     if (!over) break;
     const oldest = rows[0];
     if (!oldest) break;
